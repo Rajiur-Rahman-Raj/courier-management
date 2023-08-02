@@ -1,0 +1,708 @@
+[2023-07-16 13:02:42] production.ERROR: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 1045): SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1) at D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:712)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(376): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2414): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2402): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2936): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2403): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(625): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(609): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(294): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(490): Illuminate\\Database\\Eloquent\\Builder->first()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->firstOrCreate(Array)
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'firstOrCreate', Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call('firstOrCreate', Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\app\\Helpers\\helpers.php(109): Illuminate\\Database\\Eloquent\\Model::__callStatic('firstOrCreate', Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\app\\Providers\\AppServiceProvider.php(36): basicControl()
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\AppServiceProvider->boot()
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(653): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(924): Illuminate\\Container\\Container->call(Array)
+#21 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(905): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\AppServiceProvider))
+#22 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\AppServiceProvider), 25)
+#23 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(906): array_walk(Array, Object(Closure))
+#24 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#25 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(237): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#26 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(153): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#27 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(137): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#28 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#29 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#30 {main}
+
+[previous exception] [object] (PDOException(code: 1045): SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) at D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:70)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(70): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(46): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=127....', Array, Array)
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#4 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1064): call_user_func(Object(Closure))
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1100): Illuminate\\Database\\Connection->getPdo()
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(442): Illuminate\\Database\\Connection->getReadPdo()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(368): Illuminate\\Database\\Connection->getPdoForSelect(true)
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(705): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(376): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2414): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2402): Illuminate\\Database\\Query\\Builder->runSelect()
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2936): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2403): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(625): Illuminate\\Database\\Query\\Builder->get(Array)
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(609): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#18 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(294): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#19 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(490): Illuminate\\Database\\Eloquent\\Builder->first()
+#20 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->firstOrCreate(Array)
+#21 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'firstOrCreate', Array)
+#22 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call('firstOrCreate', Array)
+#23 D:\\xammp\\htdocs\\courier\\project\\app\\Helpers\\helpers.php(109): Illuminate\\Database\\Eloquent\\Model::__callStatic('firstOrCreate', Array)
+#24 D:\\xammp\\htdocs\\courier\\project\\app\\Providers\\AppServiceProvider.php(36): basicControl()
+#25 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\AppServiceProvider->boot()
+#26 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#27 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#28 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#29 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(653): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#30 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(924): Illuminate\\Container\\Container->call(Array)
+#31 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(905): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\AppServiceProvider))
+#32 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\AppServiceProvider), 25)
+#33 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(906): array_walk(Array, Object(Closure))
+#34 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#35 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(237): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#36 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(153): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#37 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(137): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#38 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#39 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#40 {main}
+"} 
+[2023-07-16 13:02:42] production.ERROR: Undefined variable $theme (View: D:\xammp\htdocs\courier\project\resources\views\errors\500.blade.php) {"view":{"view":"D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1763359769 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1227</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1763359769\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","exception":"<pre class=sf-dump id=sf-dump-1887803143 data-indent-pad=\"  \"><span class=sf-dump-note>Symfony\\Component\\HttpKernel\\Exception\\HttpException</span> {<a class=sf-dump-ref>#1208</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">message</span>: \"<span class=sf-dump-str title=\"149 characters\">SQLSTATE[HY000] [1045] Access denied for user &#039;forge&#039;@&#039;localhost&#039; (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1)</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">code</span>: <span class=sf-dump-num>0</span>
+  #<span class=sf-dump-protected title=\"Protected property\">file</span>: \"<span class=sf-dump-str title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php
+105 characters\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Exceptions\\Handler.php</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">line</span>: <span class=sf-dump-num>486</span>
+  -<span class=sf-dump-private title=\"Private property defined in class:&#10;`Symfony\\Component\\HttpKernel\\Exception\\HttpException`\">statusCode</span>: <span class=sf-dump-num>500</span>
+  -<span class=sf-dump-private title=\"Private property defined in class:&#10;`Symfony\\Component\\HttpKernel\\Exception\\HttpException`\">headers</span>: []
+  <span class=sf-dump-meta>trace</span>: {<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php:486
+Stack level 5.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Exceptions\\Handler.php:486</span> {<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-note title=\"Illuminate\\Foundation\\Exceptions\\Handler-&gt;prepareResponse($request, Throwable $e)
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Foundation\\Exceptions</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Handler-&gt;prepareResponse($request, Throwable $e)</span> &#8230;
+      &#8250; <code class=\"php\"><span class=sf-dump-default>if (! $this-&gt;isHttpException($e)) {</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"in Illuminate\\Foundation\\Exceptions\\Handler-&gt;prepareResponse($request, Throwable $e)\">    $e = new HttpException(500, $e-&gt;getMessage());</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>}</span></code>
+    </samp>}
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php:356
+Stack level 4.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Exceptions\\Handler.php:356</span> {<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-note title=\"Illuminate\\Foundation\\Exceptions\\Handler-&gt;render($request, Throwable $e)
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Foundation\\Exceptions</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Handler-&gt;render($request, Throwable $e)</span> &#8230;
+      &#8250; <code class=\"php\"><span class=sf-dump-default>                ? $this-&gt;prepareJsonResponse($request, $e)</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"in Illuminate\\Foundation\\Exceptions\\Handler-&gt;render($request, Throwable $e)\">                : $this-&gt;prepareResponse($request, $e);</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>}</span></code>
+      <span class=sf-dump-meta>arguments</span>: { &#8230;2}
+    </samp>}
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php:427
+Stack level 3.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Http\\Kernel.php:427</span> {<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-note title=\"Illuminate\\Foundation\\Http\\Kernel-&gt;renderException($request, Throwable $e)
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Foundation\\Http</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Kernel-&gt;renderException($request, Throwable $e)</span> &#8230;
+      &#8250; <code class=\"php\"><span class=sf-dump-default>{</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"in Illuminate\\Foundation\\Http\\Kernel-&gt;renderException($request, Throwable $e)\">    return $this-&gt;app[ExceptionHandler::class]-&gt;render($request, $e);</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>}</span></code>
+      <span class=sf-dump-meta>arguments</span>: { &#8230;2}
+    </samp>}
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php:115
+Stack level 2.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Http\\Kernel.php:115</span> {<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-note title=\"Illuminate\\Foundation\\Http\\Kernel-&gt;handle($request)
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Foundation\\Http</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Kernel-&gt;handle($request)</span> &#8230;
+      &#8250; 
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"in Illuminate\\Foundation\\Http\\Kernel-&gt;handle($request)\">    $response = $this-&gt;renderException($request, $e);</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>}</span></code>
+      <span class=sf-dump-meta>arguments</span>: { &#8230;2}
+    </samp>}
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\index.php:52
+Stack level 1.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\</span>index.php:52</span> {<samp data-depth=3 class=sf-dump-compact>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>$response = tap($kernel-&gt;handle(</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"\">    $request = Request::capture()</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>))-&gt;send();</span></code>
+      <span class=sf-dump-meta>arguments</span>: { &#8230;1}
+    </samp>}
+  </samp>}
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1887803143\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+"}},"exception":"[object] (Facade\\Ignition\\Exceptions\\ViewException(code: 0): Undefined variable $theme (View: D:\\xammp\\htdocs\\courier\\project\\resources\\views\\errors\\500.blade.php) at D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php:1)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php(1): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\\\xammp\\\\htdocs...', 1)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\xammp\\\\htdocs...')
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\xammp\\\\htdocs...', Array)
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\xammp\\\\htdocs...', Array)
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(55): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(85): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(585): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(490): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(356): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(427): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(Illuminate\\Database\\QueryException))
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(115): Illuminate\\Foundation\\Http\\Kernel->renderException(Object(Illuminate\\Http\\Request), Object(Illuminate\\Database\\QueryException))
+#18 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#19 {main}
+
+[previous exception] [object] (ErrorException(code: 0): Undefined variable $theme at D:\\xammp\\htdocs\\courier\\project\\storage\\framework\\views\\fdda0d6793784066a6da841b10e353370eeec9d5.php:1)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\storage\\framework\\views\\fdda0d6793784066a6da841b10e353370eeec9d5.php(1): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\\\xammp\\\\htdocs...', 1)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\xammp\\\\htdocs...')
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\xammp\\\\htdocs...', Array)
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\xammp\\\\htdocs...', Array)
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(55): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(85): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(585): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(490): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(356): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(427): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(Illuminate\\Database\\QueryException))
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(115): Illuminate\\Foundation\\Http\\Kernel->renderException(Object(Illuminate\\Http\\Request), Object(Illuminate\\Database\\QueryException))
+#18 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#19 {main}
+"} 
+[2023-07-16 13:02:42] production.ERROR: Uncaught ErrorException: Undefined variable $theme in D:\xammp\htdocs\courier\project\storage\framework\views\fdda0d6793784066a6da841b10e353370eeec9d5.php:1
+Stack trace:
+#0 D:\xammp\htdocs\courier\project\storage\framework\views\fdda0d6793784066a6da841b10e353370eeec9d5.php(1): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\xammp\\htdocs...', 1)
+#1 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Filesystem\Filesystem.php(107): require('D:\\xammp\\htdocs...')
+#2 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Filesystem\Filesystem.php(108): Illuminate\Filesystem\Filesystem::Illuminate\Filesystem\{closure}()
+#3 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php(58): Illuminate\Filesystem\Filesystem->getRequire('D:\\xammp\\htdocs...', Array)
+#4 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\Engines\CompilerEngine.php(61): Illuminate\View\Engines\PhpEngine->evaluatePath('D:\\xammp\\htdocs...', Array)
+#5 D:\xammp\htdocs\courier\project\vendor\facade\ignition\src\Views\Engines\CompilerEngine.php(37): Illuminate\View\Engines\CompilerEngine->get('D:\\xammp\\htdocs...', Array)
+#6 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(139): Facade\Ignition\Views\Engines\CompilerEngine->get('D:\\xammp\\htdocs...', Array)
+#7 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(122): Illuminate\View\View->getContents()
+#8 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(91): Illuminate\View\View->renderContents()
+#9 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Http\Response.php(69): Illuminate\View\View->render()
+#10 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Http\Response.php(35): Illuminate\Http\Response->setContent(Object(Illuminate\View\View))
+#11 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Routing\ResponseFactory.php(55): Illuminate\Http\Response->__construct(Object(Illuminate\View\View), 500, Array)
+#12 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Routing\ResponseFactory.php(85): Illuminate\Routing\ResponseFactory->make(Object(Illuminate\View\View), 500, Array)
+#13 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(585): Illuminate\Routing\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(490): Illuminate\Foundation\Exceptions\Handler->renderHttpException(Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#15 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(356): Illuminate\Foundation\Exceptions\Handler->prepareResponse(Object(Illuminate\Http\Request), Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#16 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php(196): Illuminate\Foundation\Exceptions\Handler->render(Object(Illuminate\Http\Request), Object(Facade\Ignition\Exceptions\ViewException))
+#17 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php(173): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse(Object(Facade\Ignition\Exceptions\ViewException))
+#18 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleException(Object(Facade\Ignition\Exceptions\ViewException))
+#19 {main}
+
+Next Facade\Ignition\Exceptions\ViewException: Undefined variable $theme (View: D:\xammp\htdocs\courier\project\resources\views\errors\500.blade.php) in D:\xammp\htdocs\courier\project\resources\views/errors/500.blade.php:1
+Stack trace:
+#0 D:\xammp\htdocs\courier\project\resources\views/errors/500.blade.php(1): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\xammp\\htdocs...', 1)
+#1 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Filesystem\Filesystem.php(107): require('D:\\xammp\\htdocs...')
+#2 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Filesystem\Filesystem.php(108): Illuminate\Filesystem\Filesystem::Illuminate\Filesystem\{closure}()
+#3 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php(58): Illuminate\Filesystem\Filesystem->getRequire('D:\\xammp\\htdocs...', Array)
+#4 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\Engines\CompilerEngine.php(61): Illuminate\View\Engines\PhpEngine->evaluatePath('D:\\xammp\\htdocs...', Array)
+#5 D:\xammp\htdocs\courier\project\vendor\facade\ignition\src\Views\Engines\CompilerEngine.php(37): Illuminate\View\Engines\CompilerEngine->get('D:\\xammp\\htdocs...', Array)
+#6 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(139): Facade\Ignition\Views\Engines\CompilerEngine->get('D:\\xammp\\htdocs...', Array)
+#7 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(122): Illuminate\View\View->getContents()
+#8 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(91): Illuminate\View\View->renderContents()
+#9 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Http\Response.php(69): Illuminate\View\View->render()
+#10 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Http\Response.php(35): Illuminate\Http\Response->setContent(Object(Illuminate\View\View))
+#11 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Routing\ResponseFactory.php(55): Illuminate\Http\Response->__construct(Object(Illuminate\View\View), 500, Array)
+#12 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Routing\ResponseFactory.php(85): Illuminate\Routing\ResponseFactory->make(Object(Illuminate\View\View), 500, Array)
+#13 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(585): Illuminate\Routing\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(490): Illuminate\Foundation\Exceptions\Handler->renderHttpException(Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#15 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(356): Illuminate\Foundation\Exceptions\Handler->prepareResponse(Object(Illuminate\Http\Request), Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#16 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php(196): Illuminate\Foundation\Exceptions\Handler->render(Object(Illuminate\Http\Request), Object(Facade\Ignition\Exceptions\ViewException))
+#17 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php(173): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse(Object(Facade\Ignition\Exceptions\ViewException))
+#18 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleException(Object(Facade\Ignition\Exceptions\ViewException))
+#19 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught ErrorException: Undefined variable $theme in D:\\xammp\\htdocs\\courier\\project\\storage\\framework\\views\\fdda0d6793784066a6da841b10e353370eeec9d5.php:1
+Stack trace:
+#0 D:\\xammp\\htdocs\\courier\\project\\storage\\framework\\views\\fdda0d6793784066a6da841b10e353370eeec9d5.php(1): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\\\xammp\\\\htdocs...', 1)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\xammp\\\\htdocs...')
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\xammp\\\\htdocs...', Array)
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\xammp\\\\htdocs...', Array)
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(55): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(85): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(585): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(490): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(356): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(196): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(Facade\\Ignition\\Exceptions\\ViewException))
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(173): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->renderHttpResponse(Object(Facade\\Ignition\\Exceptions\\ViewException))
+#18 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleException(Object(Facade\\Ignition\\Exceptions\\ViewException))
+#19 {main}
+
+Next Facade\\Ignition\\Exceptions\\ViewException: Undefined variable $theme (View: D:\\xammp\\htdocs\\courier\\project\\resources\\views\\errors\\500.blade.php) in D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php:1
+Stack trace:
+#0 D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php(1): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\\\xammp\\\\htdocs...', 1)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\xammp\\\\htdocs...')
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\xammp\\\\htdocs...', Array)
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\xammp\\\\htdocs...', Array)
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(55): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(85): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(585): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(490): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(356): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(196): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(Facade\\Ignition\\Exceptions\\ViewException))
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(173): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->renderHttpResponse(Object(Facade\\Ignition\\Exceptions\\ViewException))
+#18 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleException(Object(Facade\\Ignition\\Exceptions\\ViewException))
+#19 {main}
+  thrown at D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php:1)
+[stacktrace]
+#0 {main}
+"} 
+[2023-07-18 07:35:05] production.ERROR: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 1045): SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1) at D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:712)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(376): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2414): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2402): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2936): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2403): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(625): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(609): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(294): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(490): Illuminate\\Database\\Eloquent\\Builder->first()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->firstOrCreate(Array)
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'firstOrCreate', Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call('firstOrCreate', Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\app\\Helpers\\helpers.php(109): Illuminate\\Database\\Eloquent\\Model::__callStatic('firstOrCreate', Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\app\\Providers\\AppServiceProvider.php(36): basicControl()
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\AppServiceProvider->boot()
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(653): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(924): Illuminate\\Container\\Container->call(Array)
+#21 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(905): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\AppServiceProvider))
+#22 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\AppServiceProvider), 25)
+#23 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(906): array_walk(Array, Object(Closure))
+#24 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#25 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(237): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#26 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(153): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#27 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(137): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#28 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#29 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#30 {main}
+
+[previous exception] [object] (PDOException(code: 1045): SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) at D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:70)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(70): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(46): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=127....', Array, Array)
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#4 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1064): call_user_func(Object(Closure))
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1100): Illuminate\\Database\\Connection->getPdo()
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(442): Illuminate\\Database\\Connection->getReadPdo()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(368): Illuminate\\Database\\Connection->getPdoForSelect(true)
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(705): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(376): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2414): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2402): Illuminate\\Database\\Query\\Builder->runSelect()
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2936): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2403): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(625): Illuminate\\Database\\Query\\Builder->get(Array)
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(609): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#18 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(294): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#19 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(490): Illuminate\\Database\\Eloquent\\Builder->first()
+#20 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->firstOrCreate(Array)
+#21 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'firstOrCreate', Array)
+#22 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call('firstOrCreate', Array)
+#23 D:\\xammp\\htdocs\\courier\\project\\app\\Helpers\\helpers.php(109): Illuminate\\Database\\Eloquent\\Model::__callStatic('firstOrCreate', Array)
+#24 D:\\xammp\\htdocs\\courier\\project\\app\\Providers\\AppServiceProvider.php(36): basicControl()
+#25 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\AppServiceProvider->boot()
+#26 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#27 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#28 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#29 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(653): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#30 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(924): Illuminate\\Container\\Container->call(Array)
+#31 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(905): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\AppServiceProvider))
+#32 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\AppServiceProvider), 25)
+#33 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(906): array_walk(Array, Object(Closure))
+#34 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#35 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(237): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#36 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(153): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#37 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(137): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#38 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#39 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#40 {main}
+"} 
+[2023-07-18 07:35:05] production.ERROR: Undefined variable $theme (View: D:\xammp\htdocs\courier\project\resources\views\errors\500.blade.php) {"view":{"view":"D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-795535212 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1227</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
+</samp>}
+</pre><script>Sfdump(\"sf-dump-795535212\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+","exception":"<pre class=sf-dump id=sf-dump-1133631131 data-indent-pad=\"  \"><span class=sf-dump-note>Symfony\\Component\\HttpKernel\\Exception\\HttpException</span> {<a class=sf-dump-ref>#1226</a><samp data-depth=1 class=sf-dump-expanded>
+  #<span class=sf-dump-protected title=\"Protected property\">message</span>: \"<span class=sf-dump-str title=\"149 characters\">SQLSTATE[HY000] [1045] Access denied for user &#039;forge&#039;@&#039;localhost&#039; (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1)</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">code</span>: <span class=sf-dump-num>0</span>
+  #<span class=sf-dump-protected title=\"Protected property\">file</span>: \"<span class=sf-dump-str title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php
+105 characters\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Exceptions\\Handler.php</span>\"
+  #<span class=sf-dump-protected title=\"Protected property\">line</span>: <span class=sf-dump-num>486</span>
+  -<span class=sf-dump-private title=\"Private property defined in class:&#10;`Symfony\\Component\\HttpKernel\\Exception\\HttpException`\">statusCode</span>: <span class=sf-dump-num>500</span>
+  -<span class=sf-dump-private title=\"Private property defined in class:&#10;`Symfony\\Component\\HttpKernel\\Exception\\HttpException`\">headers</span>: []
+  <span class=sf-dump-meta>trace</span>: {<samp data-depth=2 class=sf-dump-compact>
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php:486
+Stack level 5.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Exceptions\\Handler.php:486</span> {<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-note title=\"Illuminate\\Foundation\\Exceptions\\Handler-&gt;prepareResponse($request, Throwable $e)
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Foundation\\Exceptions</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Handler-&gt;prepareResponse($request, Throwable $e)</span> &#8230;
+      &#8250; <code class=\"php\"><span class=sf-dump-default>if (! $this-&gt;isHttpException($e)) {</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"in Illuminate\\Foundation\\Exceptions\\Handler-&gt;prepareResponse($request, Throwable $e)\">    $e = new HttpException(500, $e-&gt;getMessage());</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>}</span></code>
+    </samp>}
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php:356
+Stack level 4.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Exceptions\\Handler.php:356</span> {<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-note title=\"Illuminate\\Foundation\\Exceptions\\Handler-&gt;render($request, Throwable $e)
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Foundation\\Exceptions</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Handler-&gt;render($request, Throwable $e)</span> &#8230;
+      &#8250; <code class=\"php\"><span class=sf-dump-default>                ? $this-&gt;prepareJsonResponse($request, $e)</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"in Illuminate\\Foundation\\Exceptions\\Handler-&gt;render($request, Throwable $e)\">                : $this-&gt;prepareResponse($request, $e);</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>}</span></code>
+      <span class=sf-dump-meta>arguments</span>: { &#8230;2}
+    </samp>}
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php:427
+Stack level 3.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Http\\Kernel.php:427</span> {<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-note title=\"Illuminate\\Foundation\\Http\\Kernel-&gt;renderException($request, Throwable $e)
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Foundation\\Http</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Kernel-&gt;renderException($request, Throwable $e)</span> &#8230;
+      &#8250; <code class=\"php\"><span class=sf-dump-default>{</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"in Illuminate\\Foundation\\Http\\Kernel-&gt;renderException($request, Throwable $e)\">    return $this-&gt;app[ExceptionHandler::class]-&gt;render($request, $e);</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>}</span></code>
+      <span class=sf-dump-meta>arguments</span>: { &#8230;2}
+    </samp>}
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php:115
+Stack level 2.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project\\vendor</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\laravel\\framework\\</span>src\\Illuminate\\Foundation\\Http\\Kernel.php:115</span> {<samp data-depth=3 class=sf-dump-compact>
+      <span class=sf-dump-note title=\"Illuminate\\Foundation\\Http\\Kernel-&gt;handle($request)
+\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">Illuminate\\Foundation\\Http</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-note\">\\</span>Kernel-&gt;handle($request)</span> &#8230;
+      &#8250; 
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"in Illuminate\\Foundation\\Http\\Kernel-&gt;handle($request)\">    $response = $this-&gt;renderException($request, $e);</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>}</span></code>
+      <span class=sf-dump-meta>arguments</span>: { &#8230;2}
+    </samp>}
+    <span class=sf-dump-meta title=\"D:\\xammp\\htdocs\\courier\\project\\index.php:52
+Stack level 1.\"><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">D:\\xammp\\htdocs\\courier\\project</span><span class=\"sf-dump-ellipsis sf-dump-ellipsis-path\">\\</span>index.php:52</span> {<samp data-depth=3 class=sf-dump-compact>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>$response = tap($kernel-&gt;handle(</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-const title=\"\">    $request = Request::capture()</span></code>
+      &#8250; <code class=\"php\"><span class=sf-dump-default>))-&gt;send();</span></code>
+      <span class=sf-dump-meta>arguments</span>: { &#8230;1}
+    </samp>}
+  </samp>}
+</samp>}
+</pre><script>Sfdump(\"sf-dump-1133631131\", {\"maxDepth\":3,\"maxStringLength\":160})</script>
+"}},"exception":"[object] (Facade\\Ignition\\Exceptions\\ViewException(code: 0): Undefined variable $theme (View: D:\\xammp\\htdocs\\courier\\project\\resources\\views\\errors\\500.blade.php) at D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php:1)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php(1): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\\\xammp\\\\htdocs...', 1)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\xammp\\\\htdocs...')
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\xammp\\\\htdocs...', Array)
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\xammp\\\\htdocs...', Array)
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(55): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(85): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(585): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(490): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(356): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(427): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(Illuminate\\Database\\QueryException))
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(115): Illuminate\\Foundation\\Http\\Kernel->renderException(Object(Illuminate\\Http\\Request), Object(Illuminate\\Database\\QueryException))
+#18 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#19 {main}
+
+[previous exception] [object] (ErrorException(code: 0): Undefined variable $theme at D:\\xammp\\htdocs\\courier\\project\\storage\\framework\\views\\fdda0d6793784066a6da841b10e353370eeec9d5.php:1)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\storage\\framework\\views\\fdda0d6793784066a6da841b10e353370eeec9d5.php(1): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\\\xammp\\\\htdocs...', 1)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\xammp\\\\htdocs...')
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\xammp\\\\htdocs...', Array)
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\xammp\\\\htdocs...', Array)
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(55): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(85): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(585): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(490): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(356): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(427): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(Illuminate\\Database\\QueryException))
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(115): Illuminate\\Foundation\\Http\\Kernel->renderException(Object(Illuminate\\Http\\Request), Object(Illuminate\\Database\\QueryException))
+#18 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#19 {main}
+"} 
+[2023-07-18 07:35:05] production.ERROR: Uncaught ErrorException: Undefined variable $theme in D:\xammp\htdocs\courier\project\storage\framework\views\fdda0d6793784066a6da841b10e353370eeec9d5.php:1
+Stack trace:
+#0 D:\xammp\htdocs\courier\project\storage\framework\views\fdda0d6793784066a6da841b10e353370eeec9d5.php(1): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\xammp\\htdocs...', 1)
+#1 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Filesystem\Filesystem.php(107): require('D:\\xammp\\htdocs...')
+#2 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Filesystem\Filesystem.php(108): Illuminate\Filesystem\Filesystem::Illuminate\Filesystem\{closure}()
+#3 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php(58): Illuminate\Filesystem\Filesystem->getRequire('D:\\xammp\\htdocs...', Array)
+#4 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\Engines\CompilerEngine.php(61): Illuminate\View\Engines\PhpEngine->evaluatePath('D:\\xammp\\htdocs...', Array)
+#5 D:\xammp\htdocs\courier\project\vendor\facade\ignition\src\Views\Engines\CompilerEngine.php(37): Illuminate\View\Engines\CompilerEngine->get('D:\\xammp\\htdocs...', Array)
+#6 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(139): Facade\Ignition\Views\Engines\CompilerEngine->get('D:\\xammp\\htdocs...', Array)
+#7 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(122): Illuminate\View\View->getContents()
+#8 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(91): Illuminate\View\View->renderContents()
+#9 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Http\Response.php(69): Illuminate\View\View->render()
+#10 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Http\Response.php(35): Illuminate\Http\Response->setContent(Object(Illuminate\View\View))
+#11 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Routing\ResponseFactory.php(55): Illuminate\Http\Response->__construct(Object(Illuminate\View\View), 500, Array)
+#12 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Routing\ResponseFactory.php(85): Illuminate\Routing\ResponseFactory->make(Object(Illuminate\View\View), 500, Array)
+#13 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(585): Illuminate\Routing\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(490): Illuminate\Foundation\Exceptions\Handler->renderHttpException(Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#15 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(356): Illuminate\Foundation\Exceptions\Handler->prepareResponse(Object(Illuminate\Http\Request), Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#16 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php(196): Illuminate\Foundation\Exceptions\Handler->render(Object(Illuminate\Http\Request), Object(Facade\Ignition\Exceptions\ViewException))
+#17 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php(173): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse(Object(Facade\Ignition\Exceptions\ViewException))
+#18 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleException(Object(Facade\Ignition\Exceptions\ViewException))
+#19 {main}
+
+Next Facade\Ignition\Exceptions\ViewException: Undefined variable $theme (View: D:\xammp\htdocs\courier\project\resources\views\errors\500.blade.php) in D:\xammp\htdocs\courier\project\resources\views/errors/500.blade.php:1
+Stack trace:
+#0 D:\xammp\htdocs\courier\project\resources\views/errors/500.blade.php(1): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\xammp\\htdocs...', 1)
+#1 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Filesystem\Filesystem.php(107): require('D:\\xammp\\htdocs...')
+#2 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Filesystem\Filesystem.php(108): Illuminate\Filesystem\Filesystem::Illuminate\Filesystem\{closure}()
+#3 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\Engines\PhpEngine.php(58): Illuminate\Filesystem\Filesystem->getRequire('D:\\xammp\\htdocs...', Array)
+#4 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\Engines\CompilerEngine.php(61): Illuminate\View\Engines\PhpEngine->evaluatePath('D:\\xammp\\htdocs...', Array)
+#5 D:\xammp\htdocs\courier\project\vendor\facade\ignition\src\Views\Engines\CompilerEngine.php(37): Illuminate\View\Engines\CompilerEngine->get('D:\\xammp\\htdocs...', Array)
+#6 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(139): Facade\Ignition\Views\Engines\CompilerEngine->get('D:\\xammp\\htdocs...', Array)
+#7 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(122): Illuminate\View\View->getContents()
+#8 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\View\View.php(91): Illuminate\View\View->renderContents()
+#9 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Http\Response.php(69): Illuminate\View\View->render()
+#10 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Http\Response.php(35): Illuminate\Http\Response->setContent(Object(Illuminate\View\View))
+#11 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Routing\ResponseFactory.php(55): Illuminate\Http\Response->__construct(Object(Illuminate\View\View), 500, Array)
+#12 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Routing\ResponseFactory.php(85): Illuminate\Routing\ResponseFactory->make(Object(Illuminate\View\View), 500, Array)
+#13 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(585): Illuminate\Routing\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(490): Illuminate\Foundation\Exceptions\Handler->renderHttpException(Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#15 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions\Handler.php(356): Illuminate\Foundation\Exceptions\Handler->prepareResponse(Object(Illuminate\Http\Request), Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#16 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php(196): Illuminate\Foundation\Exceptions\Handler->render(Object(Illuminate\Http\Request), Object(Facade\Ignition\Exceptions\ViewException))
+#17 D:\xammp\htdocs\courier\project\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\HandleExceptions.php(173): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse(Object(Facade\Ignition\Exceptions\ViewException))
+#18 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleException(Object(Facade\Ignition\Exceptions\ViewException))
+#19 {main}
+  thrown {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Uncaught ErrorException: Undefined variable $theme in D:\\xammp\\htdocs\\courier\\project\\storage\\framework\\views\\fdda0d6793784066a6da841b10e353370eeec9d5.php:1
+Stack trace:
+#0 D:\\xammp\\htdocs\\courier\\project\\storage\\framework\\views\\fdda0d6793784066a6da841b10e353370eeec9d5.php(1): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\\\xammp\\\\htdocs...', 1)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\xammp\\\\htdocs...')
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\xammp\\\\htdocs...', Array)
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\xammp\\\\htdocs...', Array)
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(55): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(85): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(585): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(490): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(356): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(196): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(Facade\\Ignition\\Exceptions\\ViewException))
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(173): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->renderHttpResponse(Object(Facade\\Ignition\\Exceptions\\ViewException))
+#18 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleException(Object(Facade\\Ignition\\Exceptions\\ViewException))
+#19 {main}
+
+Next Facade\\Ignition\\Exceptions\\ViewException: Undefined variable $theme (View: D:\\xammp\\htdocs\\courier\\project\\resources\\views\\errors\\500.blade.php) in D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php:1
+Stack trace:
+#0 D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php(1): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'D:\\\\xammp\\\\htdocs...', 1)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(107): require('D:\\\\xammp\\\\htdocs...')
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Filesystem\\Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire('D:\\\\xammp\\\\htdocs...', Array)
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath('D:\\\\xammp\\\\htdocs...', Array)
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\facade\\ignition\\src\\Views\\Engines\\CompilerEngine.php(37): Illuminate\\View\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(139): Facade\\Ignition\\Views\\Engines\\CompilerEngine->get('D:\\\\xammp\\\\htdocs...', Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(122): Illuminate\\View\\View->getContents()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(91): Illuminate\\View\\View->renderContents()
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(69): Illuminate\\View\\View->render()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Response.php(35): Illuminate\\Http\\Response->setContent(Object(Illuminate\\View\\View))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(55): Illuminate\\Http\\Response->__construct(Object(Illuminate\\View\\View), 500, Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ResponseFactory.php(85): Illuminate\\Routing\\ResponseFactory->make(Object(Illuminate\\View\\View), 500, Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(585): Illuminate\\Routing\\ResponseFactory->view('errors::500', Array, 500, Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(490): Illuminate\\Foundation\\Exceptions\\Handler->renderHttpException(Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Exceptions\\Handler.php(356): Illuminate\\Foundation\\Exceptions\\Handler->prepareResponse(Object(Illuminate\\Http\\Request), Object(Symfony\\Component\\HttpKernel\\Exception\\HttpException))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(196): Illuminate\\Foundation\\Exceptions\\Handler->render(Object(Illuminate\\Http\\Request), Object(Facade\\Ignition\\Exceptions\\ViewException))
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(173): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->renderHttpResponse(Object(Facade\\Ignition\\Exceptions\\ViewException))
+#18 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleException(Object(Facade\\Ignition\\Exceptions\\ViewException))
+#19 {main}
+  thrown at D:\\xammp\\htdocs\\courier\\project\\resources\\views/errors/500.blade.php:1)
+[stacktrace]
+#0 {main}
+"} 
+[2023-07-22 12:09:05] production.ERROR: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 1045): SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1) at D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:712)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(376): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2414): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2402): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2936): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2403): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(625): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(609): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(294): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(490): Illuminate\\Database\\Eloquent\\Builder->first()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->firstOrCreate(Array)
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'firstOrCreate', Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call('firstOrCreate', Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\app\\Helpers\\helpers.php(109): Illuminate\\Database\\Eloquent\\Model::__callStatic('firstOrCreate', Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\app\\Providers\\AppServiceProvider.php(36): basicControl()
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\AppServiceProvider->boot()
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(653): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(924): Illuminate\\Container\\Container->call(Array)
+#21 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(905): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\AppServiceProvider))
+#22 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\AppServiceProvider), 25)
+#23 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(906): array_walk(Array, Object(Closure))
+#24 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#25 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(237): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#26 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(153): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#27 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(137): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#28 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#29 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#30 {main}
+
+[previous exception] [object] (PDOException(code: 1045): SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) at D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:70)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(70): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(46): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=127....', Array, Array)
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#4 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1064): call_user_func(Object(Closure))
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1100): Illuminate\\Database\\Connection->getPdo()
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(442): Illuminate\\Database\\Connection->getReadPdo()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(368): Illuminate\\Database\\Connection->getPdoForSelect(true)
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(705): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(376): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2414): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2402): Illuminate\\Database\\Query\\Builder->runSelect()
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2936): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2403): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(625): Illuminate\\Database\\Query\\Builder->get(Array)
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(609): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#18 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(294): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#19 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(490): Illuminate\\Database\\Eloquent\\Builder->first()
+#20 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->firstOrCreate(Array)
+#21 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'firstOrCreate', Array)
+#22 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call('firstOrCreate', Array)
+#23 D:\\xammp\\htdocs\\courier\\project\\app\\Helpers\\helpers.php(109): Illuminate\\Database\\Eloquent\\Model::__callStatic('firstOrCreate', Array)
+#24 D:\\xammp\\htdocs\\courier\\project\\app\\Providers\\AppServiceProvider.php(36): basicControl()
+#25 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\AppServiceProvider->boot()
+#26 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#27 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#28 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#29 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(653): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#30 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(924): Illuminate\\Container\\Container->call(Array)
+#31 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(905): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\AppServiceProvider))
+#32 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\AppServiceProvider), 25)
+#33 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(906): array_walk(Array, Object(Closure))
+#34 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#35 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(237): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#36 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(153): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#37 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(137): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#38 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#39 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#40 {main}
+"} 
+[2023-08-02 10:36:50] production.ERROR: SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 1045): SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) (SQL: select * from `basic_controls` where (`id` = 1) limit 1) at D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:712)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(376): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2414): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2402): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2936): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2403): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(625): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(609): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(294): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(490): Illuminate\\Database\\Eloquent\\Builder->first()
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->firstOrCreate(Array)
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'firstOrCreate', Array)
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call('firstOrCreate', Array)
+#13 D:\\xammp\\htdocs\\courier\\project\\app\\Helpers\\helpers.php(109): Illuminate\\Database\\Eloquent\\Model::__callStatic('firstOrCreate', Array)
+#14 D:\\xammp\\htdocs\\courier\\project\\app\\Providers\\AppServiceProvider.php(36): basicControl()
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\AppServiceProvider->boot()
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#18 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#19 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(653): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#20 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(924): Illuminate\\Container\\Container->call(Array)
+#21 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(905): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\AppServiceProvider))
+#22 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\AppServiceProvider), 25)
+#23 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(906): array_walk(Array, Object(Closure))
+#24 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#25 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(237): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#26 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(153): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#27 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(137): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#28 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#29 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#30 {main}
+
+[previous exception] [object] (PDOException(code: 1045): SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO) at D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:70)
+[stacktrace]
+#0 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(70): PDO->__construct('mysql:host=127....', 'forge', '', Array)
+#1 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php(46): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('mysql:host=127....', 'forge', '', Array)
+#2 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\MySqlConnector.php(24): Illuminate\\Database\\Connectors\\Connector->createConnection('mysql:host=127....', Array, Array)
+#3 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\ConnectionFactory.php(184): Illuminate\\Database\\Connectors\\MySqlConnector->connect(Array)
+#4 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
+#5 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1064): call_user_func(Object(Closure))
+#6 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(1100): Illuminate\\Database\\Connection->getPdo()
+#7 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(442): Illuminate\\Database\\Connection->getReadPdo()
+#8 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(368): Illuminate\\Database\\Connection->getPdoForSelect(true)
+#9 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(705): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#10 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#11 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(376): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#12 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2414): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#13 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2402): Illuminate\\Database\\Query\\Builder->runSelect()
+#14 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2936): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#15 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2403): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#16 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(625): Illuminate\\Database\\Query\\Builder->get(Array)
+#17 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(609): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#18 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Concerns\\BuildsQueries.php(294): Illuminate\\Database\\Eloquent\\Builder->get(Array)
+#19 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(490): Illuminate\\Database\\Eloquent\\Builder->first()
+#20 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->firstOrCreate(Array)
+#21 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo(Object(Illuminate\\Database\\Eloquent\\Builder), 'firstOrCreate', Array)
+#22 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call('firstOrCreate', Array)
+#23 D:\\xammp\\htdocs\\courier\\project\\app\\Helpers\\helpers.php(109): Illuminate\\Database\\Eloquent\\Model::__callStatic('firstOrCreate', Array)
+#24 D:\\xammp\\htdocs\\courier\\project\\app\\Providers\\AppServiceProvider.php(36): basicControl()
+#25 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\AppServiceProvider->boot()
+#26 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#27 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#28 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#29 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(653): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#30 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(924): Illuminate\\Container\\Container->call(Array)
+#31 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(905): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\AppServiceProvider))
+#32 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\AppServiceProvider), 25)
+#33 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(906): array_walk(Array, Object(Closure))
+#34 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#35 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(237): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#36 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(153): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#37 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(137): Illuminate\\Foundation\\Http\\Kernel->bootstrap()
+#38 D:\\xammp\\htdocs\\courier\\project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#39 D:\\xammp\\htdocs\\courier\\project\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#40 {main}
+"} 
