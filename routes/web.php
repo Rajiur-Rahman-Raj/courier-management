@@ -148,10 +148,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::put('city-rete-update/{id}', [ShipmentController::class, 'cityRateUpdate'])->name('cityRateUpdate');
 		Route::put('area-rete-update/{id}', [ShipmentController::class, 'areaRateUpdate'])->name('areaRateUpdate');
 
-		Route::get('internationally-shipping-rate', [ShipmentController::class, 'internationallyRate'])->name('internationallyRate');
+
+		Route::get('internationally-shipping-rate/{type?}', [ShipmentController::class, 'internationallyRate'])->name('internationallyRate');
+		Route::get('create-shipping-rate-internationally', [ShipmentController::class, 'createShippingRateInternationally'])->name('createShippingRateInternationally');
+
+
 		Route::post('shipping-date-store', [ShipmentController::class, 'shippingDateStore'])->name('shippingDateStore');
-
-
 	});
 
 	// Manage Packing Service

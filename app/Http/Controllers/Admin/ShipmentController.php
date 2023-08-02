@@ -10,6 +10,7 @@ use App\Models\DefaultShippingRateInternationally;
 use App\Models\DefaultShippingRateOperatorCountry;
 use App\Models\ParcelType;
 use App\Models\ShippingDate;
+use App\Models\ShippingRateInternationally;
 use App\Models\ShippingRateOperatorCountry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -440,12 +441,50 @@ class ShipmentController extends Controller
 
 
 
+	// now work here
+	public function internationallyRate(Request $request, $type=null){
+		$internationallyShippingRateManagement = config('internationallyShippingRateManagement');
+		$types = array_keys($internationallyShippingRateManagement);
+		abort_if(!in_array($type, $types), 404);
+		$data['title'] = $internationallyShippingRateManagement[$type]['title'];
 
-
-
-	public function internationallyRate(){
-		dd('this is internationally rate list');
+		$data['shippingRateList'] = ShippingRateInternationally::with('fromCountry', 'toCountry', 'parcelType')
+			->when($type == 'country', function ($query) {
+				$query->whereNull(['from_state_id', 'from_city_id']);
+			})
+			->when($type == 'state', function ($query) {
+				$query->whereNotNull('from_state_id')->whereNull('from_city_id');
+			})
+			->when($type == 'city', function ($query) {
+				$query->whereNotNull(['from_city_id']);
+			})
+			->groupBy('parcel_type_id')
+			->paginate(config('basic.paginate'));
+		return view($internationallyShippingRateManagement[$type]['shipping_rate_view'], $data);
 	}
+
+
+	public function createShippingRateInternationally(){
+		$data['allCountries'] = Country::where('status', 1)->get();
+		$data['allParcelTypes'] = ParcelType::where('status', 1)->get();
+		return view('admin.shippingRate.internationally.create', $data);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	public function shippingDateStore(Request $request){
 		$purifiedData = Purify::clean($request->except('_token', '_method'));

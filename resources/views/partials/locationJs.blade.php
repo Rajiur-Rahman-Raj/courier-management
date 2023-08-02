@@ -35,6 +35,40 @@
 		}
 
 
+		$('.selectedCountry').on('change', function () {
+			let selectedValue = $(this).val();
+			getSelectedCountryState(selectedValue);
+		})
+
+		function getSelectedCountryState(value) {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			$.ajax({
+				url: "{{ route('getSeletedCountryState') }}",
+				method: 'POST',
+				data: {
+					id: value,
+				},
+				success: function (response) {
+					$('.selectedState').empty();
+					let responseData = response;
+					responseData.forEach(res => {
+						$('.selectedState').append(`<option value="${res.id}">${res.name}</option>`)
+					})
+
+					$('.selectedState').prepend(`<option value="" selected disabled>@lang('Select State')</option>`)
+				},
+				error: function (xhr, status, error) {
+					console.log(error)
+				}
+			});
+		}
+
+
 		$('.selectedState').on('change', function () {
 			let selectedValue = $(this).val();
 			getSelectedStateCity(selectedValue);
@@ -105,8 +139,46 @@
 
 
 
+		// From country state city area
+		$('.selectedFromCountry').on('change', function () {
+			let selectedValue = $(this).val();
+			getSelectedFromCountryState(selectedValue);
+		})
 
-		// From state city area
+		window.getSelectedFromCountryState = function getSelectedFromCountryState(value, from_state_id = null, dataProperty = null) {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			$.ajax({
+				url: "{{ route('getSeletedCountryState') }}",
+				method: 'POST',
+				data: {
+					id: value,
+				},
+				success: function (response) {
+					$('.selectedState').empty();
+					let responseData = response;
+					responseData.forEach(res => {
+						$('.selectedState').append(`<option value="${res.id}" ${res.id == from_state_id ? 'selected' : ''}>${res.name}</option>`)
+					})
+
+					// window.getSelectedFromCityArea($('.selectedFromState').val(), dataProperty.from_city_id);
+
+					if (!from_state_id) {
+						$('.selectedFromState').prepend(`<option value="" selected disabled>@lang('Select State')</option>`)
+					}
+				},
+				error: function (xhr, status, error) {
+					console.log(error)
+				}
+			});
+		}
+
+
+
 		$('.selectedFromState').on('change', function () {
 			let selectedValue = $(this).val();
 			getSelectedFromStateCity(selectedValue);

@@ -59,7 +59,7 @@
 						</li>
 
 						<li class="{{ activeMenu(['internationallyRate']) }}">
-							<a class="nav-link " href="{{ route('internationallyRate') }}">
+							<a class="nav-link " href="{{ route('internationallyRate', 'country') }}">
 								@lang('Internationally Rate')
 							</a>
 						</li>
