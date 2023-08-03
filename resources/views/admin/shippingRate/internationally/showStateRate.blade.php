@@ -1,21 +1,18 @@
 @extends('admin.layouts.master')
 @section('page_title')
-	@lang(optional(basicControl()->operatorCountry)->name.' Area Rate List')
+	@lang('Internationally State Rate List')
 @endsection
-@push('extra_styles')
-	<link rel="stylesheet" href="{{ asset('assets/dashboard/css/dataTables.bootstrap4.min.css') }}">
-@endpush
 
 @section('content')
 	<div class="main-content">
 		<section class="section">
 			<div class="section-header">
-				<h1>@lang('Area Rate List') (@lang(optional(basicControl()->operatorCountry)->name))</h1>
+				<h1>@lang('Internationally State Rate List')</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active">
 						<a href="{{ route('admin.home') }}">@lang('Dashboard')</a>
 					</div>
-					<div class="breadcrumb-item">@lang('Area Rate List')</div>
+					<div class="breadcrumb-item">@lang($title)</div>
 				</div>
 			</div>
 
@@ -36,8 +33,8 @@
 												<div class="row">
 													<div class="col-md-4">
 														<div class="form-group">
-															<input placeholder="@lang('From Area')" name="from_area"
-																   value="{{ old('from_area',request()->from_city) }}"
+															<input placeholder="@lang('From State')" name="from_state"
+																   value="{{ old('from_state',request()->from_state) }}"
 																   type="text"
 																   class="form-control form-control-sm">
 														</div>
@@ -45,8 +42,8 @@
 
 													<div class="col-md-4">
 														<div class="form-group">
-															<input placeholder="@lang('To Area')" name="to_area"
-																   value="{{ old('to_area',request()->to_city) }}"
+															<input placeholder="@lang('To State')" name="to_state"
+																   value="{{ old('to_state',request()->to_state) }}"
 																   type="text"
 																   class="form-control form-control-sm">
 														</div>
@@ -71,34 +68,31 @@
 									<div class="card mb-4 card-primary shadow">
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-											<h6 class="m-0 font-weight-bold text-primary">@lang('Area Rate')</h6>
+											<h6 class="m-0 font-weight-bold text-primary">@lang($title)</h6>
 
-
-											<a href="{{ route('operatorCountryRate', 'area') }}" class="btn btn-sm  btn-primary mr-2">
+											<a href="{{ route('internationallyRate', 'state') }}"
+											   class="btn btn-sm  btn-primary mr-2">
 												<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 											</a>
 										</div>
 
 										<div class="card-body pt-0">
-											<form action="" class="d-flex py-2 align-items-center">
-												<input type="checkbox" id="showHideStateCity" class="mr-2">
-												<label for="showHideStateCity" class="cursor-pointer mb-0 ml">@lang('Show City')</label>
-											</form>
 											@include('errors.error')
+											<form action="" class="d-flex py-2 align-items-center">
+												<input type="checkbox" id="showHideCountry" class="mr-2">
+												<label for="showHideCountry"
+													   class="cursor-pointer mb-0 ml">@lang('Show Country')</label>
+											</form>
 											<div class="table-responsive">
-
 												<table
 													class="table table-striped table-hover align-items-center table-flush"
 													id="data-table">
 													<thead class="thead-light">
 													<tr>
-														<th scope="col" class="addRemoveStateCity d-none">@lang('From State')</th>
-														<th scope="col" class="addRemoveStateCity d-none">@lang('To State')</th>
-														<th scope="col" class="addRemoveStateCity d-none">@lang('From City')</th>
-														<th scope="col" class="addRemoveStateCity d-none">@lang('To City')</th>
-
-														<th scope="col">@lang('From Area')</th>
-														<th scope="col">@lang('To Area')</th>
+														<th scope="col" class="addRemoveCountry d-none">@lang('From Country')</th>
+														<th scope="col" class="addRemoveCountry d-none">@lang('To Country')</th>
+														<th scope="col">@lang('From State')</th>
+														<th scope="col">@lang('To State')</th>
 														<th scope="col">@lang('Shipping Cost')</th>
 														<th scope="col">@lang('Return Shipment Cost')</th>
 														<th scope="col">@lang('Tax')</th>
@@ -108,54 +102,48 @@
 													</thead>
 
 													<tbody>
-													@forelse($showShippingRateList as $key => $shippingArea)
+													@forelse($showShippingRateList as $key => $shippingState)
 														<tr>
-															<td data-label="@lang('From State')" class="addRemoveStateCity d-none">
-																@lang(optional($shippingArea->fromState)->name)
+															<td data-label="@lang('From Country')"
+																class="addRemoveCountry d-none">
+																@lang(optional($shippingState->fromCountry)->name)
 															</td>
 
-															<td data-label="@lang('To State')" class="addRemoveStateCity d-none">
-																@lang(optional($shippingArea->toState)->name)
+															<td data-label="@lang('To Country')"
+																class="addRemoveCountry d-none">
+																@lang(optional($shippingState->toCountry)->name)
 															</td>
 
-															<td data-label="@lang('From City')" class="addRemoveStateCity d-none">
-																@lang(optional($shippingArea->fromCity)->name)
+															<td data-label="@lang('From State')">
+																@lang(optional($shippingState->fromState)->name)
 															</td>
 
-															<td data-label="@lang('To City')" class="addRemoveStateCity d-none">
-																@lang(optional($shippingArea->toCity)->name)
-															</td>
-
-															<td data-label="@lang('From Area')">
-																@lang(optional($shippingArea->fromArea)->name)
-															</td>
-
-															<td data-label="@lang('To Area')">
-																@lang(optional($shippingArea->toArea)->name)
+															<td data-label="@lang('To State')">
+																@lang(optional($shippingState->toState)->name)
 															</td>
 
 															<td data-label="@lang('Shipping Cost')">
-																{{ config('basic.currency_symbol') }}@lang($shippingArea->shipping_cost)
+																{{ config('basic.currency_symbol') }}@lang($shippingState->shipping_cost)
 															</td>
 
 															<td data-label="@lang('Return Shipment Cost')">
-																{{ config('basic.currency_symbol') }}@lang($shippingArea->return_shipment_cost)
+																{{ config('basic.currency_symbol') }}@lang($shippingState->return_shipment_cost)
 															</td>
 
 															<td data-label="@lang('Tax')">
-																@lang($shippingArea->tax)%
+																@lang($shippingState->tax)%
 															</td>
 
 															<td data-label="@lang('Insurance')">
-																{{ config('basic.currency_symbol') }}@lang($shippingArea->insurance)
+																{{ config('basic.currency_symbol') }}@lang($shippingState->insurance)
 															</td>
 
 															<td data-label="@lang('Action')">
-																<button data-target="#editAreaRateModal"
+																<button data-target="#editStateRateModal"
 																		data-toggle="modal"
-																		data-route="{{route('areaRateUpdate', $shippingArea->id)}}"
-																		data-property="{{ $shippingArea }}"
-																		class="btn btn-sm btn-outline-primary editAreaRate">
+																		data-route="{{route('stateRateUpdateInternationally', $shippingState->id)}}"
+																		data-property="{{ $shippingState }}"
+																		class="btn btn-sm btn-outline-primary editStateRate">
 																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
 															</td>
 														</tr>
@@ -168,7 +156,8 @@
 													</tbody>
 												</table>
 											</div>
-											<div class="card-footer d-flex justify-content-center">{{ $showShippingRateList->links() }}</div>
+											<div
+												class="card-footer d-flex justify-content-center">{{ $showShippingRateList->links() }}</div>
 										</div>
 									</div>
 								</div>
@@ -180,30 +169,54 @@
 		</section>
 	</div>
 
-	{{-- Edit Area Modal --}}
-	<div id="editAreaRateModal" class="modal fade" tabindex="-1" role="dialog"
+	{{-- Edit City Modal --}}
+	<div id="editStateRateModal" class="modal fade" tabindex="-1" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Edit Area Rate')</h4>
+						id="primary-header-modalLabel">@lang('Edit State Rate')</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 				</div>
-				<form action="" method="post" id="editAreaRateForm">
+				<form action="" method="post" id="editStateRateForm">
 					@csrf
 					@method('put')
 					<div class="modal-body">
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('From State') <span class="text-danger">*</span></label>
-							<select name="from_state_id"
-									class="form-control @error('from_state_id') is-invalid @enderror fromState selectedFromState">
-								<option value="" selected disabled>@lang('Select State')</option>
-								@foreach(optional(basicControl()->operatorCountry)->state() as $state)
-									<option value="{{ $state->id }}">@lang($state->name)</option>
+							<label for="">@lang('From Country')</label>
+							<select name="from_country_id"
+									class="form-control @error('from_country_id') is-invalid @enderror fromCountry selectedFromCountry">
+								<option value="" selected disabled>@lang('Select Country')</option>
+								@foreach($allCountries as $country)
+									<option value="{{ $country->id }}">@lang($country->name)</option>
 								@endforeach
+							</select>
+							<div class="invalid-feedback">
+								@error('from_country_id') @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-12 mt-3">
+							<label for="">@lang('To Country')</label>
+							<select name="to_country_id"
+									class="form-control @error('to_country_id') is-invalid @enderror toCountry selectedToCountry">
+								<option value="" selected disabled>@lang('Select Country')</option>
+								@foreach($allCountries as $country)
+									<option value="{{ $country->id }}">@lang($country->name)</option>
+								@endforeach
+							</select>
+							<div class="invalid-feedback">
+								@error('to_country_id') @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-12 mt-3">
+							<label for="from_state_id">@lang('From State') <span
+									class="text-danger">*</span></label>
+							<select name="from_state_id" class="form-control @error('from_state_id') is-invalid @enderror fromState selectedFromState">
 							</select>
 							<div class="invalid-feedback">
 								@error('from_state_id') @lang($message) @enderror
@@ -211,62 +224,14 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('To State') <span class="text-danger">*</span></label>
-							<select name="to_state_id"
-									class="form-control @error('to_state_id') is-invalid @enderror toState selectedToState">
-								<option value="" selected disabled>@lang('Select State')</option>
-								@foreach(optional(basicControl()->operatorCountry)->state() as $state)
-									<option value="{{ $state->id }}">@lang($state->name)</option>
-								@endforeach
+							<label for="to_state_id">@lang('To State') <span
+									class="text-danger">*</span></label>
+							<select name="to_state_id" class="form-control @error('to_state_id') is-invalid @enderror toState selectedToState">
 							</select>
 							<div class="invalid-feedback">
 								@error('to_state_id') @lang($message) @enderror
 							</div>
 						</div>
-
-						<div class="col-12 mt-3">
-							<label for="from_city_id">@lang('From City') <span
-									class="text-danger">*</span></label>
-							<select name="from_city_id" class="form-control @error('from_city_id') is-invalid @enderror selectedFromCity">
-							</select>
-							<div class="invalid-feedback">
-								@error('from_city_id') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-12 mt-3">
-							<label for="to_city_id">@lang('To City') <span
-									class="text-danger">*</span></label>
-							<select name="to_city_id"
-									class="form-control @error('to_city_id') is-invalid @enderror selectedToCity">
-							</select>
-							<div class="invalid-feedback">
-								@error('to_city_id') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-12 mt-3">
-							<label for="from_area_id">@lang('From Area') <span
-									class="text-danger">*</span></label>
-							<select name="from_area_id"
-									class="form-control @error('from_area_id') is-invalid @enderror fromArea selectedFromArea">
-							</select>
-							<div class="invalid-feedback">
-								@error('from_area_id') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-12 mt-3">
-							<label for="to_area_id">@lang('To Area') <span
-									class="text-danger">*</span></label>
-							<select name="to_area_id"
-									class="form-control @error('to_area_id') is-invalid @enderror toArea selectedToArea">
-							</select>
-							<div class="invalid-feedback">
-								@error('to_area_id') @lang($message) @enderror
-							</div>
-						</div>
-
 
 						<div class="col-12 mt-4 mb-1">
 							<h6>@lang('Costs For The First ') <span
@@ -399,29 +364,28 @@
 @section('scripts')
 	@include('partials.getParcelUnit')
 	@include('partials.locationJs')
-
 	<script>
 		'use strict'
 		$(document).ready(function () {
 
-			$(document).on('click', '#showHideStateCity', function (){
-				if($(this).prop("checked") == true){
-					$('.addRemoveStateCity').removeClass('d-none');
-				}
-				else if($(this).prop("checked") == false){
-					$('.addRemoveStateCity').addClass('d-none');
+			$(document).on('click', '#showHideCountry', function () {
+				if ($(this).prop("checked") == true) {
+					$('.addRemoveCountry').removeClass('d-none');
+				} else if ($(this).prop("checked") == false) {
+					$('.addRemoveCountry').addClass('d-none');
 				}
 			})
 
-			$(document).on('click', '.editAreaRate', function () {
+
+			$(document).on('click', '.editStateRate', function () {
 
 				let dataRoute = $(this).data('route');
-				$('#editAreaRateForm').attr('action', dataRoute)
+				$('#editStateRateForm').attr('action', dataRoute)
 
 				let dataProperty = $(this).data('property');
 
-				$('.fromState').val(dataProperty.from_state_id);
-				$('.toState').val(dataProperty.to_state_id);
+				$('.fromCountry').val(dataProperty.from_country_id);
+				$('.toCountry').val(dataProperty.to_country_id);
 
 				$('.parcelType').val(dataProperty.parcel_type_id);
 
@@ -430,14 +394,13 @@
 				$('.tax').val(dataProperty.tax);
 				$('.insurance').val(dataProperty.insurance);
 
+				let selectedFromCountry = $('.selectedFromCountry').val();
+				let selectedToCountry = $('.selectedToCountry').val();
 
-				let selectedFromState = $('.selectedFromState').val();
-				let selectedToState = $('.selectedToState').val();
-				window.getSelectedFromStateCity(selectedFromState, dataProperty.from_city_id, dataProperty);
-				window.getSelectedToStateCity(selectedToState, dataProperty.to_city_id, dataProperty);
+				window.getSelectedFromCountryState(selectedFromCountry, dataProperty.from_state_id);
+				window.getSelectedToCountryState(selectedToCountry, dataProperty.to_state_id);
 
 			});
-
 		})
 	</script>
 

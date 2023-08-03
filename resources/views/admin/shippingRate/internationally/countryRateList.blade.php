@@ -28,17 +28,17 @@
 
 						<div class="card-body">
 							<div class="switcher">
-								<a href="{{ route('operatorCountryRate', 'state') }}">
+								<a href="{{ route('internationallyRate', 'country') }}">
 									<button
-										class="@if(lastUriSegment() == 'state') active @endif">@lang('Country List')</button>
+										class="@if(lastUriSegment() == 'country') active @endif">@lang('Country List')</button>
 								</a>
-								<a href="{{ route('operatorCountryRate', 'city') }}">
+								<a href="{{ route('internationallyRate', 'state') }}">
 									<button
-										class="@if(lastUriSegment() == 'city') active @endif">@lang('State List')</button>
+										class="@if(lastUriSegment() == 'state') active @endif">@lang('State List')</button>
 								</a>
-								<a href="{{ route('operatorCountryRate', 'area') }}">
+								<a href="{{ route('internationallyRate', 'city') }}">
 									<button
-										class="@if(lastUriSegment() == 'area') active @endif"> @lang('City List')</button>
+										class="@if(lastUriSegment() == 'city') active @endif"> @lang('City List')</button>
 								</a>
 							</div>
 
@@ -60,42 +60,42 @@
 													<thead class="thead-light">
 													<tr>
 														<th scope="col">@lang('Parcel Type')</th>
-														<th scope="col">@lang('Shipping State')</th>
+														<th scope="col">@lang('Shipping Country')</th>
 														<th scope="col">@lang('Action')</th>
 													</tr>
 													</thead>
 
 													<tbody>
-{{--													@forelse($shippingRateList as $key => $stateList)--}}
+													@forelse($shippingRateList as $key => $countryList)
 
-{{--														<tr>--}}
-{{--															<td data-label="Parcel Type"> @lang(optional($stateList->parcelType)->parcel_type) </td>--}}
-{{--															<td data-label="@lang('Shipping State')">--}}
-{{--																<a href="{{ route('operatorCountryShowRate', ['state-list', $stateList->parcel_type_id]) }}"--}}
-{{--																   class="text-decoration-underline">--}}
-{{--																	({{ $stateList->getTotalState($stateList->parcel_type_id) }})--}}
-{{--																</a>--}}
-{{--															</td>--}}
+														<tr>
+															<td data-label="Parcel Type"> @lang(optional($countryList->parcelType)->parcel_type) </td>
+															<td data-label="@lang('Shipping Country')">
+																<a href="{{ route('internationallyShowRate', ['country-list', $countryList->parcel_type_id]) }}"
+																   class="text-decoration-underline">
+																	({{ $countryList->getTotalCountry($countryList->parcel_type_id) }})
+																</a>
+															</td>
 
-{{--															<td data-label="@lang('Action')">--}}
-{{--																<a href="{{ route('operatorCountryShowRate', ['state-list', $stateList->parcel_type_id]) }}"--}}
-{{--																   class="btn btn-outline-primary btn-sm"--}}
-{{--																   title="@lang('Show')"><i class="fa fa-eye"--}}
-{{--																							aria-hidden="true"></i> @lang('Show')--}}
-{{--																</a>--}}
-{{--															</td>--}}
-{{--														</tr>--}}
-{{--													@empty--}}
-{{--														<tr>--}}
-{{--															<th colspan="100%"--}}
-{{--																class="text-center">@lang('No data found')</th>--}}
-{{--														</tr>--}}
-{{--													@endforelse--}}
+															<td data-label="@lang('Action')">
+																<a href="{{ route('internationallyShowRate', ['country-list', $countryList->parcel_type_id]) }}"
+																   class="btn btn-outline-primary btn-sm"
+																   title="@lang('Show')"><i class="fa fa-eye"
+																							aria-hidden="true"></i> @lang('Show')
+																</a>
+															</td>
+														</tr>
+													@empty
+														<tr>
+															<th colspan="100%"
+																class="text-center">@lang('No data found')</th>
+														</tr>
+													@endforelse
 
 													</tbody>
 												</table>
 											</div>
-{{--											<div class="card-footer d-flex justify-content-center">{{ $shippingRateList->links() }}</div>--}}
+											<div class="card-footer d-flex justify-content-center">{{ $shippingRateList->links() }}</div>
 										</div>
 									</div>
 								</div>

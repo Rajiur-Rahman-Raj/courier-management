@@ -57,24 +57,13 @@
 										  action="" class="mt-4">
 										@csrf
 										<div class="row">
-											<div class="col-sm-12 col-md-4 mb-3">
-												<label for="operator_country_id">@lang('Operator Country') <span
-														class="text-danger">*</span></label>
-												<select name="operator_country_id"
-														class="form-control @error('operator_country_id') is-invalid @enderror">
-													<option
-														value="{{ optional($basicControl->operatorCountry)->id }}">@lang(optional($basicControl->operatorCountry)->name)</option>
-												</select>
-												<div class="invalid-feedback">
-													@error('operator_country_id') @lang($message) @enderror
-												</div>
-											</div>
+											<input type="hidden" name="operator_country_id" value="{{ optional($basicControl->operatorCountry)->id }}">
 
-											<div class="col-sm-12 col-md-4 mb-3">
+											<div class="col-sm-12 col-md-6 mb-3">
 												<label for="state_id">@lang('From State') <span
 														class="text-danger">*</span></label>
 												<select name="from_state_id"
-														class="form-control @error('from_state_id') is-invalid @enderror select2">
+														class="form-control @error('from_state_id') is-invalid @enderror select2 select2State">
 													<option value="" selected disabled>@lang('Select State')</option>
 													@foreach(optional($basicControl->operatorCountry)->state() as $state)
 														<option value="{{ $state->id }}">@lang($state->name)</option>
@@ -85,11 +74,11 @@
 												</div>
 											</div>
 
-											<div class="col-sm-12 col-md-4 mb-3">
+											<div class="col-sm-12 col-md-6 mb-3">
 												<label for="to_state_id">@lang('To State') <span
 														class="text-danger">*</span></label>
 												<select name="to_state_id"
-														class="form-control @error('to_state_id') is-invalid @enderror select2">
+														class="form-control @error('to_state_id') is-invalid @enderror select2 select2State">
 													<option value="" selected disabled>@lang('Select State')</option>
 													@foreach(optional($basicControl->operatorCountry)->state() as $state)
 														<option value="{{ $state->id }}">@lang($state->name)</option>
@@ -114,7 +103,7 @@
 														class="text-danger">*</span></label>
 												<div class="input-group">
 													<select name="parcel_type_id"
-															class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType">
+															class="form-control @error('parcel_type_id') is-invalid @enderror select2 select2ParcelType selectedParcelType">
 														<option value="" selected
 																disabled>@lang('Select Parcel Type')</option>
 														@foreach($allParcelTypes as $parcel_type)
@@ -122,11 +111,7 @@
 																value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
 														@endforeach
 													</select>
-													<div class="input-group-append">
-														<div class="form-control cost-per-unit">
-															X
-														</div>
-													</div>
+
 													<div class="invalid-feedback">
 														@error('parcel_type_id') @lang($message) @enderror
 													</div>
@@ -232,24 +217,14 @@
 										  action="" class="mt-4">
 										@csrf
 										<div class="row">
-											<div class="col-sm-12 col-md-4 mb-3">
-												<label for="operator_country_id">@lang('Operator Country') <span
-														class="text-danger">*</span></label>
-												<select name="operator_country_id"
-														class="form-control @error('operator_country_id') is-invalid @enderror">
-													<option
-														value="{{ optional($basicControl->operatorCountry)->id }}">@lang(optional($basicControl->operatorCountry)->name)</option>
-												</select>
-												<div class="invalid-feedback">
-													@error('operator_country_id') @lang($message) @enderror
-												</div>
-											</div>
 
-											<div class="col-sm-12 col-md-4 mb-3">
+											<input type="hidden" name="operator_country_id" value="{{ optional($basicControl->operatorCountry)->id }}">
+
+											<div class="col-sm-12 col-md-6 mb-3">
 												<label for="state_id">@lang('From State') <span
 														class="text-danger">*</span></label>
 												<select name="from_state_id"
-														class="form-control @error('from_state_id') is-invalid @enderror select2 selectedFromState">
+														class="form-control @error('from_state_id') is-invalid @enderror select2 select2State selectedFromState">
 													<option value="" selected disabled>@lang('Select State')</option>
 													@foreach(optional($basicControl->operatorCountry)->state() as $state)
 														<option value="{{ $state->id }}">@lang($state->name)</option>
@@ -260,11 +235,23 @@
 												</div>
 											</div>
 
-											<div class="col-sm-12 col-md-4 mb-3">
+											<div class="col-sm-12 col-md-6 mb-3">
+												<label for="from_city_id">@lang('Select City') <span
+														class="text-danger">*</span></label>
+												<select name="from_city_id"
+														class="form-control @error('from_city_id') is-invalid @enderror select2 select2City selectedFromCity">
+
+												</select>
+												<div class="invalid-feedback">
+													@error('from_city_id') @lang($message) @enderror
+												</div>
+											</div>
+
+											<div class="col-sm-12 col-md-6 mb-3">
 												<label for="to_state_id">@lang('To State') <span
 														class="text-danger">*</span></label>
 												<select name="to_state_id"
-														class="form-control @error('to_state_id') is-invalid @enderror select2 selectedToState">
+														class="form-control @error('to_state_id') is-invalid @enderror select2 select2State selectedToState">
 													<option value="" selected disabled>@lang('Select State')</option>
 													@foreach(optional($basicControl->operatorCountry)->state() as $state)
 														<option value="{{ $state->id }}">@lang($state->name)</option>
@@ -276,22 +263,10 @@
 											</div>
 
 											<div class="col-sm-12 col-md-6 mb-3">
-												<label for="from_city_id">@lang('From City') <span
-														class="text-danger">*</span></label>
-												<select name="from_city_id"
-														class="form-control @error('from_city_id') is-invalid @enderror select2 selectedFromCity">
-
-												</select>
-												<div class="invalid-feedback">
-													@error('from_city_id') @lang($message) @enderror
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-6 mb-3">
-												<label for="to_city_id">@lang('To City') <span
+												<label for="to_city_id">@lang('Select City') <span
 														class="text-danger">*</span></label>
 												<select name="to_city_id"
-														class="form-control @error('to_city_id') is-invalid @enderror select2 selectedToCity">
+														class="form-control @error('to_city_id') is-invalid @enderror select2 select2City selectedToCity">
 												</select>
 												<div class="invalid-feedback">
 													@error('to_city_id') @lang($message) @enderror
@@ -302,7 +277,7 @@
 										<div class="row">
 											<div class="col-12 mt-4 mb-1">
 												<h6>@lang('Costs For The First ') <span
-														class="cost-per-unit">@lang('...')</span></h6>
+														class="cost-per-unit">(@lang('UNIT'))</span></h6>
 												<hr>
 											</div>
 
@@ -312,7 +287,7 @@
 														class="text-danger">*</span></label>
 												<div class="input-group">
 													<select name="parcel_type_id"
-															class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType">
+															class="form-control @error('parcel_type_id') is-invalid @enderror select2 select2ParcelType selectedParcelType">
 														<option value="" selected
 																disabled>@lang('Select Parcel Type')</option>
 														@foreach($allParcelTypes as $parcel_type)
@@ -320,11 +295,7 @@
 																value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
 														@endforeach
 													</select>
-													<div class="input-group-append">
-														<div class="form-control cost-per-unit">
-															X
-														</div>
-													</div>
+
 													<div class="invalid-feedback">
 														@error('parcel_type_id') @lang($message) @enderror
 													</div>
@@ -429,24 +400,13 @@
 										  action="" class="mt-4">
 										@csrf
 										<div class="row">
-											<div class="col-sm-12 col-md-4 mb-3">
-												<label for="operator_country_id">@lang('Operator Country') <span
-														class="text-danger">*</span></label>
-												<select name="operator_country_id"
-														class="form-control @error('operator_country_id') is-invalid @enderror">
-													<option
-														value="{{ optional($basicControl->operatorCountry)->id }}">@lang(optional($basicControl->operatorCountry)->name)</option>
-												</select>
-												<div class="invalid-feedback">
-													@error('operator_country_id') @lang($message) @enderror
-												</div>
-											</div>
+											<input type="hidden" name="operator_country_id" value="{{ optional($basicControl->operatorCountry)->id }}">
 
 											<div class="col-sm-12 col-md-4 mb-3">
 												<label for="from_state_id">@lang('From State') <span
 														class="text-danger">*</span></label>
 												<select name="from_state_id"
-														class="form-control @error('from_state_id') is-invalid @enderror select2 selectedFromState">
+														class="form-control @error('from_state_id') is-invalid @enderror select2 select2State selectedFromState">
 													<option value="" selected disabled>@lang('Select State')</option>
 													@foreach(optional($basicControl->operatorCountry)->state() as $state)
 														<option value="{{ $state->id }}">@lang($state->name)</option>
@@ -458,10 +418,33 @@
 											</div>
 
 											<div class="col-sm-12 col-md-4 mb-3">
+												<label for="from_city_id">@lang('Select City') <span
+														class="text-danger">*</span></label>
+												<select name="from_city_id"
+														class="form-control @error('from_city_id') is-invalid @enderror select2 select2City selectedFromCity">
+												</select>
+												<div class="invalid-feedback">
+													@error('from_city_id') @lang($message) @enderror
+												</div>
+											</div>
+
+											<div class="col-sm-12 col-md-4 mb-3">
+												<label for="from_area_id">@lang('Select Area') <span
+														class="text-danger">*</span></label>
+												<select name="from_area_id"
+														class="form-control @error('from_area_id') is-invalid @enderror select2 select2Area selectedFromArea">
+
+												</select>
+												<div class="invalid-feedback">
+													@error('from_area_id') @lang($message) @enderror
+												</div>
+											</div>
+
+											<div class="col-sm-12 col-md-4 mb-3">
 												<label for="to_state_id">@lang('To State') <span
 														class="text-danger">*</span></label>
 												<select name="to_state_id"
-														class="form-control @error('to_state_id') is-invalid @enderror select2 selectedToState">
+														class="form-control @error('to_state_id') is-invalid @enderror select2 select2State selectedToState">
 													<option value="" selected disabled>@lang('Select State')</option>
 													@foreach(optional($basicControl->operatorCountry)->state() as $state)
 														<option value="{{ $state->id }}">@lang($state->name)</option>
@@ -472,45 +455,23 @@
 												</div>
 											</div>
 
-											<div class="col-sm-12 col-md-6 mb-3">
-												<label for="from_city_id">@lang('From City') <span
-														class="text-danger">*</span></label>
-												<select name="from_city_id"
-														class="form-control @error('from_city_id') is-invalid @enderror select2 selectedFromCity">
-												</select>
-												<div class="invalid-feedback">
-													@error('from_city_id') @lang($message) @enderror
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-6 mb-3">
-												<label for="to_city_id">@lang('To City') <span
+											<div class="col-sm-12 col-md-4 mb-3">
+												<label for="to_city_id">@lang('Select City') <span
 														class="text-danger">*</span></label>
 												<select name="to_city_id"
-														class="form-control @error('to_city_id') is-invalid @enderror select2 selectedToCity">
+														class="form-control @error('to_city_id') is-invalid @enderror select2 select2City selectedToCity">
 												</select>
 												<div class="invalid-feedback">
 													@error('to_city_id') @lang($message) @enderror
 												</div>
 											</div>
 
-											<div class="col-sm-12 col-md-6 mb-3">
-												<label for="from_area_id">@lang('From Area') <span
-														class="text-danger">*</span></label>
-												<select name="from_area_id"
-														class="form-control @error('from_area_id') is-invalid @enderror select2 selectedFromArea">
 
-												</select>
-												<div class="invalid-feedback">
-													@error('from_area_id') @lang($message) @enderror
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-6 mb-3">
+											<div class="col-sm-12 col-md-4 mb-3">
 												<label for="to_area_id">@lang('To Area') <span
 														class="text-danger">*</span></label>
 												<select name="to_area_id"
-														class="form-control @error('to_area_id') is-invalid @enderror select2 selectedToArea">
+														class="form-control @error('to_area_id') is-invalid @enderror select2 select2Area selectedToArea">
 												</select>
 												<div class="invalid-feedback">
 													@error('to_area_id') @lang($message) @enderror
@@ -522,7 +483,7 @@
 										<div class="row">
 											<div class="col-12 mt-4 mb-1">
 												<h6>@lang('Costs For The First ') <span
-														class="cost-per-unit">@lang('...')</span></h6>
+														class="cost-per-unit">(@lang('UNIT'))</span></h6>
 												<hr>
 											</div>
 
@@ -532,7 +493,7 @@
 														class="text-danger">*</span></label>
 												<div class="input-group">
 													<select name="parcel_type_id"
-															class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType">
+															class="form-control @error('parcel_type_id') is-invalid @enderror select2 select2ParcelType selectedParcelType">
 														<option value="" selected
 																disabled>@lang('Select Parcel Type')</option>
 														@foreach($allParcelTypes as $parcel_type)
@@ -540,11 +501,7 @@
 																value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
 														@endforeach
 													</select>
-													<div class="input-group-append">
-														<div class="form-control cost-per-unit">
-															X
-														</div>
-													</div>
+
 													<div class="invalid-feedback">
 														@error('parcel_type_id') @lang($message) @enderror
 													</div>
@@ -657,4 +614,5 @@
 	@section('scripts')
 		@include('partials.getParcelUnit')
 		@include('partials.locationJs')
+
 	@endsection

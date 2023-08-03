@@ -63,11 +63,8 @@
 											<div class="col-sm-12 col-md-3 mb-3">
 												<label for="operator_country_id">@lang('Operator Country') <span
 														class="text-danger">*</span></label>
-												<select name="operator_country_id"
-														class="form-control @error('operator_country_id') is-invalid @enderror">
-													<option
-														value="{{ optional($basicControl->operatorCountry)->id }}">@lang(optional($basicControl->operatorCountry)->name)</option>
-												</select>
+												<input type="hidden" name="operator_country_id" value="{{ optional($basicControl->operatorCountry)->id }}" class="form-control @error('operator_country_id') is-invalid @enderror">
+												<input type="text" class="form-control" value="{{ optional($basicControl->operatorCountry)->name }}" readonly>
 												<div class="invalid-feedback">
 													@error('operator_country_id') @lang($message) @enderror
 												</div>
@@ -76,8 +73,9 @@
 											<div class="col-sm-12 col-md-3 mb-3">
 												<label for="shipping_date_id"> @lang('Shipping Date') <span
 														class="text-danger">*</span></label>
+
 												<select name="shipping_date_id"
-														class="form-control @error('shipping_date_id') is-invalid @enderror form-select select-shipping-date" required>
+														class="form-control @error('shipping_date_id') is-invalid @enderror select2 form-select select-shipping-date" required>
 													<option value="" disabled selected>@lang('Select date')</option>
 													@foreach($allShippingDates as $shippingDate)
 														<option
@@ -232,7 +230,7 @@
 										<div class="row">
 											<div class="col-12 mt-4 mb-1">
 												<h6>@lang('Default Costs For The First ') <span
-														class="cost-per-unit">@lang('...')</span></h6>
+														class="cost-per-unit">(@lang('UNIT'))</span></h6>
 												<hr>
 											</div>
 
@@ -240,7 +238,7 @@
 												<label for="parcel_type_id"> @lang('Select Parcel Type') <span
 														class="text-danger">*</span></label>
 												<select name="parcel_type_id"
-														class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType form-select">
+														class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType select2 select2ParcelType">
 													<option value="" disabled selected>@lang('Select type')</option>
 													@foreach($allParcelTypes as $parcelType)
 														<option value="{{ $parcelType->id }}" {{ $parcelType->id == $defaultShippingRateOperatorCountry->parcel_type_id ? 'selected' : '' }}> @lang($parcelType->parcel_type) </option>
@@ -494,7 +492,7 @@
 										<div class="row">
 											<div class="col-12 mt-4 mb-1">
 												<h6>@lang('Default Costs For The First ') <span
-														class="cost-per-unit">@lang('...')</span></h6>
+														class="cost-per-unit">(@lang('UNIT'))</span></h6>
 												<hr>
 											</div>
 
@@ -502,7 +500,7 @@
 												<label for="parcel_type_id"> @lang('Select Parcel Type') <span
 														class="text-danger">*</span></label>
 												<select name="parcel_type_id"
-														class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType form-select">
+														class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType select2ParcelType">
 													<option value="" disabled selected>@lang('Select type')</option>
 													@foreach($allParcelTypes as $parcelType)
 														<option
@@ -686,6 +684,14 @@
 						$('#operatorCountry').removeClass('active show');
 						$('#internationalCountry').addClass('active show');
 					}
+
+					$('.select-shipping-date').select2({
+						width : '100%',
+					}).on('select2:open', () => {
+						$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" data-toggle="modal" data-target="#add-package-modal"
+                    class="btn btn-outline-primary" >+ Create Date </a>
+                    </li>`);
+					});
 
 				});
 

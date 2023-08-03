@@ -35,40 +35,6 @@
 		}
 
 
-		$('.selectedCountry').on('change', function () {
-			let selectedValue = $(this).val();
-			getSelectedCountryState(selectedValue);
-		})
-
-		function getSelectedCountryState(value) {
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
-
-			$.ajax({
-				url: "{{ route('getSeletedCountryState') }}",
-				method: 'POST',
-				data: {
-					id: value,
-				},
-				success: function (response) {
-					$('.selectedState').empty();
-					let responseData = response;
-					responseData.forEach(res => {
-						$('.selectedState').append(`<option value="${res.id}">${res.name}</option>`)
-					})
-
-					$('.selectedState').prepend(`<option value="" selected disabled>@lang('Select State')</option>`)
-				},
-				error: function (xhr, status, error) {
-					console.log(error)
-				}
-			});
-		}
-
-
 		$('.selectedState').on('change', function () {
 			let selectedValue = $(this).val();
 			getSelectedStateCity(selectedValue);
@@ -138,11 +104,10 @@
 
 
 
-
 		// From country state city area
 		$('.selectedFromCountry').on('change', function () {
 			let selectedValue = $(this).val();
-			getSelectedFromCountryState(selectedValue);
+			window.getSelectedFromCountryState(selectedValue);
 		})
 
 		window.getSelectedFromCountryState = function getSelectedFromCountryState(value, from_state_id = null, dataProperty = null) {
@@ -159,13 +124,17 @@
 					id: value,
 				},
 				success: function (response) {
-					$('.selectedState').empty();
+					$('.selectedFromState').empty();
 					let responseData = response;
 					responseData.forEach(res => {
-						$('.selectedState').append(`<option value="${res.id}" ${res.id == from_state_id ? 'selected' : ''}>${res.name}</option>`)
+						$('.selectedFromState').append(`<option value="${res.id}" ${res.id == from_state_id ? 'selected' : ''}>${res.name}</option>`)
 					})
 
-					// window.getSelectedFromCityArea($('.selectedFromState').val(), dataProperty.from_city_id);
+					if(dataProperty){
+						window.getSelectedFromStateCity($('.selectedFromState').val(), dataProperty.from_city_id);
+						window.getSelectedFromCityArea($('.selectedFromState').val(), dataProperty.from_city_id);
+					}
+
 
 					if (!from_state_id) {
 						$('.selectedFromState').prepend(`<option value="" selected disabled>@lang('Select State')</option>`)
@@ -177,6 +146,46 @@
 			});
 		}
 
+
+		$('.selectedToCountry').on('change', function () {
+			let selectedValue = $(this).val();
+			window.getSelectedToCountryState(selectedValue);
+		})
+
+		window.getSelectedToCountryState = function getSelectedToCountryState(value, to_state_id = null, dataProperty = null) {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			$.ajax({
+				url: "{{ route('getSeletedCountryState') }}",
+				method: 'POST',
+				data: {
+					id: value,
+				},
+				success: function (response) {
+					$('.selectedToState').empty();
+					let responseData = response;
+					responseData.forEach(res => {
+						$('.selectedToState').append(`<option value="${res.id}" ${res.id == to_state_id ? 'selected' : ''}>${res.name}</option>`)
+					})
+
+					if (dataProperty){
+						window.getSelectedToCityArea($('.selectedToState').val(), dataProperty.to_city_id);
+						window.getSelectedToStateCity($('.selectedToState').val(), dataProperty.to_city_id);
+					}
+
+					if (!to_state_id) {
+						$('.selectedToState').prepend(`<option value="" selected disabled>@lang('Select State')</option>`)
+					}
+				},
+				error: function (xhr, status, error) {
+					console.log(error)
+				}
+			});
+		}
 
 
 		$('.selectedFromState').on('change', function () {
@@ -204,7 +213,9 @@
 						$('.selectedFromCity').append(`<option value="${res.id}" ${res.id == from_city_id ? 'selected' : ''}>${res.name}</option>`)
 					})
 
-					window.getSelectedFromCityArea($('.selectedFromCity').val(), dataProperty.from_area_id);
+					if(dataProperty){
+						window.getSelectedFromCityArea($('.selectedFromCity').val(), dataProperty.from_area_id);
+					}
 
 					if (!from_city_id) {
 						$('.selectedFromCity').prepend(`<option value="" selected disabled>@lang('Select City')</option>`)
@@ -241,8 +252,9 @@
 					responseData.forEach(res => {
 						$('.selectedToCity').append(`<option value="${res.id}" ${res.id == to_city_id ? 'selected' : ''}>${res.name}</option>`)
 					})
-
-					window.getSelectedToCityArea($('.selectedToCity').val(), dataProperty.to_area_id);
+					if (dataProperty){
+						window.getSelectedToCityArea($('.selectedToCity').val(), dataProperty.to_area_id);
+					}
 
 					if (!to_city_id) {
 						$('.selectedToCity').prepend(`<option value="" selected disabled>@lang('Select City')</option>`)
@@ -326,6 +338,47 @@
 				}
 			});
 		}
+
+
+
+		//	2nd part
+		// If your required choice state are not found
+		$('.select2Country').select2({
+			width: '100%',
+		}).on('select2:open', () => {
+			$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" href="{{ route('countryList') }}"
+                    class="btn btn-outline-primary" target="_blank">+ Create New Country </a>
+                    </li>`);
+		});
+
+		// If your required choice state are not found
+		$('.select2State').select2({
+			width: '100%',
+		}).on('select2:open', () => {
+			$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" href="{{ route('stateList', ['state-list']) }}"
+                    class="btn btn-outline-primary" target="_blank">+ Create New State </a>
+                    </li>`);
+		});
+
+		// If your required choice city are not found
+		$('.select2City').select2({
+			width: '100%',
+		}).on('select2:open', () => {
+			$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" href="{{ route('cityList', ['city-list']) }}"
+                    class="btn btn-outline-primary" target="_blank">+ Create New City </a>
+                    </li>`);
+		});
+
+		// If your required choice area are not found
+		$('.select2Area').select2({
+			width: '100%',
+		}).on('select2:open', () => {
+			$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" href="{{ route('areaList', ['area-list']) }}"
+                    class="btn btn-outline-primary" target="_blank">+ Create New Area </a>
+                    </li>`);
+		});
+
+
 
 	});
 </script>

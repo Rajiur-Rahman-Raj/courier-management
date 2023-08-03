@@ -4859,3 +4859,8 @@ a:hover {
 	width: 100%;
 	text-align: center;
 }
+.btn:not(.btn-social):not(.btn-social-icon):active, .btn:not(.btn-social):not(.btn-social-icon):focus, .btn:not(.btn-social):not(.btn-social-icon):hover {
+	border-color: transparent !important;
+	background-color: white;
+	color: white;
+}

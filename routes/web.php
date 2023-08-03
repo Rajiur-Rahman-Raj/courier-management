@@ -151,6 +151,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 		Route::get('internationally-shipping-rate/{type?}', [ShipmentController::class, 'internationallyRate'])->name('internationallyRate');
 		Route::get('create-shipping-rate-internationally', [ShipmentController::class, 'createShippingRateInternationally'])->name('createShippingRateInternationally');
+		Route::post('shipping-rate-internationally-store/{type?}', [ShipmentController::class, 'shippingRateInternationallyStore'])->name('shippingRateInternationally.store');
+
+		Route::get('internationally-show-shipping-rate/{type?}/{id}', [ShipmentController::class, 'internationallyShowRate'])->name('internationallyShowRate');
+		Route::put('country-rete-update-internationally/{id}', [ShipmentController::class, 'countryRateUpdateInternationally'])->name('countryRateUpdateInternationally');
+		Route::put('state-rete-update-internationally/{id}', [ShipmentController::class, 'stateRateUpdateInternationally'])->name('stateRateUpdateInternationally');
+		Route::put('city-rete-update-internationally/{id}', [ShipmentController::class, 'cityRateUpdateInternationally'])->name('cityRateUpdateInternationally');
 
 
 		Route::post('shipping-date-store', [ShipmentController::class, 'shippingDateStore'])->name('shippingDateStore');
@@ -202,16 +208,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::post('country-store', [LocationController::class, 'countryStore'])->name('countryStore');
 		Route::put('country-update/{id}', [LocationController::class, 'countryUpdate'])->name('countryUpdate');
 
-		Route::get('state-list/{type?}/{id?}', [LocationController::class, 'stateList'])->name('stateList');
+		Route::get('state/{type?}/{id?}', [LocationController::class, 'stateList'])->name('stateList');
 		Route::post('state-store', [LocationController::class, 'stateStore'])->name('stateStore');
 		Route::put('state-update/{id}', [LocationController::class, 'stateUpdate'])->name('stateUpdate');
 
 
-		Route::get('city-list/{type?}/{id?}', [LocationController::class, 'cityList'])->name('cityList');
+		Route::get('city/{type?}/{id?}', [LocationController::class, 'cityList'])->name('cityList');
 		Route::post('city-store', [LocationController::class, 'cityStore'])->name('cityStore');
 		Route::put('city-update/{id}', [LocationController::class, 'cityUpdate'])->name('cityUpdate');
 
-		Route::get('area-list/{type?}/{id?}', [LocationController::class, 'areaList'])->name('areaList');
+		Route::get('area/{type?}/{id?}', [LocationController::class, 'areaList'])->name('areaList');
 		Route::post('area-store', [LocationController::class, 'areaStore'])->name('areaStore');
 		Route::put('area-update/{id}', [LocationController::class, 'areaUpdate'])->name('areaUpdate');
 

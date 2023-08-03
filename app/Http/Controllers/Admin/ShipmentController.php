@@ -440,8 +440,6 @@ class ShipmentController extends Controller
 
 
 
-
-	// now work here
 	public function internationallyRate(Request $request, $type=null){
 		$internationallyShippingRateManagement = config('internationallyShippingRateManagement');
 		$types = array_keys($internationallyShippingRateManagement);
@@ -470,9 +468,265 @@ class ShipmentController extends Controller
 		return view('admin.shippingRate.internationally.create', $data);
 	}
 
+	public function shippingRateInternationallyStore(Request $request, $type=null){
+		$purifiedData = Purify::clean($request->except('_token', '_method'));
+
+		$rules = [
+			'from_country_id' => ['required', 'exists:countries,id'],
+			'to_country_id' => ['required', 'exists:countries,id'],
+			'parcel_type_id' => ['required', 'exists:parcel_types,id'],
+			'shipping_cost' => ['nullable', 'numeric', 'min:0'],
+			'return_shipment_cost' => ['nullable', 'numeric', 'min:0'],
+			'tax' => ['nullable', 'numeric', 'min:0'],
+			'insurance' => ['nullable', 'numeric', 'min:0'],
+		];
+
+		$message = [
+			'from_country_id.required' => 'Please select from country',
+			'to_country_id.required' => 'Please select to country',
+			'parcel_type_id.required' => 'Please select parcel type',
+		];
+
+		if ($type == 'state-wise'){
+			$rules['from_state_id'] = ['required', 'exists:states,id'];
+			$rules['to_state_id'] = ['required', 'exists:states,id'];
+			$message['from_state_id.required'] = 'please select from state';
+			$message['to_state_id.required'] = 'please select to state';
+		}elseif ($type == 'city-wise'){
+			$rules['from_city_id'] = ['required', 'exists:cities,id'];
+			$rules['to_city_id'] = ['required', 'exists:cities,id'];
+			$message['from_city_id.required'] = 'please select from city';
+			$message['to_city_id.required'] = 'please select to city';
+		}
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$internationallyRate = new ShippingRateInternationally();
+
+		$internationallyRate->from_country_id = $request->from_country_id;
+		$internationallyRate->to_country_id = $request->to_country_id;
+		$internationallyRate->parcel_type_id = $request->parcel_type_id;
+		$internationallyRate->shipping_cost = $request->shipping_cost == null ? 0 : $request->shipping_cost;
+		$internationallyRate->return_shipment_cost = $request->return_shipment_cost == null ? 0 : $request->return_shipment_cost;
+		$internationallyRate->tax = $request->tax == null ? 0 : $request->tax;
+		$internationallyRate->insurance = $request->insurance == null ? 0 : $request->insurance;
+
+		if ($type == 'state-wise'){
+			$internationallyRate->from_state_id = $request->from_state_id;
+			$internationallyRate->to_state_id = $request->to_state_id;
+		}elseif ($type == 'city-wise'){
+			$internationallyRate->from_state_id = $request->from_state_id;
+			$internationallyRate->to_state_id = $request->to_state_id;
+			$internationallyRate->from_city_id = $request->from_city_id;
+			$internationallyRate->to_city_id = $request->to_city_id;
+		}
+
+		$internationallyRate->save();
+
+		return back()->with('success', 'Shipping rate added successfully');
+	}
+
+	public function internationallyShowRate(Request $request, $type=null, $id=null){
+		$search = $request->all();
+		$internationallyShowShippingRateManagement = config('internationallyShowShippingRateManagement');
+		$types = array_keys($internationallyShowShippingRateManagement);
+		abort_if(!in_array($type, $types), 404);
+		$data['title'] = $internationallyShowShippingRateManagement[$type]['title'];
+
+		$data['allCountries'] = Country::where('status', 1)->get();
+		$data['allParcelTypes'] = ParcelType::where('status', 1)->get();
+
+		$data['showShippingRateList'] = ShippingRateInternationally::with('fromCountry', 'toCountry', 'fromState', 'toState', 'fromCity', 'toCity', 'parcelType')
+			->when(isset($search['from_country']), function ($query) use ($search) {
+				$query->whereHas('fromCountry', function ($q) use ($search) {
+					return $q->whereRaw("name REGEXP '[[:<:]]{$search['from_country']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['to_country']), function ($query) use ($search) {
+				$query->whereHas('toCountry', function ($q) use ($search) {
+					return $q->whereRaw("name REGEXP '[[:<:]]{$search['to_country']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['from_state']), function ($query) use ($search) {
+				$query->whereHas('fromState', function ($q) use ($search) {
+					return $q->whereRaw("name REGEXP '[[:<:]]{$search['from_state']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['to_state']), function ($query) use ($search) {
+				$query->whereHas('toState', function ($q) use ($search) {
+					return $q->whereRaw("name REGEXP '[[:<:]]{$search['to_state']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['from_city']), function ($query) use ($search) {
+				$query->whereHas('fromCity', function ($q) use ($search) {
+					return $q->whereRaw("name REGEXP '[[:<:]]{$search['from_city']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['to_city']), function ($query) use ($search) {
+				$query->whereHas('toCity', function ($q) use ($search) {
+					return $q->whereRaw("name REGEXP '[[:<:]]{$search['to_city']}[[:>:]]'");
+				});
+			})
+			->when($type == 'country-list', function ($query){
+				$query->whereNull(['from_state_id', 'from_city_id']);
+			})
+			->when($type == 'state-list', function ($query){
+				$query->whereNotNull('from_state_id')->whereNull('from_city_id');
+			})
+			->when($type == 'city-list', function ($query){
+				$query->whereNotNull('from_city_id');
+			})
+			->where('parcel_type_id', $id)
+			->paginate(config('basic.paginate'));
+
+		return view($internationallyShowShippingRateManagement[$type]['show_shipping_rate_view'], $data);
+	}
 
 
+	public function countryRateUpdateInternationally(Request $request, $id){
+		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
+		$rules = [
+			'from_country_id' => ['required', 'exists:countries,id'],
+			'to_country_id' => ['required', 'exists:countries,id'],
+			'parcel_type_id' => ['required', 'exists:parcel_types,id'],
+			'shipping_cost' => ['nullable', 'numeric', 'min:0'],
+			'return_shipment_cost' => ['nullable', 'numeric', 'min:0'],
+			'tax' => ['nullable', 'numeric', 'min:0'],
+			'insurance' => ['nullable', 'numeric', 'min:0'],
+		];
+
+		$message = [
+			'from_country_id.required' => 'Please select from country',
+			'to_country_id.required' => 'Please select to country',
+			'parcel_type_id.required' => 'Please select parcel type',
+		];
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$internationallyRate = ShippingRateInternationally::findOrFail($id);
+
+		$internationallyRate->from_country_id = $request->from_country_id;
+		$internationallyRate->to_country_id = $request->to_country_id;
+		$internationallyRate->parcel_type_id = $request->parcel_type_id;
+		$internationallyRate->shipping_cost = $request->shipping_cost == null ? 0 : $request->shipping_cost;
+		$internationallyRate->return_shipment_cost = $request->return_shipment_cost == null ? 0 : $request->return_shipment_cost;
+		$internationallyRate->tax = $request->tax == null ? 0 : $request->tax;
+		$internationallyRate->insurance = $request->insurance == null ? 0 : $request->insurance;
+
+		$internationallyRate->save();
+
+		return back()->with('success', 'Shipping rate Update successfully');
+	}
+
+	public function stateRateUpdateInternationally(Request $request, $id){
+		$purifiedData = Purify::clean($request->except('_token', '_method'));
+
+
+		$rules = [
+			'from_country_id' => ['required', 'exists:countries,id'],
+			'to_country_id' => ['required', 'exists:countries,id'],
+			'from_state_id' => ['required', 'exists:states,id'],
+			'to_state_id' => ['required', 'exists:states,id'],
+			'parcel_type_id' => ['required', 'exists:parcel_types,id'],
+			'shipping_cost' => ['nullable', 'numeric', 'min:0'],
+			'return_shipment_cost' => ['nullable', 'numeric', 'min:0'],
+			'tax' => ['nullable', 'numeric', 'min:0'],
+			'insurance' => ['nullable', 'numeric', 'min:0'],
+		];
+
+		$message = [
+			'from_country_id.required' => 'Please select from country',
+			'to_country_id.required' => 'Please select to country',
+			'from_state_id.required' => 'Please select from state',
+			'to_state_id.required' => 'Please select to state',
+			'parcel_type_id.required' => 'Please select parcel type',
+		];
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$internationallyRate = ShippingRateInternationally::findOrFail($id);
+
+		$internationallyRate->from_country_id = $request->from_country_id;
+		$internationallyRate->to_country_id = $request->to_country_id;
+		$internationallyRate->from_state_id = $request->from_state_id;
+		$internationallyRate->to_state_id = $request->to_state_id;
+		$internationallyRate->parcel_type_id = $request->parcel_type_id;
+		$internationallyRate->shipping_cost = $request->shipping_cost == null ? 0 : $request->shipping_cost;
+		$internationallyRate->return_shipment_cost = $request->return_shipment_cost == null ? 0 : $request->return_shipment_cost;
+		$internationallyRate->tax = $request->tax == null ? 0 : $request->tax;
+		$internationallyRate->insurance = $request->insurance == null ? 0 : $request->insurance;
+
+		$internationallyRate->save();
+
+		return back()->with('success', 'Shipping rate Update successfully');
+	}
+
+
+	public function cityRateUpdateInternationally(Request $request, $id){
+		$purifiedData = Purify::clean($request->except('_token', '_method'));
+
+
+		$rules = [
+			'from_country_id' => ['required', 'exists:countries,id'],
+			'to_country_id' => ['required', 'exists:countries,id'],
+			'from_state_id' => ['required', 'exists:states,id'],
+			'to_state_id' => ['required', 'exists:states,id'],
+			'from_city_id' => ['required', 'exists:cities,id'],
+			'to_city_id' => ['required', 'exists:cities,id'],
+			'parcel_type_id' => ['required', 'exists:parcel_types,id'],
+			'shipping_cost' => ['nullable', 'numeric', 'min:0'],
+			'return_shipment_cost' => ['nullable', 'numeric', 'min:0'],
+			'tax' => ['nullable', 'numeric', 'min:0'],
+			'insurance' => ['nullable', 'numeric', 'min:0'],
+		];
+
+		$message = [
+			'from_country_id.required' => 'Please select from country',
+			'to_country_id.required' => 'Please select to country',
+			'from_state_id.required' => 'Please select from state',
+			'to_state_id.required' => 'Please select to state',
+			'from_city_id.required' => 'Please select from city',
+			'to_city_id.required' => 'Please select to city',
+			'parcel_type_id.required' => 'Please select parcel type',
+		];
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$internationallyRate = ShippingRateInternationally::findOrFail($id);
+
+		$internationallyRate->from_country_id = $request->from_country_id;
+		$internationallyRate->to_country_id = $request->to_country_id;
+		$internationallyRate->from_state_id = $request->from_state_id;
+		$internationallyRate->to_state_id = $request->to_state_id;
+		$internationallyRate->from_city_id = $request->from_city_id;
+		$internationallyRate->to_city_id = $request->to_city_id;
+		$internationallyRate->parcel_type_id = $request->parcel_type_id;
+		$internationallyRate->shipping_cost = $request->shipping_cost == null ? 0 : $request->shipping_cost;
+		$internationallyRate->return_shipment_cost = $request->return_shipment_cost == null ? 0 : $request->return_shipment_cost;
+		$internationallyRate->tax = $request->tax == null ? 0 : $request->tax;
+		$internationallyRate->insurance = $request->insurance == null ? 0 : $request->insurance;
+
+		$internationallyRate->save();
+
+		return back()->with('success', 'Shipping rate Update successfully');
+	}
 
 
 

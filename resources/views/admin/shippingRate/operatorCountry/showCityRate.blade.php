@@ -73,7 +73,7 @@
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('City Rate')</h6>
 
-											<a href="{{ route('operatorCountryRate', 'state') }}"
+											<a href="{{ route('operatorCountryRate', 'city') }}"
 											   class="btn btn-sm  btn-primary mr-2">
 												<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 											</a>

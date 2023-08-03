@@ -41,7 +41,7 @@
 
 			@if(checkPermission('manage_shipping_rates') == true)
 				<li class="menu-header">@lang('Manage Shipping Rates')</li>
-				<li class="dropdown {{ activeMenu(['defaultRate', 'operatorCountryRate', 'internationallyRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate']) }}">
+				<li class="dropdown {{ activeMenu(['defaultRate', 'operatorCountryRate', 'internationallyRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate', 'internationallyShowRate', 'createShippingRateInternationally']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-building text-primary"></i> <span>@lang('Shipping Rates')</span>
 					</a>
@@ -58,7 +58,7 @@
 							</a>
 						</li>
 
-						<li class="{{ activeMenu(['internationallyRate']) }}">
+						<li class="{{ activeMenu(['internationallyRate', 'internationallyShowRate', 'createShippingRateInternationally']) }}">
 							<a class="nav-link " href="{{ route('internationallyRate', 'country') }}">
 								@lang('Internationally Rate')
 							</a>
