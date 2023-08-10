@@ -193,8 +193,6 @@
 			</div>
 		</div>
 
-
-
 		<!------------------- Latest User --------------------->
     	<div class="row">
 			<div class="col-xl-12 col-lg-7">
@@ -219,7 +217,17 @@
 							<tbody>
 							@forelse($users as $key => $value)
 								<tr>
-									<td data-label="@lang('Name')">{{ __($value->name) }}</td>
+									<td data-label="@lang('Name')">
+										<div class="d-lg-flex d-block align-items-center ">
+											<div class="mr-3"><img src="{{ $value->profilePicture() }}" alt="user"
+																   class="rounded-circle" width="35" data-toggle="tooltip" title="" data-original-title="{{$value->name}}">
+											</div>
+											<div class="d-inline-flex d-lg-block align-items-center">
+												<p class="text-dark mb-0 font-16 font-weight-medium">{{$value->name}}</p>
+												<span class="text-muted font-14 ml-1">{{ '@'.$value->username}}</span>
+											</div>
+										</div>
+									</td>
 									<td data-label="@lang('Phone')">{{ __(optional($value->profile)->phone ?? __('N/A')) }}</td>
 									<td data-label="@lang('Email')">{{ __($value->email) }}</td>
 									<td data-label="@lang('Join date')">{{ __(date('d/m/Y - h:i A',strtotime($value->created_at))) }}</td>

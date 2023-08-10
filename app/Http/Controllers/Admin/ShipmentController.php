@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\DefaultShippingRateInternationally;
 use App\Models\DefaultShippingRateOperatorCountry;
 use App\Models\ParcelType;
+use App\Models\ShipmentType;
 use App\Models\ShippingDate;
 use App\Models\ShippingRateInternationally;
 use App\Models\ShippingRateOperatorCountry;
@@ -25,10 +26,74 @@ class ShipmentController extends Controller
 	}
 
 	public function createShipment(){
+		$data['shipmentTypes'] = ShipmentType::all();
 		$data['allBranches'] = Branch::where('status', 1);
 		return view('admin.shipments.create', $data);
 	}
 
+
+	public function shipmentTypeList(){
+		$data['allShipmentType'] = ShipmentType::all();
+		return view('admin.shipmentType.index', $data);
+	}
+
+	public function shipmentTypeStore(Request $request){
+		$purifiedData = Purify::clean($request->except('_token', '_method'));
+
+		$rules = [
+			'shipment_type' => ['required', 'string', 'max:100'],
+			'title' => ['required', 'string', 'max:191'],
+		];
+
+		$message = [
+			'shipment_type.required' => 'shipment type field is required',
+			'title.required' => 'title field is required',
+		];
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$shipmentType = New ShipmentType();
+
+		$shipmentType->shipment_type = $request->shipment_type;
+		$shipmentType->title = $request->title;
+		$shipmentType->status = $request->status;
+		$shipmentType->save();
+		return back()->with('success', 'Shipment type created successfully');
+
+
+	}
+
+	public function shipmentTypeUpdate(Request $request, $id){
+		$purifiedData = Purify::clean($request->except('_token', '_method'));
+
+		$rules = [
+			'shipment_type' => ['required', 'string', 'max:100'],
+			'title' => ['required', 'string', 'max:191'],
+		];
+
+		$message = [
+			'shipment_type.required' => 'shipment type field is required',
+			'title.required' => 'title field is required',
+		];
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$shipmentType = ShipmentType::findOrFail($id);
+
+		$shipmentType->shipment_type = $request->shipment_type;
+		$shipmentType->title = $request->title;
+		$shipmentType->status = $request->status;
+		$shipmentType->save();
+		return back()->with('success', 'Shipment type update successfully');
+	}
 
 	public function defaultRate(){
 		$data['basicControl'] = BasicControl::with('operatorCountry')->first();

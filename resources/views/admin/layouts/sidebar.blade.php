@@ -39,6 +39,23 @@
 				</li>
 			@endif
 
+
+			@if(checkPermission('manage_shipment_types') == true)
+				<li class="menu-header">@lang('Manage Shipment Types')</li>
+				<li class="dropdown {{ activeMenu(['shipmentTypeList']) }}">
+					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
+						<i class="fas fa-building text-primary"></i> <span>@lang('Shipment Types')</span>
+					</a>
+					<ul class="dropdown-menu">
+						<li class="{{ activeMenu(['shipmentTypeList']) }}">
+							<a class="nav-link " href="{{ route('shipmentTypeList') }}">
+								@lang('Shipment Type List')
+							</a>
+						</li>
+					</ul>
+				</li>
+			@endif
+
 			@if(checkPermission('manage_shipping_rates') == true)
 				<li class="menu-header">@lang('Manage Shipping Rates')</li>
 				<li class="dropdown {{ activeMenu(['defaultRate', 'operatorCountryRate', 'internationallyRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate', 'internationallyShowRate', 'createShippingRateInternationally']) }}">

@@ -132,7 +132,6 @@
 													@endforelse
 													</tbody>
 												</table>
-{{--												{{ $allCities->links('partials.pagination') }}--}}
 											</div>
 											<div class="card-footer d-flex justify-content-center">{{ $allCities->links() }}</div>
 										</div>

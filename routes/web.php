@@ -132,6 +132,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 	});
 
 
+	// Manage Shipment Types
+	Route::middleware('module:manage_shipment_types')->group(function () {
+		Route::get('shipment-type-list', [ShipmentController::class, 'shipmentTypeList'])->name('shipmentTypeList');
+		Route::post('shipping-type-store', [ShipmentController::class, 'shipmentTypeStore'])->name('shipmentTypeStore');
+		Route::put('shipment-type-update/{id}', [ShipmentController::class, 'shipmentTypeUpdate'])->name('shipmentTypeUpdate');
+	});
+
 	// Manage Shipping rates
 	Route::middleware('module:manage_shipping_rates')->group(function () {
 		Route::get('default-shipping-rate', [ShipmentController::class, 'defaultRate'])->name('defaultRate');
@@ -142,12 +149,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('create-shipping-rate-operator-country', [ShipmentController::class, 'createShippingRateOperatorCountry'])->name('createShippingRateOperatorCountry');
 		Route::post('shipping-rate-operator-country-store/{type?}', [ShipmentController::class, 'shippingRateOperatorCountryStore'])->name('shippingRateOperatorCountry.store');
 
-
 		Route::get('operator-country-show-shipping-rate/{type?}/{id}', [ShipmentController::class, 'operatorCountryShowRate'])->name('operatorCountryShowRate');
 		Route::put('state-rete-update/{id}', [ShipmentController::class, 'stateRateUpdate'])->name('stateRateUpdate');
 		Route::put('city-rete-update/{id}', [ShipmentController::class, 'cityRateUpdate'])->name('cityRateUpdate');
 		Route::put('area-rete-update/{id}', [ShipmentController::class, 'areaRateUpdate'])->name('areaRateUpdate');
-
 
 		Route::get('internationally-shipping-rate/{type?}', [ShipmentController::class, 'internationallyRate'])->name('internationallyRate');
 		Route::get('create-shipping-rate-internationally', [ShipmentController::class, 'createShippingRateInternationally'])->name('createShippingRateInternationally');
@@ -157,7 +162,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::put('country-rete-update-internationally/{id}', [ShipmentController::class, 'countryRateUpdateInternationally'])->name('countryRateUpdateInternationally');
 		Route::put('state-rete-update-internationally/{id}', [ShipmentController::class, 'stateRateUpdateInternationally'])->name('stateRateUpdateInternationally');
 		Route::put('city-rete-update-internationally/{id}', [ShipmentController::class, 'cityRateUpdateInternationally'])->name('cityRateUpdateInternationally');
-
 
 		Route::post('shipping-date-store', [ShipmentController::class, 'shippingDateStore'])->name('shippingDateStore');
 	});

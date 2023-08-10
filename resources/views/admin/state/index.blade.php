@@ -120,6 +120,7 @@
 													</tbody>
 												</table>
 											</div>
+											<div class="card-footer d-flex justify-content-center">{{ $allStates->links() }}</div>
 										</div>
 									</div>
 								</div>

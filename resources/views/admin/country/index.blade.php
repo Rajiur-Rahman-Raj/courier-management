@@ -112,11 +112,6 @@
 															</td>
 
 															<td data-label="@lang('Action')">
-																{{--																	<a href="{{ route('branchManagerEdit', $country->id) }}"--}}
-																{{--																	   class="btn btn-outline-primary btn-sm"--}}
-																{{--																	   title="@lang('Edit')"><i class="fa fa-edit" aria-hidden="true"></i> @lang('Edit')--}}
-																{{--																	</a>--}}
-
 																<button data-target="#editCountryModal"
 																		data-toggle="modal"
 																		data-route="{{route('countryUpdate', $country->id)}}"
@@ -135,6 +130,7 @@
 													</tbody>
 												</table>
 											</div>
+											<div class="card-footer d-flex justify-content-center">{{ $allCountries->links() }}</div>
 										</div>
 									</div>
 								</div>

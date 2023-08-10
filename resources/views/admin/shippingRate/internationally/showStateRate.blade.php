@@ -90,8 +90,8 @@
 													<thead class="thead-light">
 													<tr>
 														<th scope="col" class="addRemoveCountry d-none">@lang('From Country')</th>
-														<th scope="col" class="addRemoveCountry d-none">@lang('To Country')</th>
 														<th scope="col">@lang('From State')</th>
+														<th scope="col" class="addRemoveCountry d-none">@lang('To Country')</th>
 														<th scope="col">@lang('To State')</th>
 														<th scope="col">@lang('Shipping Cost')</th>
 														<th scope="col">@lang('Return Shipment Cost')</th>
@@ -109,13 +109,13 @@
 																@lang(optional($shippingState->fromCountry)->name)
 															</td>
 
+															<td data-label="@lang('From State')">
+																@lang(optional($shippingState->fromState)->name)
+															</td>
+
 															<td data-label="@lang('To Country')"
 																class="addRemoveCountry d-none">
 																@lang(optional($shippingState->toCountry)->name)
-															</td>
-
-															<td data-label="@lang('From State')">
-																@lang(optional($shippingState->fromState)->name)
 															</td>
 
 															<td data-label="@lang('To State')">
@@ -186,7 +186,7 @@
 					<div class="modal-body">
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('From Country')</label>
+							<label for="">@lang('From Country') <span class="text-danger">*</span></label>
 							<select name="from_country_id"
 									class="form-control @error('from_country_id') is-invalid @enderror fromCountry selectedFromCountry">
 								<option value="" selected disabled>@lang('Select Country')</option>
@@ -200,7 +200,16 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('To Country')</label>
+							<label for="from_state_id">@lang('State') <span class="text-danger">*</span></label>
+							<select name="from_state_id" class="form-control @error('from_state_id') is-invalid @enderror fromState selectedFromState">
+							</select>
+							<div class="invalid-feedback">
+								@error('from_state_id') @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-12 mt-3">
+							<label for="">@lang('To Country') <span class="text-danger">*</span></label>
 							<select name="to_country_id"
 									class="form-control @error('to_country_id') is-invalid @enderror toCountry selectedToCountry">
 								<option value="" selected disabled>@lang('Select Country')</option>
@@ -214,17 +223,7 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="from_state_id">@lang('From State') <span
-									class="text-danger">*</span></label>
-							<select name="from_state_id" class="form-control @error('from_state_id') is-invalid @enderror fromState selectedFromState">
-							</select>
-							<div class="invalid-feedback">
-								@error('from_state_id') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-12 mt-3">
-							<label for="to_state_id">@lang('To State') <span
+							<label for="to_state_id">@lang('State') <span
 									class="text-danger">*</span></label>
 							<select name="to_state_id" class="form-control @error('to_state_id') is-invalid @enderror toState selectedToState">
 							</select>

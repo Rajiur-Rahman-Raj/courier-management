@@ -3,6 +3,7 @@
 return [
 	'Dashboard' => 'dashboard',
 	'Manage Shipments' => 'manage_shipments',
+	'Manage Shipment Types' => 'manage_shipment_types',
 	'Manage Shipping Rates' => 'manage_shipping_rates',
 	'Manage Packing Service' => 'manage_packing_service',
 	'Manage Parcel Service' => 'manage_parcel_service',

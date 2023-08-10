@@ -1,11 +1,12 @@
 @extends('admin.layouts.master')
 
-@section('title')
+@section('page_title')
 	@lang('Create New Shipment')
 @endsection
 
 @push('extra_styles')
 	<link rel="stylesheet" href="{{ asset('assets/dashboard/css/image-uploader.css') }}"/>
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -40,25 +41,31 @@
 									<div class="col-sm-12 col-md-12 mb-3">
 										<label for="branch_id"> @lang('Shipment Type') <span
 												class="text-danger">*</span></label>
+										@foreach($shipmentTypes as $shipmentType)
+											<div class="custom-control custom-radio">
+												<input type="radio" id="shipmentType{{ $shipmentType->id }}" name="shipment_type"
+													   class="custom-control-input">
+												<label class="custom-control-label" for="shipmentType{{ $shipmentType->id }}">@lang($shipmentType->shipment_type)
+													(@lang($shipmentType->title))</label>
+											</div>
+										@endforeach
 
-										<div class="custom-control custom-radio">
-											<input type="radio" id="customRadio1" name="customRadio"
-												   class="custom-control-input">
-											<label class="custom-control-label" for="customRadio1">@lang('Pickup')
-												(@lang('For door to door delivery'))</label>
-										</div>
-										<div class="custom-control custom-radio">
-											<input type="radio" id="customRadio2" name="customRadio"
-												   class="custom-control-input">
-											<label class="custom-control-label" for="customRadio2">@lang('Drop off')
-												(@lang('For delivery package from branch directly'))</label>
-										</div>
-										<div class="custom-control custom-radio">
-											<input type="radio" id="customRadio3" name="customRadio"
-												   class="custom-control-input">
-											<label class="custom-control-label" for="customRadio3">@lang('Condition')
-												(@lang('Cash on delivery'))</label>
-										</div>
+
+
+
+{{--										<div class="custom-control custom-radio">--}}
+{{--											<input type="radio" id="customRadio2" name="customRadio"--}}
+{{--												   class="custom-control-input">--}}
+{{--											<label class="custom-control-label" for="customRadio2">@lang('Drop off')--}}
+{{--												(@lang('For delivery package from branch directly'))</label>--}}
+{{--										</div>--}}
+{{--										<div class="custom-control custom-radio">--}}
+{{--											<input type="radio" id="customRadio3" name="customRadio"--}}
+{{--												   class="custom-control-input">--}}
+{{--											<label class="custom-control-label" for="customRadio3">@lang('Condition')--}}
+{{--												(@lang('Cash on delivery'))</label>--}}
+{{--										</div>--}}
+
 									</div>
 								</div>
 
@@ -66,7 +73,7 @@
 									<div class="col-sm-12 col-md-3 mb-3">
 										<label for="email"> @lang('Shipping Date') <span
 												class="text-danger">*</span></label>
-										<input type="datetime-local" class="form-control start_date" name="start_date"
+										<input type="text" class="form-control start_date flatpickr" name="start_date"
 											   value="{{ old('start_date',request()->start_date) }}"
 											   placeholder="@lang('Start date')" autocomplete="off"/>
 										<div class="invalid-feedback">
@@ -577,12 +584,22 @@
 		@push('extra_scripts')
 			<script src="{{ asset('assets/dashboard/js/jquery.uploadPreview.min.js') }}"></script>
 			<script src="{{ asset('assets/dashboard/js/image-uploader.js') }}"></script>
+			<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
 		@endpush
 
 		@section('scripts')
 			<script type="text/javascript">
 				'use strict';
 				$(document).ready(function () {
+
+					$(".flatpickr").flatpickr({
+						// minDate: "today",
+						altInput: true,
+						altFormat: "d/m/y",
+						dateFormat: "Y-m-d H:i",
+						enableTime: true,
+
+					});
 
 					let shipingImageOptions = {
 						imagesInputName: 'shipment_image',

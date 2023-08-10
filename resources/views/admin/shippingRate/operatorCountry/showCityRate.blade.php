@@ -92,8 +92,8 @@
 													<thead class="thead-light">
 													<tr>
 														<th scope="col" class="addRemoveState d-none">@lang('From State')</th>
-														<th scope="col" class="addRemoveState d-none">@lang('To State')</th>
 														<th scope="col">@lang('From City')</th>
+														<th scope="col" class="addRemoveState d-none">@lang('To State')</th>
 														<th scope="col">@lang('To City')</th>
 														<th scope="col">@lang('Shipping Cost')</th>
 														<th scope="col">@lang('Return Shipment Cost')</th>
@@ -111,12 +111,12 @@
 																@lang(optional($shippingCity->fromState)->name)
 															</td>
 
-															<td data-label="@lang('To State')" class="addRemoveState d-none">
-																@lang(optional($shippingCity->toState)->name)
-															</td>
-
 															<td data-label="@lang('From City')">
 																@lang(optional($shippingCity->fromCity)->name)
+															</td>
+
+															<td data-label="@lang('To State')" class="addRemoveState d-none">
+																@lang(optional($shippingCity->toState)->name)
 															</td>
 
 															<td data-label="@lang('To City')">
@@ -201,6 +201,16 @@
 						</div>
 
 						<div class="col-12 mt-3">
+							<label for="from_city_id">@lang('City') <span
+									class="text-danger">*</span></label>
+							<select name="from_city_id" class="form-control @error('from_city_id') is-invalid @enderror selectedFromCity">
+							</select>
+							<div class="invalid-feedback">
+								@error('from_city_id') @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-12 mt-3">
 							<label for="">@lang('To State') <span class="text-danger">*</span></label>
 							<select name="to_state_id"
 									class="form-control @error('to_state_id') is-invalid @enderror toState selectedToState">
@@ -215,17 +225,7 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="from_city_id">@lang('From City') <span
-									class="text-danger">*</span></label>
-							<select name="from_city_id" class="form-control @error('from_city_id') is-invalid @enderror selectedFromCity">
-							</select>
-							<div class="invalid-feedback">
-								@error('from_city_id') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-12 mt-3">
-							<label for="to_city_id">@lang('To City') <span
+							<label for="to_city_id">@lang('City') <span
 									class="text-danger">*</span></label>
 							<select name="to_city_id"
 									class="form-control @error('to_city_id') is-invalid @enderror selectedToCity toCity">

@@ -15,7 +15,10 @@ class DatabaseSeeder extends Seeder
 	{
 		$this->call([
 			EmailTemplateSeeder::class,
-			NotifyTemplateSeeder::class
+			NotifyTemplateSeeder::class,
+			CountrySeeder::class,
+			StateSeeder::class,
+			CitySeeder::class,
 		]);
 	}
 }
