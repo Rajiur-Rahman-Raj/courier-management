@@ -41,6 +41,7 @@
 													id="data-table">
 													<thead class="thead-light">
 													<tr>
+														<th scope="col">@lang('Shipment Area')</th>
 														<th scope="col">@lang('Shipment Type')</th>
 														<th scope="col">@lang('title')</th>
 														<th scope="col">@lang('Status')</th>
@@ -51,6 +52,16 @@
 													<tbody>
 													@forelse($allShipmentType as $key => $type)
 														<tr>
+															<td data-label="@lang('Shipment Area')">
+																@if($type->shipment_area == '1')
+																	@lang('Operator Country')
+																@elseif($type->shipment_area == '2')
+																	@lang('Internationally')
+																@else
+																	@lang('Operator Country + Internationally')
+																@endif
+															</td>
+
 															<td data-label="@lang('Shipment Type')">
 																@lang($type->shipment_type)
 															</td>
@@ -110,7 +121,21 @@
 					@csrf
 					<div class="modal-body">
 						<div class="col-12 mt-3">
-							<label for="">@lang('Shipment Type') <span class="text-danger">*</span></label>
+							<label for="">@lang('Shipment Area')</label>
+							<select name="shipment_area"
+									class="form-control @error('shipment_area') is-invalid @enderror select2">
+								<option value="" disabled selected>@lang('Select One')</option>
+									<option value="1">@lang('Operator Country')</option>
+									<option value="2">@lang('Internationally')</option>
+									<option value="3">@lang('Both') (@lang('Operator Country + Internationally'))</option>
+							</select>
+							<div class="invalid-feedback">
+								@error('shipment_area') @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-12 mt-3">
+							<label for="">@lang('Shipment Type') </label>
 							<input
 								type="text"
 								class="form-control @error('shipment_type') is-invalid @enderror" name="shipment_type"
@@ -121,7 +146,7 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('Title') <span class="text-danger">*</span></label>
+							<label for="">@lang('Title') <span class="text-danger">(@lang('optional'))</span></label>
 							<input
 								type="text"
 								class="form-control @error('title') is-invalid @enderror" name="title"
@@ -169,6 +194,20 @@
 					@csrf
 					@method('put')
 					<div class="modal-body">
+
+						<div class="col-12 mt-3">
+							<label for="">@lang('Shipment Area')</label>
+							<select name="shipment_area"
+									class="form-control @error('shipment_area') is-invalid @enderror shipment-area">
+								<option value="1">@lang('Operator Country')</option>
+								<option value="2">@lang('Internationally')</option>
+								<option value="3">@lang('Both') (@lang('Operator Country + Internationally'))</option>
+							</select>
+							<div class="invalid-feedback">
+								@error('shipment_area') @lang($message) @enderror
+							</div>
+						</div>
+
 						<div class="col-12 mt-3">
 							<label for="">@lang('Shipment Type') <span class="text-danger">*</span></label>
 							<input
@@ -221,6 +260,7 @@
 				let dataRoute = $(this).data('route');
 				$('#editShipmentTypeForm').attr('action', dataRoute);
 				let dataProperty = $(this).data('property');
+				$('.shipment-area').val(dataProperty.shipment_area);
 				$('.shipment-type-name').val(dataProperty.shipment_type);
 				$('.shipment-type-title').val(dataProperty.title);
 				$(dataProperty.status == 0 ? '.status_disabled' : '.status_enabled').prop('checked', true);

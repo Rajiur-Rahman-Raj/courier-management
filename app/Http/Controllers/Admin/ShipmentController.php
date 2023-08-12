@@ -8,14 +8,17 @@ use App\Models\Branch;
 use App\Models\Country;
 use App\Models\DefaultShippingRateInternationally;
 use App\Models\DefaultShippingRateOperatorCountry;
+use App\Models\Package;
 use App\Models\ParcelType;
 use App\Models\ShipmentType;
 use App\Models\ShippingDate;
 use App\Models\ShippingRateInternationally;
 use App\Models\ShippingRateOperatorCountry;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Stevebauman\Purify\Facades\Purify;
 
 class ShipmentController extends Controller
@@ -26,9 +29,24 @@ class ShipmentController extends Controller
 	}
 
 	public function createShipment(){
-		$data['shipmentTypes'] = ShipmentType::all();
-		$data['allBranches'] = Branch::where('status', 1);
+		$data['operatorCountryShipmentTypes'] = ShipmentType::whereIn('shipment_area', [1,3])->get();
+		$data['internationallyShipmentTypes'] = ShipmentType::whereIn('shipment_area', [2,3])->get();
+
+		$data['allBranches'] = Branch::where('status', 1)->get();
+		$data['users'] = User::where('user_type', '!=', '0')->get();
+		$data['senders'] = $data['users']->where('user_type', 1);
+		$data['receivers'] = $data['users']->where('user_type', 2);
+
+		$data['allCountries'] = Country::where('status', 1)->get();
+		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
+
+		$data['packageList'] = Package::where('status', 1)->get();
+
 		return view('admin.shipments.create', $data);
+	}
+
+	public function shipmentStore(Request $request){
+		dd('i am here');
 	}
 
 
@@ -41,13 +59,14 @@ class ShipmentController extends Controller
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
+			'shipment_area' => ['required', Rule::in(['1','2','3'])],
 			'shipment_type' => ['required', 'string', 'max:100'],
-			'title' => ['required', 'string', 'max:191'],
+			'title' => ['nullable', 'string', 'max:191'],
 		];
 
 		$message = [
+			'shipment_area.required' => 'Please select a shipment area',
 			'shipment_type.required' => 'shipment type field is required',
-			'title.required' => 'title field is required',
 		];
 
 		$validate = Validator::make($purifiedData, $rules, $message);
@@ -58,6 +77,7 @@ class ShipmentController extends Controller
 
 		$shipmentType = New ShipmentType();
 
+		$shipmentType->shipment_area = $request->shipment_area;
 		$shipmentType->shipment_type = $request->shipment_type;
 		$shipmentType->title = $request->title;
 		$shipmentType->status = $request->status;
@@ -71,13 +91,14 @@ class ShipmentController extends Controller
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
+			'shipment_area' => ['required', Rule::in(['1','2','3'])],
 			'shipment_type' => ['required', 'string', 'max:100'],
-			'title' => ['required', 'string', 'max:191'],
+			'title' => ['nullable', 'string', 'max:191'],
 		];
 
 		$message = [
+			'shipment_area.required' => 'Please select a shipment area',
 			'shipment_type.required' => 'shipment type field is required',
-			'title.required' => 'title field is required',
 		];
 
 		$validate = Validator::make($purifiedData, $rules, $message);
@@ -88,6 +109,7 @@ class ShipmentController extends Controller
 
 		$shipmentType = ShipmentType::findOrFail($id);
 
+		$shipmentType->shipment_area = $request->shipment_area;
 		$shipmentType->shipment_type = $request->shipment_type;
 		$shipmentType->title = $request->title;
 		$shipmentType->status = $request->status;

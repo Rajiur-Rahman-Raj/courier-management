@@ -205,7 +205,7 @@
 									</div>
 
 									<div class="col-md-4 form-group">
-										<label>@lang('Client Type')</label>
+										<label>@lang('User Type')</label>
 										<div class="selectgroup w-100">
 											<label class="selectgroup-item">
 												<input type="radio" name="client_type" value="1"

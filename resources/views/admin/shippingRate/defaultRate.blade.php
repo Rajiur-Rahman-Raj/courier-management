@@ -5,13 +5,11 @@
 @endsection
 
 @section('content')
-
 	@if(Session::has('active-tab'))
 		@php
 			$active_tab= \Illuminate\Support\Facades\Session::get('active-tab');
 		@endphp
 	@endif
-
 
 	<div class="main-content">
 		<section class="section">
@@ -665,6 +663,7 @@
 
 		@section('scripts')
 			@include('partials.getParcelUnit')
+			@include('partials.select2Create')
 			<script>
 				'use strict';
 				$(document).ready(function () {
@@ -684,14 +683,6 @@
 						$('#operatorCountry').removeClass('active show');
 						$('#internationalCountry').addClass('active show');
 					}
-
-					$('.select-shipping-date').select2({
-						width : '100%',
-					}).on('select2:open', () => {
-						$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" data-toggle="modal" data-target="#add-package-modal"
-                    class="btn btn-outline-primary" >+ Create Date </a>
-                    </li>`);
-					});
 
 				});
 

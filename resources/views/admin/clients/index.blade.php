@@ -107,7 +107,7 @@
 												<th>@lang('Phone')</th>
 												<th>@lang('Email')</th>
 												<th>@lang('Join date')</th>
-												<th>@lang('Client Type')</th>
+												<th>@lang('User Type')</th>
 												<th>@lang('Status')</th>
 												<th>@lang('Action')</th>
 											</tr>

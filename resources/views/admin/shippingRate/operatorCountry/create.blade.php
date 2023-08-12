@@ -614,5 +614,6 @@
 	@section('scripts')
 		@include('partials.getParcelUnit')
 		@include('partials.locationJs')
+		@include('partials.select2Create')
 
 	@endsection

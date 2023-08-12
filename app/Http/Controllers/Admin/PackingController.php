@@ -290,7 +290,12 @@ class PackingController extends Controller
 	}
 
 	public function getSelectedPackageVariant(Request $request){
-		$results = PackageVariant::where('package_id', $request->id)->get();
+		$results = PackageVariant::where('package_id', $request->id)->where('status', 1)->get();
+		return response($results);
+	}
+
+	public function getSelectedVariantService(Request $request){
+		$results = PackingService::where('package_id', $request->packageId)->where('variant_id', $request->variantId)->where('status', 1)->get();
 		return response($results);
 	}
 

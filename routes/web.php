@@ -129,6 +129,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 	Route::middleware('module:manage_shipments')->group(function () {
 		Route::get('shipment-list', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
 		Route::get('create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
+		Route::post('shipment-store', [ShipmentController::class, 'shipmentStore'])->name('shipmentStore');
 	});
 
 
@@ -175,6 +176,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::post('variant-store', [PackingController::class, 'variantStor1e'])->name('variantStore');
 		Route::put('variant-update/{id}', [PackingController::class, 'variantUpdate'])->name('variantUpdate');
 		Route::post('get-package-variant', [PackingController::class, 'getSelectedPackageVariant'])->name('getSelectedPackageVariant');
+		Route::post('get-variant-service', [PackingController::class, 'getSelectedVariantService'])->name('getSelectedVariantService');
 
 		Route::post('packing-service-store', [PackingController::class, 'packingServiceStore'])->name('packingServiceStore');
 		Route::put('packing-service-update/{id}', [PackingController::class, 'packingServiceUpdate'])->name('packingServiceUpdate');

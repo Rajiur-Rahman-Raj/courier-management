@@ -44,5 +44,5 @@
   'admin_logo' => 'logo/admin-logo.png',
   'logo_meta' => 'logo/meta.png',
   'partial_banner' => 'logo/banner.jpg',
-  'operator_country' => '1',
+  'operator_country' => '19',
 );
