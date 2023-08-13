@@ -42,6 +42,8 @@ class ShipmentController extends Controller
 
 		$data['packageList'] = Package::where('status', 1)->get();
 
+		$data['parcelTypes'] = ParcelType::where('status', 1)->get();
+
 		return view('admin.shipments.create', $data);
 	}
 

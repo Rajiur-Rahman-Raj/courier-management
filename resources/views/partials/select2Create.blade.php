@@ -64,4 +64,12 @@
                     </li>`);
 	});
 
+	$('.select2ParcelType').select2({
+		width: '100%'
+	}).on('select2:open', () => {
+		$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" href="{{ route('parcelServiceList') }}"
+                    class="btn btn-outline-primary" target="_blank">+ Create New Parcel </a>
+                    </li>`);
+	});
+
 </script>

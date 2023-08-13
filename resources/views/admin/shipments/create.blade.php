@@ -61,7 +61,8 @@
 										@csrf
 										<div class="row mb-3">
 											<div class="col-sm-12 col-md-12 mb-3">
-												<label for="branch_id"> @lang('Shipment Type') </label>
+												<h6 for="branch_id"
+													class="text-dark font-weight-bold"> @lang('Shipment Type') </h6>
 												@foreach($operatorCountryShipmentTypes as $shipmentType)
 													<div class="custom-control custom-radio">
 														<input type="radio" id="shipmentType{{ $shipmentType->id }}"
@@ -185,7 +186,8 @@
 											</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="from_city_id">@lang('Select City') <span class="text-dark font-weight-bold">(@lang('optional'))</span></label>
+												<label for="from_city_id">@lang('Select City') <span
+														class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 												<select name="from_city_id"
 														class="form-control @error('from_city_id') is-invalid @enderror select2 select2City selectedFromCity">
 												</select>
@@ -195,7 +197,8 @@
 											</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="from_area_id">@lang('Select Area') <span class="text-dark font-weight-bold">(@lang('optional'))</span></label>
+												<label for="from_area_id">@lang('Select Area') <span
+														class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 												<select name="from_area_id"
 														class="form-control @error('from_area_id') is-invalid @enderror select2 select2Area selectedFromArea">
 
@@ -220,7 +223,8 @@
 											</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="to_city_id">@lang('Select City') <span class="text-dark font-weight-bold">(@lang('optional'))</span></label>
+												<label for="to_city_id">@lang('Select City') <span
+														class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 												<select name="to_city_id"
 														class="form-control @error('to_city_id') is-invalid @enderror select2 select2City selectedToCity">
 												</select>
@@ -231,7 +235,9 @@
 
 
 											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="to_area_id">@lang('Select Area') <span class="text-dark font-weight-bold">(@lang('optional'))</span> </label>
+												<label for="to_area_id">@lang('Select Area') <span
+														class="text-dark font-weight-bold">(@lang('optional'))</span>
+												</label>
 												<select name="to_area_id"
 														class="form-control @error('to_area_id') is-invalid @enderror select2 select2Area selectedToArea">
 												</select>
@@ -258,7 +264,8 @@
 												<label for="branch_id"> @lang('Payment Type')</label>
 												<select name="payment_type"
 														class="form-control @error('payment_type') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Payment Type')</option>
+													<option value="" disabled
+															selected>@lang('Select Payment Type')</option>
 													<option value="wallet">@lang('From Wallet')</option>
 													<option value="cash">@lang('Cash')</option>
 												</select>
@@ -270,11 +277,11 @@
 											</div>
 
 											<div class="col-sm-12 col-md-4 mb-3">
-												<label for="payment_status"> @lang('Payment Status') <span
-														class="text-danger">*</span></label>
+												<label for="payment_status"> @lang('Payment Status')</label>
 												<select name="payment_status"
 														class="form-control @error('payment_status') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Payment Status')</option>
+													<option value="" disabled
+															selected>@lang('Select Payment Status')</option>
 													<option value="1">@lang('Paid')</option>
 													<option value="2">@lang('Unpaid')</option>
 												</select>
@@ -288,107 +295,117 @@
 
 
 										<div class="row mb-3">
-											<div class="col-sm-12 col-md-12 mb-3 mt-3">
-												<label for="branch_id"> @lang('Packing Service') </label>
+											<div class="col-sm-12 col-md- mt-3">
+												<h6 for="branch_id"
+													class="text-dark font-weight-bold"> @lang('Packing Service') </h6>
 												<div class="custom-control custom-radio">
-													<input type="radio" id="packing_service" name="packing_service"
-														   class="custom-control-input">
+													<input type="radio" id="packingServiceOn" name="packing_service"
+														   class="custom-control-input" value="yes">
 													<label class="custom-control-label"
-														   for="packing_service">@lang('Yes')</label>
+														   for="packingServiceOn">@lang('Yes')</label>
 												</div>
 												<div class="custom-control custom-radio">
-													<input type="radio" id="packing_service2" name="packing_service"
+													<input type="radio" id="packingServiceOff" value="no"
+														   name="packing_service"
 														   class="custom-control-input" checked>
 													<label class="custom-control-label"
-														   for="packing_service2">@lang('No')</label>
+														   for="packingServiceOff">@lang('No')</label>
+												</div>
+											</div>
+
+											<div class="col-md-12 addFieldButton d-none">
+												<div class="form-group">
+													<a href="javascript:void(0)"
+													   class="btn btn-success float-right"
+													   id="generate"><i
+															class="fa fa-plus-circle"></i> {{ trans('Add Field') }}
+													</a>
 												</div>
 											</div>
 										</div>
 
-										<div class="row">
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="package_id"> @lang('Select Package')</label>
-												<select name="package_id"
-														class="form-control @error('package_id') is-invalid @enderror select2 selectedPackage">
-													<option value="" disabled selected>@lang('Select package')</option>
-													@foreach($packageList as $package)
-														<option value="{{ $package->id }}">@lang($package->package_name)</option>
-													@endforeach
-												</select>
+										<div class="addedField d-none">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="form-group">
+														<div class="input-group">
+															<select name="package_id"
+																	class="form-control @error('package_id') is-invalid @enderror selectedPackage">
+																<option value="" disabled
+																		selected>@lang('Select package')</option>
+																@foreach($packageList as $package)
+																	<option
+																		value="{{ $package->id }}">@lang($package->package_name)</option>
+																@endforeach
+															</select>
 
-												<div class="invalid-feedback">
-													@error('package_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
+															<select name="variant_id"
+																	class="form-control @error('variant_id') is-invalid @enderror selectedVariant">
+																<option value="">@lang('Select Variant')</option>
+															</select>
 
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="">@lang('Select Variant')</label>
-												<select name="variant_id"
-														class="form-control @error('variant_id') is-invalid @enderror selectedVariant">
-												</select>
+															<input type="text" name="variant_price"
+																   class="form-control @error('variant_price') is-invalid @enderror variantPrice"
+																   placeholder="@lang('price')">
+															<div class="input-group-append" readonly="">
+																<div class="form-control">
+																	{{ config('basic.currency_symbol') }}
+																</div>
+															</div>
 
-												<div class="invalid-feedback">
-													@error('variant_id') @lang($message) @enderror
-												</div>
-											</div>
+															<input type="text" name="variant_quantity"
+																   class="form-control @error('variant_quantity') is-invalid @enderror"
+																   value="{{ old('variant_quantity') }}"
+																   id="variantQuantity" placeholder="@lang('quantity')">
 
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="variant_price"> @lang('Price')</label>
-												<div class="input-group">
-													<input type="text" name="variant_price"
-														   class="form-control @error('variant_price') is-invalid @enderror variantPrice">
-													<div class="input-group-append" readonly="">
-														<div class="form-control">
-															{{ config('basic.currency_symbol') }}
+															<input type="text" name="email"
+																   class="form-control @error('email') is-invalid @enderror managerEmail totalPackingCost"
+																   value="{{ old('email') }}" readonly
+																   placeholder="@lang('total cost')">
+															<div class="input-group-append" readonly="">
+																<div class="form-control">
+																	{{ config('basic.currency_symbol') }}
+																</div>
+															</div>
+
+															<span class="input-group-btn">
+                                                        <button
+															class="btn btn-danger  delete_desc custom_delete_desc_padding"
+															type="button">
+                                                            <i class="fa fa-times"></i>
+                                                        </button>
+                                                    </span>
 														</div>
 													</div>
-													<div class="invalid-feedback">
-														@error('variant_price') @lang($message) @enderror
-													</div>
-													<div class="valid-feedback"></div>
 												</div>
 											</div>
-
-
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="variant_quantity"> @lang('quantity')</label>
-												<input type="text" name="variant_quantity"
-													   class="form-control @error('variant_quantity') is-invalid @enderror"
-													   value="{{ old('variant_quantity') }}" id="variantQuantity">
-												<div class="invalid-feedback">
-													@error('variant_quantity') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="email"> @lang('Total Packing Cost') <span
-														class="text-danger">*</span></label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail totalPackingCost"
-													   value="{{ old('email') }}" readonly>
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
 										</div>
 
-
-										<div class="row">
+										<div class="row mt-3">
+											<div class="col-md-12 d-flex justify-content-between">
+												<div>
+													<h6 for="branch_id"
+														class="text-dark font-weight-bold"> @lang('Shipment Parcel Information') </h6>
+												</div>
+												<div class="addParcelInfoField">
+													<div class="form-group">
+														<a href="javascript:void(0)"
+														   class="btn btn-success float-right"
+														   id="generate"><i
+																class="fa fa-plus-circle"></i> {{ trans('Add Field') }}
+														</a>
+													</div>
+												</div>
+											</div>
 											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('Percel Type') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">Food</option>
-													<option value="">Oil</option>
-													<option value="">Wood</option>
-													<option value="">Electronics</option>
+												<label for="branch_id"> @lang('Percel Type') </label>
+												<select name="parcel_type_id"
+														class="form-control @error('branch_id') is-invalid @enderror select2 selectedParcelType select2ParcelType">
+													<option value="" disabled
+															selected>@lang('Select Parcel Type')</option>
+													@foreach($parcelTypes as $parcel_type)
+														<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
+													@endforeach
 												</select>
 
 												<div class="invalid-feedback">
@@ -397,9 +414,22 @@
 												<div class="valid-feedback"></div>
 											</div>
 
+											<div class="col-sm-12 col-md-2 mb-3">
+												<label for="parcel_unit_id"> @lang('Select Unit') </label>
+												<select name="parcel_unit_id"
+														class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit">
+													<option value="" disabled
+															selected>@lang('Select Parcel Unit')</option>
+												</select>
+
+												<div class="invalid-feedback">
+													@error('parcel_unit_id') @lang($message) @enderror
+												</div>
+												<div class="valid-feedback"></div>
+											</div>
+
 											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Description/Percel Name') <span
-														class="text-danger">*</span></label>
+												<label for="email"> @lang('Description/Percel Name') </label>
 												<input type="text" name="email"
 													   class="form-control @error('email') is-invalid @enderror managerEmail"
 													   value="{{ old('email') }}">
@@ -409,8 +439,8 @@
 												<div class="valid-feedback"></div>
 											</div>
 
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Quantity') <span class="text-danger">*</span></label>
+											<div class="col-sm-12 col-md-2 mb-3">
+												<label for="email"> @lang('Quantity')</label>
 												<input type="text" name="email"
 													   class="form-control @error('email') is-invalid @enderror managerEmail"
 													   value="{{ old('email') }}">
@@ -420,9 +450,8 @@
 												<div class="valid-feedback"></div>
 											</div>
 
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Weight') kg <span
-														class="text-danger">*</span></label>
+											<div class="col-sm-12 col-md-2 mb-3">
+												<label for="email"> @lang('Weight')</label>
 												<input type="text" name="email"
 													   class="form-control @error('email') is-invalid @enderror managerEmail"
 													   value="{{ old('email') }}">
@@ -1102,6 +1131,37 @@
 			@include('partials.packageVariant')
 			<script type="text/javascript">
 				'use strict';
+
+				// Get references to the radio buttons and the target element
+				const packingServiceOn = document.getElementById('packingServiceOn');
+				const packingServiceOff = document.getElementById('packingServiceOff');
+
+				// Add event listeners to the radio buttons
+				packingServiceOn.addEventListener('change', function () {
+					if (packingServiceOn.checked) {
+						$('.addedField').removeClass('d-none')
+						$('.addFieldButton').removeClass('d-none')
+					}
+				});
+
+				packingServiceOff.addEventListener('change', function () {
+					if (packingServiceOff.checked) {
+						$('.addedField').addClass('d-none')
+						$('.addFieldButton').addClass('d-none')
+					}
+				});
+
+				function variantQuantityHandel(id) {
+					const variantQuantityId = `#variantQuantity_${id}`;
+
+					let quantity = $(variantQuantityId).val();
+					let variantPrice = $(`.variantPrice_${id}`).val();
+
+					let totalPackingCost = quantity * variantPrice;
+					$(`.totalPackingCost_${id}`).val(totalPackingCost);
+
+				}
+
 				$(document).ready(function () {
 
 					$(".flatpickr").flatpickr({
@@ -1137,7 +1197,7 @@
 						no_label: false
 					});
 
-					$('#variantQuantity').on('keyup', function (){
+					$('#variantQuantity').on('keyup', function () {
 						let quantity = $(this).val();
 						let variantPrice = $('.variantPrice').val();
 
@@ -1207,6 +1267,54 @@
 							}
 						});
 					}
+
+					$("#generate").on('click', function () {
+						const id = Date.now();
+						var form = `<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<div class="input-group">
+													<select name="package_id" class="form-control @error('package_id') is-invalid @enderror selectedPackage_${id}" onchange="selectedPackageVariantHandel(${id})">
+														<option value="" disabled selected>@lang('Select package')</option>
+														@foreach($packageList as $package)
+						<option value="{{ $package->id }}">@lang($package->package_name)</option>
+														@endforeach
+						</select>
+
+						<select name="variant_id" class="form-control @error('variant_id') is-invalid @enderror selectedVariant_${id}" onchange="selectedVariantServiceHandel(${id})">
+														<option value="">@lang('Select Variant')</option>
+													</select>
+
+													<input type="text" name="variant_price" class="form-control @error('variant_price') is-invalid @enderror variantPrice_${id}" placeholder="@lang('price')">
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															{{ config('basic.currency_symbol') }}
+						</div>
+					</div>
+
+					<input type="text" name="variant_quantity" class="form-control @error('variant_quantity') is-invalid @enderror" value="{{ old('variant_quantity') }}" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" placeholder="@lang('quantity')">
+													<input type="text" name="email" class="form-control @error('email') is-invalid @enderror managerEmail totalPackingCost_${id}" value="{{ old('email') }}" readonly placeholder="@lang('total cost')">
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															{{ config('basic.currency_symbol') }}
+						</div>
+					</div>
+
+					<span class="input-group-btn">
+						<button class="btn btn-danger  delete_desc custom_delete_desc_padding" type="button">
+							<i class="fa fa-times"></i>
+						</button>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>`;
+						$('.addedField').append(form)
+					});
+
+					$(document).on('click', '.delete_desc', function () {
+						$(this).closest('.input-group').parent().remove();
+					});
 				});
 			</script>
 @endsection

@@ -1,12 +1,23 @@
 <script>
 	'use strict'
+
 	$(document).on('change', '.selectedPackage', function () {
 		let selectedValue = $(this).val();
 		const selectedPack = false;
 		getSelectedPackageVariant(selectedValue, selectedPack);
 	})
 
-	function getSelectedPackageVariant(value, type, variantId=null) {
+	function selectedPackageVariantHandel(id = null) {
+		let selectedValue;
+		if (id) {
+			selectedValue = $(`.selectedPackage_${id}`).val();
+		}
+		selectedValue = $(`.selectedPackage_${id}`).val();
+		const selectedPack = false;
+		getSelectedPackageVariant(selectedValue, selectedPack, null, id);
+	}
+
+	function getSelectedPackageVariant(value, type, variantId = null, packageId = null) {
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -21,6 +32,7 @@
 			},
 			success: function (response) {
 				let responseData = response;
+				let selectedVariantClass = '.selectedVariant';
 
 				if (type == true) {
 					let result = [];
@@ -71,11 +83,16 @@
 					}
 					$('.packageVariantTr').html(result);
 				} else {
-					$('.selectedVariant').empty();
+					if (packageId){
+						selectedVariantClass = `.selectedVariant_${packageId}`
+					}
+
+
+					$(selectedVariantClass).empty();
 					responseData.forEach(res => {
-						$('.selectedVariant').append(`<option value="${res.id}">${res.variant}</option>`)
+						$(selectedVariantClass).append(`<option value="${res.id}">${res.variant}</option>`)
 					})
-					$('.selectedVariant').prepend(`<option value="" selected disabled>@lang('Select Variant')</option>`)
+					$(selectedVariantClass).prepend(`<option value="" selected disabled>@lang('Select Variant')</option>`)
 					$('#variId').val(variantId);
 				}
 			},
@@ -86,13 +103,52 @@
 	}
 
 
-	$(document).on('change', '.selectedVariant', function (){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	$(document).on('change', '.selectedVariant', function () {
 		let selectedPackage = $('.selectedPackage').val();
 		let selectedVariant = $(this).val();
 		getSelectedVariantService(selectedPackage, selectedVariant);
 	})
 
-	function getSelectedVariantService(selectedPackage, selectedVariant){
+
+	function selectedVariantServiceHandel(id = null) {
+		let selectedPackageValue = $(`.selectedPackage`).val();
+		let selectedVariantValue = $(`.selectedVariant`).val();
+		if (id) {
+			selectedPackageValue = $(`.selectedPackage_${id}`).val();
+			selectedVariantValue = $(`.selectedVariant_${id}`).val();
+		}
+		getSelectedVariantService(selectedPackageValue, selectedVariantValue, id);
+	}
+
+
+
+
+
+	function getSelectedVariantService(selectedPackage, selectedVariant, id = null) {
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -108,7 +164,11 @@
 			},
 			success: function (response) {
 				let responseData = response;
-				$('.variantPrice').val(responseData[0].cost)
+				let variantPriceClass = ".variantPrice";
+				if (id) {
+					variantPriceClass = `.variantPrice_${id}`;
+				}
+				$(variantPriceClass).val(responseData[0].cost)
 			},
 			error: function (xhr, status, error) {
 				console.log(error)

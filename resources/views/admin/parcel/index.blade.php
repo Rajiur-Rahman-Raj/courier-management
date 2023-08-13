@@ -557,7 +557,7 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('Cost') <span class="text-danger">*</span> <span class="cost-per-kg text-dark font-weight-bold"></span></label>
+							<label for="">@lang('Cost per unit') <span class="text-danger">*</span> <span class=" text-dark font-weight-bold"></span></label>
 
 							<div class="input-group">
 								<input type="text" class="form-control @error('cost') is-invalid @enderror" name="cost"
@@ -641,7 +641,7 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('Cost') <span class="text-danger">*</span> <span class="cost-per-kg font-weight-bold"></span></label>
+							<label for="">@lang('Cost per unit') <span class="text-danger">*</span> <span class="font-weight-bold"></span></label>
 
 							<div class="input-group">
 								<input type="text" class="form-control @error('cost') is-invalid @enderror parcel-cost"
@@ -687,6 +687,7 @@
 @endsection
 
 @section('scripts')
+	@include('partials.getParcelUnit')
 	<script>
 		'use strict'
 		$(document).ready(function () {
@@ -733,40 +734,7 @@
 
 			});
 
-			$(document).on('change', '.selectedParcelType', function () {
-				let selectedValue = $(this).val();
-				getSelectedParcelTypeUnit(selectedValue);
-			})
 
-			function getSelectedParcelTypeUnit(value, unitId=null) {
-				$.ajaxSetup({
-					headers: {
-						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					}
-				});
-
-				$.ajax({
-					url: "{{ route('getSelectedParcelTypeUnit') }}",
-					method: 'POST',
-					data: {
-						id: value,
-					},
-					success: function (response) {
-						let responseData = response;
-
-						$('.selectedParcelUnit').empty();
-						responseData.forEach(res => {
-							$('.selectedParcelUnit').append(`<option value="${res.id}">${res.unit}</option>`)
-						})
-						$('.selectedParcelUnit').prepend(`<option value="" selected disabled>@lang('Select Unit')</option>`)
-						$('#unitId').val(unitId);
-						$('.cost-per-kg').text(`(Cost per ${responseData[0].unit})`)
-					},
-					error: function (xhr, status, error) {
-						console.log(error)
-					}
-				});
-			}
 
 		})
 	</script>
