@@ -7,10 +7,10 @@
 
 
 <!-- Template CSS -->
-<link rel="stylesheet" href="{{ asset('assets/dashboard/css/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/dashboard/css/components.css') }}">
 
 {{--<link href="{{asset('assets/dashboard/css/select2.min.css')}}" rel="stylesheet">--}}
 <link href="{{asset('assets/dashboard/css/new_select2.min.css')}}" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('assets/dashboard/css/style.css') }}">
 
 @stack('extra_styles')

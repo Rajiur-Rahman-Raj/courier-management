@@ -4868,3 +4868,9 @@ a:hover {
 .custom_delete_desc_padding{
 	padding: 3px 10px 3px 10px !important;
 }
+.shipmentsDiscount #discount{
+	height: 42px !important;
+}
+.w-35{
+	width: 35% !important;
+}

@@ -78,7 +78,7 @@
 
 										<div class="row">
 											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Shipping Date') </label>
+												<label for="shipment_date"> @lang('Shipment Date') </label>
 												<input type="text" class="form-control shipment_date flatpickr"
 													   name="shipment_date"
 													   value="{{ old('shipment_date',request()->shipment_date) }}"
@@ -86,11 +86,10 @@
 												<div class="invalid-feedback">
 													@error('shipment_date') @lang($message) @enderror
 												</div>
-												<div class="valid-feedback"></div>
 											</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Estimate Delivery Date') </label>
+												<label for="delivery_date"> @lang('Estimate Delivery Date') </label>
 												<input type="date" class="form-control start_date flatpickr2"
 													   name="delivery_date"
 													   value="{{ old('delivery_date',request()->delivery_date) }}"
@@ -98,7 +97,6 @@
 												<div class="invalid-feedback">
 													@error('delivery_date') @lang($message) @enderror
 												</div>
-												<div class="valid-feedback"></div>
 											</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
@@ -114,7 +112,6 @@
 												<div class="invalid-feedback">
 													@error('sender_branch') @lang($message) @enderror
 												</div>
-												<div class="valid-feedback"></div>
 											</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
@@ -129,29 +126,26 @@
 												</select>
 
 												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
+													@error('receiver_branch') @lang($message) @enderror
 												</div>
 												<div class="valid-feedback"></div>
 											</div>
 										</div>
 
 										<div class="row">
-
 											<div class="col-sm-12 col-md-3 mb-3">
 												<label for="sender_id"> @lang('Sender')</label>
 												<select name="sender_id"
 														class="form-control @error('sender_id') is-invalid @enderror select2 select-client">
 													<option value="" disabled selected>@lang('Select Sender')</option>
 													@foreach($senders as $sender)
-														<option
-															value="{{ $sender->id }}">@lang($sender->name)</option>
+														<option value="{{ $sender->id }}">@lang($sender->name)</option>
 													@endforeach
 												</select>
 
 												<div class="invalid-feedback">
 													@error('sender_id') @lang($message) @enderror
 												</div>
-												<div class="valid-feedback"></div>
 											</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
@@ -168,7 +162,6 @@
 												<div class="invalid-feedback">
 													@error('receiver_id') @lang($message) @enderror
 												</div>
-												<div class="valid-feedback"></div>
 											</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
@@ -201,7 +194,6 @@
 														class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 												<select name="from_area_id"
 														class="form-control @error('from_area_id') is-invalid @enderror select2 select2Area selectedFromArea">
-
 												</select>
 												<div class="invalid-feedback">
 													@error('from_area_id') @lang($message) @enderror
@@ -261,7 +253,7 @@
 											</div>
 
 											<div class="col-sm-12 col-md-4 mb-3">
-												<label for="branch_id"> @lang('Payment Type')</label>
+												<label for="payment_type"> @lang('Payment Type')</label>
 												<select name="payment_type"
 														class="form-control @error('payment_type') is-invalid @enderror select2">
 													<option value="" disabled
@@ -273,7 +265,6 @@
 												<div class="invalid-feedback">
 													@error('payment_type') @lang($message) @enderror
 												</div>
-												<div class="valid-feedback"></div>
 											</div>
 
 											<div class="col-sm-12 col-md-4 mb-3">
@@ -289,15 +280,13 @@
 												<div class="invalid-feedback">
 													@error('payment_status') @lang($message) @enderror
 												</div>
-												<div class="valid-feedback"></div>
 											</div>
 										</div>
 
 
 										<div class="row mb-3">
 											<div class="col-sm-12 col-md- mt-3">
-												<h6 for="branch_id"
-													class="text-dark font-weight-bold"> @lang('Packing Service') </h6>
+												<h6 class="text-dark font-weight-bold"> @lang('Packing Service') </h6>
 												<div class="custom-control custom-radio">
 													<input type="radio" id="packingServiceOn" name="packing_service"
 														   class="custom-control-input" value="yes">
@@ -313,18 +302,18 @@
 												</div>
 											</div>
 
-											<div class="col-md-12 addFieldButton d-none">
+											<div class="col-md-12 addPackingFieldButton d-none">
 												<div class="form-group">
 													<a href="javascript:void(0)"
 													   class="btn btn-success float-right"
-													   id="generate"><i
-															class="fa fa-plus-circle"></i> {{ trans('Add Field') }}
+													   id="packingGenerate"><i
+															class="fa fa-plus-circle"></i> {{ trans('Add More') }}
 													</a>
 												</div>
 											</div>
 										</div>
 
-										<div class="addedField d-none">
+										<div class="addedPackingField d-none">
 											<div class="row">
 												<div class="col-md-12">
 													<div class="form-group">
@@ -345,7 +334,7 @@
 															</select>
 
 															<input type="text" name="variant_price"
-																   class="form-control @error('variant_price') is-invalid @enderror variantPrice"
+																   class="form-control @error('variant_price') is-invalid @enderror variantPrice newVariantPrice"
 																   placeholder="@lang('price')">
 															<div class="input-group-append" readonly="">
 																<div class="form-control">
@@ -354,23 +343,22 @@
 															</div>
 
 															<input type="text" name="variant_quantity"
-																   class="form-control @error('variant_quantity') is-invalid @enderror"
-																   value="{{ old('variant_quantity') }}"
-																   id="variantQuantity" placeholder="@lang('quantity')">
+																   class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity"
+																   value="{{ old('variant_quantity') }}" id="variantQuantity"
+																    placeholder="@lang('quantity')">
 
-															<input type="text" name="email"
-																   class="form-control @error('email') is-invalid @enderror managerEmail totalPackingCost"
-																   value="{{ old('email') }}" readonly
+															<input type="text" name="package_cost"
+																   class="form-control @error('package_cost') is-invalid @enderror managerEmail totalPackingCost packingCostValue"
+																   value="{{ old('package_cost') }}" readonly
 																   placeholder="@lang('total cost')">
 															<div class="input-group-append" readonly="">
 																<div class="form-control">
 																	{{ config('basic.currency_symbol') }}
 																</div>
 															</div>
-
 															<span class="input-group-btn">
                                                         <button
-															class="btn btn-danger  delete_desc custom_delete_desc_padding"
+															class="btn btn-danger delete_packing_desc custom_delete_desc_padding"
 															type="button">
                                                             <i class="fa fa-times"></i>
                                                         </button>
@@ -381,676 +369,138 @@
 											</div>
 										</div>
 
-										<div class="row mt-3">
+										<div class="row mt-4">
 											<div class="col-md-12 d-flex justify-content-between">
 												<div>
 													<h6 for="branch_id"
 														class="text-dark font-weight-bold"> @lang('Shipment Parcel Information') </h6>
 												</div>
-												<div class="addParcelInfoField">
+												<div class="addParcelFieldButton">
 													<div class="form-group">
 														<a href="javascript:void(0)"
 														   class="btn btn-success float-right"
-														   id="generate"><i
-																class="fa fa-plus-circle"></i> {{ trans('Add Field') }}
+														   id="parcelGenerate"><i
+																class="fa fa-plus-circle"></i> {{ trans('Add More') }}
 														</a>
 													</div>
 												</div>
 											</div>
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('Percel Type') </label>
-												<select name="parcel_type_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2 selectedParcelType select2ParcelType">
-													<option value="" disabled
-															selected>@lang('Select Parcel Type')</option>
-													@foreach($parcelTypes as $parcel_type)
-														<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
-													@endforeach
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="parcel_unit_id"> @lang('Select Unit') </label>
-												<select name="parcel_unit_id"
-														class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit">
-													<option value="" disabled
-															selected>@lang('Select Parcel Unit')</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('parcel_unit_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Description/Percel Name') </label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="email"> @lang('Quantity')</label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="email"> @lang('Weight')</label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
 										</div>
 
+										<div class="addedParcelField">
+											<div class="row">
+												<div class="col-sm-12 col-md-3 mb-3">
+													<label for="parcel_type_id"> @lang('Parcel Type') </label>
+													<select name="parcel_type_id"
+															class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType select2ParcelType">
+														<option value="" disabled
+																selected>@lang('Select Parcel Type')</option>
+														@foreach($parcelTypes as $parcel_type)
+															<option
+																value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
+														@endforeach
+													</select>
 
-										<div class="row">
-											<div class="col-sm-12 col-md-12">
-												<label for="email"> @lang('Dimensions') [Length x Width x Height] (cm)
-													<span
-														class="text-danger">*</span></label>
-											</div>
-
-											<div class="col-sm-12 col-md-4 mb-3">
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-4 mb-3">
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-4 mb-3">
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-										</div>
-
-										<div class="row">
-											{{--									<div class="col-sm-12 col-md-7">--}}
-											{{--										<div class="form-group mb-4">--}}
-											{{--											<label class="col-form-label">@lang("Manager Photo")</label>--}}
-											{{--											<div id="image-preview" class="image-preview"--}}
-											{{--												 style="background-image: url({{ getFile(config('location.category.path'))}}">--}}
-											{{--												<label for="image-upload"--}}
-											{{--													   id="image-label">@lang('Choose File')</label>--}}
-											{{--												<input type="file" name="image" class=""--}}
-											{{--													   id="image-upload"/>--}}
-											{{--											</div>--}}
-											{{--											@error('image')--}}
-											{{--											<span class="text-danger">{{ $message }}</span>--}}
-											{{--											@enderror--}}
-											{{--										</div>--}}
-											{{--									</div>--}}
-
-											<div class="col-sm-12 col-md-7">
-												<div class="form-group mb-4">
-													<label class="col-form-label">@lang("Attatchments")</label>
-													<div class="shipment-image"></div>
-													@error('listing_image.*')
-													<span class="text-danger">@lang($message)</span>
-													@enderror
-												</div>
-											</div>
-
-
-											<div class="col-md-5 form-group">
-												<label>@lang('Status')</label>
-												<div class="selectgroup w-100">
-													<label class="selectgroup-item">
-														<input type="radio" name="status" value="0"
-															   class="selectgroup-input" {{ old('status') == 0 ? 'checked' : ''}}>
-														<span class="selectgroup-button">@lang('OFF')</span>
-													</label>
-													<label class="selectgroup-item">
-														<input type="radio" name="status" value="1"
-															   class="selectgroup-input" {{ old('status') == 1 ? 'checked' : ''}}>
-														<span class="selectgroup-button">@lang('ON')</span>
-													</label>
-												</div>
-											</div>
-										</div>
-
-
-										<div class="border-line-area">
-											<h6 class="border-line-title">Summary</h6>
-										</div>
-
-										<div class="d-flex justify-content-end shipmentsDiscount">
-											<div class="col-md-3">
-												<div class="input-group">
-													<span class="input-group-text">Discount</span>
-													<input type="number" name="discount" value=""
-														   class="form-control bg-white text-dark discount"
-														   id="discount">
-													<span class="input-group-text">%</span>
-												</div>
-											</div>
-										</div>
-
-										<div class=" d-flex justify-content-end mt-2">
-											<div class="col-md-3  d-flex justify-content-between">
-												<span class="fw-bold">Subtotal:</span>
-												<div>$<span class="subtotal">30.00</span></div>
-											</div>
-										</div>
-
-										<div class=" d-flex justify-content-end mt-2">
-											<div class="col-md-3  d-flex justify-content-between">
-												<span class="fw-bold">Total:</span>
-												<div> $<span class="total">27.00</span></div>
-											</div>
-										</div>
-
-
-										<button type="submit"
-												class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
-									</form>
-								</div>
-
-								<div class="tab-pane fade"
-									 id="tab2" role="tabpanel">
-									<form method="post" action="{{ route('shipmentStore') }}"
-										  class="mt-4" enctype="multipart/form-data">
-										@csrf
-										<div class="row mb-3">
-											<div class="col-sm-12 col-md-12 mb-3">
-												<label for="branch_id"> @lang('Shipment Type') </label>
-												@foreach($internationallyShipmentTypes as $shipmentType)
-													<div class="custom-control custom-radio">
-														<input type="radio" id="shipmentType{{ $shipmentType->id }}"
-															   name="shipment_type"
-															   class="custom-control-input">
-														<label class="custom-control-label"
-															   for="shipmentType{{ $shipmentType->id }}">@lang($shipmentType->shipment_type)
-															(@lang($shipmentType->title))</label>
+													<div class="invalid-feedback">
+														@error('parcel_type_id') @lang($message) @enderror
 													</div>
-												@endforeach
+												</div>
+
+												<div class="col-sm-12 col-md-2 mb-3">
+													<label for="parcel_unit_id"> @lang('Select Unit') </label>
+													<select name="parcel_unit_id"
+															class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit">
+														<option value="" disabled
+																selected>@lang('Select Parcel Unit')</option>
+													</select>
+
+													<div class="invalid-feedback">
+														@error('parcel_unit_id') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-3 mb-3">
+													<label
+														for="parcel_description"> @lang('Description/Parcel Name') </label>
+													<input type="text" name="parcel_description"
+														   class="form-control @error('parcel_description') is-invalid @enderror"
+														   value="{{ old('parcel_description') }}">
+													<div class="invalid-feedback">
+														@error('parcel_description') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-2 mb-3">
+													<label for="parcel_quantity"> @lang('Quantity')</label>
+													<input type="text" name="parcel_quantity"
+														   class="form-control @error('parcel_quantity') is-invalid @enderror"
+														   value="{{ old('parcel_quantity') }}">
+													<div class="invalid-feedback">
+														@error('parcel_quantity') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-2 mb-3">
+													<label for="parcel_weight"> @lang('Weight')</label>
+													<div class="input-group">
+														<input type="text" name="parcel_weight"
+															   class="form-control @error('parcel_weight') is-invalid @enderror"
+															   value="{{ old('parcel_weight') }}">
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																@lang('kg')
+															</div>
+														</div>
+													</div>
+
+													<div class="invalid-feedback">
+														@error('parcel_weight') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-12 d-flex justify-content-between">
+													<label for="email"> @lang('Dimensions') [Length x Width x Height]
+														(cm)
+														<span
+															class="text-dark font-weight-bold">(@lang('optional')</span></label>
+												</div>
+
+												<div class="col-sm-12 col-md-4 mb-3">
+													<input type="text" name="parcel_length"
+														   class="form-control @error('parcel_length') is-invalid @enderror"
+														   value="{{ old('parcel_length') }}">
+													<div class="invalid-feedback">
+														@error('parcel_length') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-4 mb-3">
+													<input type="text" name="parcel_width"
+														   class="form-control @error('parcel_width') is-invalid @enderror"
+														   value="{{ old('parcel_width') }}">
+													<div class="invalid-feedback">
+														@error('parcel_width') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-4 mb-3">
+													<input type="text" name="parcel_height"
+														   class="form-control @error('parcel_height') is-invalid @enderror"
+														   value="{{ old('parcel_height') }}">
+													<div class="invalid-feedback">
+														@error('parcel_height') @lang($message) @enderror
+													</div>
+												</div>
+
 											</div>
 										</div>
 
 										<div class="row">
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Shipping Date') </label>
-												<input type="text" class="form-control shipment_date flatpickr"
-													   name="shipment_date"
-													   value="{{ old('shipment_date',request()->shipment_date) }}"
-													   placeholder="@lang('shipment date')" autocomplete="off"/>
-												<div class="invalid-feedback">
-													@error('shipment_date') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Estimate Delivery Date') </label>
-												<input type="date" class="form-control start_date flatpickr2"
-													   name="delivery_date"
-													   value="{{ old('delivery_date',request()->delivery_date) }}"
-													   placeholder="@lang('Delivery date')" autocomplete="off"/>
-												<div class="invalid-feedback">
-													@error('delivery_date') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="sender_branch"> @lang('Sender Branch') </label>
-												<select name="sender_branch"
-														class="form-control @error('sender_branch') is-invalid @enderror select2 select-branch">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													@foreach($allBranches as $branch)
-														<option
-															value="{{ $branch->id }}">@lang($branch->branch_name)</option>
-													@endforeach
-												</select>
-												<div class="invalid-feedback">
-													@error('sender_branch') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="receiver_branch"> @lang('Receiver Branch')</label>
-												<select name="receiver_branch"
-														class="form-control @error('receiver_branch') is-invalid @enderror select2 select-branch">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													@foreach($allBranches as $branch)
-														<option
-															value="{{ $branch->id }}">@lang($branch->branch_name)</option>
-													@endforeach
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-										</div>
-
-										<div class="row">
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="sender_id"> @lang('Sender')</label>
-												<select name="sender_id"
-														class="form-control @error('sender_id') is-invalid @enderror select2 select-client"
-														id="sender_id">
-													<option value="" disabled selected>@lang('Select Sender')</option>
-													@foreach($senders as $sender)
-														<option value="{{ $sender->id }}">@lang($sender->name)</option>
-													@endforeach
-												</select>
-
-												<div class="invalid-feedback">
-													@error('sender_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="receiver_id"> @lang('Receiver')</label>
-												<select name="receiver_id"
-														class="form-control @error('receiver_id') is-invalid @enderror select2 select-client">
-													<option value="" disabled selected>@lang('Select Receiver')</option>
-													@foreach($receivers as $receiver)
-														<option
-															value="{{ $receiver->id }}">@lang($receiver->name)</option>
-													@endforeach
-												</select>
-
-												<div class="invalid-feedback">
-													@error('receiver_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('From Country') <span class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('To Country') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('From State') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('To State') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('From City') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('To City') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-										</div>
-
-										<div class="row">
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('From Area') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('To Area') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('Payment Type') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">@lang('From Wallet')</option>
-													<option value="">@lang('Cash')</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('Payment Status') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">@lang('Paid')</option>
-													<option value="">@lang('Unpaid')</option>
-													<option value="">@lang('Postpaid')</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-										</div>
-
-
-										<div class="row mb-3">
-											<div class="col-sm-12 col-md-12 mb-3">
-												<label for="branch_id"> @lang('Packing Service') <span
-														class="text-danger">*</span></label>
-												<div class="custom-control custom-radio">
-													<input type="radio" id="packing_service" name="packing_service"
-														   class="custom-control-input">
-													<label class="custom-control-label"
-														   for="packing_service">@lang('Yes')</label>
-												</div>
-												<div class="custom-control custom-radio">
-													<input type="radio" id="packing_service2" name="packing_service"
-														   class="custom-control-input">
-													<label class="custom-control-label"
-														   for="packing_service2">@lang('No')</label>
-												</div>
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('Packing Type') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">asdfasd</option>
-													<option value="">adsasdfs</option>
-													<option value="">adsasdf</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('quantity') <span class="text-danger">*</span></label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Total Packing Cost') <span
-														class="text-danger">*</span></label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-										</div>
-
-
-										<div class="row">
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="branch_id"> @lang('Percel Type') <span
-														class="text-danger">*</span></label>
-												<select name="branch_id"
-														class="form-control @error('branch_id') is-invalid @enderror select2">
-													<option value="" disabled selected>@lang('Select Branch')</option>
-													<option value="">Food</option>
-													<option value="">Oil</option>
-													<option value="">Wood</option>
-													<option value="">Electronics</option>
-												</select>
-
-												<div class="invalid-feedback">
-													@error('branch_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Description/Percel Name') <span
-														class="text-danger">*</span></label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Quantity') <span class="text-danger">*</span></label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="email"> @lang('Weight') kg <span
-														class="text-danger">*</span></label>
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-										</div>
-
-
-										<div class="row">
-											<div class="col-sm-12 col-md-12">
-												<label for="email"> @lang('Dimensions') [Length x Width x Height] (cm)
-													<span
-														class="text-danger">*</span></label>
-											</div>
-
-											<div class="col-sm-12 col-md-4 mb-3">
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-4 mb-3">
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-4 mb-3">
-												<input type="text" name="email"
-													   class="form-control @error('email') is-invalid @enderror managerEmail"
-													   value="{{ old('email') }}">
-												<div class="invalid-feedback">
-													@error('email') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-										</div>
-
-										<div class="row">
-											{{--									<div class="col-sm-12 col-md-7">--}}
-											{{--										<div class="form-group mb-4">--}}
-											{{--											<label class="col-form-label">@lang("Manager Photo")</label>--}}
-											{{--											<div id="image-preview" class="image-preview"--}}
-											{{--												 style="background-image: url({{ getFile(config('location.category.path'))}}">--}}
-											{{--												<label for="image-upload"--}}
-											{{--													   id="image-label">@lang('Choose File')</label>--}}
-											{{--												<input type="file" name="image" class=""--}}
-											{{--													   id="image-upload"/>--}}
-											{{--											</div>--}}
-											{{--											@error('image')--}}
-											{{--											<span class="text-danger">{{ $message }}</span>--}}
-											{{--											@enderror--}}
-											{{--										</div>--}}
-											{{--									</div>--}}
-
 											<div class="col-sm-12 col-md-7">
 												<div class="form-group mb-4">
 													<label class="col-form-label">@lang("Attatchments")</label>
-													<div class="shipment-image"></div>
-													@error('listing_image.*')
+													<div class="shipment_image"></div>
+													@error('shipment_image.*')
 													<span class="text-danger">@lang($message)</span>
 													@enderror
 												</div>
@@ -1082,7 +532,7 @@
 										<div class="d-flex justify-content-end shipmentsDiscount">
 											<div class="col-md-3">
 												<div class="input-group">
-													<span class="input-group-text">Discount</span>
+													<span class="input-group-text">@lang('Discount')</span>
 													<input type="number" name="discount" value=""
 														   class="form-control bg-white text-dark discount"
 														   id="discount">
@@ -1092,16 +542,48 @@
 										</div>
 
 										<div class=" d-flex justify-content-end mt-2">
-											<div class="col-md-3  d-flex justify-content-between">
-												<span class="fw-bold">Subtotal:</span>
-												<div>$<span class="subtotal">30.00</span></div>
+											<div class="col-md-3 d-flex justify-content-between">
+												<span class="fw-bold">@lang('Subtotal')</span>
+												<div class="input-group w-50">
+													<input type="number" name="sub_total" value="0"
+														   class="form-control bg-white text-dark subTotal" readonly>
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															{{ $basic->currency_symbol }}
+														</div>
+													</div>
+												</div>
 											</div>
 										</div>
 
 										<div class=" d-flex justify-content-end mt-2">
-											<div class="col-md-3  d-flex justify-content-between">
-												<span class="fw-bold">Total:</span>
-												<div> $<span class="total">27.00</span></div>
+											<div class="col-md-3 d-flex justify-content-between">
+												<span class="fw-bold">@lang('Discount')</span>
+												<div class="input-group w-50">
+													<input type="number" name="discount_amount" value="0"
+														   class="form-control bg-white text-dark discountAmount"
+														   readonly>
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															{{ $basic->currency_symbol }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class=" d-flex justify-content-end mt-2">
+											<div class="col-md-3 d-flex justify-content-between">
+												<span class="fw-bold">@lang('Total Pay')</span>
+												<div class="input-group w-50">
+													<input type="number" name="total_pay" value="0"
+														   class="form-control bg-white text-dark totalPay" readonly>
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															{{ $basic->currency_symbol }}
+														</div>
+													</div>
+												</div>
 											</div>
 										</div>
 
@@ -1131,7 +613,6 @@
 			@include('partials.packageVariant')
 			<script type="text/javascript">
 				'use strict';
-
 				// Get references to the radio buttons and the target element
 				const packingServiceOn = document.getElementById('packingServiceOn');
 				const packingServiceOff = document.getElementById('packingServiceOff');
@@ -1139,31 +620,28 @@
 				// Add event listeners to the radio buttons
 				packingServiceOn.addEventListener('change', function () {
 					if (packingServiceOn.checked) {
-						$('.addedField').removeClass('d-none')
-						$('.addFieldButton').removeClass('d-none')
+						$('.addedPackingField').removeClass('d-none')
+						$('.addPackingFieldButton').removeClass('d-none')
 					}
 				});
 
 				packingServiceOff.addEventListener('change', function () {
 					if (packingServiceOff.checked) {
-						$('.addedField').addClass('d-none')
-						$('.addFieldButton').addClass('d-none')
+						$('.addedPackingField').addClass('d-none')
+						$('.addPackingFieldButton').addClass('d-none')
 					}
 				});
 
 				function variantQuantityHandel(id) {
 					const variantQuantityId = `#variantQuantity_${id}`;
-
 					let quantity = $(variantQuantityId).val();
 					let variantPrice = $(`.variantPrice_${id}`).val();
 
 					let totalPackingCost = quantity * variantPrice;
 					$(`.totalPackingCost_${id}`).val(totalPackingCost);
-
 				}
 
 				$(document).ready(function () {
-
 					$(".flatpickr").flatpickr({
 						altInput: true,
 						dateFormat: "Y-m-d H:i",
@@ -1185,17 +663,8 @@
 						maxSize: 5242880
 					};
 
-					$('.shipment-image').imageUploader(shipingImageOptions);
+					$('.shipment_image').imageUploader(shipingImageOptions);
 
-
-					$.uploadPreview({
-						input_field: "#image-upload",
-						preview_box: "#image-preview",
-						label_field: "#image-label",
-						label_default: "Choose File",
-						label_selected: "Change File",
-						no_label: false
-					});
 
 					$('#variantQuantity').on('keyup', function () {
 						let quantity = $(this).val();
@@ -1211,7 +680,6 @@
 					})
 
 					function getSeletedRoleUser(value) {
-
 						$.ajaxSetup({
 							headers: {
 								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1245,7 +713,6 @@
 					})
 
 					function getSeletedRoleUserInfo(value) {
-
 						$.ajaxSetup({
 							headers: {
 								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1268,7 +735,7 @@
 						});
 					}
 
-					$("#generate").on('click', function () {
+					$("#packingGenerate").on('click', function () {
 						const id = Date.now();
 						var form = `<div class="row">
 										<div class="col-md-12">
@@ -1281,19 +748,19 @@
 														@endforeach
 						</select>
 
-						<select name="variant_id" class="form-control @error('variant_id') is-invalid @enderror selectedVariant_${id}" onchange="selectedVariantServiceHandel(${id})">
+						<select name="variant_id" class="form-control @error('variant_id') is-invalid @enderror selectedVariant_${id} newVariant" onchange="selectedVariantServiceHandel(${id})">
 														<option value="">@lang('Select Variant')</option>
 													</select>
 
-													<input type="text" name="variant_price" class="form-control @error('variant_price') is-invalid @enderror variantPrice_${id}" placeholder="@lang('price')">
+													<input type="text" name="variant_price" class="form-control @error('variant_price') is-invalid @enderror newVariantPrice variantPrice_${id}" placeholder="@lang('price')">
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ config('basic.currency_symbol') }}
 						</div>
 					</div>
 
-					<input type="text" name="variant_quantity" class="form-control @error('variant_quantity') is-invalid @enderror" value="{{ old('variant_quantity') }}" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" placeholder="@lang('quantity')">
-													<input type="text" name="email" class="form-control @error('email') is-invalid @enderror managerEmail totalPackingCost_${id}" value="{{ old('email') }}" readonly placeholder="@lang('total cost')">
+					<input type="text" name="variant_quantity" class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity" value="{{ old('variant_quantity') }}" id="variantQuantity_${id}"  placeholder="@lang('quantity')">
+													<input type="text" name="package_cost" class="form-control @error('package_cost') is-invalid @enderror totalPackingCost_${id} packingCostValue" value="{{ old('email') }} " readonly placeholder="@lang('total cost')">
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ config('basic.currency_symbol') }}
@@ -1301,20 +768,144 @@
 					</div>
 
 					<span class="input-group-btn">
-						<button class="btn btn-danger  delete_desc custom_delete_desc_padding" type="button">
-							<i class="fa fa-times"></i>
+						<button class="btn btn-danger  delete_packing_desc custom_delete_desc_padding" type="button">
+						<i class="fa fa-times"></i>
 						</button>
 					</span>
 				</div>
 			</div>
 		</div>
 	</div>`;
-						$('.addedField').append(form)
+						$('.addedPackingField').append(form)
 					});
 
-					$(document).on('click', '.delete_desc', function () {
+					$(document).on('click', '.delete_packing_desc', function () {
 						$(this).closest('.input-group').parent().remove();
 					});
+
+					// i am here
+					$("#parcelGenerate").on('click', function () {
+						const id = Date.now();
+						var form = `<div class="row" id="removeParcelField${id}">
+										<div class="col-md-12 d-flex justify-content-end">
+											<button
+												class="btn btn-danger  delete_parcel_desc custom_delete_desc_padding mt-4"
+												type="button" onclick="deleteParcelField(${id})">
+												<i class="fa fa-times"></i>
+											</button>
+										</div>
+										<div class="col-sm-12 col-md-3 mb-3">
+											<label for="parcel_type_id"> @lang('Parcel Type') </label>
+											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})">
+												<option value="" disabled selected>@lang('Select Parcel Type')</option>
+												@foreach($parcelTypes as $parcel_type)
+						<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
+												@endforeach
+						</select>
+
+						<div class="invalid-feedback">
+@error('parcel_type_id') @lang($message) @enderror
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-md-2 mb-3">
+						<label for="parcel_unit_id"> @lang('Select Unit') </label>
+											<select name="parcel_unit_id"
+													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit${id}">
+												<option value="" disabled
+														selected>@lang('Select Parcel Unit')</option>
+											</select>
+
+											<div class="invalid-feedback">
+												@error('parcel_unit_id') @lang($message) @enderror
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-md-3 mb-3">
+						<label for="parcel_description"> @lang('Description/Percel Name') </label>
+											<input type="text" name="parcel_description"
+												   class="form-control @error('parcel_description') is-invalid @enderror"
+												   value="{{ old('email') }}">
+											<div class="invalid-feedback">
+												@error('parcel_description') @lang($message) @enderror
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-md-2 mb-3">
+						<label for="parcel_quantity"> @lang('Quantity')</label>
+											<input type="text" name="parcel_quantity"
+												   class="form-control @error('parcel_quantity') is-invalid @enderror"
+												   value="{{ old('parcel_quantity') }}">
+											<div class="invalid-feedback">
+												@error('parcel_quantity') @lang($message) @enderror
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-md-2 mb-3">
+						<label for="parcel_weight"> @lang('Weight')</label>
+											<input type="text" name="parcel_weight"
+												   class="form-control @error('parcel_weight') is-invalid @enderror"
+												   value="{{ old('parcel_weight') }}">
+											<div class="invalid-feedback">
+												@error('parcel_weight') @lang($message) @enderror
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-md-12">
+						<label> @lang('Dimensions') [Length x Width x Height] (cm)
+											<span class="text-dark font-weight-bold">(optional)</span></label>
+										</div>
+
+										<div class="col-sm-12 col-md-4 mb-3">
+											<input type="text" name="parcel_length" class="form-control @error('parcel_length') is-invalid @enderror" value="{{ old('parcel_length') }}">
+											<div class="invalid-feedback">
+												@error('parcel_length') @lang($message) @enderror
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-md-4 mb-3">
+						<input type="text" name="parcel_width" class="form-control @error('parcel_width') is-invalid @enderror" value="{{ old('parcel_width') }}">
+											<div class="invalid-feedback">
+												@error('parcel_width') @lang($message) @enderror
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-md-4 mb-3">
+						<input type="text" name="parcel_height" class="form-control @error('parcel_height') is-invalid @enderror" value="{{ old('parcel_height') }}">
+											<div class="invalid-feedback">
+												@error('parcel_height') @lang($message) @enderror
+						</div>
+					</div>
+				</div>`;
+
+						$('.addedParcelField').append(form)
+
+					});
 				});
+
+
+				function deleteParcelField(id) {
+					$(`#removeParcelField${id}`).remove();
+				}
+
+
+				$(document).on('input', '.newVariantQuantity', function(){
+					window.calculateSubTotalPrice();
+				})
+
+
+			 window.calculateSubTotalPrice = function calculateSubTotalPrice(){
+					let subTotal = 0;
+					$('.newVariantQuantity').each(function (key, value){
+						console.log($(value).val());
+						let quantity = parseFloat($(value).val()).toFixed(2);
+						let price = parseFloat($(value).siblings('.newVariantPrice').val()).toFixed(2);
+						let cost = (isNaN(quantity) || isNaN(price)) ? 0 : quantity * price;
+						subTotal += cost;
+					})
+					$('.subTotal').val(subTotal);
+				}
+
+
 			</script>
 @endsection

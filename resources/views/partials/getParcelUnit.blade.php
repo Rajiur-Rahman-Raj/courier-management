@@ -1,14 +1,17 @@
 <script>
 	'use strict'
 
-
-
 	$(document).on('change', '.selectedParcelType', function () {
 		let selectedValue = $(this).val();
 		getSelectedParcelTypeUnit(selectedValue);
 	})
 
-	function getSelectedParcelTypeUnit(value, unitId=null) {
+	function selectedParcelTypeHandel(id = null){
+		let selectedValue = $(`.selectedParcelType_${id}`).val();
+		getSelectedParcelTypeUnit(selectedValue, null, id);
+	}
+
+	function getSelectedParcelTypeUnit(value, unitId=null, dynamicId = null) {
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -22,12 +25,16 @@
 				id: value,
 			},
 			success: function (response) {
+				let selectedParcelUnitClass = '.selectedParcelUnit';
+				if (dynamicId){
+					selectedParcelUnitClass = `.selectedParcelUnit${dynamicId}`
+				}
 				let responseData = response;
-				$('.selectedParcelUnit').empty();
+				$(selectedParcelUnitClass).empty();
 				responseData.forEach(res => {
-					$('.selectedParcelUnit').append(`<option value="${res.id}">${res.unit}</option>`)
+					$(selectedParcelUnitClass).append(`<option value="${res.id}">${res.unit}</option>`)
 				})
-				$('.selectedParcelUnit').prepend(`<option value="" selected disabled>@lang('Select Unit')</option>`)
+				$(selectedParcelUnitClass).prepend(`<option value="" selected disabled>@lang('Select Unit')</option>`)
 				$('#unitId').val(unitId);
 				$('.cost-per-unit').text(`(${responseData[0].unit})`)
 			},
