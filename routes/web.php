@@ -192,6 +192,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::put('parcel-unit-update/{id}', [ParcelController::class, 'parcelUnitUpdate'])->name('parcelUnitUpdate');
 		Route::post('get-parcel-type-unit', [ParcelController::class, 'getSelectedParcelTypeUnit'])->name('getSelectedParcelTypeUnit');
 
+		Route::post('get-parcel-unit-service', [PackingController::class, 'getSelectedParcelUnitService'])->name('getSelectedParcelUnitService');
+
 		Route::post('parcel-service-store', [ParcelController::class, 'parcelServiceStore'])->name('parcelServiceStore');
 		Route::put('parcel-service-update/{id}', [ParcelController::class, 'parcelServiceUpdate'])->name('parcelServiceUpdate');
 	});

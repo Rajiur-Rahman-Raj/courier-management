@@ -344,8 +344,9 @@
 
 															<input type="text" name="variant_quantity"
 																   class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity"
-																   value="{{ old('variant_quantity') }}" id="variantQuantity"
-																    placeholder="@lang('quantity')">
+																   value="{{ old('variant_quantity') }}"
+																   id="variantQuantity"
+																   placeholder="@lang('quantity')">
 
 															<input type="text" name="package_cost"
 																   class="form-control @error('package_cost') is-invalid @enderror managerEmail totalPackingCost packingCostValue"
@@ -389,7 +390,18 @@
 
 										<div class="addedParcelField">
 											<div class="row">
-												<div class="col-sm-12 col-md-3 mb-3">
+												<div class="col-sm-12 col-md-4 mb-3">
+													<label
+														for="parcel_description"> @lang('Description/Parcel Name') </label>
+													<input type="text" name="parcel_description"
+														   class="form-control @error('parcel_description') is-invalid @enderror"
+														   value="{{ old('parcel_description') }}">
+													<div class="invalid-feedback">
+														@error('parcel_description') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-4 mb-3">
 													<label for="parcel_type_id"> @lang('Parcel Type') </label>
 													<select name="parcel_type_id"
 															class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType select2ParcelType">
@@ -406,7 +418,7 @@
 													</div>
 												</div>
 
-												<div class="col-sm-12 col-md-2 mb-3">
+												<div class="col-sm-12 col-md-4 mb-3">
 													<label for="parcel_unit_id"> @lang('Select Unit') </label>
 													<select name="parcel_unit_id"
 															class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit">
@@ -420,18 +432,28 @@
 												</div>
 
 												<div class="col-sm-12 col-md-3 mb-3">
-													<label
-														for="parcel_description"> @lang('Description/Parcel Name') </label>
-													<input type="text" name="parcel_description"
-														   class="form-control @error('parcel_description') is-invalid @enderror"
-														   value="{{ old('parcel_description') }}">
-													<div class="invalid-feedback">
-														@error('parcel_description') @lang($message) @enderror
+
+													<label for="cost_per_unit"> @lang('Cost per unit')</label>
+													<div class="input-group">
+														<input type="text" name="cost_per_unit"
+															   class="form-control @error('cost_per_unit') is-invalid @enderror unitPrice newCostPerUnit"
+															   value="{{ old('cost_per_unit') }}">
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																{{ $basic->currency_symbol }}
+															</div>
+														</div>
+
+														<div class="invalid-feedback">
+															@error('cost_per_unit') @lang($message) @enderror
+														</div>
+
 													</div>
 												</div>
 
-												<div class="col-sm-12 col-md-2 mb-3">
-													<label for="parcel_quantity"> @lang('Quantity')</label>
+
+												<div class="col-sm-12 col-md-3 mb-3">
+													<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
 													<input type="text" name="parcel_quantity"
 														   class="form-control @error('parcel_quantity') is-invalid @enderror"
 														   value="{{ old('parcel_quantity') }}">
@@ -440,11 +462,11 @@
 													</div>
 												</div>
 
-												<div class="col-sm-12 col-md-2 mb-3">
-													<label for="parcel_weight"> @lang('Weight')</label>
+												<div class="col-sm-12 col-md-3 mb-3 new_total_weight_parent">
+													<label for="parcel_weight"> @lang('Total Weight')</label>
 													<div class="input-group">
 														<input type="text" name="parcel_weight"
-															   class="form-control @error('parcel_weight') is-invalid @enderror"
+															   class="form-control @error('parcel_weight') is-invalid @enderror newTotalWeight"
 															   value="{{ old('parcel_weight') }}">
 														<div class="input-group-append" readonly="">
 															<div class="form-control">
@@ -455,6 +477,24 @@
 
 													<div class="invalid-feedback">
 														@error('parcel_weight') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-3 mb-3">
+													<label for="parcel_total_cost"> @lang('Total Cost')</label>
+													<div class="input-group">
+														<input type="text" name="parcel_total_cost"
+															   class="form-control @error('parcel_total_cost') is-invalid @enderror"
+															   value="{{ old('parcel_total_cost') }}">
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																{{ $basic->currency_symbol }}
+															</div>
+														</div>
+													</div>
+
+													<div class="invalid-feedback">
+														@error('parcel_total_cost') @lang($message) @enderror
 													</div>
 												</div>
 
@@ -598,6 +638,8 @@
 				</div>
 			</div>
 		</div>
+		<input type="hidden" class="firstFiv" value="0">
+		<input type="hidden" class="lastFiv" value="0">
 		@endsection
 
 		@push('extra_scripts')
@@ -632,14 +674,7 @@
 					}
 				});
 
-				function variantQuantityHandel(id) {
-					const variantQuantityId = `#variantQuantity_${id}`;
-					let quantity = $(variantQuantityId).val();
-					let variantPrice = $(`.variantPrice_${id}`).val();
 
-					let totalPackingCost = quantity * variantPrice;
-					$(`.totalPackingCost_${id}`).val(totalPackingCost);
-				}
 
 				$(document).ready(function () {
 					$(".flatpickr").flatpickr({
@@ -752,16 +787,16 @@
 														<option value="">@lang('Select Variant')</option>
 													</select>
 
-													<input type="text" name="variant_price" class="form-control @error('variant_price') is-invalid @enderror newVariantPrice variantPrice_${id}" placeholder="@lang('price')">
+													<input type="text" name="variant_price" class="form-control @error('variant_price') is-invalid @enderror newVariantPrice variantPrice_${id}" placeholder="@lang('price')" >
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ config('basic.currency_symbol') }}
 						</div>
 					</div>
 
-					<input type="text" name="variant_quantity" class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity" value="{{ old('variant_quantity') }}" id="variantQuantity_${id}"  placeholder="@lang('quantity')">
-													<input type="text" name="package_cost" class="form-control @error('package_cost') is-invalid @enderror totalPackingCost_${id} packingCostValue" value="{{ old('email') }} " readonly placeholder="@lang('total cost')">
-													<div class="input-group-append" readonly="">
+					<input type="text" name="variant_quantity" class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity" value="{{ old('variant_quantity') }}" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" placeholder="@lang('quantity')">
+													<input type="text" name="package_cost" class="form-control @error('package_cost') is-invalid @enderror totalPackingCost_${id} packingCostValue" value="{{ old('package_cost') }} " readonly placeholder="@lang('total cost')">
+													<div class="input-group-append">
 														<div class="form-control">
 															{{ config('basic.currency_symbol') }}
 						</div>
@@ -794,7 +829,17 @@
 												<i class="fa fa-times"></i>
 											</button>
 										</div>
-										<div class="col-sm-12 col-md-3 mb-3">
+										<div class="col-sm-12 col-md-4 mb-3">
+						<label for="parcel_description"> @lang('Description/Percel Name') </label>
+											<input type="text" name="parcel_description"
+												   class="form-control @error('parcel_description') is-invalid @enderror"
+												   value="{{ old('email') }}">
+											<div class="invalid-feedback">
+												@error('parcel_description') @lang($message) @enderror
+						</div>
+					</div>
+
+										<div class="col-sm-12 col-md-4 mb-3">
 											<label for="parcel_type_id"> @lang('Parcel Type') </label>
 											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})">
 												<option value="" disabled selected>@lang('Select Parcel Type')</option>
@@ -808,10 +853,10 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-2 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3">
 						<label for="parcel_unit_id"> @lang('Select Unit') </label>
 											<select name="parcel_unit_id"
-													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit${id}">
+													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})">
 												<option value="" disabled
 														selected>@lang('Select Parcel Unit')</option>
 											</select>
@@ -821,38 +866,70 @@
 						</div>
 					</div>
 
+
 					<div class="col-sm-12 col-md-3 mb-3">
-						<label for="parcel_description"> @lang('Description/Percel Name') </label>
-											<input type="text" name="parcel_description"
-												   class="form-control @error('parcel_description') is-invalid @enderror"
-												   value="{{ old('email') }}">
-											<div class="invalid-feedback">
-												@error('parcel_description') @lang($message) @enderror
+													<label for="cost_per_unit"> @lang('Cost per unit')</label>
+													<div class="input-group">
+														<input type="text" name="cost_per_unit"
+															   class="form-control @error('cost_per_unit') is-invalid @enderror newCostPerUnit unitPrice_${id}"
+															   value="{{ old('cost_per_unit') }}">
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																{{ $basic->currency_symbol }}
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-2 mb-3">
-						<label for="parcel_quantity"> @lang('Quantity')</label>
-											<input type="text" name="parcel_quantity"
-												   class="form-control @error('parcel_quantity') is-invalid @enderror"
-												   value="{{ old('parcel_quantity') }}">
-											<div class="invalid-feedback">
-												@error('parcel_quantity') @lang($message) @enderror
+					<div class="invalid-feedback">
+@error('cost_per_unit') @lang($message) @enderror
+						</div>
+
+					</div>
+				</div>
+
+
+				<div class="col-sm-12 col-md-3 mb-3">
+					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
+													<input type="text" name="parcel_quantity"
+														   class="form-control @error('parcel_quantity') is-invalid @enderror"
+														   value="{{ old('parcel_quantity') }}">
+													<div class="invalid-feedback">
+														@error('parcel_quantity') @lang($message) @enderror
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-2 mb-3">
-						<label for="parcel_weight"> @lang('Weight')</label>
-											<input type="text" name="parcel_weight"
-												   class="form-control @error('parcel_weight') is-invalid @enderror"
-												   value="{{ old('parcel_weight') }}">
-											<div class="invalid-feedback">
-												@error('parcel_weight') @lang($message) @enderror
+					<div class="col-sm-12 col-md-3 mb-3 new_total_weight_parent">
+						<label for="parcel_weight"> @lang('Total Weight')</label>
+						<div class="input-group">
+							<input type="text" name="parcel_weight" class="form-control @error('parcel_weight') is-invalid @enderror newTotalWeight" value="{{ old('parcel_weight') }}">
+							<div class="input-group-append" readonly="">
+								<div class="form-control">
+									@lang('kg')
+						</div>
+					</div>
+				</div>
+				<div class="invalid-feedback"> @error('parcel_weight') @lang($message) @enderror </div>
+					</div>
+
+					<div class="col-sm-12 col-md-3 mb-3">
+						<label for="parcel_total_cost"> @lang('Total Cost')</label>
+													<div class="input-group">
+														<input type="text" name="parcel_total_cost"
+															   class="form-control @error('parcel_total_cost') is-invalid @enderror"
+															   value="{{ old('parcel_total_cost') }}">
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																{{ $basic->currency_symbol }}
+						</div>
+					</div>
+				</div>
+
+				<div class="invalid-feedback">
+@error('parcel_total_cost') @lang($message) @enderror
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-12">
-						<label> @lang('Dimensions') [Length x Width x Height] (cm)
+<div class="col-sm-12 col-md-12">
+<label> @lang('Dimensions') [Length x Width x Height] (cm)
 											<span class="text-dark font-weight-bold">(optional)</span></label>
 										</div>
 
@@ -888,22 +965,57 @@
 					$(`#removeParcelField${id}`).remove();
 				}
 
-
-				$(document).on('input', '.newVariantQuantity', function(){
-					window.calculateSubTotalPrice();
+				$(document).on('input', '.newVariantQuantity', function () {
+					window.calculatePackingTotalPrice();
 				})
 
-
-			 window.calculateSubTotalPrice = function calculateSubTotalPrice(){
+				window.calculatePackingTotalPrice = function calculatePackingTotalPrice() {
 					let subTotal = 0;
-					$('.newVariantQuantity').each(function (key, value){
-						console.log($(value).val());
+					$('.newVariantQuantity').each(function (key, value) {
 						let quantity = parseFloat($(value).val()).toFixed(2);
 						let price = parseFloat($(value).siblings('.newVariantPrice').val()).toFixed(2);
 						let cost = (isNaN(quantity) || isNaN(price)) ? 0 : quantity * price;
 						subTotal += cost;
 					})
-					$('.subTotal').val(subTotal);
+					let updateSubTotal = subTotal.toFixed(2);
+					$('.subTotal').val(updateSubTotal);
+					$('.lastFiv').val(updateSubTotal);
+
+					totalSubCount(subTotal);
+				}
+
+
+				$(document).on('input', '.newTotalWeight', function () {
+					window.calculateParcelTotalPrice();
+				});
+
+				window.calculateParcelTotalPrice = function calculateParcelTotalPrice() {
+					let subTotal = 0;
+					$('.newTotalWeight').each(function (key, value) {
+						let totalWeight = parseFloat($(this).val()).toFixed(2);
+						let costPerUnit = parseFloat($(value).parents('.new_total_weight_parent').siblings().find('.newCostPerUnit').val()).toFixed(2);
+						let cost = isNaN(totalWeight) || isNaN(costPerUnit) ? 0 : totalWeight * costPerUnit;
+						subTotal += cost;
+					});
+					let updateSubTotal = subTotal.toFixed(2);
+					$('.subTotal').val(updateSubTotal);
+					$('.firstFiv').val(updateSubTotal);
+					totalSubCount(subTotal);
+				}
+
+				function totalSubCount() {
+					let total = parseFloat($('.firstFiv').val()) + parseFloat($('.lastFiv').val());
+					$('.subTotal').val(total.toFixed(2));
+				}
+
+
+				function variantQuantityHandel(id) {
+					const variantQuantityId = `#variantQuantity_${id}`;
+					let quantity = $(variantQuantityId).val();
+					let variantPrice = $(`.variantPrice_${id}`).val();
+
+					let totalPackingCost = quantity * variantPrice;
+					$(`.totalPackingCost_${id}`).val(totalPackingCost);
 				}
 
 

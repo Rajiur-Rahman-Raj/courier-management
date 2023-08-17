@@ -103,7 +103,6 @@
 		}
 
 
-
 		// From country state city area
 		$('.selectedFromCountry').on('change', function () {
 			let selectedValue = $(this).val();
@@ -130,7 +129,7 @@
 						$('.selectedFromState').append(`<option value="${res.id}" ${res.id == from_state_id ? 'selected' : ''}>${res.name}</option>`)
 					})
 
-					if(dataProperty){
+					if (dataProperty) {
 						window.getSelectedFromStateCity($('.selectedFromState').val(), dataProperty.from_city_id);
 						window.getSelectedFromCityArea($('.selectedFromState').val(), dataProperty.from_city_id);
 					}
@@ -172,7 +171,7 @@
 						$('.selectedToState').append(`<option value="${res.id}" ${res.id == to_state_id ? 'selected' : ''}>${res.name}</option>`)
 					})
 
-					if (dataProperty){
+					if (dataProperty) {
 						window.getSelectedToCityArea($('.selectedToState').val(), dataProperty.to_city_id);
 						window.getSelectedToStateCity($('.selectedToState').val(), dataProperty.to_city_id);
 					}
@@ -213,7 +212,7 @@
 						$('.selectedFromCity').append(`<option value="${res.id}" ${res.id == from_city_id ? 'selected' : ''}>${res.name}</option>`)
 					})
 
-					if(dataProperty){
+					if (dataProperty) {
 						window.getSelectedFromCityArea($('.selectedFromCity').val(), dataProperty.from_area_id);
 					}
 
@@ -252,7 +251,7 @@
 					responseData.forEach(res => {
 						$('.selectedToCity').append(`<option value="${res.id}" ${res.id == to_city_id ? 'selected' : ''}>${res.name}</option>`)
 					})
-					if (dataProperty){
+					if (dataProperty) {
 						window.getSelectedToCityArea($('.selectedToCity').val(), dataProperty.to_area_id);
 					}
 
@@ -328,7 +327,7 @@
 						$('.selectedToArea').append(`<option value="${res.id}" ${res.id == to_area_id ? 'selected' : ''}>${res.name}</option>`)
 					})
 
-					if (!to_area_id){
+					if (!to_area_id) {
 						$('.selectedToArea').prepend(`<option value="" selected disabled>@lang('Select Area')</option>`)
 					}
 

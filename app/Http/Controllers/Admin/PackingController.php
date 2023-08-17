@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\PackageVariant;
 use App\Models\Admin\PackingService;
 use App\Models\Package;
+use App\Models\ParcelService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -296,6 +297,11 @@ class PackingController extends Controller
 
 	public function getSelectedVariantService(Request $request){
 		$results = PackingService::where('package_id', $request->packageId)->where('variant_id', $request->variantId)->where('status', 1)->get();
+		return response($results);
+	}
+
+	public function getSelectedParcelUnitService(Request $request){
+		$results = ParcelService::where('parcel_type_id', $request->parcelTypeId)->where('parcel_unit_id', $request->parcelUnitId)->where('status', 1)->get();
 		return response($results);
 	}
 

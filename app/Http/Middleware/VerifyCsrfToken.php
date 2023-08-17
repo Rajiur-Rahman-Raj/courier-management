@@ -18,5 +18,8 @@ class VerifyCsrfToken extends Middleware
         'admin/sort-payment-methods',
         '*branch-employee-list',
         '*get-role-user-info',
+        '*get-parcel-unit-service',
+        '*get-parcel-unit-service',
+        '*get-parcel-type-unit',
     ];
 }

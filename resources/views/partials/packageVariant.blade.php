@@ -141,11 +141,9 @@
 			selectedPackageValue = $(`.selectedPackage_${id}`).val();
 			selectedVariantValue = $(`.selectedVariant_${id}`).val();
 		}
+
 		getSelectedVariantService(selectedPackageValue, selectedVariantValue, id);
-
 	}
-
-
 
 
 
@@ -170,7 +168,7 @@
 					variantPriceClass = `.variantPrice_${id}`;
 				}
 				$(variantPriceClass).val(responseData[0].cost)
-				window.calculateSubTotalPrice();
+				window.calculatePackingTotalPrice();
 			},
 			error: function (xhr, status, error) {
 				console.log(error)
