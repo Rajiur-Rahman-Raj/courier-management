@@ -5,6 +5,7 @@
 		let selectedValue = $(this).val();
 		const selectedPack = false;
 		getSelectedPackageVariant(selectedValue, selectedPack);
+
 	})
 
 	function selectedPackageVariantHandel(id = null) {

@@ -130,6 +130,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('shipment-list', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
 		Route::get('create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
 		Route::post('shipment-store', [ShipmentController::class, 'shipmentStore'])->name('shipmentStore');
+
+		Route::post('oc-get-selected-location-ship-rate', [ShipmentController::class, 'OCGetSelectedLocationShipRate'])->name('OCGetSelectedLocationShipRate');
 	});
 
 

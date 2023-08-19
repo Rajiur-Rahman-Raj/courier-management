@@ -4874,3 +4874,10 @@ a:hover {
 .w-35{
 	width: 35% !important;
 }
+
+.addMoreParcelBox{
+	background: #f5f5f5;
+	border-radius: 10px;
+	padding: 5px;
+	margin-bottom: 20px;
+}

@@ -100,4 +100,70 @@
 
 	}
 
+
+
+	$(document).on('change', '.OCParcelTypeWiseShippingRate', function (){
+		window.OCGetShippingRates();
+	})
+
+	window.OCGetShippingRates = function OCGetShippingRates(){
+		let fromStateId = $('.selectedFromState').val();
+		let fromCityId = $('.selectedFromCity').val();
+		let fromAreaId = $('.selectedFromArea').val();
+
+		let toStateId   = $('.selectedToState').val();
+		let toCityId   = $('.selectedToCity').val();
+		let toAreaId   = $('.selectedToArea').val();
+
+		let totalShippingCost = 0;
+		let totalTax = 0;
+		let totalInsurance = 0;
+
+
+
+		$('.OCParcelTypeWiseShippingRate').each(function (key, value){
+			let parcelTypeId = $(value).val();
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			$.ajax({
+				url: "{{ route('OCGetSelectedLocationShipRate') }}",
+				method: 'POST',
+				data: {
+					parcelTypeId: parcelTypeId,
+					fromStateId: fromStateId,
+					fromCityId: fromCityId,
+					fromAreaId: fromAreaId,
+
+					toStateId: toStateId,
+					toCityId: toCityId,
+					toAreaId: toAreaId,
+				},
+				success: function (response) {
+						let responseData = response;
+						let shippingCost = parseFloat(responseData.shipping_cost);
+						let shippingTax  = responseData.tax;
+						let shippingInsurance = parseFloat(responseData.insurance);
+
+						totalShippingCost = isNaN(shippingCost) ? 0 : totalShippingCost + shippingCost;
+
+						let tax = isNaN(shippingCost) || isNaN(shippingTax) ? 0 : shippingCost * shippingTax / 100;
+						totalTax += tax;
+
+						totalInsurance = isNaN(shippingInsurance) ? 0 : totalInsurance + shippingInsurance;
+
+						parseFloat($('.OCShippingCost').val(totalShippingCost)).toFixed(2);
+						$('.OCTax').val(totalTax)
+						parseFloat($('.OCInsurance').val(totalInsurance)).toFixed(2);
+				},
+				error: function (xhr, status, error) {
+					console.log(error)
+				}
+			});
+		})
+	}
+
 </script>

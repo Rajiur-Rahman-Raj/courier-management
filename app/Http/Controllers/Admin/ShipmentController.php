@@ -819,16 +819,6 @@ class ShipmentController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
-
 	public function shippingDateStore(Request $request){
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -856,5 +846,39 @@ class ShipmentController extends Controller
 		$shippingDate->save();
 
 		return back()->with('success', 'Shipping Date Created Successfully!');
+	}
+
+
+	public function OCGetSelectedLocationShipRate(Request $request){
+		$operatorCountryId = BasicControl::first('operator_country');
+
+		if ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->fromAreaId == null) {
+			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
+				->where('parcel_type_id', $request->parcelTypeId)
+				->where('from_state_id', $request->fromStateId)
+				->where('to_state_id', $request->toStateId)
+				->first();
+			return response($shippingRate);
+		} elseif ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null && $request->fromAreaId == null && $request->toAreaId == null) {
+			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
+				->where('parcel_type_id', $request->parcelTypeId)
+				->where('from_state_id', $request->fromStateId)
+				->where('to_state_id', $request->toStateId)
+				->where('from_city_id', $request->fromCityId)
+				->where('to_city_id', $request->toCityId)
+				->first();
+			return response($shippingRate);
+		} elseif ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null && $request->fromAreaId != null && $request->toAreaId != null) {
+			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
+				->where('parcel_type_id', $request->parcelTypeId)
+				->where('from_state_id', $request->fromStateId)
+				->where('to_state_id', $request->toStateId)
+				->where('from_city_id', $request->fromCityId)
+				->where('to_city_id', $request->toCityId)
+				->where('from_area_id', $request->fromAreaId)
+				->where('to_area_id', $request->toAreaId)
+				->first();
+			return response($shippingRate);
+		}
 	}
 }

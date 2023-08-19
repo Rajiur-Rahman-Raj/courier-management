@@ -390,9 +390,9 @@
 
 										<div class="addedParcelField">
 											<div class="row">
-												<div class="col-sm-12 col-md-4 mb-3">
+												<div class="col-sm-12 col-md-3 mb-3">
 													<label
-														for="parcel_description"> @lang('Description/Parcel Name') </label>
+														for="parcel_description"> @lang('Parcel Name') </label>
 													<input type="text" name="parcel_description"
 														   class="form-control @error('parcel_description') is-invalid @enderror"
 														   value="{{ old('parcel_description') }}">
@@ -401,10 +401,20 @@
 													</div>
 												</div>
 
-												<div class="col-sm-12 col-md-4 mb-3">
+												<div class="col-sm-12 col-md-3 mb-3">
+													<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
+													<input type="text" name="parcel_quantity"
+														   class="form-control @error('parcel_quantity') is-invalid @enderror"
+														   value="{{ old('parcel_quantity') }}">
+													<div class="invalid-feedback">
+														@error('parcel_quantity') @lang($message) @enderror
+													</div>
+												</div>
+
+												<div class="col-sm-12 col-md-3 mb-3">
 													<label for="parcel_type_id"> @lang('Parcel Type') </label>
 													<select name="parcel_type_id"
-															class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType select2ParcelType">
+															class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType select2ParcelType OCParcelTypeWiseShippingRate">
 														<option value="" disabled
 																selected>@lang('Select Parcel Type')</option>
 														@foreach($parcelTypes as $parcel_type)
@@ -418,7 +428,7 @@
 													</div>
 												</div>
 
-												<div class="col-sm-12 col-md-4 mb-3">
+												<div class="col-sm-12 col-md-3 mb-3">
 													<label for="parcel_unit_id"> @lang('Select Unit') </label>
 													<select name="parcel_unit_id"
 															class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit">
@@ -431,7 +441,7 @@
 													</div>
 												</div>
 
-												<div class="col-sm-12 col-md-3 mb-3">
+												<div class="col-sm-12 col-md-4 mb-3">
 
 													<label for="cost_per_unit"> @lang('Cost per unit')</label>
 													<div class="input-group">
@@ -451,18 +461,7 @@
 													</div>
 												</div>
 
-
-												<div class="col-sm-12 col-md-3 mb-3">
-													<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
-													<input type="text" name="parcel_quantity"
-														   class="form-control @error('parcel_quantity') is-invalid @enderror"
-														   value="{{ old('parcel_quantity') }}">
-													<div class="invalid-feedback">
-														@error('parcel_quantity') @lang($message) @enderror
-													</div>
-												</div>
-
-												<div class="col-sm-12 col-md-3 mb-3 new_total_weight_parent">
+												<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
 													<label for="parcel_weight"> @lang('Total Weight')</label>
 													<div class="input-group">
 														<input type="text" name="parcel_weight"
@@ -480,11 +479,11 @@
 													</div>
 												</div>
 
-												<div class="col-sm-12 col-md-3 mb-3">
+												<div class="col-sm-12 col-md-4 mb-3">
 													<label for="parcel_total_cost"> @lang('Total Cost')</label>
 													<div class="input-group">
 														<input type="text" name="parcel_total_cost"
-															   class="form-control @error('parcel_total_cost') is-invalid @enderror"
+															   class="form-control @error('parcel_total_cost') is-invalid @enderror totalParcelCost"
 															   value="{{ old('parcel_total_cost') }}">
 														<div class="input-group-append" readonly="">
 															<div class="form-control">
@@ -574,7 +573,7 @@
 												<div class="input-group">
 													<span class="input-group-text">@lang('Discount')</span>
 													<input type="number" name="discount" value=""
-														   class="form-control bg-white text-dark discount"
+														   class="form-control bg-white text-dark OCDiscount"
 														   id="discount">
 													<span class="input-group-text">%</span>
 												</div>
@@ -583,10 +582,11 @@
 
 										<div class=" d-flex justify-content-end mt-2">
 											<div class="col-md-3 d-flex justify-content-between">
-												<span class="fw-bold">@lang('Subtotal')</span>
+												<span class="fw-bold">@lang('Discount Amount')</span>
 												<div class="input-group w-50">
-													<input type="number" name="sub_total" value="0"
-														   class="form-control bg-white text-dark subTotal" readonly>
+													<input type="number" name="discount_amount" value="0"
+														   class="form-control bg-white text-dark OCDiscountAmount"
+														   readonly>
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ $basic->currency_symbol }}
@@ -598,11 +598,56 @@
 
 										<div class=" d-flex justify-content-end mt-2">
 											<div class="col-md-3 d-flex justify-content-between">
-												<span class="fw-bold">@lang('Discount')</span>
+												<span class="fw-bold">@lang('Subtotal')</span>
 												<div class="input-group w-50">
-													<input type="number" name="discount_amount" value="0"
-														   class="form-control bg-white text-dark discountAmount"
-														   readonly>
+													<input type="number" name="sub_total" value="0"
+														   class="form-control bg-white text-dark OCSubTotal" readonly>
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															{{ $basic->currency_symbol }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class=" d-flex justify-content-end mt-2">
+											<div class="col-md-3 d-flex justify-content-between">
+												<span class="fw-bold">@lang('Shipping Cost')</span>
+												<div class="input-group w-50">
+													<input type="number" name="oc_shipping_cost" value="0"
+														   class="form-control bg-white text-dark OCShippingCost" readonly disabled>
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															{{ $basic->currency_symbol }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class=" d-flex justify-content-end mt-2">
+											<div class="col-md-3 d-flex justify-content-between">
+												<span class="fw-bold">@lang('Tax')</span>
+												<div class="input-group w-50">
+													<input type="number" name="sub_total" value="0"
+														   class="form-control bg-white text-dark OCTax" readonly disabled>
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															{{ $basic->currency_symbol }}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+
+										<div class=" d-flex justify-content-end mt-2">
+											<div class="col-md-3 d-flex justify-content-between">
+												<span class="fw-bold">@lang('Insurance')</span>
+												<div class="input-group w-50">
+													<input type="number" name="sub_total" value="0"
+														   class="form-control bg-white text-dark OCInsurance" readonly disabled>
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ $basic->currency_symbol }}
@@ -617,7 +662,7 @@
 												<span class="fw-bold">@lang('Total Pay')</span>
 												<div class="input-group w-50">
 													<input type="number" name="total_pay" value="0"
-														   class="form-control bg-white text-dark totalPay" readonly>
+														   class="form-control bg-white text-dark OCtotalPay" readonly>
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ $basic->currency_symbol }}
@@ -673,7 +718,6 @@
 						$('.addPackingFieldButton').addClass('d-none')
 					}
 				});
-
 
 
 				$(document).ready(function () {
@@ -818,10 +862,10 @@
 						$(this).closest('.input-group').parent().remove();
 					});
 
-					// i am here
+
 					$("#parcelGenerate").on('click', function () {
 						const id = Date.now();
-						var form = `<div class="row" id="removeParcelField${id}">
+						var form = `<div class="row addMoreParcelBox" id="removeParcelField${id}">
 										<div class="col-md-12 d-flex justify-content-end">
 											<button
 												class="btn btn-danger  delete_parcel_desc custom_delete_desc_padding mt-4"
@@ -829,7 +873,7 @@
 												<i class="fa fa-times"></i>
 											</button>
 										</div>
-										<div class="col-sm-12 col-md-4 mb-3">
+										<div class="col-sm-12 col-md-3 mb-3">
 						<label for="parcel_description"> @lang('Description/Percel Name') </label>
 											<input type="text" name="parcel_description"
 												   class="form-control @error('parcel_description') is-invalid @enderror"
@@ -839,9 +883,19 @@
 						</div>
 					</div>
 
-										<div class="col-sm-12 col-md-4 mb-3">
-											<label for="parcel_type_id"> @lang('Parcel Type') </label>
-											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})">
+					<div class="col-sm-12 col-md-3 mb-3">
+					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
+					<input type="text" name="parcel_quantity"
+						   class="form-control @error('parcel_quantity') is-invalid @enderror"
+						   value="{{ old('parcel_quantity') }}">
+					<div class="invalid-feedback">
+						@error('parcel_quantity') @lang($message) @enderror
+						</div>
+					</div>
+
+											<div class="col-sm-12 col-md-3 mb-3">
+												<label for="parcel_type_id"> @lang('Parcel Type') </label>
+											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror operatorCountryParcelTypeWiseShipRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})">
 												<option value="" disabled selected>@lang('Select Parcel Type')</option>
 												@foreach($parcelTypes as $parcel_type)
 						<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
@@ -853,7 +907,7 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-3 mb-3">
 						<label for="parcel_unit_id"> @lang('Select Unit') </label>
 											<select name="parcel_unit_id"
 													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})">
@@ -867,7 +921,7 @@
 					</div>
 
 
-					<div class="col-sm-12 col-md-3 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3">
 													<label for="cost_per_unit"> @lang('Cost per unit')</label>
 													<div class="input-group">
 														<input type="text" name="cost_per_unit"
@@ -886,18 +940,7 @@
 					</div>
 				</div>
 
-
-				<div class="col-sm-12 col-md-3 mb-3">
-					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
-													<input type="text" name="parcel_quantity"
-														   class="form-control @error('parcel_quantity') is-invalid @enderror"
-														   value="{{ old('parcel_quantity') }}">
-													<div class="invalid-feedback">
-														@error('parcel_quantity') @lang($message) @enderror
-						</div>
-					</div>
-
-					<div class="col-sm-12 col-md-3 mb-3 new_total_weight_parent">
+				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
 						<label for="parcel_weight"> @lang('Total Weight')</label>
 						<div class="input-group">
 							<input type="text" name="parcel_weight" class="form-control @error('parcel_weight') is-invalid @enderror newTotalWeight" value="{{ old('parcel_weight') }}">
@@ -910,11 +953,11 @@
 				<div class="invalid-feedback"> @error('parcel_weight') @lang($message) @enderror </div>
 					</div>
 
-					<div class="col-sm-12 col-md-3 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3">
 						<label for="parcel_total_cost"> @lang('Total Cost')</label>
 													<div class="input-group">
 														<input type="text" name="parcel_total_cost"
-															   class="form-control @error('parcel_total_cost') is-invalid @enderror"
+															   class="form-control @error('parcel_total_cost') is-invalid @enderror totalParcelCost"
 															   value="{{ old('parcel_total_cost') }}">
 														<div class="input-group-append" readonly="">
 															<div class="form-control">
@@ -978,10 +1021,11 @@
 						subTotal += cost;
 					})
 					let updateSubTotal = subTotal.toFixed(2);
-					$('.subTotal').val(updateSubTotal);
+					$('.OCSubTotal').val(updateSubTotal);
 					$('.lastFiv').val(updateSubTotal);
 
 					totalSubCount(subTotal);
+					calculateOCDiscount();
 				}
 
 
@@ -996,18 +1040,52 @@
 						let costPerUnit = parseFloat($(value).parents('.new_total_weight_parent').siblings().find('.newCostPerUnit').val()).toFixed(2);
 						let cost = isNaN(totalWeight) || isNaN(costPerUnit) ? 0 : totalWeight * costPerUnit;
 						subTotal += cost;
+
+						$(value).parents('.new_total_weight_parent').siblings().find('.totalParcelCost').val(cost);
 					});
 					let updateSubTotal = subTotal.toFixed(2);
-					$('.subTotal').val(updateSubTotal);
+					$('.OCSubTotal').val(updateSubTotal);
 					$('.firstFiv').val(updateSubTotal);
 					totalSubCount(subTotal);
+					calculateOCDiscount();
 				}
 
 				function totalSubCount() {
 					let total = parseFloat($('.firstFiv').val()) + parseFloat($('.lastFiv').val());
-					$('.subTotal').val(total.toFixed(2));
+					$('.OCSubTotal').val(total.toFixed(2));
+					finalTotalAmountCalculation();
+					return total;
 				}
 
+				$(document).on('input', '.OCDiscount', function (){
+					calculateOCDiscount();
+				})
+
+				function calculateOCDiscount(){
+					let discount = parseFloat($('.OCDiscount').val());
+					let OCSubTotal = totalSubCount();
+					if (!discount){
+						$('.OCSubTotal').val(OCSubTotal);
+						$('.OCDiscountAmount').val(0);
+						finalTotalAmountCalculation()
+						return;
+					}
+					let OCDiscountAmount = OCSubTotal * discount / 100;
+					let OCSubTotalAfterDiscount = OCSubTotal - parseFloat(OCDiscountAmount);
+					$('.OCDiscountAmount').val(OCDiscountAmount);
+					$('.OCSubTotal').val(OCSubTotalAfterDiscount);
+
+					finalTotalAmountCalculation();
+				}
+
+				function finalTotalAmountCalculation(){
+					let OCSubTotalAfterDiscount = parseFloat($('.OCSubTotal').val());
+					let OCShipingCost = parseFloat($('.OCShippingCost').val());
+					let OCTax = parseFloat($('.OCTax').val());
+					let OCInsurance = parseFloat($('.OCInsurance').val());
+					let OCtotalPay = OCSubTotalAfterDiscount + OCShipingCost + OCTax + OCInsurance;
+					$('.OCtotalPay').val(OCtotalPay);
+				}
 
 				function variantQuantityHandel(id) {
 					const variantQuantityId = `#variantQuantity_${id}`;
