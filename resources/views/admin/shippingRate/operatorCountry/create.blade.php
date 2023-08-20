@@ -10,7 +10,8 @@
 				<h1>@lang('Create Shipping Rate For') (@lang(optional(basicControl()->operatorCountry)->name))</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active"><a href="{{ route('admin.home') }}">@lang("Dashboard")</a></div>
-					<div class="breadcrumb-item"><a href="{{ route('operatorCountryRate', 'state') }}">@lang("Shipping Rate List")</a>
+					<div class="breadcrumb-item"><a
+							href="{{ route('operatorCountryRate', 'state') }}">@lang("Shipping Rate List")</a>
 					</div>
 					<div class="breadcrumb-item">@lang("Create Shipping Rate")</div>
 				</div>
@@ -53,11 +54,13 @@
 							<div class="tab-content mt-2" id="myTabContent">
 								<div class="tab-pane fade show active"
 									 id="tab1" role="tabpanel">
-									<form action="{{ route('shippingRateOperatorCountry.store', 'state-wise') }}" method="post"
+									<form action="{{ route('shippingRateOperatorCountry.store', 'state-wise') }}"
+										  method="post"
 										  action="" class="mt-4">
 										@csrf
 										<div class="row">
-											<input type="hidden" name="operator_country_id" value="{{ optional($basicControl->operatorCountry)->id }}">
+											<input type="hidden" name="operator_country_id"
+												   value="{{ optional($basicControl->operatorCountry)->id }}">
 
 											<div class="col-sm-12 col-md-6 mb-3">
 												<label for="state_id">@lang('From State') <span
@@ -206,6 +209,35 @@
 											</div>
 										</div>
 
+										<div class="row">
+											<div class="col-12 mt-4 mb-1">
+												<h6>@lang('Cost For Cash on Delivary')</h6>
+												<hr>
+											</div>
+
+											<div class="col-sm-12 col-md-3 mb-3">
+												<label for="cash_on_delivery_cost"> @lang('Shipping Cost:') <span
+														class="text-danger">*</span></label>
+
+												<div class="input-group">
+													<input type="text" name="cash_on_delivery_cost"
+														   class="form-control @error('cash_on_delivery_cost') is-invalid @enderror"
+														   placeholder="0.00"
+														   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+														   min="0"
+														   value="{{ old('cash_on_delivery_cost') }}">
+													<div class="input-group-append">
+														<div class="form-control">
+															{{ config('basic.currency_symbol') }}
+														</div>
+													</div>
+													<div class="invalid-feedback">
+														@error('cash_on_delivery_cost') @lang($message) @enderror
+													</div>
+												</div>
+											</div>
+										</div>
+
 										<button type="submit"
 												class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 									</form>
@@ -213,12 +245,14 @@
 
 								<div class="tab-pane fade"
 									 id="tab2" role="tabpanel">
-									<form action="{{ route('shippingRateOperatorCountry.store', 'city-wise') }}" method="post"
+									<form action="{{ route('shippingRateOperatorCountry.store', 'city-wise') }}"
+										  method="post"
 										  action="" class="mt-4">
 										@csrf
 										<div class="row">
 
-											<input type="hidden" name="operator_country_id" value="{{ optional($basicControl->operatorCountry)->id }}">
+											<input type="hidden" name="operator_country_id"
+												   value="{{ optional($basicControl->operatorCountry)->id }}">
 
 											<div class="col-sm-12 col-md-6 mb-3">
 												<label for="state_id">@lang('From State') <span
@@ -390,17 +424,48 @@
 											</div>
 										</div>
 
+										<div class="row">
+											<div class="col-12 mt-4 mb-1">
+												<h6>@lang('Cost For Cash on Delivary')</h6>
+												<hr>
+											</div>
+
+											<div class="col-sm-12 col-md-3 mb-3">
+												<label for="cash_on_delivery_cost"> @lang('Shipping Cost:') <span
+														class="text-danger">*</span></label>
+
+												<div class="input-group">
+													<input type="text" name="cash_on_delivery_cost"
+														   class="form-control @error('cash_on_delivery_cost') is-invalid @enderror"
+														   placeholder="0.00"
+														   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+														   min="0"
+														   value="{{ old('cash_on_delivery_cost') }}">
+													<div class="input-group-append">
+														<div class="form-control">
+															{{ config('basic.currency_symbol') }}
+														</div>
+													</div>
+													<div class="invalid-feedback">
+														@error('cash_on_delivery_cost') @lang($message) @enderror
+													</div>
+												</div>
+											</div>
+										</div>
+
 										<button type="submit"
 												class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 									</form>
 								</div>
 								<div class="tab-pane fade"
 									 id="tab3" role="tabpanel">
-									<form action="{{ route('shippingRateOperatorCountry.store', 'area-wise') }}" method="post"
+									<form action="{{ route('shippingRateOperatorCountry.store', 'area-wise') }}"
+										  method="post"
 										  action="" class="mt-4">
 										@csrf
 										<div class="row">
-											<input type="hidden" name="operator_country_id" value="{{ optional($basicControl->operatorCountry)->id }}">
+											<input type="hidden" name="operator_country_id"
+												   value="{{ optional($basicControl->operatorCountry)->id }}">
 
 											<div class="col-sm-12 col-md-4 mb-3">
 												<label for="from_state_id">@lang('From State') <span
@@ -596,7 +661,37 @@
 											</div>
 										</div>
 
-										<button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
+										<div class="row">
+											<div class="col-12 mt-4 mb-1">
+												<h6>@lang('Cost For Cash on Delivary')</h6>
+												<hr>
+											</div>
+
+											<div class="col-sm-12 col-md-3 mb-3">
+												<label for="cash_on_delivery_cost"> @lang('Shipping Cost:') <span
+														class="text-danger">*</span></label>
+
+												<div class="input-group">
+													<input type="text" name="cash_on_delivery_cost"
+														   class="form-control @error('cash_on_delivery_cost') is-invalid @enderror"
+														   placeholder="0.00"
+														   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+														   min="0"
+														   value="{{ old('cash_on_delivery_cost') }}">
+													<div class="input-group-append">
+														<div class="form-control">
+															{{ config('basic.currency_symbol') }}
+														</div>
+													</div>
+													<div class="invalid-feedback">
+														@error('cash_on_delivery_cost') @lang($message) @enderror
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<button type="submit"
+												class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 									</form>
 								</div>
 							</div>

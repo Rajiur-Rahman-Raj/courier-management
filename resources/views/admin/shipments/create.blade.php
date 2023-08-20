@@ -63,16 +63,34 @@
 											<div class="col-sm-12 col-md-12 mb-3">
 												<h6 for="branch_id"
 													class="text-dark font-weight-bold"> @lang('Shipment Type') </h6>
-												@foreach($operatorCountryShipmentTypes as $shipmentType)
-													<div class="custom-control custom-radio">
-														<input type="radio" id="shipmentType{{ $shipmentType->id }}"
-															   name="shipment_type"
-															   class="custom-control-input">
-														<label class="custom-control-label"
-															   for="shipmentType{{ $shipmentType->id }}">@lang($shipmentType->shipment_type)
-															(@lang($shipmentType->title))</label>
-													</div>
-												@endforeach
+												<div class="custom-control custom-radio">
+													<input type="radio" id="shipmentTypeDropOff"
+														   name="shipment_type"
+														   class="custom-control-input" checked>
+													<label class="custom-control-label"
+														   for="shipmentTypeDropOff">@lang($shipmentTypeList[0]['shipment_type'])
+														(@lang($shipmentTypeList[0]['title']))</label>
+												</div>
+
+												<div class="custom-control custom-radio">
+													<input type="radio" id="shipmentTypePickup"
+														   name="shipment_type"
+														   data-resource="{{ $defaultShippingRateOC }}"
+														   class="custom-control-input">
+													<label class="custom-control-label"
+														   for="shipmentTypePickup">@lang($shipmentTypeList[1]['shipment_type'])
+														(@lang($shipmentTypeList[1]['title']))</label>
+												</div>
+
+												<div class="custom-control custom-radio">
+													<input type="radio" id="shipmentTypeCondition"
+														   name="shipment_type"
+														   class="custom-control-input">
+													<label class="custom-control-label"
+														   for="shipmentTypeCondition">@lang($shipmentTypeList[2]['shipment_type'])
+														(@lang($shipmentTypeList[2]['title']))</label>
+												</div>
+
 											</div>
 										</div>
 
@@ -462,7 +480,7 @@
 												</div>
 
 												<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
-													<label for="parcel_weight"> @lang('Total Weight')</label>
+													<label for="parcel_weight"> @lang('Total Unit')</label>
 													<div class="input-group">
 														<input type="text" name="parcel_weight"
 															   class="form-control @error('parcel_weight') is-invalid @enderror newTotalWeight"
@@ -611,12 +629,47 @@
 											</div>
 										</div>
 
+										<div class="pickup d-none">
+											<div class=" d-flex justify-content-end mt-2">
+												<div class="col-md-3 d-flex justify-content-between">
+													<span class="fw-bold">@lang('Pickup Cost')</span>
+													<div class="input-group w-50">
+														<input type="number" name="oc_pickup_cost" value="0"
+															   class="form-control bg-white text-dark OCPickupCost"
+															   readonly disabled>
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																{{ $basic->currency_symbol }}
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class=" d-flex justify-content-end mt-2">
+												<div class="col-md-3 d-flex justify-content-between">
+													<span class="fw-bold">@lang('Supply Cost')</span>
+													<div class="input-group w-50">
+														<input type="number" name="oc_supply_cost" value="0"
+															   class="form-control bg-white text-dark OCSupplyCost"
+															   readonly disabled>
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																{{ $basic->currency_symbol }}
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
 										<div class=" d-flex justify-content-end mt-2">
 											<div class="col-md-3 d-flex justify-content-between">
 												<span class="fw-bold">@lang('Shipping Cost')</span>
 												<div class="input-group w-50">
 													<input type="number" name="oc_shipping_cost" value="0"
-														   class="form-control bg-white text-dark OCShippingCost" readonly disabled>
+														   class="form-control bg-white text-dark OCShippingCost"
+														   readonly disabled>
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ $basic->currency_symbol }}
@@ -631,7 +684,8 @@
 												<span class="fw-bold">@lang('Tax')</span>
 												<div class="input-group w-50">
 													<input type="number" name="sub_total" value="0"
-														   class="form-control bg-white text-dark OCTax" readonly disabled>
+														   class="form-control bg-white text-dark OCTax" readonly
+														   disabled>
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ $basic->currency_symbol }}
@@ -647,7 +701,8 @@
 												<span class="fw-bold">@lang('Insurance')</span>
 												<div class="input-group w-50">
 													<input type="number" name="sub_total" value="0"
-														   class="form-control bg-white text-dark OCInsurance" readonly disabled>
+														   class="form-control bg-white text-dark OCInsurance" readonly
+														   disabled>
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ $basic->currency_symbol }}
@@ -700,11 +755,10 @@
 			@include('partials.packageVariant')
 			<script type="text/javascript">
 				'use strict';
-				// Get references to the radio buttons and the target element
+
 				const packingServiceOn = document.getElementById('packingServiceOn');
 				const packingServiceOff = document.getElementById('packingServiceOff');
 
-				// Add event listeners to the radio buttons
 				packingServiceOn.addEventListener('change', function () {
 					if (packingServiceOn.checked) {
 						$('.addedPackingField').removeClass('d-none')
@@ -716,6 +770,39 @@
 					if (packingServiceOff.checked) {
 						$('.addedPackingField').addClass('d-none')
 						$('.addPackingFieldButton').addClass('d-none')
+					}
+				});
+
+
+				const shipmentTypePickup = document.getElementById('shipmentTypePickup');
+				const shipmentTypeDropOff = document.getElementById('shipmentTypeDropOff');
+				const shipmentTypeCondition = document.getElementById('shipmentTypeCondition');
+
+				shipmentTypePickup.addEventListener('change', function () {
+					if (shipmentTypePickup.checked) {
+						let dataResouce = $('#shipmentTypePickup').data('resource');
+						$('.pickup').removeClass('d-none');
+						$('.OCPickupCost').val(dataResouce.pickup_cost);
+						$('.OCSupplyCost').val(dataResouce.supply_cost);
+						finalTotalAmountCalculation();
+					}
+				});
+
+				shipmentTypeDropOff.addEventListener('change', function () {
+					if (shipmentTypeDropOff.checked) {
+						$('.pickup').addClass('d-none');
+						$('.OCPickupCost').val(0);
+						$('.OCSupplyCost').val(0);
+						finalTotalAmountCalculation();
+					}
+				});
+
+				shipmentTypeCondition.addEventListener('change', function () {
+					if (shipmentTypeCondition.checked) {
+						$('.pickup').addClass('d-none');
+						$('.OCPickupCost').val(0);
+						$('.OCSupplyCost').val(0);
+						finalTotalAmountCalculation();
 					}
 				});
 
@@ -895,7 +982,7 @@
 
 											<div class="col-sm-12 col-md-3 mb-3">
 												<label for="parcel_type_id"> @lang('Parcel Type') </label>
-											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror operatorCountryParcelTypeWiseShipRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})">
+											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})">
 												<option value="" disabled selected>@lang('Select Parcel Type')</option>
 												@foreach($parcelTypes as $parcel_type)
 						<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
@@ -941,7 +1028,7 @@
 				</div>
 
 				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
-						<label for="parcel_weight"> @lang('Total Weight')</label>
+						<label for="parcel_weight"> @lang('Total Unit')</label>
 						<div class="input-group">
 							<input type="text" name="parcel_weight" class="form-control @error('parcel_weight') is-invalid @enderror newTotalWeight" value="{{ old('parcel_weight') }}">
 							<div class="input-group-append" readonly="">
@@ -1057,14 +1144,14 @@
 					return total;
 				}
 
-				$(document).on('input', '.OCDiscount', function (){
+				$(document).on('input', '.OCDiscount', function () {
 					calculateOCDiscount();
 				})
 
-				function calculateOCDiscount(){
+				function calculateOCDiscount() {
 					let discount = parseFloat($('.OCDiscount').val());
 					let OCSubTotal = totalSubCount();
-					if (!discount){
+					if (!discount) {
 						$('.OCSubTotal').val(OCSubTotal);
 						$('.OCDiscountAmount').val(0);
 						finalTotalAmountCalculation()
@@ -1078,12 +1165,14 @@
 					finalTotalAmountCalculation();
 				}
 
-				function finalTotalAmountCalculation(){
+				function finalTotalAmountCalculation() {
 					let OCSubTotalAfterDiscount = parseFloat($('.OCSubTotal').val());
 					let OCShipingCost = parseFloat($('.OCShippingCost').val());
 					let OCTax = parseFloat($('.OCTax').val());
 					let OCInsurance = parseFloat($('.OCInsurance').val());
-					let OCtotalPay = OCSubTotalAfterDiscount + OCShipingCost + OCTax + OCInsurance;
+					let OCPickupCost = parseFloat($('.OCPickupCost').val());
+					let OCSupplyCost = parseFloat($('.OCSupplyCost').val());
+					let OCtotalPay = OCSubTotalAfterDiscount + OCShipingCost + OCTax + OCInsurance + OCPickupCost + OCSupplyCost;
 					$('.OCtotalPay').val(OCtotalPay);
 				}
 

@@ -16,6 +16,7 @@ use App\Models\ShippingRateInternationally;
 use App\Models\ShippingRateOperatorCountry;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -29,94 +30,49 @@ class ShipmentController extends Controller
 	}
 
 	public function createShipment(){
-		$data['operatorCountryShipmentTypes'] = ShipmentType::whereIn('shipment_area', [1,3])->get();
-		$data['internationallyShipmentTypes'] = ShipmentType::whereIn('shipment_area', [2,3])->get();
+		$data['shipmentTypeList'] = config('shipmentTypeList');
 
 		$data['allBranches'] = Branch::where('status', 1)->get();
 		$data['users'] = User::where('user_type', '!=', '0')->get();
 		$data['senders'] = $data['users']->where('user_type', 1);
 		$data['receivers'] = $data['users']->where('user_type', 2);
-
 		$data['allCountries'] = Country::where('status', 1)->get();
 		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
-
 		$data['packageList'] = Package::where('status', 1)->get();
-
 		$data['parcelTypes'] = ParcelType::where('status', 1)->get();
+		$data['defaultShippingRateOC'] = DefaultShippingRateOperatorCountry::first();
 
 		return view('admin.shipments.create', $data);
 	}
 
-	public function shipmentStore(Request $request){
-		dd('i am here');
-	}
-
-
 	public function shipmentTypeList(){
-		$data['allShipmentType'] = ShipmentType::all();
+		$data['allShipmentType'] = config('shipmentTypeList');
 		return view('admin.shipmentType.index', $data);
 	}
 
-	public function shipmentTypeStore(Request $request){
-		$purifiedData = Purify::clean($request->except('_token', '_method'));
+	public function shipmentTypeUpdate(Request $request, $id)
+	{
+		$filePath = base_path('config/shipmentTypeList.php');
 
-		$rules = [
-			'shipment_area' => ['required', Rule::in(['1','2','3'])],
-			'shipment_type' => ['required', 'string', 'max:100'],
-			'title' => ['nullable', 'string', 'max:191'],
-		];
+		$shipmentTypeList = config('shipmentTypeList');
 
-		$message = [
-			'shipment_area.required' => 'Please select a shipment area',
-			'shipment_type.required' => 'shipment type field is required',
-		];
-
-		$validate = Validator::make($purifiedData, $rules, $message);
-
-		if ($validate->fails()) {
-			return back()->withInput()->withErrors($validate);
+		foreach ($shipmentTypeList as & $typeList) {
+			if ($typeList['id'] == $id) {
+				$typeList['shipment_type'] = $request->shipment_type;
+				$typeList['title'] = $request->title;
+				break;
+			}
 		}
 
-		$shipmentType = New ShipmentType();
+		$exportedArray = var_export($shipmentTypeList, true);
+		$content = "<?php\n\nreturn $exportedArray;";
 
-		$shipmentType->shipment_area = $request->shipment_area;
-		$shipmentType->shipment_type = $request->shipment_type;
-		$shipmentType->title = $request->title;
-		$shipmentType->status = $request->status;
-		$shipmentType->save();
-		return back()->with('success', 'Shipment type created successfully');
+		file_put_contents($filePath, $content);
 
-
-	}
-
-	public function shipmentTypeUpdate(Request $request, $id){
-		$purifiedData = Purify::clean($request->except('_token', '_method'));
-
-		$rules = [
-			'shipment_area' => ['required', Rule::in(['1','2','3'])],
-			'shipment_type' => ['required', 'string', 'max:100'],
-			'title' => ['nullable', 'string', 'max:191'],
-		];
-
-		$message = [
-			'shipment_area.required' => 'Please select a shipment area',
-			'shipment_type.required' => 'shipment type field is required',
-		];
-
-		$validate = Validator::make($purifiedData, $rules, $message);
-
-		if ($validate->fails()) {
-			return back()->withInput()->withErrors($validate);
-		}
-
-		$shipmentType = ShipmentType::findOrFail($id);
-
-		$shipmentType->shipment_area = $request->shipment_area;
-		$shipmentType->shipment_type = $request->shipment_type;
-		$shipmentType->title = $request->title;
-		$shipmentType->status = $request->status;
-		$shipmentType->save();
-		return back()->with('success', 'Shipment type update successfully');
+		// Clear cache and return response
+		session()->flash('success', 'Updated Successfully');
+		Artisan::call('optimize:clear');
+		return back();
 	}
 
 	public function defaultRate(){
@@ -141,11 +97,6 @@ class ShipmentController extends Controller
 			'return_shipment_cost' => ['numeric', 'min:0'],
 			'default_tax' => ['numeric', 'min:0'],
 			'default_insurance' => ['numeric', 'min:0'],
-			'parcel_type_id' => ['exists:parcel_types,id'],
-			'shipping_cost_first_unit' => ['numeric', 'min:0'],
-			'return_shipping_cost_first_unit' => ['numeric', 'min:0'],
-			'default_tax_first_unit' => ['numeric', 'min:0'],
-			'default_insurance_first_unit' => ['numeric', 'min:0'],
 		];
 
 		$message = [
@@ -170,11 +121,6 @@ class ShipmentController extends Controller
 		$defaultShippingRateOperatorCountry->return_shipment_cost = $request->return_shipment_cost;
 		$defaultShippingRateOperatorCountry->default_tax = $request->default_tax;
 		$defaultShippingRateOperatorCountry->default_insurance = $request->default_insurance;
-		$defaultShippingRateOperatorCountry->parcel_type_id = $request->parcel_type_id;
-		$defaultShippingRateOperatorCountry->shipping_cost_first_unit = $request->shipping_cost_first_unit;
-		$defaultShippingRateOperatorCountry->return_shipment_cost_first_unit = $request->return_shipment_cost_first_unit;
-		$defaultShippingRateOperatorCountry->default_tax_first_unit = $request->default_tax_first_unit;
-		$defaultShippingRateOperatorCountry->default_insurance_first_unit = $request->default_insurance_first_unit;
 
 		$defaultShippingRateOperatorCountry->save();
 
@@ -193,11 +139,6 @@ class ShipmentController extends Controller
 			'return_shipment_cost' => ['numeric', 'min:0'],
 			'default_tax' => ['numeric', 'min:0'],
 			'default_insurance' => ['numeric', 'min:0'],
-			'parcel_type_id' => ['exists:parcel_types,id'],
-			'shipping_cost_first_unit' => ['numeric', 'min:0'],
-			'return_shipping_cost_first_unit' => ['numeric', 'min:0'],
-			'default_tax_first_unit' => ['numeric', 'min:0'],
-			'default_insurance_first_unit' => ['numeric', 'min:0'],
 		];
 
 		$message = [
@@ -220,17 +161,11 @@ class ShipmentController extends Controller
 		$defaultShippingRateInternationally->return_shipment_cost = $request->return_shipment_cost;
 		$defaultShippingRateInternationally->default_tax = $request->default_tax;
 		$defaultShippingRateInternationally->default_insurance = $request->default_insurance;
-		$defaultShippingRateInternationally->parcel_type_id = $request->parcel_type_id;
-		$defaultShippingRateInternationally->shipping_cost_first_unit = $request->shipping_cost_first_unit;
-		$defaultShippingRateInternationally->return_shipment_cost_first_unit = $request->return_shipment_cost_first_unit;
-		$defaultShippingRateInternationally->default_tax_first_unit = $request->default_tax_first_unit;
-		$defaultShippingRateInternationally->default_insurance_first_unit = $request->default_insurance_first_unit;
 
 		$defaultShippingRateInternationally->save();
 		Session::flash('active-tab', 'tab2');
 		return back()->with('success', 'Default rate internationally update successfully');
 	}
-
 
 	public function operatorCountryRate(Request $request, $type=null){
 		$operatorCountryShippingRateManagement = config('operatorCountryShippingRateManagement');
@@ -468,6 +403,7 @@ class ShipmentController extends Controller
 			'return_shipment_cost' => ['nullable', 'numeric', 'min:0'],
 			'tax' => ['nullable', 'numeric', 'min:0'],
 			'insurance' => ['nullable', 'numeric', 'min:0'],
+			'cash_on_delivery_cost' => ['nullable', 'numeric', 'min:0'],
 		];
 
 		$message = [
@@ -505,6 +441,7 @@ class ShipmentController extends Controller
 		$operatorCountry->return_shipment_cost = $request->return_shipment_cost == null ? 0 : $request->return_shipment_cost;
 		$operatorCountry->tax = $request->tax == null ? 0 : $request->tax;
 		$operatorCountry->insurance = $request->insurance == null ? 0 : $request->insurance;
+		$operatorCountry->cash_on_delivery_cost = $request->cash_on_delivery_cost == null ? 0 : $request->cash_on_delivery_cost;
 
 		if ($type == 'city-wise'){
 			$operatorCountry->from_city_id = $request->from_city_id;
@@ -520,13 +457,6 @@ class ShipmentController extends Controller
 
 		return back()->with('success', 'Shipping rate created successfully');
 	}
-
-
-
-
-
-
-
 
 
 	public function internationallyRate(Request $request, $type=null){

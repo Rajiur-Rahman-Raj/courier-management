@@ -8,7 +8,7 @@
 	<div class="main-content">
 		<section class="section">
 			<div class="section-header">
-				<h1>@lang('Parcel Service List')</h1>
+				<h1>@lang('Shipment Type List')</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active">
 						<a href="{{ route('admin.home') }}">@lang('Dashboard')</a>
@@ -24,14 +24,7 @@
 							<div class="row justify-content-md-center">
 								<div class="col-lg-12">
 									<div class="card mb-4 card-primary shadow">
-										<div
-											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-											<h6 class="m-0 font-weight-bold text-primary">@lang('Shipment Type List')</h6>
-											<button class="btn btn-sm btn-outline-primary"
-													data-target="#add-shipmentType-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add Shipment Type')</button>
-										</div>
+
 
 										<div class="card-body">
 											@include('errors.error')
@@ -41,27 +34,18 @@
 													id="data-table">
 													<thead class="thead-light">
 													<tr>
-														<th scope="col">@lang('Shipment Area')</th>
 														<th scope="col">@lang('Shipment Type')</th>
 														<th scope="col">@lang('title')</th>
-														<th scope="col">@lang('Status')</th>
 														<th scope="col">@lang('Action')</th>
 													</tr>
 													</thead>
 
 													<tbody>
 													@forelse($allShipmentType as $key => $type)
+														@php
+															$type = (object) $type;
+														@endphp
 														<tr>
-															<td data-label="@lang('Shipment Area')">
-																@if($type->shipment_area == '1')
-																	@lang('Operator Country')
-																@elseif($type->shipment_area == '2')
-																	@lang('Internationally')
-																@else
-																	@lang('Operator Country + Internationally')
-																@endif
-															</td>
-
 															<td data-label="@lang('Shipment Type')">
 																@lang($type->shipment_type)
 															</td>
@@ -70,18 +54,14 @@
 																@lang($type->title)
 															</td>
 
-															<td data-label="@lang('Status')"
-																class="font-weight-bold text-dark">
-																	<?php echo $type->statusMessage; ?>
-															</td>
-
 															<td data-label="@lang('Action')">
 																<button data-target="#updateShipmnetTypeModal"
 																		data-toggle="modal"
 																		data-route="{{route('shipmentTypeUpdate', $type->id)}}"
-																		data-property="{{ $type }}"
+																		data-shipmenttype="{{$type->shipment_type}}"
+																		data-title="{{$type->title}}"
 																		class="btn btn-sm btn-outline-primary editShipmentType">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
+																	<i class="fas fa-edit"></i> @lang(' Update')</button>
 															</td>
 														</tr>
 													@empty
@@ -106,79 +86,6 @@
 	</div>
 
 
-	{{-- Add Parcel Type Modal --}}
-	<div id="add-shipmentType-modal" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Add Shipment Type')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="{{ route('shipmentTypeStore') }}" method="post" enctype="multipart/form-data">
-					@csrf
-					<div class="modal-body">
-						<div class="col-12 mt-3">
-							<label for="">@lang('Shipment Area')</label>
-							<select name="shipment_area"
-									class="form-control @error('shipment_area') is-invalid @enderror select2">
-								<option value="" disabled selected>@lang('Select One')</option>
-									<option value="1">@lang('Operator Country')</option>
-									<option value="2">@lang('Internationally')</option>
-									<option value="3">@lang('Both') (@lang('Operator Country + Internationally'))</option>
-							</select>
-							<div class="invalid-feedback">
-								@error('shipment_area') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-12 mt-3">
-							<label for="">@lang('Shipment Type') </label>
-							<input
-								type="text"
-								class="form-control @error('shipment_type') is-invalid @enderror" name="shipment_type"
-								placeholder="@lang('shipment type')" required/>
-							<div class="invalid-feedback">
-								@error('shipment_type') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-12 mt-3">
-							<label for="">@lang('Title') <span class="text-danger">(@lang('optional'))</span></label>
-							<input
-								type="text"
-								class="form-control @error('title') is-invalid @enderror" name="title"
-								placeholder="@lang('title')" required/>
-							<div class="invalid-feedback">
-								@error('title') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-md-12 my-3">
-							<label for="">@lang('Status') </label>
-							<div class="selectgroup w-100">
-								<label class="selectgroup-item">
-									<input type="radio" name="status" value="0" class="selectgroup-input">
-									<span class="selectgroup-button">@lang('OFF')</span>
-								</label>
-								<label class="selectgroup-item">
-									<input type="radio" name="status" value="1" class="selectgroup-input" checked>
-									<span class="selectgroup-button">@lang('ON')</span>
-								</label>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('Close')</button>
-						<button type="submit" class="btn btn-primary">@lang('save')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
 	{{-- Edit Parcel Type Modal --}}
 	<div id="updateShipmnetTypeModal" class="modal fade" tabindex="-1" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
@@ -196,20 +103,7 @@
 					<div class="modal-body">
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('Shipment Area')</label>
-							<select name="shipment_area"
-									class="form-control @error('shipment_area') is-invalid @enderror shipment-area">
-								<option value="1">@lang('Operator Country')</option>
-								<option value="2">@lang('Internationally')</option>
-								<option value="3">@lang('Both') (@lang('Operator Country + Internationally'))</option>
-							</select>
-							<div class="invalid-feedback">
-								@error('shipment_area') @lang($message) @enderror
-							</div>
-						</div>
-
-						<div class="col-12 mt-3">
-							<label for="">@lang('Shipment Type') <span class="text-danger">*</span></label>
+							<label for="">@lang('Shipment Type')</label>
 							<input
 								type="text"
 								class="form-control shipment-type-name" name="shipment_type"
@@ -217,27 +111,11 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('Title') <span class="text-danger">*</span></label>
+							<label for="">@lang('Title')</label>
 							<input
 								type="text"
 								class="form-control shipment-type-title" name="title"
 								placeholder="@lang('title')" required/>
-						</div>
-
-						<div class="col-md-12 my-3">
-							<label for="">@lang('Status') </label>
-							<div class="selectgroup w-100">
-								<label class="selectgroup-item">
-									<input type="radio" name="status" value="0"
-										   class="selectgroup-input status_disabled">
-									<span class="selectgroup-button">@lang('OFF')</span>
-								</label>
-								<label class="selectgroup-item">
-									<input type="radio" name="status" value="1"
-										   class="selectgroup-input status_enabled">
-									<span class="selectgroup-button">@lang('ON')</span>
-								</label>
-							</div>
 						</div>
 					</div>
 
@@ -259,11 +137,10 @@
 			$(document).on('click', '.editShipmentType', function () {
 				let dataRoute = $(this).data('route');
 				$('#editShipmentTypeForm').attr('action', dataRoute);
-				let dataProperty = $(this).data('property');
-				$('.shipment-area').val(dataProperty.shipment_area);
-				$('.shipment-type-name').val(dataProperty.shipment_type);
-				$('.shipment-type-title').val(dataProperty.title);
-				$(dataProperty.status == 0 ? '.status_disabled' : '.status_enabled').prop('checked', true);
+				let shipmentType = $(this).data('shipmenttype');
+				let title = $(this).data('title');
+				$('.shipment-type-name').val(shipmentType);
+				$('.shipment-type-title').val(title);
 			});
 		})
 	</script>

@@ -151,7 +151,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('operator-country-shipping-rate/{type?}', [ShipmentController::class, 'operatorCountryRate'])->name('operatorCountryRate');
 		Route::get('create-shipping-rate-operator-country', [ShipmentController::class, 'createShippingRateOperatorCountry'])->name('createShippingRateOperatorCountry');
 		Route::post('shipping-rate-operator-country-store/{type?}', [ShipmentController::class, 'shippingRateOperatorCountryStore'])->name('shippingRateOperatorCountry.store');
-
 		Route::get('operator-country-show-shipping-rate/{type?}/{id}', [ShipmentController::class, 'operatorCountryShowRate'])->name('operatorCountryShowRate');
 		Route::put('state-rete-update/{id}', [ShipmentController::class, 'stateRateUpdate'])->name('stateRateUpdate');
 		Route::put('city-rete-update/{id}', [ShipmentController::class, 'cityRateUpdate'])->name('cityRateUpdate');

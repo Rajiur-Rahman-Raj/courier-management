@@ -351,6 +351,34 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="col-12 mt-4 mb-1">
+							<h6>@lang('Cost For Cash on Delivary')</h6>
+							<hr>
+						</div>
+
+						<div class="col-12 mt-3">
+							<label for="cash_on_delivery_cost"> @lang('Shipping Cost:') <span
+									class="text-danger">*</span></label>
+
+							<div class="input-group">
+								<input type="text" name="cash_on_delivery_cost"
+									   class="form-control @error('cash_on_delivery_cost') is-invalid @enderror cashOnDeliveryCost"
+									   placeholder="0.00"
+									   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+									   min="0"
+									   value="{{ old('cash_on_delivery_cost') }}">
+								<div class="input-group-append">
+									<div class="form-control">
+										{{ config('basic.currency_symbol') }}
+									</div>
+								</div>
+								<div class="invalid-feedback">
+									@error('cash_on_delivery_cost') @lang($message) @enderror
+								</div>
+							</div>
+						</div>
+
 					</div>
 
 					<div class="modal-footer">
@@ -395,6 +423,7 @@
 
 				$('.shippingCost').val(dataProperty.shipping_cost);
 				$('.returnShipmentCost').val(dataProperty.return_shipment_cost);
+				$('.cashOnDeliveryCost').val(dataProperty.cash_on_delivery_cost);
 				$('.tax').val(dataProperty.tax);
 				$('.insurance').val(dataProperty.insurance);
 

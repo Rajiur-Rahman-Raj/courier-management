@@ -225,97 +225,6 @@
 											</div>
 										</div>
 
-										<div class="row">
-											<div class="col-12 mt-4 mb-1">
-												<h6>@lang('Default Costs For The First ') <span
-														class="cost-per-unit">(@lang('UNIT'))</span></h6>
-												<hr>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="parcel_type_id"> @lang('Select Parcel Type') <span
-														class="text-danger">*</span></label>
-												<select name="parcel_type_id"
-														class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType select2 select2ParcelType">
-													<option value="" disabled selected>@lang('Select type')</option>
-													@foreach($allParcelTypes as $parcelType)
-														<option value="{{ $parcelType->id }}" {{ $parcelType->id == $defaultShippingRateOperatorCountry->parcel_type_id ? 'selected' : '' }}> @lang($parcelType->parcel_type) </option>
-													@endforeach
-												</select>
-
-												<div class="invalid-feedback">
-													@error('parcel_type_id') @lang($message) @enderror
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="shipping_cost_first_unit"> @lang('Shipping Cost:') <span
-														class="text-danger">*</span></label>
-												<input type="text" name="shipping_cost_first_unit"
-													   class="form-control @error('shipping_cost_first_unit') is-invalid @enderror"
-													   placeholder="0.00"
-													   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-													   min="0"
-													   value="{{ old('shipping_cost_first_unit', $defaultShippingRateOperatorCountry->shipping_cost_first_unit) }}">
-												<div class="invalid-feedback">
-													@error('shipping_cost_first_unit') @lang($message) @enderror
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="return_shipment_cost_first_unit"> @lang('Returned Shipment Cost:')
-													<span
-														class="text-danger">*</span></label>
-												<input type="text" name="return_shipment_cost_first_unit"
-													   class="form-control @error('return_shipment_cost_first_unit') is-invalid @enderror"
-													   placeholder="0.00"
-													   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-													   min="0"
-													   value="{{ old('return_shipment_cost_first_unit', $defaultShippingRateOperatorCountry->return_shipment_cost_first_unit) }}">
-												<div class="invalid-feedback">
-													@error('return_shipment_cost_first_unit') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="default_tax_first_unit"> @lang('Tax:') % <span
-														class="text-danger">*</span></label>
-												<div class="input-group">
-													<input type="text" name="default_tax_first_unit"
-														   class="form-control @error('default_tax_first_unit') is-invalid @enderror"
-														   placeholder="0"
-														   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-														   min="0"
-														   value="{{ old('default_tax_first_unit', $defaultShippingRateOperatorCountry->default_tax_first_unit) }}">
-
-													<div class="input-group-append">
-														<div class="form-control">
-															@lang('%')
-														</div>
-													</div>
-													<div class="invalid-feedback">
-														@error('default_tax_first_unit') @lang($message) @enderror
-													</div>
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="default_insurance_first_unit"> @lang('Insurance::') <span
-														class="text-danger">*</span></label>
-												<input type="text" name="default_insurance_first_unit"
-													   class="form-control @error('default_insurance_first_unit') is-invalid @enderror"
-													   placeholder="0"
-													   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-													   min="0"
-													   value="{{ old('default_insurance_first_unit', $defaultShippingRateOperatorCountry->default_insurance_first_unit) }}">
-												<div class="invalid-feedback">
-													@error('default_insurance_first_unit') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-										</div>
-
 										<button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 									</form>
 								</div>
@@ -333,7 +242,7 @@
 												<label for="shipping_date_id"> @lang('Shipping Date') <span
 														class="text-danger">*</span></label>
 												<select name="shipping_date_id"
-														class="form-control @error('shipping_date_id') is-invalid @enderror form-select select-shipping-date">
+														class="form-control @error('shipping_date_id') is-invalid @enderror select2 form-select select-shipping-date">
 													<option value="" disabled selected>@lang('Select date')</option>
 													@foreach($allShippingDates as $shippingDate)
 														<option
@@ -486,107 +395,10 @@
 												</div>
 											</div>
 										</div>
-
-										<div class="row">
-											<div class="col-12 mt-4 mb-1">
-												<h6>@lang('Default Costs For The First ') <span
-														class="cost-per-unit">(@lang('UNIT'))</span></h6>
-												<hr>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="parcel_type_id"> @lang('Select Parcel Type') <span
-														class="text-danger">*</span></label>
-												<select name="parcel_type_id"
-														class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType select2ParcelType">
-													<option value="" disabled selected>@lang('Select type')</option>
-													@foreach($allParcelTypes as $parcelType)
-														<option
-															value="{{ $parcelType->id }}" {{ $parcelType->id == $defaultShippingRateInternationally->parcel_type_id ? 'selected' : '' }}> @lang($parcelType->parcel_type) </option>
-													@endforeach
-												</select>
-
-												<div class="invalid-feedback">
-													@error('parcel_type_id') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="shipping_cost_first_unit"> @lang('Shipping Cost:') <span
-														class="text-danger">*</span></label>
-												<input type="text" name="shipping_cost_first_unit"
-													   class="form-control @error('shipping_cost_first_unit') is-invalid @enderror"
-													   placeholder="0.00"
-													   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-													   min="0"
-													   value="{{ old('shipping_cost_first_unit', $defaultShippingRateInternationally->shipping_cost_first_unit) }}">
-												<div class="invalid-feedback">
-													@error('shipping_cost_first_unit') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="return_shipment_cost_first_unit"> @lang('Returned Shipment Cost:')
-													<span
-														class="text-danger">*</span></label>
-												<input type="text" name="return_shipment_cost_first_unit"
-													   class="form-control @error('return_shipment_cost_first_unit') is-invalid @enderror"
-													   placeholder="0.00"
-													   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-													   min="0"
-													   value="{{ old('return_shipment_cost_first_unit', $defaultShippingRateInternationally->return_shipment_cost_first_unit) }}">
-												<div class="invalid-feedback">
-													@error('return_shipment_cost_first_unit') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="default_tax_first_unit"> @lang('Tax:') % <span
-														class="text-danger">*</span></label>
-												<div class="input-group">
-													<input type="text" name="default_tax_first_unit"
-														   class="form-control @error('default_tax_first_unit') is-invalid @enderror"
-														   placeholder="0"
-														   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-														   min="0"
-														   value="{{ old('default_tax_first_unit', $defaultShippingRateInternationally->default_tax_first_unit) }}">
-
-													<div class="input-group-append">
-														<div class="form-control">
-															@lang('%')
-														</div>
-													</div>
-													<div class="invalid-feedback">
-														@error('default_tax_first_unit') @lang($message) @enderror
-													</div>
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-2 mb-3">
-												<label for="default_insurance_first_unit"> @lang('Insurance::') <span
-														class="text-danger">*</span></label>
-												<input type="text" name="default_insurance_first_unit"
-													   class="form-control @error('default_insurance_first_unit') is-invalid @enderror"
-													   placeholder="0"
-													   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-													   min="0"
-													   value="{{ old('default_insurance_first_unit', $defaultShippingRateInternationally->default_insurance_first_unit) }}">
-												<div class="invalid-feedback">
-													@error('default_insurance_first_unit') @lang($message) @enderror
-												</div>
-												<div class="valid-feedback"></div>
-											</div>
-										</div>
-
 										<button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 									</form>
 								</div>
 							</div>
-
-
 						</div>
 					</div>
 				</div>

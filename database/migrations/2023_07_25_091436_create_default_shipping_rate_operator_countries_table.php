@@ -23,11 +23,6 @@ class CreateDefaultShippingRateOperatorCountriesTable extends Migration
 			$table->double('return_shipping_cost')->default(0.00)->nullable();
 			$table->double('default_tax')->default(0.00)->nullable();
 			$table->double('default_insurance')->default(0.00)->nullable();
-			$table->foreignId('parcel_type_id')->index()->nullable();
-			$table->double('shipping_cost_first_unit')->default(0.00)->nullable();
-			$table->double('return_shipping_cost_first_unit')->default(0.00)->nullable();
-			$table->double('default_tax_first_unit')->default(0.00)->nullable();
-			$table->double('default_insurance_first_unit')->default(0.00)->nullable();
 			$table->boolean('status')->default(1);
             $table->timestamps();
         });
