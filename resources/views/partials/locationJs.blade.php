@@ -190,6 +190,7 @@
 		$('.selectedFromState').on('change', function () {
 			let selectedValue = $(this).val();
 			getSelectedFromStateCity(selectedValue);
+			window.calculateCashOnDeliveryShippingCost();
 		})
 
 		window.getSelectedFromStateCity = function getSelectedFromStateCity(value, from_city_id = null, dataProperty = null) {
@@ -230,6 +231,7 @@
 		$('.selectedToState').on('change', function () {
 			let selectedValue = $(this).val();
 			getSelectedToStateCity(selectedValue);
+			window.calculateCashOnDeliveryShippingCost();
 		})
 
 		window.getSelectedToStateCity = function getSelectedToStateCity(value, to_city_id = null, dataProperty = null) {
@@ -269,6 +271,7 @@
 		$('.selectedFromCity').on('change', function () {
 			let selectedValue = $(this).val();
 			getSelectedFromCityArea(selectedValue);
+			window.calculateCashOnDeliveryShippingCost();
 		})
 
 		window.getSelectedFromCityArea = function getSelectedFromCityArea(value, from_area_id = null) {
@@ -305,6 +308,7 @@
 		$('.selectedToCity').on('change', function () {
 			let selectedValue = $(this).val();
 			getSelectedToCityArea(selectedValue);
+			window.calculateCashOnDeliveryShippingCost();
 		})
 
 		window.getSelectedToCityArea = function getSelectedToCityArea(value, to_area_id = null) {
@@ -337,6 +341,16 @@
 				}
 			});
 		}
+
+
+		$('.selectedFromArea').on('change', function (){
+			window.calculateCashOnDeliveryShippingCost();
+		})
+
+		$('.selectedToArea').on('change', function (){
+			window.calculateCashOnDeliveryShippingCost();
+		})
+
 
 	});
 </script>

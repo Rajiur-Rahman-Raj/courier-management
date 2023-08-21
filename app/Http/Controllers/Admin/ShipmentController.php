@@ -781,17 +781,21 @@ class ShipmentController extends Controller
 
 	public function OCGetSelectedLocationShipRate(Request $request){
 		$operatorCountryId = BasicControl::first('operator_country');
-
+		$parcelTypeId = $request->parcelTypeId;
 		if ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->fromAreaId == null) {
 			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
-				->where('parcel_type_id', $request->parcelTypeId)
+				->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
+					$query->where('parcel_type_id', $parcelTypeId);
+				})
 				->where('from_state_id', $request->fromStateId)
 				->where('to_state_id', $request->toStateId)
 				->first();
 			return response($shippingRate);
 		} elseif ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null && $request->fromAreaId == null && $request->toAreaId == null) {
 			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
-				->where('parcel_type_id', $request->parcelTypeId)
+				->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
+					$query->where('parcel_type_id', $parcelTypeId);
+				})
 				->where('from_state_id', $request->fromStateId)
 				->where('to_state_id', $request->toStateId)
 				->where('from_city_id', $request->fromCityId)
@@ -800,7 +804,9 @@ class ShipmentController extends Controller
 			return response($shippingRate);
 		} elseif ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null && $request->fromAreaId != null && $request->toAreaId != null) {
 			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
-				->where('parcel_type_id', $request->parcelTypeId)
+				->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
+					$query->where('parcel_type_id', $parcelTypeId);
+				})
 				->where('from_state_id', $request->fromStateId)
 				->where('to_state_id', $request->toStateId)
 				->where('from_city_id', $request->fromCityId)

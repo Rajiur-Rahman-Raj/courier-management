@@ -4881,3 +4881,9 @@ a:hover {
 	padding: 5px;
 	margin-bottom: 20px;
 }
+.search-currency-dropdown select.form-control:not([size]):not([multiple]), .form-control:not(.form-control-sm):not(.form-control-lg) {
+	height: 32px;
+}
+#cod_parcel_details{
+	height: 80px !important;
+}

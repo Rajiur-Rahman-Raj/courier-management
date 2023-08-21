@@ -120,7 +120,6 @@
 		let totalInsurance = 0;
 
 
-
 		$('.OCParcelTypeWiseShippingRate').each(function (key, value){
 			let parcelTypeId = $(value).val();
 			$.ajaxSetup({
@@ -143,6 +142,7 @@
 					toAreaId: toAreaId,
 				},
 				success: function (response) {
+					console.log(response);
 						let responseData = response;
 						let shippingCost = parseFloat(responseData.shipping_cost);
 						let shippingTax  = responseData.tax;
