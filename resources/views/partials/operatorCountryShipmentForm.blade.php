@@ -10,7 +10,8 @@
 				<div class="custom-control custom-radio">
 					<input type="radio" id="shipmentTypeDropOff"
 						   name="shipment_type"
-						   class="custom-control-input" checked>
+						   value="drop_off"
+						   class="custom-control-input" checked @if(old('shipment_type') === 'drop_off') checked @endif>
 					<label class="custom-control-label"
 						   for="shipmentTypeDropOff">@lang($shipmentTypeList[0]['shipment_type'])
 						(@lang($shipmentTypeList[0]['title']))</label>
@@ -19,8 +20,9 @@
 				<div class="custom-control custom-radio">
 					<input type="radio" id="shipmentTypePickup"
 						   name="shipment_type"
+						   value="pickup"
 						   data-resource="{{ $defaultShippingRateOC }}"
-						   class="custom-control-input">
+						   class="custom-control-input" @if(old('shipment_type') === 'pickup') checked @endif>
 					<label class="custom-control-label"
 						   for="shipmentTypePickup">@lang($shipmentTypeList[1]['shipment_type'])
 						(@lang($shipmentTypeList[1]['title']))</label>
@@ -29,14 +31,20 @@
 				<div class="custom-control custom-radio">
 					<input type="radio" id="shipmentTypeCondition"
 						   name="shipment_type"
-						   class="custom-control-input">
+						   value="condition"
+						   class="custom-control-input" @if(old('shipment_type') === 'condition') checked @endif>
 					<label class="custom-control-label"
 						   for="shipmentTypeCondition">@lang($shipmentTypeList[2]['shipment_type'])
 						(@lang($shipmentTypeList[2]['title']))</label>
 				</div>
+				<div class="invalid-feedback d-block">
+					@error('shipment_type') @lang($message) @enderror
+				</div>
 
 			</div>
+
 		</div>
+
 
 		<div class="row get_receive_amount d-none">
 			<div class="col-sm-12 col-md-3 mb-3">
@@ -54,7 +62,7 @@
 							{{ $basic->currency_symbol }}
 						</div>
 					</div>
-					<div class="invalid-feedback">
+					<div class="invalid-feedback d-block">
 						@error('receive_amount') @lang($message) @enderror
 					</div>
 				</div>
@@ -68,8 +76,8 @@
 					   name="shipment_date"
 					   value="{{ old('shipment_date',request()->shipment_date) }}"
 					   placeholder="@lang('shipment date')" autocomplete="off"/>
-				<div class="invalid-feedback">
-					@error('shipment_date') @lang($message) @enderror
+				<div class="invalid-feedback d-block">
+					<span>@error('shipment_date') @lang($message) @enderror</span>
 				</div>
 			</div>
 
@@ -79,7 +87,7 @@
 					   name="delivery_date"
 					   value="{{ old('delivery_date',request()->delivery_date) }}"
 					   placeholder="@lang('Delivery date')" autocomplete="off"/>
-				<div class="invalid-feedback">
+				<div class="invalid-feedback d-block">
 					@error('delivery_date') @lang($message) @enderror
 				</div>
 			</div>
@@ -123,6 +131,7 @@
 				<select name="sender_id"
 						class="form-control @error('sender_id') is-invalid @enderror select2 select-client">
 					<option value="" disabled selected>@lang('Select Sender')</option>
+
 					@foreach($senders as $sender)
 						<option value="{{ $sender->id }}">@lang($sender->name)</option>
 					@endforeach
@@ -230,11 +239,9 @@
 					<option value="1">@lang('Sender')</option>
 					<option value="2">@lang('Receiver')</option>
 				</select>
-
 				<div class="invalid-feedback">
 					@error('payment_by') @lang($message) @enderror
 				</div>
-				<div class="valid-feedback"></div>
 			</div>
 
 			<div class="col-sm-12 col-md-4 mb-3">
@@ -274,14 +281,14 @@
 				<h6 class="text-dark font-weight-bold"> @lang('Packing Service') </h6>
 				<div class="custom-control custom-radio">
 					<input type="radio" id="packingServiceOn" name="packing_service"
-						   class="custom-control-input" value="yes">
+						   class="custom-control-input" checked @if(old('packing_service') === 'yes') checked @endif value="yes">
 					<label class="custom-control-label"
 						   for="packingServiceOn">@lang('Yes')</label>
 				</div>
 				<div class="custom-control custom-radio">
 					<input type="radio" id="packingServiceOff" value="no"
 						   name="packing_service"
-						   class="custom-control-input" checked>
+						   class="custom-control-input"  @if(old('packing_service') === 'no') checked @endif>
 					<label class="custom-control-label"
 						   for="packingServiceOff">@lang('No')</label>
 				</div>
@@ -312,6 +319,10 @@
 								@endforeach
 							</select>
 
+							<div class="invalid-feedback">
+								@error('package_id') @lang($message) @enderror
+							</div>
+
 							<select name="variant_id"
 									class="form-control @error('variant_id') is-invalid @enderror selectedVariant">
 								<option value="">@lang('Select Variant')</option>
@@ -319,8 +330,8 @@
 
 							<input type="text" name="variant_price"
 								   class="form-control @error('variant_price') is-invalid @enderror variantPrice newVariantPrice"
-								   placeholder="@lang('price')">
-							<div class="input-group-append" readonly="">
+								   placeholder="@lang('price')" readonly>
+							<div class="input-group-append">
 								<div class="form-control">
 									{{ config('basic.currency_symbol') }}
 								</div>
@@ -329,6 +340,8 @@
 							<input type="text" name="variant_quantity"
 								   class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity"
 								   value="{{ old('variant_quantity') }}"
+								   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+								   min="1"
 								   id="variantQuantity"
 								   placeholder="@lang('quantity')">
 
@@ -408,6 +421,7 @@
 					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
 					<input type="text" name="parcel_quantity"
 						   class="form-control @error('parcel_quantity') is-invalid @enderror"
+						   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
 						   value="{{ old('parcel_quantity') }}">
 					<div class="invalid-feedback">
 						@error('parcel_quantity') @lang($message) @enderror
@@ -450,7 +464,7 @@
 					<div class="input-group">
 						<input type="text" name="cost_per_unit"
 							   class="form-control @error('cost_per_unit') is-invalid @enderror unitPrice newCostPerUnit"
-							   value="{{ old('cost_per_unit') }}">
+							   value="{{ old('cost_per_unit') }}" readonly>
 						<div class="input-group-append" readonly="">
 							<div class="form-control">
 								{{ $basic->currency_symbol }}
@@ -465,20 +479,20 @@
 				</div>
 
 				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
-					<label for="parcel_weight"> @lang('Total Unit')</label>
+					<label for="total_unit"> @lang('Total Unit')</label>
 					<div class="input-group">
-						<input type="text" name="parcel_weight"
-							   class="form-control @error('parcel_weight') is-invalid @enderror newTotalWeight"
-							   value="{{ old('parcel_weight') }}">
+						<input type="text" name="total_unit"
+							   class="form-control @error('total_unit') is-invalid @enderror newTotalWeight"
+							   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+							   value="{{ old('total_unit') }}">
 						<div class="input-group-append" readonly="">
 							<div class="form-control">
 								@lang('kg')
 							</div>
 						</div>
-					</div>
-
-					<div class="invalid-feedback">
-						@error('parcel_weight') @lang($message) @enderror
+						<div class="invalid-feedback d-block">
+							@error('total_unit') @lang($message) @enderror
+						</div>
 					</div>
 				</div>
 
@@ -487,7 +501,7 @@
 					<div class="input-group">
 						<input type="text" name="parcel_total_cost"
 							   class="form-control @error('parcel_total_cost') is-invalid @enderror totalParcelCost"
-							   value="{{ old('parcel_total_cost') }}">
+							   value="{{ old('parcel_total_cost') }}" readonly>
 						<div class="input-group-append" readonly="">
 							<div class="form-control">
 								{{ $basic->currency_symbol }}
@@ -504,7 +518,7 @@
 					<label for="email"> @lang('Dimensions') [Length x Width x Height]
 						(cm)
 						<span
-							class="text-dark font-weight-bold">(@lang('optional')</span></label>
+							class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 				</div>
 
 				<div class="col-sm-12 col-md-4 mb-3">

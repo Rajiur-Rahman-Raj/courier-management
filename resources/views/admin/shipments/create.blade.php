@@ -81,54 +81,94 @@
 			<script type="text/javascript">
 				'use strict';
 
-				const shipmentTypeDropOff = document.getElementById('shipmentTypeDropOff');
-				const shipmentTypePickup = document.getElementById('shipmentTypePickup');
-				const shipmentTypeCondition = document.getElementById('shipmentTypeCondition');
+				OCFormHandlingByShipmentType();
 
-				shipmentTypeDropOff.addEventListener('change', function () {
-					if (shipmentTypeDropOff.checked) {
+				$('input[name="shipment_type"]').change(function () {
+					OCFormHandlingByShipmentType();
+				});
+
+				function OCFormHandlingByShipmentType() {
+					if ($('input[name="shipment_type"]:checked').val() === "drop_off") {
 						$('.pickup').addClass('d-none');
 						$('.OCPickupCost').val(0);
 						$('.OCSupplyCost').val(0);
-
 						$('.get_receive_amount').addClass('d-none');
 						$('.add_cod_parcel_info').addClass('d-none');
 						$('.addParcelFieldButton').removeClass('d-none');
 						$('.addedParcelField').removeClass('d-none')
-
 						finalTotalAmountCalculation();
-					}
-				});
 
-				shipmentTypePickup.addEventListener('change', function () {
-					if (shipmentTypePickup.checked) {
+						$('input[name="receive_amount"]').prop('required', false);
+						$('input[name="parcel_name"]').prop('required', true);
+						$('input[name="parcel_quantity"]').prop('required', true);
+						$('select[name="parcel_type_id"]').prop('required', true);
+						$('select[name="parcel_unit_id"]').prop('required', true);
+						$('input[name="total_unit"]').prop('required', true);
+
+					} else if ($('input[name="shipment_type"]:checked').val() === "pickup") {
 						let dataResouce = $('#shipmentTypePickup').data('resource');
 						$('.pickup').removeClass('d-none');
 						$('.OCPickupCost').val(dataResouce.pickup_cost);
 						$('.OCSupplyCost').val(dataResouce.supply_cost);
-
 						$('.get_receive_amount').addClass('d-none');
 						$('.add_cod_parcel_info').addClass('d-none');
 						$('.addParcelFieldButton').removeClass('d-none');
 						$('.addedParcelField').removeClass('d-none')
-
 						finalTotalAmountCalculation();
-					}
-				});
 
-				shipmentTypeCondition.addEventListener('change', function () {
-					if (shipmentTypeCondition.checked) {
+						$('input[name="receive_amount"]').prop('required', false);
+						$('input[name="parcel_name"]').prop('required', true);
+						$('input[name="parcel_quantity"]').prop('required', true);
+						$('select[name="parcel_type_id"]').prop('required', true);
+						$('select[name="parcel_unit_id"]').prop('required', true);
+						$('input[name="total_unit"]').prop('required', true);
+
+					} else if ($('input[name="shipment_type"]:checked').val() === "condition") {
 						$('.pickup').addClass('d-none');
 						$('.OCPickupCost').val(0);
 						$('.OCSupplyCost').val(0);
-
 						$('.get_receive_amount').removeClass('d-none');
 						$('.add_cod_parcel_info').removeClass('d-none');
 						$('.addParcelFieldButton').addClass('d-none');
 						$('.addedParcelField').addClass('d-none')
 						finalTotalAmountCalculation();
+
+						$('input[name="receive_amount"]').prop('required', true);
+						$('input[name="parcel_name"]').prop('required', false);
+						$('input[name="parcel_quantity"]').prop('required', false);
+						$('select[name="parcel_type_id"]').prop('required', false);
+						$('select[name="parcel_unit_id"]').prop('required', false);
+						$('input[name="total_unit"]').prop('required', false);
 					}
+				}
+
+
+
+				formHandlingByPackingService();
+
+				$('input[name="packing_service"]').change(function () {
+					formHandlingByPackingService();
 				});
+
+				function formHandlingByPackingService() {
+					if ($('input[name="packing_service"]:checked').val() === "yes") {
+						$('.addedPackingField').removeClass('d-none')
+						$('.addPackingFieldButton').removeClass('d-none')
+
+						$('select[name="package_id"]').prop('required', true);
+						$('select[name="variant_id"]').prop('required', true);
+						$('input[name="variant_quantity"]').prop('required', true);
+
+					} else if ($('input[name="packing_service"]:checked').val() === "no") {
+						$('.addedPackingField').addClass('d-none')
+						$('.addPackingFieldButton').addClass('d-none')
+
+						$('select[name="package_id"]').prop('required', false);
+						$('select[name="variant_id"]').prop('required', false);
+						$('input[name="variant_quantity"]').prop('required', false);
+					}
+				}
+
 
 				window.calculateCashOnDeliveryShippingCost = function calculateCashOnDeliveryShippingCost() {
 					if (shipmentTypeCondition.checked) {
@@ -172,24 +212,6 @@
 				}
 
 
-				const packingServiceOn = document.getElementById('packingServiceOn');
-				const packingServiceOff = document.getElementById('packingServiceOff');
-
-				packingServiceOn.addEventListener('change', function () {
-					if (packingServiceOn.checked) {
-						$('.addedPackingField').removeClass('d-none')
-						$('.addPackingFieldButton').removeClass('d-none')
-					}
-				});
-
-				packingServiceOff.addEventListener('change', function () {
-					if (packingServiceOff.checked) {
-						$('.addedPackingField').addClass('d-none')
-						$('.addPackingFieldButton').addClass('d-none')
-					}
-				});
-
-
 				$(document).ready(function () {
 
 					$(".flatpickr").flatpickr({
@@ -212,19 +234,20 @@
 					});
 
 					$("#packingGenerate").on('click', function () {
+						formHandlingByPackingService();
 						const id = Date.now();
 						var form = `<div class="row">
 										<div class="col-md-12">
 											<div class="form-group">
 												<div class="input-group">
-													<select name="package_id" class="form-control @error('package_id') is-invalid @enderror selectedPackage_${id}" onchange="selectedPackageVariantHandel(${id})">
+													<select name="package_id" class="form-control @error('package_id') is-invalid @enderror selectedPackage_${id}" onchange="selectedPackageVariantHandel(${id})" required>
 														<option value="" disabled selected>@lang('Select package')</option>
 														@foreach($packageList as $package)
 						<option value="{{ $package->id }}">@lang($package->package_name)</option>
 														@endforeach
 						</select>
 
-<select name="variant_id" class="form-control @error('variant_id') is-invalid @enderror selectedVariant_${id} newVariant" onchange="selectedVariantServiceHandel(${id})">
+<select name="variant_id" class="form-control @error('variant_id') is-invalid @enderror selectedVariant_${id} newVariant" onchange="selectedVariantServiceHandel(${id})" required>
 														<option value="">@lang('Select Variant')</option>
 													</select>
 
@@ -235,7 +258,7 @@
 						</div>
 					</div>
 
-					<input type="text" name="variant_quantity" class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity" value="{{ old('variant_quantity') }}" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" placeholder="@lang('quantity')">
+					<input type="text" name="variant_quantity" class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity" value="{{ old('variant_quantity') }}" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" placeholder="@lang('quantity')" required>
 													<input type="text" name="package_cost" class="form-control @error('package_cost') is-invalid @enderror totalPackingCost_${id} packingCostValue" value="{{ old('package_cost') }} " readonly placeholder="@lang('total cost')">
 													<div class="input-group-append">
 														<div class="form-control">
@@ -260,8 +283,8 @@
 					});
 
 
-
 					$("#parcelGenerate").on('click', function () {
+						formHandlingByPackingService();
 						const id = Date.now();
 						var form = `<div class="row addMoreParcelBox" id="removeParcelField${id}">
 										<div class="col-md-12 d-flex justify-content-end">
@@ -272,12 +295,12 @@
 											</button>
 										</div>
 										<div class="col-sm-12 col-md-3 mb-3">
-						<label for="parcel_description"> @lang('Description/Percel Name') </label>
-											<input type="text" name="parcel_description"
-												   class="form-control @error('parcel_description') is-invalid @enderror"
-												   value="{{ old('email') }}">
+						<label for="parcel_name"> @lang('Percel Name') </label>
+											<input type="text" name="parcel_name"
+												   class="form-control @error('parcel_name') is-invalid @enderror"
+												   value="{{ old('email') }}" required>
 											<div class="invalid-feedback">
-												@error('parcel_description') @lang($message) @enderror
+												@error('parcel_name') @lang($message) @enderror
 						</div>
 					</div>
 
@@ -285,7 +308,7 @@
 					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
 					<input type="text" name="parcel_quantity"
 						   class="form-control @error('parcel_quantity') is-invalid @enderror"
-						   value="{{ old('parcel_quantity') }}">
+						   value="{{ old('parcel_quantity') }}" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" required>
 					<div class="invalid-feedback">
 						@error('parcel_quantity') @lang($message) @enderror
 						</div>
@@ -293,7 +316,7 @@
 
 											<div class="col-sm-12 col-md-3 mb-3">
 												<label for="parcel_type_id"> @lang('Parcel Type') </label>
-											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})">
+											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})" required>
 												<option value="" disabled selected>@lang('Select Parcel Type')</option>
 												@foreach($parcelTypes as $parcel_type)
 						<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
@@ -308,7 +331,7 @@
 					<div class="col-sm-12 col-md-3 mb-3">
 						<label for="parcel_unit_id"> @lang('Select Unit') </label>
 											<select name="parcel_unit_id"
-													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})">
+													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})" required>
 												<option value="" disabled
 														selected>@lang('Select Parcel Unit')</option>
 											</select>
@@ -324,7 +347,7 @@
 													<div class="input-group">
 														<input type="text" name="cost_per_unit"
 															   class="form-control @error('cost_per_unit') is-invalid @enderror newCostPerUnit unitPrice_${id}"
-															   value="{{ old('cost_per_unit') }}">
+															   value="{{ old('cost_per_unit') }}" readonly>
 														<div class="input-group-append" readonly="">
 															<div class="form-control">
 																{{ $basic->currency_symbol }}
@@ -339,16 +362,16 @@
 				</div>
 
 				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
-						<label for="parcel_weight"> @lang('Total Unit')</label>
+						<label for="total_unit"> @lang('Total Unit')</label>
 						<div class="input-group">
-							<input type="text" name="parcel_weight" class="form-control @error('parcel_weight') is-invalid @enderror newTotalWeight" value="{{ old('parcel_weight') }}">
+							<input type="text" name="total_unit" class="form-control @error('total_unit') is-invalid @enderror newTotalWeight" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" value="{{ old('total_unit') }}" required>
 							<div class="input-group-append" readonly="">
 								<div class="form-control">
 									@lang('kg')
 						</div>
 					</div>
 				</div>
-				<div class="invalid-feedback"> @error('parcel_weight') @lang($message) @enderror </div>
+				<div class="invalid-feedback"> @error('total_unit') @lang($message) @enderror </div>
 					</div>
 
 					<div class="col-sm-12 col-md-4 mb-3">
@@ -356,7 +379,7 @@
 													<div class="input-group">
 														<input type="text" name="parcel_total_cost"
 															   class="form-control @error('parcel_total_cost') is-invalid @enderror totalParcelCost"
-															   value="{{ old('parcel_total_cost') }}">
+															   value="{{ old('parcel_total_cost') }}" readonly>
 														<div class="input-group-append" readonly="">
 															<div class="form-control">
 																{{ $basic->currency_symbol }}
@@ -505,7 +528,6 @@
 				};
 
 				$('.shipment_image').imageUploader(shipingImageOptions);
-
 
 			</script>
 @endsection
