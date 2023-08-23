@@ -21,5 +21,6 @@ class VerifyCsrfToken extends Middleware
         '*get-parcel-unit-service',
         '*get-parcel-unit-service',
         '*get-parcel-type-unit',
+        '*get-package-variant',
     ];
 }

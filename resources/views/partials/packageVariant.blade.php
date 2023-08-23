@@ -88,7 +88,6 @@
 						selectedVariantClass = `.selectedVariant_${packageId}`
 					}
 
-
 					$(selectedVariantClass).empty();
 					responseData.forEach(res => {
 						$(selectedVariantClass).append(`<option value="${res.id}">${res.variant}</option>`)

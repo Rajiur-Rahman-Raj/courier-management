@@ -55,7 +55,7 @@
 
 							<div class="tab-content mt-2" id="myTabContent">
 								@include('partials.operatorCountryShipmentForm')
-								@include('partials.internationallyShipmentForm')
+{{--								@include('partials.internationallyShipmentForm')--}}
 							</div>
 						</div>
 					</div>
@@ -64,6 +64,10 @@
 		</div>
 		<input type="hidden" class="firstFiv" value="0">
 		<input type="hidden" class="lastFiv" value="0">
+		@php
+			$oldPackingCounts = old('variant_price') ? count(old('variant_price')) : 0;
+		@endphp
+
 		@endsection
 
 		@push('extra_scripts')
@@ -80,6 +84,60 @@
 
 			<script type="text/javascript">
 				'use strict';
+
+				let oldPackingValue = "{{ $oldPackingCounts }}"
+
+				if(oldPackingValue){
+					for(let i = 0;  i < oldPackingValue; i++){
+						let oldPackageId;
+						let oldVariantId;
+						if (i == 0){
+							oldPackageId = $(`.selectedPackage`).val();
+							oldVariantId = $(`.selectedVariant`).data('oldvariant');
+						}else{
+							oldPackageId = $(`.selectedPackage_${i}`).val();
+							oldVariantId = $(`.selectedVariant_${i}`).data('oldvariant');
+						}
+
+						getOldSelectedPackageVariant(oldPackageId, oldVariantId, i);
+					}
+
+					function getOldSelectedPackageVariant(value, oldVariantId, i) {
+						$.ajaxSetup({
+							headers: {
+								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+							}
+						});
+
+						$.ajax({
+							url: "{{ route('getSelectedPackageVariant') }}",
+							method: 'POST',
+							data: {
+								id: value,
+							},
+							success: function (response) {
+								let responseData = response;
+								let selectedVariantClass;
+								if (i == 0){
+									selectedVariantClass = '.selectedVariant';
+								}else{
+									selectedVariantClass = `.selectedVariant_${i}`
+								}
+
+
+								responseData.forEach(res => {
+									$(selectedVariantClass).append(`<option value="${res.id}" ${res.id == oldVariantId ? 'selected' : ''}>${res.variant}</option>`)
+								})
+
+							},
+							error: function (xhr, status, error) {
+								console.log(error)
+							}
+						});
+					}
+				}
+
+
 
 				OCFormHandlingByShipmentType();
 
@@ -99,6 +157,7 @@
 						finalTotalAmountCalculation();
 
 						$('input[name="receive_amount"]').prop('required', false);
+						$('textarea[name="parcel_details"]').prop('required', false);
 						$('input[name="parcel_name"]').prop('required', true);
 						$('input[name="parcel_quantity"]').prop('required', true);
 						$('select[name="parcel_type_id"]').prop('required', true);
@@ -117,6 +176,7 @@
 						finalTotalAmountCalculation();
 
 						$('input[name="receive_amount"]').prop('required', false);
+						$('textarea[name="parcel_details"]').prop('required', false);
 						$('input[name="parcel_name"]').prop('required', true);
 						$('input[name="parcel_quantity"]').prop('required', true);
 						$('select[name="parcel_type_id"]').prop('required', true);
@@ -134,6 +194,8 @@
 						finalTotalAmountCalculation();
 
 						$('input[name="receive_amount"]').prop('required', true);
+						$('textarea[name="parcel_details"]').prop('required', true);
+
 						$('input[name="parcel_name"]').prop('required', false);
 						$('input[name="parcel_quantity"]').prop('required', false);
 						$('select[name="parcel_type_id"]').prop('required', false);
@@ -152,7 +214,7 @@
 
 				function formHandlingByPackingService() {
 					if ($('input[name="packing_service"]:checked').val() === "yes") {
-						$('.addedPackingField').removeClass('d-none')
+						$('.packingField').removeClass('d-none')
 						$('.addPackingFieldButton').removeClass('d-none')
 
 						$('select[name="package_id"]').prop('required', true);
@@ -160,7 +222,7 @@
 						$('input[name="variant_quantity"]').prop('required', true);
 
 					} else if ($('input[name="packing_service"]:checked').val() === "no") {
-						$('.addedPackingField').addClass('d-none')
+						$('.packingField').addClass('d-none')
 						$('.addPackingFieldButton').addClass('d-none')
 
 						$('select[name="package_id"]').prop('required', false);
@@ -171,7 +233,7 @@
 
 
 				window.calculateCashOnDeliveryShippingCost = function calculateCashOnDeliveryShippingCost() {
-					if (shipmentTypeCondition.checked) {
+					if ($('input[name="shipment_type"]:checked').val() === "condition") {
 						let fromStateId = $('.selectedFromState').val();
 						let fromCityId = $('.selectedFromCity').val();
 						let fromAreaId = $('.selectedFromArea').val();
@@ -240,26 +302,26 @@
 										<div class="col-md-12">
 											<div class="form-group">
 												<div class="input-group">
-													<select name="package_id" class="form-control @error('package_id') is-invalid @enderror selectedPackage_${id}" onchange="selectedPackageVariantHandel(${id})" required>
+													<select name="package_id[]" class="form-control selectedPackage_${id}" onchange="selectedPackageVariantHandel(${id})" required>
 														<option value="" disabled selected>@lang('Select package')</option>
 														@foreach($packageList as $package)
 						<option value="{{ $package->id }}">@lang($package->package_name)</option>
 														@endforeach
 						</select>
 
-<select name="variant_id" class="form-control @error('variant_id') is-invalid @enderror selectedVariant_${id} newVariant" onchange="selectedVariantServiceHandel(${id})" required>
+<select name="variant_id[]" class="form-control selectedVariant_${id} newVariant" onchange="selectedVariantServiceHandel(${id})" required>
 														<option value="">@lang('Select Variant')</option>
 													</select>
 
-													<input type="text" name="variant_price" class="form-control @error('variant_price') is-invalid @enderror newVariantPrice variantPrice_${id}" placeholder="@lang('price')" >
+													<input type="text" name="variant_price[]" class="form-control newVariantPrice variantPrice_${id}" placeholder="@lang('price')" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" readonly>
 													<div class="input-group-append" readonly="">
 														<div class="form-control">
 															{{ config('basic.currency_symbol') }}
 						</div>
 					</div>
 
-					<input type="text" name="variant_quantity" class="form-control @error('variant_quantity') is-invalid @enderror newVariantQuantity" value="{{ old('variant_quantity') }}" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" placeholder="@lang('quantity')" required>
-													<input type="text" name="package_cost" class="form-control @error('package_cost') is-invalid @enderror totalPackingCost_${id} packingCostValue" value="{{ old('package_cost') }} " readonly placeholder="@lang('total cost')">
+					<input type="text" name="variant_quantity[]" class="form-control newVariantQuantity" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" placeholder="@lang('quantity')" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" required>
+													<input type="text" name="package_cost[]" class="form-control totalPackingCost_${id} packingCostValue" readonly placeholder="@lang('total cost')">
 													<div class="input-group-append">
 														<div class="form-control">
 															{{ config('basic.currency_symbol') }}
@@ -283,151 +345,151 @@
 					});
 
 
-					$("#parcelGenerate").on('click', function () {
-						formHandlingByPackingService();
-						const id = Date.now();
-						var form = `<div class="row addMoreParcelBox" id="removeParcelField${id}">
-										<div class="col-md-12 d-flex justify-content-end">
-											<button
-												class="btn btn-danger  delete_parcel_desc custom_delete_desc_padding mt-4"
-												type="button" onclick="deleteParcelField(${id})">
-												<i class="fa fa-times"></i>
-											</button>
-										</div>
-										<div class="col-sm-12 col-md-3 mb-3">
-						<label for="parcel_name"> @lang('Percel Name') </label>
-											<input type="text" name="parcel_name"
-												   class="form-control @error('parcel_name') is-invalid @enderror"
-												   value="{{ old('email') }}" required>
-											<div class="invalid-feedback">
-												@error('parcel_name') @lang($message) @enderror
-						</div>
-					</div>
+{{--					$("#parcelGenerate").on('click', function () {--}}
+{{--						formHandlingByPackingService();--}}
+{{--						const id = Date.now();--}}
+{{--						var form = `<div class="row addMoreParcelBox" id="removeParcelField${id}">--}}
+{{--										<div class="col-md-12 d-flex justify-content-end">--}}
+{{--											<button--}}
+{{--												class="btn btn-danger  delete_parcel_desc custom_delete_desc_padding mt-4"--}}
+{{--												type="button" onclick="deleteParcelField(${id})">--}}
+{{--												<i class="fa fa-times"></i>--}}
+{{--											</button>--}}
+{{--										</div>--}}
+{{--										<div class="col-sm-12 col-md-3 mb-3">--}}
+{{--						<label for="parcel_name"> @lang('Parcel Name') </label>--}}
+{{--											<input type="text" name="parcel_name[]"--}}
+{{--												   class="form-control @error('parcel_name') is-invalid @enderror"--}}
+{{--												   value="{{ old('email') }}" required>--}}
+{{--											<div class="invalid-feedback">--}}
+{{--												@error('parcel_name') @lang($message) @enderror--}}
+{{--						</div>--}}
+{{--					</div>--}}
 
-					<div class="col-sm-12 col-md-3 mb-3">
-					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
-					<input type="text" name="parcel_quantity"
-						   class="form-control @error('parcel_quantity') is-invalid @enderror"
-						   value="{{ old('parcel_quantity') }}" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" required>
-					<div class="invalid-feedback">
-						@error('parcel_quantity') @lang($message) @enderror
-						</div>
-					</div>
+{{--					<div class="col-sm-12 col-md-3 mb-3">--}}
+{{--					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>--}}
+{{--					<input type="number" name="parcel_quantity[]"--}}
+{{--						   class="form-control @error('parcel_quantity') is-invalid @enderror"--}}
+{{--						   value="{{ old('parcel_quantity') }}" required>--}}
+{{--					<div class="invalid-feedback">--}}
+{{--						@error('parcel_quantity') @lang($message) @enderror--}}
+{{--						</div>--}}
+{{--					</div>--}}
 
-											<div class="col-sm-12 col-md-3 mb-3">
-												<label for="parcel_type_id"> @lang('Parcel Type') </label>
-											<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})" required>
-												<option value="" disabled selected>@lang('Select Parcel Type')</option>
-												@foreach($parcelTypes as $parcel_type)
-						<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
-												@endforeach
-						</select>
+{{--											<div class="col-sm-12 col-md-3 mb-3">--}}
+{{--												<label for="parcel_type_id"> @lang('Parcel Type') </label>--}}
+{{--											<select name="parcel_type_id[]" class="form-control @error('parcel_type_id') is-invalid @enderror OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})" required>--}}
+{{--												<option value="" disabled selected>@lang('Select Parcel Type')</option>--}}
+{{--												@foreach($parcelTypes as $parcel_type)--}}
+{{--						<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>--}}
+{{--												@endforeach--}}
+{{--						</select>--}}
 
-						<div class="invalid-feedback">
-@error('parcel_type_id') @lang($message) @enderror
-						</div>
-					</div>
+{{--						<div class="invalid-feedback">--}}
+{{--@error('parcel_type_id') @lang($message) @enderror--}}
+{{--						</div>--}}
+{{--					</div>--}}
 
-					<div class="col-sm-12 col-md-3 mb-3">
-						<label for="parcel_unit_id"> @lang('Select Unit') </label>
-											<select name="parcel_unit_id"
-													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})" required>
-												<option value="" disabled
-														selected>@lang('Select Parcel Unit')</option>
-											</select>
+{{--					<div class="col-sm-12 col-md-3 mb-3">--}}
+{{--						<label for="parcel_unit_id"> @lang('Select Unit') </label>--}}
+{{--											<select name="parcel_unit_id[]"--}}
+{{--													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})" required>--}}
+{{--												<option value="" disabled--}}
+{{--														selected>@lang('Select Parcel Unit')</option>--}}
+{{--											</select>--}}
 
-											<div class="invalid-feedback">
-												@error('parcel_unit_id') @lang($message) @enderror
-						</div>
-					</div>
+{{--											<div class="invalid-feedback">--}}
+{{--												@error('parcel_unit_id') @lang($message) @enderror--}}
+{{--						</div>--}}
+{{--					</div>--}}
 
 
-					<div class="col-sm-12 col-md-4 mb-3">
-													<label for="cost_per_unit"> @lang('Cost per unit')</label>
-													<div class="input-group">
-														<input type="text" name="cost_per_unit"
-															   class="form-control @error('cost_per_unit') is-invalid @enderror newCostPerUnit unitPrice_${id}"
-															   value="{{ old('cost_per_unit') }}" readonly>
-														<div class="input-group-append" readonly="">
-															<div class="form-control">
-																{{ $basic->currency_symbol }}
-						</div>
-					</div>
+{{--					<div class="col-sm-12 col-md-4 mb-3">--}}
+{{--													<label for="cost_per_unit"> @lang('Cost per unit')</label>--}}
+{{--													<div class="input-group">--}}
+{{--														<input type="text" name="cost_per_unit[]"--}}
+{{--															   class="form-control @error('cost_per_unit') is-invalid @enderror newCostPerUnit unitPrice_${id}"--}}
+{{--															   value="{{ old('cost_per_unit') }}" readonly>--}}
+{{--														<div class="input-group-append" readonly="">--}}
+{{--															<div class="form-control">--}}
+{{--																{{ $basic->currency_symbol }}--}}
+{{--						</div>--}}
+{{--					</div>--}}
 
-					<div class="invalid-feedback">
-@error('cost_per_unit') @lang($message) @enderror
-						</div>
+{{--					<div class="invalid-feedback">--}}
+{{--@error('cost_per_unit') @lang($message) @enderror--}}
+{{--						</div>--}}
 
-					</div>
-				</div>
+{{--					</div>--}}
+{{--				</div>--}}
 
-				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
-						<label for="total_unit"> @lang('Total Unit')</label>
-						<div class="input-group">
-							<input type="text" name="total_unit" class="form-control @error('total_unit') is-invalid @enderror newTotalWeight" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" value="{{ old('total_unit') }}" required>
-							<div class="input-group-append" readonly="">
-								<div class="form-control">
-									@lang('kg')
-						</div>
-					</div>
-				</div>
-				<div class="invalid-feedback"> @error('total_unit') @lang($message) @enderror </div>
-					</div>
+{{--				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">--}}
+{{--						<label for="total_unit"> @lang('Total Unit')</label>--}}
+{{--						<div class="input-group">--}}
+{{--							<input type="text" name="total_unit[]" class="form-control @error('total_unit') is-invalid @enderror newTotalWeight" value="{{ old('total_unit') }}" required>--}}
+{{--							<div class="input-group-append" readonly="">--}}
+{{--								<div class="form-control">--}}
+{{--									@lang('kg')--}}
+{{--						</div>--}}
+{{--					</div>--}}
+{{--				</div>--}}
+{{--				<div class="invalid-feedback"> @error('total_unit') @lang($message) @enderror </div>--}}
+{{--					</div>--}}
 
-					<div class="col-sm-12 col-md-4 mb-3">
-						<label for="parcel_total_cost"> @lang('Total Cost')</label>
-													<div class="input-group">
-														<input type="text" name="parcel_total_cost"
-															   class="form-control @error('parcel_total_cost') is-invalid @enderror totalParcelCost"
-															   value="{{ old('parcel_total_cost') }}" readonly>
-														<div class="input-group-append" readonly="">
-															<div class="form-control">
-																{{ $basic->currency_symbol }}
-						</div>
-					</div>
-				</div>
+{{--					<div class="col-sm-12 col-md-4 mb-3">--}}
+{{--						<label for="parcel_total_cost"> @lang('Total Cost')</label>--}}
+{{--													<div class="input-group">--}}
+{{--														<input type="text" name="parcel_total_cost[]"--}}
+{{--															   class="form-control @error('parcel_total_cost') is-invalid @enderror totalParcelCost"--}}
+{{--															   value="{{ old('parcel_total_cost') }}" readonly>--}}
+{{--														<div class="input-group-append" readonly="">--}}
+{{--															<div class="form-control">--}}
+{{--																{{ $basic->currency_symbol }}--}}
+{{--						</div>--}}
+{{--					</div>--}}
+{{--				</div>--}}
 
-				<div class="invalid-feedback">
-@error('parcel_total_cost') @lang($message) @enderror
-						</div>
-					</div>
+{{--				<div class="invalid-feedback">--}}
+{{--@error('parcel_total_cost') @lang($message) @enderror--}}
+{{--						</div>--}}
+{{--					</div>--}}
 
-<div class="col-sm-12 col-md-12">
-<label> @lang('Dimensions') [Length x Width x Height] (cm)
-											<span class="text-dark font-weight-bold">(optional)</span></label>
-										</div>
+{{--<div class="col-sm-12 col-md-12">--}}
+{{--<label> @lang('Dimensions') [Length x Width x Height] (cm)--}}
+{{--											<span class="text-dark font-weight-bold">(optional)</span></label>--}}
+{{--										</div>--}}
 
-										<div class="col-sm-12 col-md-4 mb-3">
-											<input type="text" name="parcel_length" class="form-control @error('parcel_length') is-invalid @enderror" value="{{ old('parcel_length') }}">
-											<div class="invalid-feedback">
-												@error('parcel_length') @lang($message) @enderror
-						</div>
-					</div>
+{{--										<div class="col-sm-12 col-md-4 mb-3">--}}
+{{--											<input type="text" name="parcel_length[]" class="form-control @error('parcel_length') is-invalid @enderror" value="{{ old('parcel_length') }}">--}}
+{{--											<div class="invalid-feedback">--}}
+{{--												@error('parcel_length') @lang($message) @enderror--}}
+{{--						</div>--}}
+{{--					</div>--}}
 
-					<div class="col-sm-12 col-md-4 mb-3">
-						<input type="text" name="parcel_width" class="form-control @error('parcel_width') is-invalid @enderror" value="{{ old('parcel_width') }}">
-											<div class="invalid-feedback">
-												@error('parcel_width') @lang($message) @enderror
-						</div>
-					</div>
+{{--					<div class="col-sm-12 col-md-4 mb-3">--}}
+{{--						<input type="text" name="parcel_width[]" class="form-control @error('parcel_width') is-invalid @enderror" value="{{ old('parcel_width') }}">--}}
+{{--											<div class="invalid-feedback">--}}
+{{--												@error('parcel_width') @lang($message) @enderror--}}
+{{--						</div>--}}
+{{--					</div>--}}
 
-					<div class="col-sm-12 col-md-4 mb-3">
-						<input type="text" name="parcel_height" class="form-control @error('parcel_height') is-invalid @enderror" value="{{ old('parcel_height') }}">
-											<div class="invalid-feedback">
-												@error('parcel_height') @lang($message) @enderror
-						</div>
-					</div>
-				</div>`;
+{{--					<div class="col-sm-12 col-md-4 mb-3">--}}
+{{--						<input type="text" name="parcel_height[]" class="form-control @error('parcel_height') is-invalid @enderror" value="{{ old('parcel_height') }}">--}}
+{{--											<div class="invalid-feedback">--}}
+{{--												@error('parcel_height') @lang($message) @enderror--}}
+{{--						</div>--}}
+{{--					</div>--}}
+{{--				</div>`;--}}
 
-						$('.addedParcelField').append(form)
+{{--						$('.addedParcelField').append(form)--}}
 
-					});
+{{--					});--}}
 				});
 
 
-				function deleteParcelField(id) {
-					$(`#removeParcelField${id}`).remove();
-				}
+				// function deleteParcelField(id) {
+				// 	$(`#removeParcelField${id}`).remove();
+				// }
 
 				$(document).on('input', '.newVariantQuantity', function () {
 					window.calculatePackingTotalPrice();
@@ -510,6 +572,7 @@
 				}
 
 				function variantQuantityHandel(id) {
+
 					const variantQuantityId = `#variantQuantity_${id}`;
 					let quantity = $(variantQuantityId).val();
 					let variantPrice = $(`.variantPrice_${id}`).val();

@@ -28,7 +28,6 @@ class ShipmentRequest extends FormRequest
 
 		$rules = [
 			'shipment_type' => ['required', Rule::in(['drop_off', 'pickup', 'condition'])],
-			'receive_amount' => ['required_if:shipment_type, condition', 'numeric', 'min:0'],
 			'shipment_date' => ['required'],
 			'delivery_date' => ['required'],
 			'sender_branch' => ['required', 'exists:branches,id'],
@@ -55,6 +54,11 @@ class ShipmentRequest extends FormRequest
 			$rules['parcel_type_id'] = ['required', 'exists:parcel_types,id'];
 			$rules['parcel_unit_id'] = ['required', 'exists:parcel_units,id'];
 			$rules['total_unit'] = ['required', 'numeric'];
+		}
+
+		if ($this->input('shipment_type') === 'condition') {
+			$rules['receive_amount'] = ['required', 'numeric', 'min:1'];
+			$rules['parcel_details'] = ['required', 'max:5000'];
 		}
 
         return $rules;

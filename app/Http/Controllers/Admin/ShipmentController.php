@@ -47,24 +47,7 @@ class ShipmentController extends Controller
 	}
 
 	public function shipmentStore(ShipmentRequest $request){
-		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
 		dd($request->all());
-
-
-//		if ($request->shipment_type === 'condition') {
-//			$rules['receive_amount'] = ['required', 'numeric', 'min:0'];
-//		}
-
-//		$message = [
-//			'sender_id.required' => 'The sender field is required.',
-//			'receiver_id.required' => 'The Receiver field is required.',
-//		];
-
-//		$validate = Validator::make($purifiedData, $rules, $message);
-
-//		if ($validate->fails()) {
-//			return back()->withInput()->withErrors($validate);
-//		}
 	}
 
 
