@@ -24,8 +24,6 @@ class ShipmentRequest extends FormRequest
      */
     public function rules()
     {
-
-
 		$rules = [
 			'shipment_type' => ['required', Rule::in(['drop_off', 'pickup', 'condition'])],
 			'shipment_date' => ['required'],
@@ -49,7 +47,7 @@ class ShipmentRequest extends FormRequest
 		];
 
 		if ($this->input('shipment_type') === 'drop_off' || $this->input('shipment_type') === 'pickup') {
-			$rules['parcel_name'] = ['required', 'string', 'max:2000'];
+			$rules['parcel_name'] = ['required'];
 			$rules['parcel_quantity'] = ['required', 'numeric', 'min:1'];
 			$rules['parcel_type_id'] = ['required', 'exists:parcel_types,id'];
 			$rules['parcel_unit_id'] = ['required', 'exists:parcel_units,id'];

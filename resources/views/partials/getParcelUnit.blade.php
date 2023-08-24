@@ -12,13 +12,6 @@
 	}
 
 	function getSelectedParcelTypeUnit(value, unitId=null, dynamicId = null) {
-
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-
 		$.ajax({
 			url: "{{ route('getSelectedParcelTypeUnit') }}",
 			method: 'POST',

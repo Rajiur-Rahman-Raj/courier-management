@@ -20,6 +20,13 @@
 
 <script>
     'use strict'
+
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
 	@auth
     let pushNotificationArea = new Vue({
         el: "#pushNotificationArea",

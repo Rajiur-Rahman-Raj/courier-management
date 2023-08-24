@@ -99,7 +99,7 @@
 					<option value="" disabled selected>@lang('Select Branch')</option>
 					@foreach($allBranches as $branch)
 						<option
-							value="{{ $branch->id }}">@lang($branch->branch_name)</option>
+							value="{{ $branch->id }}" {{ old('sender_branch') == $branch->id ? 'selected' : ''}}>@lang($branch->branch_name)</option>
 					@endforeach
 				</select>
 				<div class="invalid-feedback">
@@ -114,7 +114,7 @@
 					<option value="" disabled selected>@lang('Select Branch')</option>
 					@foreach($allBranches as $branch)
 						<option
-							value="{{ $branch->id }}">@lang($branch->branch_name)</option>
+							value="{{ $branch->id }}" {{ old('receiver_branch') == $branch->id ? 'selected' : ''}}>@lang($branch->branch_name)</option>
 					@endforeach
 				</select>
 
@@ -133,7 +133,7 @@
 					<option value="" disabled selected>@lang('Select Sender')</option>
 
 					@foreach($senders as $sender)
-						<option value="{{ $sender->id }}">@lang($sender->name)</option>
+						<option value="{{ $sender->id }}" {{ old('sender_id') == $sender->id ? 'selected' : ''}}>@lang($sender->name)</option>
 					@endforeach
 				</select>
 
@@ -149,7 +149,7 @@
 					<option value="" disabled selected>@lang('Select Receiver')</option>
 					@foreach($receivers as $receiver)
 						<option
-							value="{{ $receiver->id }}">@lang($receiver->name)</option>
+							value="{{ $receiver->id }}" {{ old('receiver_id') == $receiver->id ? 'selected' : ''}}>@lang($receiver->name)</option>
 					@endforeach
 				</select>
 
@@ -164,7 +164,7 @@
 						class="form-control @error('from_state_id') is-invalid @enderror select2 select2State selectedFromState">
 					<option value="" selected disabled>@lang('Select State')</option>
 					@foreach(optional($basicControl->operatorCountry)->state() as $state)
-						<option value="{{ $state->id }}">@lang($state->name)</option>
+						<option value="{{ $state->id }}" {{ old('from_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
 					@endforeach
 				</select>
 				<div class="invalid-feedback">
@@ -176,7 +176,7 @@
 				<label for="from_city_id">@lang('Select City') <span
 						class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 				<select name="from_city_id"
-						class="form-control @error('from_city_id') is-invalid @enderror select2 select2City selectedFromCity">
+						class="form-control @error('from_city_id') is-invalid @enderror select2 select2City selectedFromCity" data-oldfromcityid="{{ old('from_city_id') }}">
 				</select>
 				<div class="invalid-feedback">
 					@error('from_city_id') @lang($message) @enderror
@@ -187,7 +187,7 @@
 				<label for="from_area_id">@lang('Select Area') <span
 						class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 				<select name="from_area_id"
-						class="form-control @error('from_area_id') is-invalid @enderror select2 select2Area selectedFromArea">
+						class="form-control @error('from_area_id') is-invalid @enderror select2 select2Area selectedFromArea" data-oldfromareaid="{{ old('from_area_id') }}">
 				</select>
 				<div class="invalid-feedback">
 					@error('from_area_id') @lang($message) @enderror
@@ -200,7 +200,7 @@
 						class="form-control @error('to_state_id') is-invalid @enderror select2 select2State selectedToState">
 					<option value="" selected disabled>@lang('Select State')</option>
 					@foreach(optional($basicControl->operatorCountry)->state() as $state)
-						<option value="{{ $state->id }}">@lang($state->name)</option>
+						<option value="{{ $state->id }}" {{ old('to_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
 					@endforeach
 				</select>
 				<div class="invalid-feedback">
@@ -212,7 +212,7 @@
 				<label for="to_city_id">@lang('Select City') <span
 						class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 				<select name="to_city_id"
-						class="form-control @error('to_city_id') is-invalid @enderror select2 select2City selectedToCity">
+						class="form-control @error('to_city_id') is-invalid @enderror select2 select2City selectedToCity" data-oldtocityid="{{ old('to_city_id') }}">
 				</select>
 				<div class="invalid-feedback">
 					@error('to_city_id') @lang($message) @enderror
@@ -225,7 +225,7 @@
 						class="text-dark font-weight-bold">(@lang('optional'))</span>
 				</label>
 				<select name="to_area_id"
-						class="form-control @error('to_area_id') is-invalid @enderror select2 select2Area selectedToArea">
+						class="form-control @error('to_area_id') is-invalid @enderror select2 select2Area selectedToArea" data-oldtoareaid="{{ old('to_area_id') }}">
 				</select>
 				<div class="invalid-feedback">
 					@error('to_area_id') @lang($message) @enderror
@@ -236,8 +236,8 @@
 				<label for="payment_by"> @lang('Payment By')</label>
 				<select name="payment_by"
 						class="form-control @error('payment_by') is-invalid @enderror">
-					<option value="1">@lang('Sender')</option>
-					<option value="2">@lang('Receiver')</option>
+					<option value="1" {{ old('payment_by') == '1' ? 'selected' : '' }}>@lang('Sender')</option>
+					<option value="2" {{ old('payment_by') == '2' ? 'selected' : '' }}>@lang('Receiver')</option>
 				</select>
 				<div class="invalid-feedback">
 					@error('payment_by') @lang($message) @enderror
@@ -250,8 +250,8 @@
 						class="form-control @error('payment_type') is-invalid @enderror select2">
 					<option value="" disabled
 							selected>@lang('Select Payment Type')</option>
-					<option value="wallet">@lang('From Wallet')</option>
-					<option value="cash">@lang('Cash')</option>
+					<option value="wallet" {{ old('payment_type') == 'wallet' ? 'selected' : '' }}>@lang('From Wallet')</option>
+					<option value="cash" {{ old('payment_type') == 'cash' ? 'selected' : '' }}>@lang('Cash')</option>
 				</select>
 
 				<div class="invalid-feedback">
@@ -265,8 +265,8 @@
 						class="form-control @error('payment_status') is-invalid @enderror select2">
 					<option value="" disabled
 							selected>@lang('Select Payment Status')</option>
-					<option value="1">@lang('Paid')</option>
-					<option value="2">@lang('Unpaid')</option>
+					<option value="1" {{ old('payment_status') == '1' ? 'selected' : '' }}>@lang('Paid')</option>
+					<option value="2" {{ old('payment_status') == '2' ? 'selected' : '' }}>@lang('Unpaid')</option>
 				</select>
 
 				<div class="invalid-feedback">
@@ -281,14 +281,15 @@
 				<h6 class="text-dark font-weight-bold"> @lang('Packing Service') </h6>
 				<div class="custom-control custom-radio">
 					<input type="radio" id="packingServiceOn" name="packing_service"
-						   class="custom-control-input" checked @if(old('packing_service') === 'yes') checked @endif value="yes">
+						   class="custom-control-input" checked @if(old('packing_service') === 'yes') checked
+						   @endif value="yes">
 					<label class="custom-control-label"
 						   for="packingServiceOn">@lang('Yes')</label>
 				</div>
 				<div class="custom-control custom-radio">
 					<input type="radio" id="packingServiceOff" value="no"
 						   name="packing_service"
-						   class="custom-control-input"  @if(old('packing_service') === 'no') checked @endif>
+						   class="custom-control-input" @if(old('packing_service') === 'no') checked @endif>
 					<label class="custom-control-label"
 						   for="packingServiceOff">@lang('No')</label>
 				</div>
@@ -306,7 +307,6 @@
 		</div>
 
 
-
 		<div class="packingField d-none">
 			<div class="row">
 				<div class="col-md-12">
@@ -317,7 +317,8 @@
 								<option value="" disabled
 										selected>@lang('Select package')</option>
 								@foreach($packageList as $package)
-									<option value="{{ $package->id }}" {{ old('package_id.0') == $package->id ? 'selected' : '' }}>@lang($package->package_name)</option>
+									<option
+										value="{{ $package->id }}" {{ old('package_id.0') == $package->id ? 'selected' : '' }}>@lang($package->package_name)</option>
 								@endforeach
 							</select>
 
@@ -325,7 +326,9 @@
 								@error('package_id.0') @lang($message) @enderror
 							</div>
 
-							<select name="variant_id[]" class="form-control @error('variant_id.0') is-invalid @enderror selectedVariant" data-oldvariant='{{ old("variant_id.0") }}'>
+							<select name="variant_id[]"
+									class="form-control @error('variant_id.0') is-invalid @enderror selectedVariant"
+									data-oldvariant='{{ old("variant_id.0") }}'>
 								<option value="">@lang('Select Variant')</option>
 							</select>
 
@@ -380,27 +383,42 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<div class="input-group">
-									<select name="package_id[]" class="form-control @error("package_id.$i") is-invalid @enderror selectedPackage_{{$i}}" onchange="selectedPackageVariantHandel({{$i}})" required>
+									<select name="package_id[]"
+											class="form-control @error("package_id.$i") is-invalid @enderror selectedPackage_{{$i}}"
+											onchange="selectedPackageVariantHandel({{$i}})" required>
 										<option value="" disabled selected>@lang('Select package')</option>
 										@foreach($packageList as $package)
-											<option value="{{ $package->id }}" {{ old("package_id.$i") == $package->id ? 'selected' : '' }}>@lang($package->package_name)</option>
+											<option
+												value="{{ $package->id }}" {{ old("package_id.$i") == $package->id ? 'selected' : '' }}>@lang($package->package_name)</option>
 										@endforeach
 									</select>
 
-									<select name="variant_id[]" class="form-control selectedVariant_{{$i}} newVariant" data-oldvariant='{{ old("variant_id.$i") }}' onchange="selectedVariantServiceHandel({{$i}})" required>
+									<select name="variant_id[]" class="form-control selectedVariant_{{$i}} newVariant"
+											data-oldvariant='{{ old("variant_id.$i") }}'
+											onchange="selectedVariantServiceHandel({{$i}})" required>
 										<option value="">@lang('Select Variant')</option>
 									</select>
 
 
-									<input type="text" name="variant_price[]" value="{{ old("variant_price.$i") }}" class="form-control @error("variant_price.$i") is-invalid @enderror newVariantPrice variantPrice_{{$i}}" placeholder="@lang('price')" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" readonly>
+									<input type="text" name="variant_price[]" value="{{ old("variant_price.$i") }}"
+										   class="form-control @error("variant_price.$i") is-invalid @enderror newVariantPrice variantPrice_{{$i}}"
+										   placeholder="@lang('price')"
+										   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" readonly>
 									<div class="input-group-append" readonly="">
 										<div class="form-control">
 											{{ config('basic.currency_symbol') }}
 										</div>
 									</div>
 
-									<input type="text" name="variant_quantity[]" class="form-control @error("variant_quantity.$i") is-invalid @enderror newVariantQuantity" value="{{ old("variant_quantity.$i") }}" id="variantQuantity_{{$i}}" onkeyup="variantQuantityHandel({{$i}})" placeholder="@lang('quantity')" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" required>
-									<input type="text" name="package_cost[]" class="form-control @error('package_cost') is-invalid @enderror totalPackingCost_{{$i}} packingCostValue" value="{{ old("package_cost.$i") }} " readonly placeholder="@lang('total cost')">
+									<input type="text" name="variant_quantity[]"
+										   class="form-control @error("variant_quantity.$i") is-invalid @enderror newVariantQuantity"
+										   value="{{ old("variant_quantity.$i") }}" id="variantQuantity_{{$i}}"
+										   onkeyup="variantQuantityHandel({{$i}})" placeholder="@lang('quantity')"
+										   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" required>
+									<input type="text" name="package_cost[]"
+										   class="form-control @error('package_cost') is-invalid @enderror totalPackingCost_{{$i}} packingCostValue"
+										   value="{{ old("package_cost.$i") }} " readonly
+										   placeholder="@lang('total cost')">
 									<div class="input-group-append">
 										<div class="form-control">
 											{{ config('basic.currency_symbol') }}
@@ -419,8 +437,6 @@
 				@endfor
 			@endif
 		</div>
-
-
 
 		<div class="row mt-4">
 			<div class="col-md-12 d-flex justify-content-between">
@@ -459,152 +475,306 @@
 			</div>
 		</div>
 
-{{--		<div class="addedParcelField">--}}
-{{--			<div class="row">--}}
-{{--				<div class="col-sm-12 col-md-3 mb-3">--}}
-{{--					<label--}}
-{{--						for="parcel_name"> @lang('Parcel Name') </label>--}}
-{{--					<input type="text" name="parcel_name[]"--}}
-{{--						   class="form-control @error('parcel_name') is-invalid @enderror"--}}
-{{--						   value="{{ old('parcel_name') }}">--}}
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_name') @lang($message) @enderror--}}
-{{--					</div>--}}
-{{--				</div>--}}
+		<div class="parcelField">
+			<div class="row">
+				<div class="col-sm-12 col-md-3 mb-3">
+					<label
+						for="parcel_name"> @lang('Parcel Name') </label>
+					<input type="text" name="parcel_name[]"
+						   class="form-control @error('parcel_name.0') is-invalid @enderror"
+						   value="{{ old('parcel_name.0') }}">
+					<div class="invalid-feedback">
+						@error('parcel_name.0') @lang($message) @enderror
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-3 mb-3">--}}
-{{--					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>--}}
-{{--					<input type="text" name="parcel_quantity[]"--}}
-{{--						   class="form-control @error('parcel_quantity') is-invalid @enderror"--}}
-{{--						   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"--}}
-{{--						   value="{{ old('parcel_quantity') }}">--}}
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_quantity') @lang($message) @enderror--}}
-{{--					</div>--}}
-{{--				</div>--}}
+				<div class="col-sm-12 col-md-3 mb-3">
+					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
+					<input type="text" name="parcel_quantity[]"
+						   class="form-control @error('parcel_quantity.0') is-invalid @enderror"
+						   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+						   value="{{ old('parcel_quantity.0') }}">
+					<div class="invalid-feedback">
+						@error('parcel_quantity.0') @lang($message) @enderror
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-3 mb-3">--}}
-{{--					<label for="parcel_type_id"> @lang('Parcel Type') </label>--}}
-{{--					<select name="parcel_type_id[]"--}}
-{{--							class="form-control @error('parcel_type_id') is-invalid @enderror select2 selectedParcelType select2ParcelType OCParcelTypeWiseShippingRate">--}}
-{{--						<option value="" disabled--}}
-{{--								selected>@lang('Select Parcel Type')</option>--}}
-{{--						@foreach($parcelTypes as $parcel_type)--}}
-{{--							<option--}}
-{{--								value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>--}}
-{{--						@endforeach--}}
-{{--					</select>--}}
+				<div class="col-sm-12 col-md-3 mb-3">
+					<label for="parcel_type_id"> @lang('Parcel Type') </label>
+					<select name="parcel_type_id[]"
+							class="form-control @error('parcel_type_id.0') is-invalid @enderror select2 selectedParcelType select2ParcelType OCParcelTypeWiseShippingRate">
+						<option value="" disabled
+								selected>@lang('Select Parcel Type')</option>
+						@foreach($parcelTypes as $parcel_type)
+							<option value="{{ $parcel_type->id }}" {{ old('parcel_type_id.0') == $parcel_type->id ? 'selected' : '' }}>@lang($parcel_type->parcel_type)</option>
+						@endforeach
+					</select>
 
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_type_id') @lang($message) @enderror--}}
-{{--					</div>--}}
-{{--				</div>--}}
+					<div class="invalid-feedback">
+						@error('parcel_type_id.0') @lang($message) @enderror
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-3 mb-3">--}}
-{{--					<label for="parcel_unit_id"> @lang('Select Unit') </label>--}}
-{{--					<select name="parcel_unit_id[]"--}}
-{{--							class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit">--}}
-{{--						<option value="" disabled--}}
-{{--								selected>@lang('Select Parcel Unit')</option>--}}
-{{--					</select>--}}
+				<div class="col-sm-12 col-md-3 mb-3">
+					<label for="parcel_unit_id"> @lang('Select Unit') </label>
+					<select name="parcel_unit_id[]"
+							class="form-control @error('parcel_unit_id.0') is-invalid @enderror selectedParcelUnit" data-oldparcelunitid='{{ old("parcel_unit_id.0") }}'>
+						<option value="" disabled
+								selected>@lang('Select Parcel Unit')</option>
+					</select>
 
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_unit_id') @lang($message) @enderror--}}
-{{--					</div>--}}
-{{--				</div>--}}
+					<div class="invalid-feedback">
+						@error('parcel_unit_id.0') @lang($message) @enderror
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-4 mb-3">--}}
+				<div class="col-sm-12 col-md-4 mb-3">
 
-{{--					<label for="cost_per_unit"> @lang('Cost per unit')</label>--}}
-{{--					<div class="input-group">--}}
-{{--						<input type="text" name="cost_per_unit[]"--}}
-{{--							   class="form-control @error('cost_per_unit') is-invalid @enderror unitPrice newCostPerUnit"--}}
-{{--							   value="{{ old('cost_per_unit') }}" readonly>--}}
-{{--						<div class="input-group-append" readonly="">--}}
-{{--							<div class="form-control">--}}
-{{--								{{ $basic->currency_symbol }}--}}
-{{--							</div>--}}
-{{--						</div>--}}
+					<label for="cost_per_unit"> @lang('Cost per unit')</label>
+					<div class="input-group">
+						<input type="text" name="cost_per_unit[]"
+							   class="form-control @error('cost_per_unit.0') is-invalid @enderror unitPrice newCostPerUnit"
+							   value="{{ old('cost_per_unit.0') }}" readonly>
+						<div class="input-group-append" readonly="">
+							<div class="form-control">
+								{{ $basic->currency_symbol }}
+							</div>
+						</div>
 
-{{--						<div class="invalid-feedback">--}}
-{{--							@error('cost_per_unit') @lang($message) @enderror--}}
-{{--						</div>--}}
+						<div class="invalid-feedback">
+							@error('cost_per_unit.0') @lang($message) @enderror
+						</div>
 
-{{--					</div>--}}
-{{--				</div>--}}
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">--}}
-{{--					<label for="total_unit"> @lang('Total Unit')</label>--}}
-{{--					<div class="input-group">--}}
-{{--						<input type="text" name="total_unit[]"--}}
-{{--							   class="form-control @error('total_unit') is-invalid @enderror newTotalWeight"--}}
-{{--							   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"--}}
-{{--							   value="{{ old('total_unit') }}">--}}
-{{--						<div class="input-group-append" readonly="">--}}
-{{--							<div class="form-control">--}}
-{{--								@lang('kg')--}}
-{{--							</div>--}}
-{{--						</div>--}}
-{{--						<div class="invalid-feedback d-block">--}}
-{{--							@error('total_unit') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
-{{--				</div>--}}
+				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
+					<label for="total_unit"> @lang('Total Unit')</label>
+					<div class="input-group">
+						<input type="text" name="total_unit[]"
+							   class="form-control @error('total_unit.0') is-invalid @enderror newTotalWeight"
+							   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+							   value="{{ old('total_unit.0') }}">
+						<div class="input-group-append" readonly="">
+							<div class="form-control">
+								@lang('kg')
+							</div>
+						</div>
+						<div class="invalid-feedback d-block">
+							@error('total_unit.0') @lang($message) @enderror
+						</div>
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--					<label for="parcel_total_cost"> @lang('Total Cost')</label>--}}
-{{--					<div class="input-group">--}}
-{{--						<input type="text" name="parcel_total_cost[]"--}}
-{{--							   class="form-control @error('parcel_total_cost') is-invalid @enderror totalParcelCost"--}}
-{{--							   value="{{ old('parcel_total_cost') }}" readonly>--}}
-{{--						<div class="input-group-append" readonly="">--}}
-{{--							<div class="form-control">--}}
-{{--								{{ $basic->currency_symbol }}--}}
-{{--							</div>--}}
-{{--						</div>--}}
-{{--					</div>--}}
+				<div class="col-sm-12 col-md-4 mb-3">
+					<label for="parcel_total_cost"> @lang('Total Cost')</label>
+					<div class="input-group">
+						<input type="text" name="parcel_total_cost[]"
+							   class="form-control @error('parcel_total_cost.0') is-invalid @enderror totalParcelCost"
+							   value="{{ old('parcel_total_cost.0') }}" readonly>
+						<div class="input-group-append" readonly="">
+							<div class="form-control">
+								{{ $basic->currency_symbol }}
+							</div>
+						</div>
+					</div>
 
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_total_cost') @lang($message) @enderror--}}
-{{--					</div>--}}
-{{--				</div>--}}
+					<div class="invalid-feedback">
+						@error('parcel_total_cost.0') @lang($message) @enderror
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-12 d-flex justify-content-between">--}}
-{{--					<label for="email"> @lang('Dimensions') [Length x Width x Height]--}}
-{{--						(cm)--}}
-{{--						<span--}}
-{{--							class="text-dark font-weight-bold">(@lang('optional'))</span></label>--}}
-{{--				</div>--}}
+				<div class="col-sm-12 col-md-12 d-flex justify-content-between">
+					<label for="email"> @lang('Dimensions') [Length x Width x Height]
+						(cm)
+						<span
+							class="text-dark font-weight-bold">(@lang('optional'))</span></label>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--					<input type="text" name="parcel_length[]"--}}
-{{--						   class="form-control @error('parcel_length') is-invalid @enderror"--}}
-{{--						   value="{{ old('parcel_length') }}">--}}
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_length') @lang($message) @enderror--}}
-{{--					</div>--}}
-{{--				</div>--}}
+				<div class="col-sm-12 col-md-4 mb-3">
+					<input type="text" name="parcel_length[]"
+						   class="form-control @error('parcel_length.0') is-invalid @enderror"
+						   value="{{ old('parcel_length.0') }}">
+					<div class="invalid-feedback">
+						@error('parcel_length.0') @lang($message) @enderror
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--					<input type="text" name="parcel_width[]"--}}
-{{--						   class="form-control @error('parcel_width') is-invalid @enderror"--}}
-{{--						   value="{{ old('parcel_width') }}">--}}
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_width') @lang($message) @enderror--}}
-{{--					</div>--}}
-{{--				</div>--}}
+				<div class="col-sm-12 col-md-4 mb-3">
+					<input type="text" name="parcel_width[]"
+						   class="form-control @error('parcel_width.0') is-invalid @enderror"
+						   value="{{ old('parcel_width.0') }}">
+					<div class="invalid-feedback">
+						@error('parcel_width.0') @lang($message) @enderror
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--					<input type="text" name="parcel_height[]"--}}
-{{--						   class="form-control @error('parcel_height') is-invalid @enderror"--}}
-{{--						   value="{{ old('parcel_height') }}">--}}
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_height') @lang($message) @enderror--}}
-{{--					</div>--}}
-{{--				</div>--}}
+				<div class="col-sm-12 col-md-4 mb-3">
+					<input type="text" name="parcel_height[]"
+						   class="form-control @error('parcel_height.0') is-invalid @enderror"
+						   value="{{ old('parcel_height.0') }}">
+					<div class="invalid-feedback">
+						@error('parcel_height.0') @lang($message) @enderror
+					</div>
+				</div>
+			</div>
+		</div>
 
-{{--			</div>--}}
-{{--		</div>--}}
+		<div class="addedParcelField">
+
+			@php
+				$oldParcelCounts = old('parcel_name') ? count(old('parcel_name')) : 0;
+			@endphp
+
+			@if($oldParcelCounts > 1)
+				@for($i = 1; $i < $oldParcelCounts; $i++)
+					<div class="row addMoreParcelBox" id="removeParcelField{{$i}}">
+						<div class="col-md-12 d-flex justify-content-end">
+							<button
+								class="btn btn-danger  delete_parcel_desc custom_delete_desc_padding mt-4"
+								type="button" onclick="deleteParcelField({{$i}})">
+								<i class="fa fa-times"></i>
+							</button>
+						</div>
+						<div class="col-sm-12 col-md-3 mb-3">
+							<label for="parcel_name"> @lang('Parcel Name') </label>
+							<input type="text" name="parcel_name[]"
+								   class="form-control @error("parcel_name.$i") is-invalid @enderror"
+								   value="{{ old("parcel_name.$i") }}" required>
+							<div class="invalid-feedback">
+								@error("parcel_name.$i") @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-3 mb-3">
+							<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
+							<input type="number" name="parcel_quantity[]"
+								   class="form-control @error("parcel_quantity.$i") is-invalid @enderror"
+								   value='{{ old("parcel_quantity.$i") }}' required>
+							<div class="invalid-feedback">
+								@error("parcel_quantity.$i") @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-3 mb-3">
+							<label for="parcel_type_id"> @lang('Parcel Type') </label>
+							<select name="parcel_type_id[]"
+									class="form-control @error("parcel_type_id.$i") is-invalid @enderror OCParcelTypeWiseShippingRate select2 selectedParcelType_{{$i}} select2ParcelType"
+									onchange="selectedParcelTypeHandel({{$i}})" required>
+								<option value="" disabled selected>@lang('Select Parcel Type')</option>
+								@foreach($parcelTypes as $parcel_type)
+									<option value="{{ $parcel_type->id }}" {{ old("parcel_type_id.$i") == $parcel_type->id ? 'selected' : '' }}>@lang($parcel_type->parcel_type)</option>
+								@endforeach
+							</select>
+
+							<div class="invalid-feedback">
+								@error("parcel_type_id.$i") @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-3 mb-3">
+							<label for="parcel_unit_id"> @lang('Select Unit') </label>
+							<select name="parcel_unit_id[]"
+									class="form-control @error("parcel_unit_id.$i") is-invalid @enderror selectedParcelUnit_{{$i}}"
+									data-oldparcelunitid='{{ old("parcel_unit_id.$i") }}'
+									onchange="selectedParcelServiceHandel({{$i}})" required>
+								<option value="" disabled
+										selected>@lang('Select Parcel Unit')</option>
+							</select>
+
+							<div class="invalid-feedback">
+								@error("parcel_unit_id.$i") @lang($message) @enderror
+							</div>
+						</div>
+
+
+						<div class="col-sm-12 col-md-4 mb-3">
+							<label for="cost_per_unit"> @lang('Cost per unit')</label>
+							<div class="input-group">
+								<input type="text" name="cost_per_unit[]"
+									   class="form-control @error("cost_per_unit.$i") is-invalid @enderror newCostPerUnit unitPrice_{{$i}}"
+									   value="{{ old("cost_per_unit.$i") }}" readonly>
+								<div class="input-group-append" readonly="">
+									<div class="form-control">
+										{{ $basic->currency_symbol }}
+									</div>
+								</div>
+
+								<div class="invalid-feedback">
+									@error("cost_per_unit.$i") @lang($message) @enderror
+								</div>
+
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
+							<label for="total_unit"> @lang('Total Unit')</label>
+							<div class="input-group">
+								<input type="text" name="total_unit[]"
+									   class="form-control @error("total_unit.$i") is-invalid @enderror newTotalWeight"
+									   value="{{ old("total_unit.$i") }}" required>
+								<div class="input-group-append" readonly="">
+									<div class="form-control">
+										@lang('kg')
+									</div>
+								</div>
+							</div>
+							<div class="invalid-feedback"> @error("total_unit.$i") @lang($message) @enderror </div>
+						</div>
+
+						<div class="col-sm-12 col-md-4 mb-3">
+							<label for="parcel_total_cost"> @lang('Total Cost')</label>
+							<div class="input-group">
+								<input type="text" name="parcel_total_cost[]"
+									   class="form-control @error("parcel_total_cost.$i") is-invalid @enderror totalParcelCost"
+									   value="{{ old("parcel_total_cost.$i") }}" readonly>
+								<div class="input-group-append" readonly="">
+									<div class="form-control">
+										{{ $basic->currency_symbol }}
+									</div>
+								</div>
+							</div>
+
+							<div class="invalid-feedback">
+								@error("parcel_total_cost.$i") @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-12">
+							<label> @lang('Dimensions') [Length x Width x Height] (cm)
+								<span class="text-dark font-weight-bold">(optional)</span></label>
+						</div>
+
+						<div class="col-sm-12 col-md-4 mb-3">
+							<input type="text" name="parcel_length[]"
+								   class="form-control @error("parcel_length.$i") is-invalid @enderror"
+								   value="{{ old("parcel_length.$i") }}">
+							<div class="invalid-feedback">
+								@error("parcel_length.$i") @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-4 mb-3">
+							<input type="text" name="parcel_width[]"
+								   class="form-control @error("parcel_width.$i") is-invalid @enderror"
+								   value="{{ old("parcel_width.$i") }}">
+							<div class="invalid-feedback">
+								@error("parcel_width.$i") @lang($message) @enderror
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-4 mb-3">
+							<input type="text" name="parcel_height[]"
+								   class="form-control @error("parcel_height.$i") is-invalid @enderror"
+								   value="{{ old("parcel_height.$i") }}">
+							<div class="invalid-feedback">
+								@error("parcel_height.$i") @lang($message) @enderror
+							</div>
+						</div>
+					</div>
+				@endfor
+			@endif
+		</div>
 
 
 		<div class="row">
@@ -645,9 +815,10 @@
 			<div class="col-md-3">
 				<div class="input-group">
 					<span class="input-group-text">@lang('Discount')</span>
-					<input type="number" name="discount" value=""
+					<input type="number" name="discount" value="" data-discount="{{ old('discount') }}"
 						   class="form-control bg-white text-dark OCDiscount"
-						   id="discount">
+						   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
+						   id="discount" min="0">
 					<span class="input-group-text">%</span>
 				</div>
 			</div>
@@ -658,7 +829,7 @@
 				<span class="fw-bold">@lang('Discount Amount')</span>
 				<div class="input-group w-50">
 					<input type="number" name="discount_amount" value="0"
-						   class="form-control bg-white text-dark OCDiscountAmount"
+						   class="form-control bg-white text-dark OCDiscountAmount" data-discountamount="{{ old('discount_amount') }}"
 						   readonly>
 					<div class="input-group-append" readonly="">
 						<div class="form-control">
@@ -674,7 +845,7 @@
 				<span class="fw-bold">@lang('Subtotal')</span>
 				<div class="input-group w-50">
 					<input type="number" name="sub_total" value="0"
-						   class="form-control bg-white text-dark OCSubTotal" readonly>
+						   class="form-control bg-white text-dark OCSubTotal" data-subtotal="{{ old('sub_total') }}" readonly>
 					<div class="input-group-append" readonly="">
 						<div class="form-control">
 							{{ $basic->currency_symbol }}
@@ -689,7 +860,7 @@
 				<div class="col-md-3 d-flex justify-content-between">
 					<span class="fw-bold">@lang('Pickup Cost')</span>
 					<div class="input-group w-50">
-						<input type="text" name="pickup_cost" value="0"
+						<input type="text" name="pickup_cost" value="0" data-pickupcost="{{ old('pickup_cost') }}"
 							   class="form-control bg-white text-dark OCPickupCost"
 							   readonly disabled>
 						<div class="input-group-append" readonly="">
@@ -705,7 +876,7 @@
 				<div class="col-md-3 d-flex justify-content-between">
 					<span class="fw-bold">@lang('Supply Cost')</span>
 					<div class="input-group w-50">
-						<input type="text" name="supply_cost" value="0"
+						<input type="text" name="supply_cost" value="0" data-supplycost="{{ old('supply_cost') }}"
 							   class="form-control bg-white text-dark OCSupplyCost"
 							   readonly disabled>
 						<div class="input-group-append" readonly="">
@@ -722,7 +893,7 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Shipping Cost')</span>
 				<div class="input-group w-50">
-					<input type="text" name="shipping_cost" value="0"
+					<input type="text" name="shipping_cost" value="0" data-shippingcost="{{ old('shipping_cost') }}"
 						   class="form-control bg-white text-dark OCShippingCost"
 						   readonly disabled>
 					<div class="input-group-append" readonly="">
@@ -738,7 +909,7 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Tax')</span>
 				<div class="input-group w-50">
-					<input type="text" name="tax" value="0"
+					<input type="text" name="tax" value="0" data-tax="{{ old('tax') }}"
 						   class="form-control bg-white text-dark OCTax" readonly
 						   disabled>
 					<div class="input-group-append" readonly="">
@@ -755,7 +926,7 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Insurance')</span>
 				<div class="input-group w-50">
-					<input type="text" name="insurance" value="0"
+					<input type="text" name="insurance" value="0" data-insurance="{{ old('insurance') }}"
 						   class="form-control bg-white text-dark OCInsurance" readonly
 						   disabled>
 					<div class="input-group-append" readonly="">
@@ -771,7 +942,7 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Total Pay')</span>
 				<div class="input-group w-50">
-					<input type="number" name="total_pay" value="0"
+					<input type="number" name="total_pay" value="0" data-totalpay="{{ old('total_pay') }}"
 						   class="form-control bg-white text-dark OCtotalPay" readonly>
 					<div class="input-group-append" readonly="">
 						<div class="form-control">

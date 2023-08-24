@@ -55,18 +55,34 @@
 
 							<div class="tab-content mt-2" id="myTabContent">
 								@include('partials.operatorCountryShipmentForm')
-{{--								@include('partials.internationallyShipmentForm')--}}
+								{{--								@include('partials.internationallyShipmentForm')--}}
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<input type="hidden" class="firstFiv" value="0">
-		<input type="hidden" class="lastFiv" value="0">
+		<input type="hidden" name="first_fiv" class="firstFiv" value="{{ old('first_fiv') }}"  data-firstfiv="{{ old('first_fiv') }}">
+		<input type="hidden" name="last_fiv" class="lastFiv" value="{{ old('last_fiv') }}" data-lastfiv="{{ old('last_fiv') }}">
+
+
 		@php
+			$findError = 0;
 			$oldPackingCounts = old('variant_price') ? count(old('variant_price')) : 0;
+            $oldParcelCounts = old('parcel_name') ? count(old('parcel_name')) : 0;
+
+            $oldFromCityIdPresent = old('from_city_id') ? 1 : 0;
+            $oldFromAreaIdPresent = old('from_area_id') ? 1 : 0;
+
+            $oldToCityIdPresent = old('to_city_id') ? 1 : 0;
+            $oldToAreaIdPresent = old('to_area_id') ? 1 : 0;
 		@endphp
+
+		@if($errors->any())
+			@php
+				$findError = 1;
+			@endphp
+		@endif
 
 		@endsection
 
@@ -86,15 +102,160 @@
 				'use strict';
 
 				let oldPackingValue = "{{ $oldPackingCounts }}"
+				let findError = "{{ $findError }}"
 
-				if(oldPackingValue){
-					for(let i = 0;  i < oldPackingValue; i++){
+				let oldFromCityIdPresent = "{{ $oldFromCityIdPresent }}"
+				let oldFromAreaIdPresent = "{{ $oldFromAreaIdPresent }}"
+
+				let oldToCityIdPresent = "{{ $oldToCityIdPresent }}"
+				let oldToAreaIdPresent = "{{ $oldToAreaIdPresent }}"
+
+				if (findError == 1){
+					let discount = $('.OCDiscount').data('discount');
+					let discountAmount = $('.OCDiscountAmount').data('discountamount');
+					let subTotal = $('.OCSubTotal').data('subtotal');
+					let pickupCost = $('.OCPickupCost').data('pickupcost');
+					let supplyCost = $('.OCSupplyCost').data('supplycost');
+					let shippingCost = $('.OCShippingCost').data('shippingcost');
+					let tax = $('.OCTax').data('tax');
+					let insurance = $('.OCInsurance').data('insurance');
+					let totalPay = $('.OCtotalPay').data('totalpay');
+					let firstFiv = $('.firstFiv').data('firstfiv');
+					let lastFiv = $('.lastFiv').data('lastfiv');
+
+					setOldSummery(discount,discountAmount,subTotal,pickupCost,supplyCost,shippingCost,tax,insurance,totalPay);
+				}
+
+				function setOldSummery(discount,discountAmount,subTotal,pickupCost,supplyCost,shippingCost,tax,insurance,totalPay,firstFiv,lastFiv){
+					$('.OCDiscount').val(discount);
+					$('.OCDiscountAmount').val(discountAmount);
+					$('.OCSubTotal').val(subTotal);
+					$('.OCPickupCost').val(pickupCost);
+					$('.OCSupplyCost').val(supplyCost);
+					$('.OCShippingCost').val(shippingCost);
+					$('.OCTax').val(tax);
+					$('.OCInsurance').val(insurance);
+					$('.OCtotalPay').val(totalPay);
+					$('.firstFiv').val(firstFiv);
+					$('.lastFiv').val(lastFiv);
+
+					// calculateOCDiscount();
+				}
+
+
+				if (oldFromCityIdPresent == 1 && oldFromAreaIdPresent == 1) {
+					let oldFromStateId = $('.selectedFromState').val();
+					let oldFromCityId = $('.selectedFromCity').data('oldfromcityid');
+					let oldFromAreaId = $('.selectedFromArea').data('oldfromareaid');
+					getOldFromCity(oldFromStateId, oldFromCityId);
+					getOldFromArea(oldFromCityId, oldFromAreaId);
+				} else if (oldFromCityIdPresent == 1 && oldFromAreaIdPresent == 0) {
+					let oldFromStateId = $('.selectedFromState').val();
+					let oldFromCityId = $('.selectedFromCity').data('oldfromcityid');
+					getOldFromCity(oldFromStateId, oldFromCityId);
+				}
+
+				if (oldToCityIdPresent == 1 && oldToAreaIdPresent == 1) {
+					let oldToStateId = $('.selectedToState').val();
+					let oldToCityId = $('.selectedToCity').data('oldtocityid');
+					let oldToAreaId = $('.selectedToArea').data('oldtoareaid');
+					getOldToCity(oldToStateId, oldToCityId);
+					getOldToArea(oldToCityId, oldToAreaId);
+				} else if (oldToCityIdPresent == 1 && oldToAreaIdPresent == 0) {
+					let oldToStateId = $('.selectedToState').val();
+					let oldToCityId = $('.selectedToCity').data('oldtocityid');
+					getOldToCity(oldToStateId, oldToCityId);
+				}
+
+				function getOldFromCity(oldFromStateId, oldFromCityId) {
+					$.ajax({
+						url: "{{ route('getSeletedStateCity') }}",
+						method: 'POST',
+						data: {
+							id: oldFromStateId,
+						},
+						success: function (response) {
+							$('.selectedFromCity').empty();
+							let responseData = response;
+							responseData.forEach(res => {
+								$('.selectedFromCity').append(`<option value="${res.id}" ${res.id == oldFromCityId ? 'selected' : ''}>${res.name}</option>`)
+							})
+						},
+						error: function (xhr, status, error) {
+							console.log(error)
+						}
+					});
+				}
+
+				function getOldFromArea(oldFromCityId, oldFromAreaId) {
+					$.ajax({
+						url: "{{ route('getSeletedCityArea') }}",
+						method: 'POST',
+						data: {
+							id: oldFromCityId,
+						},
+						success: function (response) {
+							$('.selectedFromArea').empty();
+							let responseData = response;
+							responseData.forEach(res => {
+								$('.selectedFromArea').append(`<option value="${res.id}" ${res.id == oldFromAreaId ? 'selected' : ''}>${res.name}</option>`)
+							})
+						},
+						error: function (xhr, status, error) {
+							console.log(error)
+						}
+					});
+				}
+
+				function getOldToCity(oldToStateId, oldToCityId) {
+					$.ajax({
+						url: "{{ route('getSeletedStateCity') }}",
+						method: 'POST',
+						data: {
+							id: oldToStateId,
+						},
+						success: function (response) {
+							$('.selectedFromCity').empty();
+							let responseData = response;
+							responseData.forEach(res => {
+								$('.selectedToCity').append(`<option value="${res.id}" ${res.id == oldToCityId ? 'selected' : ''}>${res.name}</option>`)
+							})
+						},
+						error: function (xhr, status, error) {
+							console.log(error)
+						}
+					});
+				}
+
+				function getOldToArea(oldToCityId, oldToAreaId) {
+					$.ajax({
+						url: "{{ route('getSeletedCityArea') }}",
+						method: 'POST',
+						data: {
+							id: oldToCityId,
+						},
+						success: function (response) {
+							$('.selectedToArea').empty();
+							let responseData = response;
+							responseData.forEach(res => {
+								$('.selectedToArea').append(`<option value="${res.id}" ${res.id == oldToAreaId ? 'selected' : ''}>${res.name}</option>`)
+							})
+						},
+						error: function (xhr, status, error) {
+							console.log(error)
+						}
+					});
+				}
+
+
+				if (oldPackingValue) {
+					for (let i = 0; i < oldPackingValue; i++) {
 						let oldPackageId;
 						let oldVariantId;
-						if (i == 0){
+						if (i == 0) {
 							oldPackageId = $(`.selectedPackage`).val();
 							oldVariantId = $(`.selectedVariant`).data('oldvariant');
-						}else{
+						} else {
 							oldPackageId = $(`.selectedPackage_${i}`).val();
 							oldVariantId = $(`.selectedVariant_${i}`).data('oldvariant');
 						}
@@ -103,11 +264,6 @@
 					}
 
 					function getOldSelectedPackageVariant(value, oldVariantId, i) {
-						$.ajaxSetup({
-							headers: {
-								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-							}
-						});
 
 						$.ajax({
 							url: "{{ route('getSelectedPackageVariant') }}",
@@ -118,9 +274,9 @@
 							success: function (response) {
 								let responseData = response;
 								let selectedVariantClass;
-								if (i == 0){
+								if (i == 0) {
 									selectedVariantClass = '.selectedVariant';
-								}else{
+								} else {
 									selectedVariantClass = `.selectedVariant_${i}`
 								}
 
@@ -137,6 +293,50 @@
 					}
 				}
 
+
+				let oldParcelValue = "{{ $oldParcelCounts }}"
+
+				if (oldParcelValue) {
+					for (let i = 0; i < oldParcelValue; i++) {
+						let oldParcelTypeId;
+						let oldParcelUnitId;
+						if (i == 0) {
+							oldParcelTypeId = $(`.selectedParcelType`).val();
+							oldParcelUnitId = $(`.selectedParcelUnit`).data('oldparcelunitid');
+						} else {
+							oldParcelTypeId = $(`.selectedParcelType_${i}`).val();
+							oldParcelUnitId = $(`.selectedParcelUnit_${i}`).data('oldparcelunitid');
+						}
+
+						getOldSelectedParcelTypeUnit(oldParcelTypeId, oldParcelUnitId, i);
+					}
+
+					function getOldSelectedParcelTypeUnit(oldParcelTypeId, oldParcelUnitId, i) {
+						$.ajax({
+							url: "{{ route('getSelectedParcelTypeUnit') }}",
+							method: 'POST',
+							data: {
+								id: oldParcelTypeId,
+							},
+							success: function (response) {
+								let responseData = response;
+								let selectedParcelUnitClass;
+								if (i == 0) {
+									selectedParcelUnitClass = '.selectedParcelUnit';
+								} else {
+									selectedParcelUnitClass = `.selectedParcelUnit_${i}`
+								}
+
+								responseData.forEach(res => {
+									$(selectedParcelUnitClass).append(`<option value="${res.id}" ${res.id == oldParcelUnitId ? 'selected' : ''}>${res.unit}</option>`)
+								})
+							},
+							error: function (xhr, status, error) {
+								console.log(error)
+							}
+						});
+					}
+				}
 
 
 				OCFormHandlingByShipmentType();
@@ -203,7 +403,6 @@
 						$('input[name="total_unit"]').prop('required', false);
 					}
 				}
-
 
 
 				formHandlingByPackingService();
@@ -345,151 +544,120 @@
 					});
 
 
-{{--					$("#parcelGenerate").on('click', function () {--}}
-{{--						formHandlingByPackingService();--}}
-{{--						const id = Date.now();--}}
-{{--						var form = `<div class="row addMoreParcelBox" id="removeParcelField${id}">--}}
-{{--										<div class="col-md-12 d-flex justify-content-end">--}}
-{{--											<button--}}
-{{--												class="btn btn-danger  delete_parcel_desc custom_delete_desc_padding mt-4"--}}
-{{--												type="button" onclick="deleteParcelField(${id})">--}}
-{{--												<i class="fa fa-times"></i>--}}
-{{--											</button>--}}
-{{--										</div>--}}
-{{--										<div class="col-sm-12 col-md-3 mb-3">--}}
-{{--						<label for="parcel_name"> @lang('Parcel Name') </label>--}}
-{{--											<input type="text" name="parcel_name[]"--}}
-{{--												   class="form-control @error('parcel_name') is-invalid @enderror"--}}
-{{--												   value="{{ old('email') }}" required>--}}
-{{--											<div class="invalid-feedback">--}}
-{{--												@error('parcel_name') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
+					$("#parcelGenerate").on('click', function () {
+						formHandlingByPackingService();
+						const id = Date.now();
+						var form = `<div class="row addMoreParcelBox" id="removeParcelField${id}">
+										<div class="col-md-12 d-flex justify-content-end">
+											<button
+												class="btn btn-danger  delete_parcel_desc custom_delete_desc_padding mt-4"
+												type="button" onclick="deleteParcelField(${id})">
+												<i class="fa fa-times"></i>
+											</button>
+										</div>
+										<div class="col-sm-12 col-md-3 mb-3">
+						<label for="parcel_name"> @lang('Parcel Name') </label>
+											<input type="text" name="parcel_name[]"
+												   class="form-control" required>
 
-{{--					<div class="col-sm-12 col-md-3 mb-3">--}}
-{{--					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>--}}
-{{--					<input type="number" name="parcel_quantity[]"--}}
-{{--						   class="form-control @error('parcel_quantity') is-invalid @enderror"--}}
-{{--						   value="{{ old('parcel_quantity') }}" required>--}}
-{{--					<div class="invalid-feedback">--}}
-{{--						@error('parcel_quantity') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
+					</div>
 
-{{--											<div class="col-sm-12 col-md-3 mb-3">--}}
-{{--												<label for="parcel_type_id"> @lang('Parcel Type') </label>--}}
-{{--											<select name="parcel_type_id[]" class="form-control @error('parcel_type_id') is-invalid @enderror OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})" required>--}}
-{{--												<option value="" disabled selected>@lang('Select Parcel Type')</option>--}}
-{{--												@foreach($parcelTypes as $parcel_type)--}}
-{{--						<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>--}}
-{{--												@endforeach--}}
-{{--						</select>--}}
+					<div class="col-sm-12 col-md-3 mb-3">
+					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
+					<input type="number" name="parcel_quantity[]"
+						   class="form-control" required>
+					</div>
 
-{{--						<div class="invalid-feedback">--}}
-{{--@error('parcel_type_id') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
+											<div class="col-sm-12 col-md-3 mb-3">
+												<label for="parcel_type_id"> @lang('Parcel Type') </label>
+											<select name="parcel_type_id[]" class="form-control OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})" required>
+												<option value="" disabled selected>@lang('Select Parcel Type')</option>
+												@foreach($parcelTypes as $parcel_type)
+						<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
+												@endforeach
+						</select>
+					</div>
 
-{{--					<div class="col-sm-12 col-md-3 mb-3">--}}
-{{--						<label for="parcel_unit_id"> @lang('Select Unit') </label>--}}
-{{--											<select name="parcel_unit_id[]"--}}
-{{--													class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})" required>--}}
-{{--												<option value="" disabled--}}
-{{--														selected>@lang('Select Parcel Unit')</option>--}}
-{{--											</select>--}}
-
-{{--											<div class="invalid-feedback">--}}
-{{--												@error('parcel_unit_id') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
+					<div class="col-sm-12 col-md-3 mb-3">
+						<label for="parcel_unit_id"> @lang('Select Unit') </label>
+											<select name="parcel_unit_id[]"
+													class="form-control selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})" required>
+												<option value="" disabled
+														selected>@lang('Select Parcel Unit')</option>
+											</select>
 
 
-{{--					<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--													<label for="cost_per_unit"> @lang('Cost per unit')</label>--}}
-{{--													<div class="input-group">--}}
-{{--														<input type="text" name="cost_per_unit[]"--}}
-{{--															   class="form-control @error('cost_per_unit') is-invalid @enderror newCostPerUnit unitPrice_${id}"--}}
-{{--															   value="{{ old('cost_per_unit') }}" readonly>--}}
-{{--														<div class="input-group-append" readonly="">--}}
-{{--															<div class="form-control">--}}
-{{--																{{ $basic->currency_symbol }}--}}
-{{--						</div>--}}
-{{--					</div>--}}
+					</div>
 
-{{--					<div class="invalid-feedback">--}}
-{{--@error('cost_per_unit') @lang($message) @enderror--}}
-{{--						</div>--}}
 
-{{--					</div>--}}
-{{--				</div>--}}
+					<div class="col-sm-12 col-md-4 mb-3">
+													<label for="cost_per_unit"> @lang('Cost per unit')</label>
+													<div class="input-group">
+														<input type="text" name="cost_per_unit[]"
+															   class="form-control newCostPerUnit unitPrice_${id}"
+															   readonly>
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																{{ $basic->currency_symbol }}
+						</div>
+					</div>
+					</div>
+				</div>
 
-{{--				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">--}}
-{{--						<label for="total_unit"> @lang('Total Unit')</label>--}}
-{{--						<div class="input-group">--}}
-{{--							<input type="text" name="total_unit[]" class="form-control @error('total_unit') is-invalid @enderror newTotalWeight" value="{{ old('total_unit') }}" required>--}}
-{{--							<div class="input-group-append" readonly="">--}}
-{{--								<div class="form-control">--}}
-{{--									@lang('kg')--}}
-{{--						</div>--}}
-{{--					</div>--}}
-{{--				</div>--}}
-{{--				<div class="invalid-feedback"> @error('total_unit') @lang($message) @enderror </div>--}}
-{{--					</div>--}}
+				<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
+						<label for="total_unit"> @lang('Total Unit')</label>
+						<div class="input-group">
+							<input type="text" name="total_unit[]" class="form-control newTotalWeight" required>
+							<div class="input-group-append" readonly="">
+								<div class="form-control">
+									@lang('kg')
+						</div>
+					</div>
+				</div>
+					</div>
 
-{{--					<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--						<label for="parcel_total_cost"> @lang('Total Cost')</label>--}}
-{{--													<div class="input-group">--}}
-{{--														<input type="text" name="parcel_total_cost[]"--}}
-{{--															   class="form-control @error('parcel_total_cost') is-invalid @enderror totalParcelCost"--}}
-{{--															   value="{{ old('parcel_total_cost') }}" readonly>--}}
-{{--														<div class="input-group-append" readonly="">--}}
-{{--															<div class="form-control">--}}
-{{--																{{ $basic->currency_symbol }}--}}
-{{--						</div>--}}
-{{--					</div>--}}
-{{--				</div>--}}
+					<div class="col-sm-12 col-md-4 mb-3">
+						<label for="parcel_total_cost"> @lang('Total Cost')</label>
+													<div class="input-group">
+														<input type="text" name="parcel_total_cost[]"
+															   class="form-control totalParcelCost" readonly>
+														<div class="input-group-append" readonly="">
+															<div class="form-control">
+																{{ $basic->currency_symbol }}
+						</div>
+					</div>
+				</div>
 
-{{--				<div class="invalid-feedback">--}}
-{{--@error('parcel_total_cost') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
+					</div>
 
-{{--<div class="col-sm-12 col-md-12">--}}
-{{--<label> @lang('Dimensions') [Length x Width x Height] (cm)--}}
-{{--											<span class="text-dark font-weight-bold">(optional)</span></label>--}}
-{{--										</div>--}}
+<div class="col-sm-12 col-md-12">
+<label> @lang('Dimensions') [Length x Width x Height] (cm)
+											<span class="text-dark font-weight-bold">(optional)</span></label>
+										</div>
 
-{{--										<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--											<input type="text" name="parcel_length[]" class="form-control @error('parcel_length') is-invalid @enderror" value="{{ old('parcel_length') }}">--}}
-{{--											<div class="invalid-feedback">--}}
-{{--												@error('parcel_length') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
+										<div class="col-sm-12 col-md-4 mb-3">
+											<input type="text" name="parcel_length[]" class="form-control">
+					</div>
 
-{{--					<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--						<input type="text" name="parcel_width[]" class="form-control @error('parcel_width') is-invalid @enderror" value="{{ old('parcel_width') }}">--}}
-{{--											<div class="invalid-feedback">--}}
-{{--												@error('parcel_width') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
+					<div class="col-sm-12 col-md-4 mb-3">
+						<input type="text" name="parcel_width[]" class="form-control">
 
-{{--					<div class="col-sm-12 col-md-4 mb-3">--}}
-{{--						<input type="text" name="parcel_height[]" class="form-control @error('parcel_height') is-invalid @enderror" value="{{ old('parcel_height') }}">--}}
-{{--											<div class="invalid-feedback">--}}
-{{--												@error('parcel_height') @lang($message) @enderror--}}
-{{--						</div>--}}
-{{--					</div>--}}
-{{--				</div>`;--}}
+					</div>
 
-{{--						$('.addedParcelField').append(form)--}}
+					<div class="col-sm-12 col-md-4 mb-3">
+						<input type="text" name="parcel_height[]" class="form-control">
+					</div>
+				</div>`;
 
-{{--					});--}}
+						$('.addedParcelField').append(form)
+
+					});
 				});
 
 
-				// function deleteParcelField(id) {
-				// 	$(`#removeParcelField${id}`).remove();
-				// }
+				function deleteParcelField(id) {
+					$(`#removeParcelField${id}`).remove();
+				}
 
 				$(document).on('input', '.newVariantQuantity', function () {
 					window.calculatePackingTotalPrice();
