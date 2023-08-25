@@ -9,6 +9,7 @@ use App\Models\Branch;
 use App\Models\Country;
 use App\Models\DefaultShippingRateInternationally;
 use App\Models\DefaultShippingRateOperatorCountry;
+use App\Models\OperatorCountryShipment;
 use App\Models\Package;
 use App\Models\ParcelType;
 use App\Models\ShipmentType;
@@ -47,6 +48,10 @@ class ShipmentController extends Controller
 	}
 
 	public function shipmentStore(ShipmentRequest $request){
+
+		$OperatorCountryShipment = new OperatorCountryShipment();
+
+
 		dd($request->all());
 	}
 
@@ -262,6 +267,7 @@ class ShipmentController extends Controller
 			'return_shipment_cost' => ['nullable', 'numeric', 'min:0'],
 			'tax' => ['nullable', 'numeric', 'min:0'],
 			'insurance' => ['nullable', 'numeric', 'min:0'],
+			'cash_on_delivery_cost' => ['nullable', 'numeric', 'min:0'],
 		];
 
 		$message = [
@@ -285,6 +291,7 @@ class ShipmentController extends Controller
 		$operatorCountry->return_shipment_cost = $request->return_shipment_cost == null ? 0 : $request->return_shipment_cost;
 		$operatorCountry->tax = $request->tax == null ? 0 : $request->tax;
 		$operatorCountry->insurance = $request->insurance == null ? 0 : $request->insurance;
+		$operatorCountry->cash_on_delivery_cost = $request->cash_on_delivery_cost == null ? 0 : $request->cash_on_delivery_cost;
 
 		$operatorCountry->save();
 
@@ -304,6 +311,7 @@ class ShipmentController extends Controller
 			'return_shipment_cost' => ['nullable', 'numeric', 'min:0'],
 			'tax' => ['nullable', 'numeric', 'min:0'],
 			'insurance' => ['nullable', 'numeric', 'min:0'],
+			'cash_on_delivery_cost' => ['nullable', 'numeric', 'min:0'],
 		];
 
 		$message = [
@@ -331,6 +339,7 @@ class ShipmentController extends Controller
 		$operatorCountry->return_shipment_cost = $request->return_shipment_cost == null ? 0 : $request->return_shipment_cost;
 		$operatorCountry->tax = $request->tax == null ? 0 : $request->tax;
 		$operatorCountry->insurance = $request->insurance == null ? 0 : $request->insurance;
+		$operatorCountry->cash_on_delivery_cost = $request->cash_on_delivery_cost == null ? 0 : $request->cash_on_delivery_cost;
 
 		$operatorCountry->save();
 
@@ -352,6 +361,7 @@ class ShipmentController extends Controller
 			'return_shipment_cost' => ['nullable', 'numeric', 'min:0'],
 			'tax' => ['nullable', 'numeric', 'min:0'],
 			'insurance' => ['nullable', 'numeric', 'min:0'],
+			'cash_on_delivery_cost' => ['nullable', 'numeric', 'min:0'],
 		];
 
 		$message = [
@@ -383,6 +393,7 @@ class ShipmentController extends Controller
 		$operatorCountry->return_shipment_cost = $request->return_shipment_cost == null ? 0 : $request->return_shipment_cost;
 		$operatorCountry->tax = $request->tax == null ? 0 : $request->tax;
 		$operatorCountry->insurance = $request->insurance == null ? 0 : $request->insurance;
+		$operatorCountry->cash_on_delivery_cost = $request->cash_on_delivery_cost == null ? 0 : $request->cash_on_delivery_cost;
 
 		$operatorCountry->save();
 

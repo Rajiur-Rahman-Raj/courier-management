@@ -55,19 +55,15 @@
 
 							<div class="tab-content mt-2" id="myTabContent">
 								@include('partials.operatorCountryShipmentForm')
-								{{--								@include('partials.internationallyShipmentForm')--}}
+								{{--@include('partials.internationallyShipmentForm')--}}
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<input type="hidden" name="first_fiv" class="firstFiv" value="{{ old('first_fiv') }}"  data-firstfiv="{{ old('first_fiv') }}">
-		<input type="hidden" name="last_fiv" class="lastFiv" value="{{ old('last_fiv') }}" data-lastfiv="{{ old('last_fiv') }}">
-
 
 		@php
-			$findError = 0;
 			$oldPackingCounts = old('variant_price') ? count(old('variant_price')) : 0;
             $oldParcelCounts = old('parcel_name') ? count(old('parcel_name')) : 0;
 
@@ -77,12 +73,6 @@
             $oldToCityIdPresent = old('to_city_id') ? 1 : 0;
             $oldToAreaIdPresent = old('to_area_id') ? 1 : 0;
 		@endphp
-
-		@if($errors->any())
-			@php
-				$findError = 1;
-			@endphp
-		@endif
 
 		@endsection
 
@@ -102,45 +92,12 @@
 				'use strict';
 
 				let oldPackingValue = "{{ $oldPackingCounts }}"
-				let findError = "{{ $findError }}"
 
 				let oldFromCityIdPresent = "{{ $oldFromCityIdPresent }}"
 				let oldFromAreaIdPresent = "{{ $oldFromAreaIdPresent }}"
 
 				let oldToCityIdPresent = "{{ $oldToCityIdPresent }}"
 				let oldToAreaIdPresent = "{{ $oldToAreaIdPresent }}"
-
-				if (findError == 1){
-					let discount = $('.OCDiscount').data('discount');
-					let discountAmount = $('.OCDiscountAmount').data('discountamount');
-					let subTotal = $('.OCSubTotal').data('subtotal');
-					let pickupCost = $('.OCPickupCost').data('pickupcost');
-					let supplyCost = $('.OCSupplyCost').data('supplycost');
-					let shippingCost = $('.OCShippingCost').data('shippingcost');
-					let tax = $('.OCTax').data('tax');
-					let insurance = $('.OCInsurance').data('insurance');
-					let totalPay = $('.OCtotalPay').data('totalpay');
-					let firstFiv = $('.firstFiv').data('firstfiv');
-					let lastFiv = $('.lastFiv').data('lastfiv');
-
-					setOldSummery(discount,discountAmount,subTotal,pickupCost,supplyCost,shippingCost,tax,insurance,totalPay);
-				}
-
-				function setOldSummery(discount,discountAmount,subTotal,pickupCost,supplyCost,shippingCost,tax,insurance,totalPay,firstFiv,lastFiv){
-					$('.OCDiscount').val(discount);
-					$('.OCDiscountAmount').val(discountAmount);
-					$('.OCSubTotal').val(subTotal);
-					$('.OCPickupCost').val(pickupCost);
-					$('.OCSupplyCost').val(supplyCost);
-					$('.OCShippingCost').val(shippingCost);
-					$('.OCTax').val(tax);
-					$('.OCInsurance').val(insurance);
-					$('.OCtotalPay').val(totalPay);
-					$('.firstFiv').val(firstFiv);
-					$('.lastFiv').val(lastFiv);
-
-					// calculateOCDiscount();
-				}
 
 
 				if (oldFromCityIdPresent == 1 && oldFromAreaIdPresent == 1) {
@@ -265,6 +222,12 @@
 
 					function getOldSelectedPackageVariant(value, oldVariantId, i) {
 
+						$.ajaxSetup({
+							headers: {
+								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+							}
+						});
+
 						$.ajax({
 							url: "{{ route('getSelectedPackageVariant') }}",
 							method: 'POST',
@@ -312,6 +275,13 @@
 					}
 
 					function getOldSelectedParcelTypeUnit(oldParcelTypeId, oldParcelUnitId, i) {
+
+						$.ajaxSetup({
+							headers: {
+								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+							}
+						});
+
 						$.ajax({
 							url: "{{ route('getSelectedParcelTypeUnit') }}",
 							method: 'POST',
@@ -354,6 +324,7 @@
 						$('.add_cod_parcel_info').addClass('d-none');
 						$('.addParcelFieldButton').removeClass('d-none');
 						$('.addedParcelField').removeClass('d-none')
+						$('.parcelField').removeClass('d-none')
 						finalTotalAmountCalculation();
 
 						$('input[name="receive_amount"]').prop('required', false);
@@ -373,6 +344,7 @@
 						$('.add_cod_parcel_info').addClass('d-none');
 						$('.addParcelFieldButton').removeClass('d-none');
 						$('.addedParcelField').removeClass('d-none')
+						$('.parcelField').removeClass('d-none')
 						finalTotalAmountCalculation();
 
 						$('input[name="receive_amount"]').prop('required', false);
@@ -391,6 +363,7 @@
 						$('.add_cod_parcel_info').removeClass('d-none');
 						$('.addParcelFieldButton').addClass('d-none');
 						$('.addedParcelField').addClass('d-none')
+						$('.parcelField').addClass('d-none')
 						finalTotalAmountCalculation();
 
 						$('input[name="receive_amount"]').prop('required', true);
@@ -474,14 +447,16 @@
 
 
 				$(document).ready(function () {
-
 					$(".flatpickr").flatpickr({
+						wrap: true,
+						minDate: "today",
 						altInput: true,
 						dateFormat: "Y-m-d H:i",
 						enableTime: true,
-
 					});
+
 					$(".flatpickr2").flatpickr({
+						wrap: true,
 						altInput: true,
 						dateFormat: "Y-m-d H:i",
 					});
@@ -519,7 +494,7 @@
 						</div>
 					</div>
 
-					<input type="text" name="variant_quantity[]" class="form-control newVariantQuantity" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" placeholder="@lang('quantity')" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" required>
+					<input type="text" name="variant_quantity[]" class="form-control newVariantQuantity" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" min="0" placeholder="@lang('quantity')" required>
 													<input type="text" name="package_cost[]" class="form-control totalPackingCost_${id} packingCostValue" readonly placeholder="@lang('total cost')">
 													<div class="input-group-append">
 														<div class="form-control">
@@ -564,8 +539,8 @@
 
 					<div class="col-sm-12 col-md-3 mb-3">
 					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
-					<input type="number" name="parcel_quantity[]"
-						   class="form-control" required>
+					<input type="text" name="parcel_quantity[]"
+						   class="form-control" up="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" required>
 					</div>
 
 											<div class="col-sm-12 col-md-3 mb-3">
@@ -608,7 +583,7 @@
 						<label for="total_unit"> @lang('Total Unit')</label>
 						<div class="input-group">
 							<input type="text" name="total_unit[]" class="form-control newTotalWeight" required>
-							<div class="input-group-append" readonly="">
+							<div class="input-group-append" up="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" readonly="">
 								<div class="form-control">
 									@lang('kg')
 						</div>
@@ -663,6 +638,7 @@
 					window.calculatePackingTotalPrice();
 				})
 
+
 				window.calculatePackingTotalPrice = function calculatePackingTotalPrice() {
 					let subTotal = 0;
 					$('.newVariantQuantity').each(function (key, value) {
@@ -674,7 +650,6 @@
 					let updateSubTotal = subTotal.toFixed(2);
 					$('.OCSubTotal').val(updateSubTotal);
 					$('.lastFiv').val(updateSubTotal);
-
 					totalSubCount(subTotal);
 					calculateOCDiscount();
 				}
@@ -701,6 +676,7 @@
 					calculateOCDiscount();
 				}
 
+
 				function totalSubCount() {
 					let total = parseFloat($('.firstFiv').val()) + parseFloat($('.lastFiv').val());
 					$('.OCSubTotal').val(total.toFixed(2));
@@ -714,6 +690,7 @@
 
 				function calculateOCDiscount() {
 					let discount = parseFloat($('.OCDiscount').val());
+
 					let OCSubTotal = totalSubCount();
 					if (!discount) {
 						$('.OCSubTotal').val(OCSubTotal);

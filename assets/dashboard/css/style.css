@@ -34,6 +34,9 @@ a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fal,
 a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fab {
 	margin-left: 4px;
 }
+.cursor-pointer{
+	cursor: pointer;
+}
 
 .bg-primary {
 	background-color: #6777ef !important;

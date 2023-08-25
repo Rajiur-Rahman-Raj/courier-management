@@ -70,25 +70,57 @@
 		</div>
 
 		<div class="row">
+
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="shipment_date"> @lang('Shipment Date') </label>
-				<input type="text" class="form-control shipment_date flatpickr"
-					   name="shipment_date"
-					   value="{{ old('shipment_date',request()->shipment_date) }}"
-					   placeholder="@lang('shipment date')" autocomplete="off"/>
-				<div class="invalid-feedback d-block">
-					<span>@error('shipment_date') @lang($message) @enderror</span>
+				<div class="flatpickr">
+					<div class="input-group">
+						<input type="date" placeholder="@lang('Select date-time')" class="form-control shipment_date"  name="shipment_date"
+							   value="{{ old('shipment_date',request()->shipment_date) }}" data-input>
+						<div class="input-group-append" readonly="">
+							<div class="form-control">
+								<a class="input-button cursor-pointer" title="toggle" data-toggle>
+									<i class="far fa-calendar"></i>
+								</a>
+							</div>
+
+							<div class="form-control">
+								<a class="input-button cursor-pointer" title="clear" data-clear>
+									<i class="fas fa-times"></i>
+								</a>
+							</div>
+						</div>
+						<div class="invalid-feedback d-block">
+							@error('shipment_date') @lang($message) @enderror
+						</div>
+					</div>
 				</div>
 			</div>
 
+
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="delivery_date"> @lang('Estimate Delivery Date') </label>
-				<input type="date" class="form-control start_date flatpickr2"
-					   name="delivery_date"
-					   value="{{ old('delivery_date',request()->delivery_date) }}"
-					   placeholder="@lang('Delivery date')" autocomplete="off"/>
-				<div class="invalid-feedback d-block">
-					@error('delivery_date') @lang($message) @enderror
+				<div class="flatpickr2">
+					<div class="input-group">
+						<input type="date" placeholder="@lang('Select Date')" class="form-control delivery_date"  name="delivery_date"
+							   value="{{ old('delivery_date',request()->delivery_date) }}" data-input>
+						<div class="input-group-append" readonly="">
+							<div class="form-control">
+								<a class="input-button cursor-pointer" title="toggle" data-toggle>
+									<i class="far fa-calendar"></i>
+								</a>
+							</div>
+
+							<div class="form-control">
+								<a class="input-button cursor-pointer" title="clear" data-clear>
+									<i class="fas fa-times"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="invalid-feedback d-block">
+						@error('delivery_date') @lang($message) @enderror
+					</div>
 				</div>
 			</div>
 
@@ -815,7 +847,7 @@
 			<div class="col-md-3">
 				<div class="input-group">
 					<span class="input-group-text">@lang('Discount')</span>
-					<input type="number" name="discount" value="" data-discount="{{ old('discount') }}"
+					<input type="text" name="discount" value="{{ old('discount') ?? '0' }}"
 						   class="form-control bg-white text-dark OCDiscount"
 						   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
 						   id="discount" min="0">
@@ -828,7 +860,7 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Discount Amount')</span>
 				<div class="input-group w-50">
-					<input type="number" name="discount_amount" value="0"
+					<input type="number" name="discount_amount" value="{{ old('discount_amount') ?? '0' }}"
 						   class="form-control bg-white text-dark OCDiscountAmount" data-discountamount="{{ old('discount_amount') }}"
 						   readonly>
 					<div class="input-group-append" readonly="">
@@ -844,7 +876,7 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Subtotal')</span>
 				<div class="input-group w-50">
-					<input type="number" name="sub_total" value="0"
+					<input type="number" name="sub_total" value="{{ old('sub_total') ?? '0' }}"
 						   class="form-control bg-white text-dark OCSubTotal" data-subtotal="{{ old('sub_total') }}" readonly>
 					<div class="input-group-append" readonly="">
 						<div class="form-control">
@@ -860,7 +892,7 @@
 				<div class="col-md-3 d-flex justify-content-between">
 					<span class="fw-bold">@lang('Pickup Cost')</span>
 					<div class="input-group w-50">
-						<input type="text" name="pickup_cost" value="0" data-pickupcost="{{ old('pickup_cost') }}"
+						<input type="text" name="pickup_cost" value="{{ old('pickup_cost') ?? '0' }}" data-pickupcost="{{ old('pickup_cost') }}"
 							   class="form-control bg-white text-dark OCPickupCost"
 							   readonly disabled>
 						<div class="input-group-append" readonly="">
@@ -876,7 +908,7 @@
 				<div class="col-md-3 d-flex justify-content-between">
 					<span class="fw-bold">@lang('Supply Cost')</span>
 					<div class="input-group w-50">
-						<input type="text" name="supply_cost" value="0" data-supplycost="{{ old('supply_cost') }}"
+						<input type="text" name="supply_cost" value="{{ old('supply_cost') ?? '0' }}" data-supplycost="{{ old('supply_cost') }}"
 							   class="form-control bg-white text-dark OCSupplyCost"
 							   readonly disabled>
 						<div class="input-group-append" readonly="">
@@ -893,10 +925,10 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Shipping Cost')</span>
 				<div class="input-group w-50">
-					<input type="text" name="shipping_cost" value="0" data-shippingcost="{{ old('shipping_cost') }}"
+					<input type="text" name="shipping_cost" value="{{ old('shipping_cost') ?? '0' }}" data-shippingcost="{{ old('shipping_cost') }}"
 						   class="form-control bg-white text-dark OCShippingCost"
-						   readonly disabled>
-					<div class="input-group-append" readonly="">
+						   readonly>
+					<div class="input-group-append">
 						<div class="form-control">
 							{{ $basic->currency_symbol }}
 						</div>
@@ -909,10 +941,9 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Tax')</span>
 				<div class="input-group w-50">
-					<input type="text" name="tax" value="0" data-tax="{{ old('tax') }}"
-						   class="form-control bg-white text-dark OCTax" readonly
-						   disabled>
-					<div class="input-group-append" readonly="">
+					<input type="text" name="tax" value="{{ old('tax') ?? '0' }}" data-tax="{{ old('tax') }}"
+						   class="form-control bg-white text-dark OCTax" readonly>
+					<div class="input-group-append">
 						<div class="form-control">
 							{{ $basic->currency_symbol }}
 						</div>
@@ -926,10 +957,9 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Insurance')</span>
 				<div class="input-group w-50">
-					<input type="text" name="insurance" value="0" data-insurance="{{ old('insurance') }}"
-						   class="form-control bg-white text-dark OCInsurance" readonly
-						   disabled>
-					<div class="input-group-append" readonly="">
+					<input type="text" name="insurance" value="{{ old('insurance') ?? '0' }}" data-insurance="{{ old('insurance') }}"
+						   class="form-control bg-white text-dark OCInsurance" readonly>
+					<div class="input-group-append">
 						<div class="form-control">
 							{{ $basic->currency_symbol }}
 						</div>
@@ -942,9 +972,9 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Total Pay')</span>
 				<div class="input-group w-50">
-					<input type="number" name="total_pay" value="0" data-totalpay="{{ old('total_pay') }}"
+					<input type="number" name="total_pay" value="{{ old('total_pay') ?? '0' }}" data-totalpay="{{ old('total_pay') }}"
 						   class="form-control bg-white text-dark OCtotalPay" readonly>
-					<div class="input-group-append" readonly="">
+					<div class="input-group-append">
 						<div class="form-control">
 							{{ $basic->currency_symbol }}
 						</div>
@@ -953,8 +983,10 @@
 			</div>
 		</div>
 
+		<input type="hidden" name="first_fiv" class="firstFiv" value="{{ old('first_fiv') ?? '0' }}">
+		<input type="hidden" name="last_fiv" class="lastFiv" value="{{ old('last_fiv') ?? '0' }}">
 
-		<button type="submit"
-				class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
+
+		<button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 	</form>
 </div>

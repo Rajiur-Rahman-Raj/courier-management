@@ -48,10 +48,10 @@ class ShipmentRequest extends FormRequest
 
 		if ($this->input('shipment_type') === 'drop_off' || $this->input('shipment_type') === 'pickup') {
 			$rules['parcel_name'] = ['required'];
-			$rules['parcel_quantity'] = ['required', 'numeric', 'min:1'];
+			$rules['parcel_quantity'] = ['required', 'min:1'];
 			$rules['parcel_type_id'] = ['required', 'exists:parcel_types,id'];
 			$rules['parcel_unit_id'] = ['required', 'exists:parcel_units,id'];
-			$rules['total_unit'] = ['required', 'numeric'];
+			$rules['total_unit'] = ['required'];
 		}
 
 		if ($this->input('shipment_type') === 'condition') {
