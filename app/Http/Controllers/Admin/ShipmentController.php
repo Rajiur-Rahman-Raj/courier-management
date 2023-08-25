@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShipmentRequest;
-use App\Http\ListingTrait;
+use App\Traits\OCShipmentStoreTrait;
 use App\Traits\Notify;
 use App\Traits\Upload;
 use App\Models\BasicControl;
@@ -22,6 +22,7 @@ use App\Models\ShippingRateOperatorCountry;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -29,7 +30,7 @@ use Stevebauman\Purify\Facades\Purify;
 
 class ShipmentController extends Controller
 {
-	use Upload, Notify;
+	use Upload, Notify, OCShipmentStoreTrait;
 	public function shipmentList(){
 		return view('admin.shipments.index');
 	}
@@ -51,97 +52,58 @@ class ShipmentController extends Controller
 	}
 
 	public function shipmentStore(ShipmentRequest $request){
-		$OperatorCountryShipment = new OperatorCountryShipment();
 
-		$OperatorCountryShipment->shipment_type = $request->shipment_type;
-		$OperatorCountryShipment->receive_amount = $request->receive_amount != null ? $request->receive_amount : null;
-		$OperatorCountryShipment->shipment_date = $request->shipment_date;
-		$OperatorCountryShipment->delivery_date = $request->delivery_date;
-		$OperatorCountryShipment->sender_branch = $request->sender_branch;
-		$OperatorCountryShipment->receiver_branch = $request->receiver_branch;
-		$OperatorCountryShipment->sender_id = $request->sender_id;
-		$OperatorCountryShipment->receiver_id = $request->receiver_id;
-		$OperatorCountryShipment->from_state_id = $request->from_state_id;
-		$OperatorCountryShipment->from_city_id = $request->from_city_id ? $request->from_city_id : null;
-		$OperatorCountryShipment->from_area_id = $request->from_area_id ? $request->from_area_id : null;
-		$OperatorCountryShipment->to_state_id = $request->to_state_id;
-		$OperatorCountryShipment->to_city_id = $request->to_city_id ?? null;
-		$OperatorCountryShipment->to_area_id = $request->to_area_id ?? null;
-		$OperatorCountryShipment->payment_by = $request->payment_by;
-		$OperatorCountryShipment->payment_type = $request->payment_type;
-		$OperatorCountryShipment->payment_status = $request->payment_status;
+		try {
+			DB::beginTransaction();
+			$OperatorCountryShipment = new OperatorCountryShipment();
 
+			$OperatorCountryShipment->shipment_type = $request->shipment_type;
+			$OperatorCountryShipment->receive_amount = $request->receive_amount != null ? $request->receive_amount : null;
+			$OperatorCountryShipment->shipment_date = $request->shipment_date;
+			$OperatorCountryShipment->delivery_date = $request->delivery_date;
+			$OperatorCountryShipment->sender_branch = $request->sender_branch;
+			$OperatorCountryShipment->receiver_branch = $request->receiver_branch;
+			$OperatorCountryShipment->sender_id = $request->sender_id;
+			$OperatorCountryShipment->receiver_id = $request->receiver_id;
+			$OperatorCountryShipment->from_state_id = $request->from_state_id;
+			$OperatorCountryShipment->from_city_id = $request->from_city_id ? $request->from_city_id : null;
+			$OperatorCountryShipment->from_area_id = $request->from_area_id ? $request->from_area_id : null;
+			$OperatorCountryShipment->to_state_id = $request->to_state_id;
+			$OperatorCountryShipment->to_city_id = $request->to_city_id ?? null;
+			$OperatorCountryShipment->to_area_id = $request->to_area_id ?? null;
+			$OperatorCountryShipment->payment_by = $request->payment_by;
+			$OperatorCountryShipment->payment_type = $request->payment_type;
+			$OperatorCountryShipment->payment_status = $request->payment_status;
 
-		if ($request->packing_service == 'yes'){
-			$packingService = [];
-			foreach($request->package_id as $key => $value){
-				$packingService[] = [
-					'package_id' => $request->package_id[$key],
-					'variant_id' => $request->variant_id[$key],
-					'variant_price' => $request->variant_price[$key],
-					'variant_quantity' => $request->variant_quantity[$key],
-					'package_cost' => $request->package_cost[$key],
-				];
+			$this->storePackingService($request, $OperatorCountryShipment);
+
+			if ($request->shipment_type == 'condition'){
+				$OperatorCountryShipment->parcel_details = $request->parcel_details;
 			}
 
-			$OperatorCountryShipment->packing_service = $packingService;
+			$this->storeParcelInformation($request, $OperatorCountryShipment);
+
+			$OperatorCountryShipment->discount = $request->discount;
+			$OperatorCountryShipment->discount_amount = $request->discount_amount;
+			$OperatorCountryShipment->sub_total = $request->sub_total;
+			$OperatorCountryShipment->shipping_cost = $request->shipping_cost;
+			$OperatorCountryShipment->tax = $request->tax;
+			$OperatorCountryShipment->insurance = $request->insurance;
+			$OperatorCountryShipment->pickup_cost = $request->pickup_cost ?? null;
+			$OperatorCountryShipment->supply_cost = $request->supply_cost ?? null;
+			$OperatorCountryShipment->total_pay = $request->total_pay;
+			$OperatorCountryShipment->status = $request->status;
+
+			$OperatorCountryShipment->save();
+
+			$this->storeShipmentAttatchments($request, $OperatorCountryShipment);
+
+			DB::commit();
+			return back()->with('success', 'Shipment created successfully');
+		}catch (\Exception $exp){
+			DB::rollBack();
+			return back()->with('error', 'failed to create shipment');
 		}
-
-		if ($request->shipment_type == 'condition'){
-			$OperatorCountryShipment->parcel_details = $request->parcel_details;
-		}
-
-		if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup'){
-			$parcelInformation = [];
-			foreach ($request->parcel_name as $key => $value){
-				$parcelInformation[] = [
-					'parcel_name' => $request->parcel_name[$key],
-					'parcel_quantity' => $request->parcel_quantity[$key],
-					'parcel_type_id' => $request->parcel_type_id[$key],
-					'parcel_unit_id' => $request->parcel_unit_id[$key],
-					'cost_per_unit' => $request->cost_per_unit[$key],
-					'total_unit' => $request->total_unit[$key],
-					'parcel_total_cost' => $request->parcel_total_cost[$key],
-					'parcel_length' => $request->parcel_length[$key],
-					'parcel_width' => $request->parcel_width[$key],
-					'parcel_height' => $request->parcel_height[$key],
-				];
-			}
-			$OperatorCountryShipment->parcel_information = $parcelInformation;
-
-		}
-
-		$OperatorCountryShipment->discount = $request->discount;
-		$OperatorCountryShipment->discount_amount = $request->discount_amount;
-		$OperatorCountryShipment->sub_total = $request->sub_total;
-		$OperatorCountryShipment->shipping_cost = $request->shipping_cost;
-		$OperatorCountryShipment->tax = $request->tax;
-		$OperatorCountryShipment->insurance = $request->insurance;
-		$OperatorCountryShipment->pickup_cost = $request->pickup_cost ?? null;
-		$OperatorCountryShipment->supply_cost = $request->supply_cost ?? null;
-		$OperatorCountryShipment->total_pay = $request->total_pay;
-		$OperatorCountryShipment->status = $request->status;
-		$OperatorCountryShipment->save();
-
-		if ($request->hasFile('shipment_image')){
-			foreach ($request->shipment_image as $key => $value){
-				try {
-					$OCSAttatchment = new OCSAttatchment();
-					$OCSAttatchment->operator_country_shipment_id = $OperatorCountryShipment->id;
-					$image = $this->fileUpload($request->shipment_image[$key], config('location.shipmentAttatchments.path'), $OCSAttatchment->driver, null);
-					if ($image) {
-						$OCSAttatchment->image = $image['path'];
-						$OCSAttatchment->driver = $image['driver'];
-					}
-					$OCSAttatchment->save();
-				} catch (\Exception $exp) {
-					continue;
-				}
-			}
-		}
-
-		return back()->with('success', 'Shipment created successfully');
-
 	}
 
 
