@@ -65,6 +65,10 @@ return [
 		'path' => 'packing',
 		'size' => '300x300',
 	],
+	'shipmentAttatchments' => [
+		'path' => 'shipmentAttatchments',
+		'size' => '300x300',
+	],
 	'driver' => [
 		'path' => 'driver',
 		'size' => '300x250'

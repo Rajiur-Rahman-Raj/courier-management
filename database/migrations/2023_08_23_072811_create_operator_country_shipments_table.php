@@ -33,7 +33,8 @@ class CreateOperatorCountryShipmentsTable extends Migration
 			$table->string('payment_type')->nullable();
 			$table->integer('payment_status')->nullable();
 			$table->json('packing_service')->nullable();
-			$table->json('parcel_details')->nullable();
+			$table->json('parcel_information')->nullable();
+			$table->longText('parcel_details')->nullable();
 			$table->double('discount')->nullable();
 			$table->double('discount_amount')->nullable();
 			$table->double('sub_total')->nullable();

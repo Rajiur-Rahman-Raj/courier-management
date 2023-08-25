@@ -894,7 +894,7 @@
 					<div class="input-group w-50">
 						<input type="text" name="pickup_cost" value="{{ old('pickup_cost') ?? '0' }}" data-pickupcost="{{ old('pickup_cost') }}"
 							   class="form-control bg-white text-dark OCPickupCost"
-							   readonly disabled>
+							   readonly>
 						<div class="input-group-append" readonly="">
 							<div class="form-control">
 								{{ $basic->currency_symbol }}
@@ -910,7 +910,7 @@
 					<div class="input-group w-50">
 						<input type="text" name="supply_cost" value="{{ old('supply_cost') ?? '0' }}" data-supplycost="{{ old('supply_cost') }}"
 							   class="form-control bg-white text-dark OCSupplyCost"
-							   readonly disabled>
+							   readonly>
 						<div class="input-group-append" readonly="">
 							<div class="form-control">
 								{{ $basic->currency_symbol }}

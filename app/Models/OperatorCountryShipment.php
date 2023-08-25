@@ -13,7 +13,7 @@ class OperatorCountryShipment extends Model
 
 	protected $casts = [
 		'packing_service' => 'array',
-		'parcel_details' => 'array',
+		'parcel_information' => 'array',
 	];
 
 }
