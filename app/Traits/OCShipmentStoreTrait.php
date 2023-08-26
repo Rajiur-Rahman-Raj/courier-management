@@ -3,11 +3,11 @@
 namespace App\Traits;
 
 use App\Models\OCSAttatchment;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 trait OCShipmentStoreTrait {
 	public function storePackingService($request, $OperatorCountryShipment){
-		if ($request->packing_service == 'yes'){
 			$packingService = [];
 			foreach($request->package_id as $key => $value){
 				$packingService[] = [
@@ -18,12 +18,10 @@ trait OCShipmentStoreTrait {
 					'package_cost' => $request->package_cost[$key],
 				];
 			}
-			$OperatorCountryShipment->packing_service = $packingService;
-		}
+		$OperatorCountryShipment['packing_services'] = $packingService;
 	}
 
 	public function storeParcelInformation($request, $OperatorCountryShipment){
-		if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup'){
 			$parcelInformation = [];
 			foreach ($request->parcel_name as $key => $value){
 				$parcelInformation[] = [
@@ -39,14 +37,11 @@ trait OCShipmentStoreTrait {
 					'parcel_height' => $request->parcel_height[$key],
 				];
 			}
-			$OperatorCountryShipment->parcel_information = $parcelInformation;
-
-		}
+		$OperatorCountryShipment['parcel_information'] = $parcelInformation;
 	}
 
 
 	public function storeShipmentAttatchments($request, $OperatorCountryShipment){
-		if ($request->hasFile('shipment_image')){
 			foreach ($request->shipment_image as $key => $value){
 				try {
 					$OCSAttatchment = new OCSAttatchment();
@@ -58,10 +53,58 @@ trait OCShipmentStoreTrait {
 					}
 					$OCSAttatchment->save();
 				} catch (\Exception $exp) {
-					DB::rollBack();
-					return back()->with('error', 'could not upload image');
+					return [
+						'status' => 'error',
+						'message' => 'could not upload image',
+					];
 				}
 			}
-		}
+
+			return [
+				'status' => 'success',
+			];
 	}
+
+
+	public function walletPaymentCalculation($request, $shipmentId){
+		$paymnetBy = $request->payment_by;
+		if ($paymnetBy == 1){
+			$paymentFrom = $request->sender_id;
+		}else{
+			$paymentFrom = $request->receiver_id;
+		}
+
+		$amount = $request->total_pay;
+		$user = User::findOrFail($paymentFrom);
+		$userBalance = $user->balance;
+		if ($amount > $userBalance) {
+			return back()->with('error', 'Insufficient Balance');
+		}
+
+		$new_balance = getAmount($userBalance - $amount);
+		$user->balance = $new_balance;
+		$user->save();
+		$basic = basicControl();
+
+		$msg = [
+			'currency' => $basic->currency_symbol,
+			'amount' => $amount,
+			'shipment_id' => $shipmentId,
+		];
+
+		$action = [
+			"link" => "#",
+			"icon" => "fa fa-money-bill-alt text-white"
+		];
+
+		$this->userPushNotification($user, 'PAYMENT_FOR_COURIER_SHIPMENT', $msg, $action);
+
+		$this->sendMailSms($user, $type = 'PAYMENT_FOR_COURIER_SHIPMENT', [
+			'amount' => getAmount($amount),
+			'currency' => $basic->currency_symbol,
+			'shipment_id' => $shipmentId,
+		]);
+
+	}
+
 }

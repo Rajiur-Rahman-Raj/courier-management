@@ -161,7 +161,7 @@
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="sender_id"> @lang('Sender')</label>
 				<select name="sender_id"
-						class="form-control @error('sender_id') is-invalid @enderror select2 select-client">
+						class="form-control @error('sender_id') is-invalid @enderror select2 select-client getSender">
 					<option value="" disabled selected>@lang('Select Sender')</option>
 
 					@foreach($senders as $sender)
@@ -177,7 +177,7 @@
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="receiver_id"> @lang('Receiver')</label>
 				<select name="receiver_id"
-						class="form-control @error('receiver_id') is-invalid @enderror select2 select-client">
+						class="form-control @error('receiver_id') is-invalid @enderror select2 select-client getReceiver">
 					<option value="" disabled selected>@lang('Select Receiver')</option>
 					@foreach($receivers as $receiver)
 						<option
@@ -267,7 +267,7 @@
 			<div class="col-sm-12 col-md-4 mb-3">
 				<label for="payment_by"> @lang('Payment By')</label>
 				<select name="payment_by"
-						class="form-control @error('payment_by') is-invalid @enderror">
+						class="form-control @error('payment_by') is-invalid @enderror payment_by">
 					<option value="1" {{ old('payment_by') == '1' ? 'selected' : '' }}>@lang('Sender')</option>
 					<option value="2" {{ old('payment_by') == '2' ? 'selected' : '' }}>@lang('Receiver')</option>
 				</select>

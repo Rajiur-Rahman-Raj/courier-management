@@ -20,6 +20,7 @@ use App\Models\ShippingDate;
 use App\Models\ShippingRateInternationally;
 use App\Models\ShippingRateOperatorCountry;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -31,11 +32,14 @@ use Stevebauman\Purify\Facades\Purify;
 class ShipmentController extends Controller
 {
 	use Upload, Notify, OCShipmentStoreTrait;
-	public function shipmentList(){
+
+	public function shipmentList()
+	{
 		return view('admin.shipments.index');
 	}
 
-	public function createShipment(){
+	public function createShipment()
+	{
 		$data['shipmentTypeList'] = config('shipmentTypeList');
 
 		$data['allBranches'] = Branch::where('status', 1)->get();
@@ -51,64 +55,92 @@ class ShipmentController extends Controller
 		return view('admin.shipments.create', $data);
 	}
 
-	public function shipmentStore(ShipmentRequest $request){
-
+	public function shipmentStore(ShipmentRequest $request)
+	{
 		try {
 			DB::beginTransaction();
 			$OperatorCountryShipment = new OperatorCountryShipment();
+			$shipmentId = strRandom();
+			$fillData = $request->only($OperatorCountryShipment->getFillable());
+			$fillData['shipment_id'] = $shipmentId;
+			$fillData['receive_amount'] = $request->receive_amount != null ? $request->receive_amount : null;
+			$fillData['from_city_id'] = $request->from_city_id ?? null;
+			$fillData['from_area_id'] = $request->from_area_id ?? null;
+			$fillData['to_city_id'] = $request->to_city_id ?? null;
+			$fillData['to_area_id'] = $request->to_area_id ?? null;
 
-			$OperatorCountryShipment->shipment_type = $request->shipment_type;
-			$OperatorCountryShipment->receive_amount = $request->receive_amount != null ? $request->receive_amount : null;
-			$OperatorCountryShipment->shipment_date = $request->shipment_date;
-			$OperatorCountryShipment->delivery_date = $request->delivery_date;
-			$OperatorCountryShipment->sender_branch = $request->sender_branch;
-			$OperatorCountryShipment->receiver_branch = $request->receiver_branch;
-			$OperatorCountryShipment->sender_id = $request->sender_id;
-			$OperatorCountryShipment->receiver_id = $request->receiver_id;
-			$OperatorCountryShipment->from_state_id = $request->from_state_id;
-			$OperatorCountryShipment->from_city_id = $request->from_city_id ? $request->from_city_id : null;
-			$OperatorCountryShipment->from_area_id = $request->from_area_id ? $request->from_area_id : null;
-			$OperatorCountryShipment->to_state_id = $request->to_state_id;
-			$OperatorCountryShipment->to_city_id = $request->to_city_id ?? null;
-			$OperatorCountryShipment->to_area_id = $request->to_area_id ?? null;
-			$OperatorCountryShipment->payment_by = $request->payment_by;
-			$OperatorCountryShipment->payment_type = $request->payment_type;
-			$OperatorCountryShipment->payment_status = $request->payment_status;
-
-			$this->storePackingService($request, $OperatorCountryShipment);
-
-			if ($request->shipment_type == 'condition'){
-				$OperatorCountryShipment->parcel_details = $request->parcel_details;
+			if ($request->packing_service == 'yes'){
+				$this->storePackingService($request, $OperatorCountryShipment);
+			}else{
+				$fillData['packing_services'] = null;
 			}
 
-			$this->storeParcelInformation($request, $OperatorCountryShipment);
+			if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup'){
+				$this->storeParcelInformation($request, $OperatorCountryShipment);
+			}else{
+				$fillData['parcel_information'] = null;
+			}
 
-			$OperatorCountryShipment->discount = $request->discount;
-			$OperatorCountryShipment->discount_amount = $request->discount_amount;
-			$OperatorCountryShipment->sub_total = $request->sub_total;
-			$OperatorCountryShipment->shipping_cost = $request->shipping_cost;
-			$OperatorCountryShipment->tax = $request->tax;
-			$OperatorCountryShipment->insurance = $request->insurance;
-			$OperatorCountryShipment->pickup_cost = $request->pickup_cost ?? null;
-			$OperatorCountryShipment->supply_cost = $request->supply_cost ?? null;
-			$OperatorCountryShipment->total_pay = $request->total_pay;
-			$OperatorCountryShipment->status = $request->status;
+			if ($request->shipment_type == 'condition') {
+				$fillData['parcel_details'] = $request->parcel_details;
+			}
 
-			$OperatorCountryShipment->save();
+			if ($request->payment_type == 'wallet') {
+				$this->walletPaymentCalculation($request, $shipmentId);
+			}
 
-			$this->storeShipmentAttatchments($request, $OperatorCountryShipment);
+			$OperatorCountryShipment->fill($fillData)->save();
+
+			if ($request->hasFile('shipment_image')){
+				$getShipmentAttachments = $this->storeShipmentAttatchments($request, $OperatorCountryShipment);
+				if ($getShipmentAttachments['status'] == 'error'){
+					throw new \Exception($getShipmentAttachments['message']);
+				}
+			}
 
 			DB::commit();
+
+			$basic = basicControl();
+			$amount = $request->total_pay;
+			$sender = User::findOrFail($request->sender_id);
+			$date = Carbon::now();
+			$msg = [
+				'currency' => $basic->currency_symbol,
+				'amount' => $amount,
+				'shipment_id' => $shipmentId,
+			];
+
+			$action = [
+				"link" => "#",
+				"icon" => "fa fa-money-bill-alt text-white"
+			];
+
+			$adminAction = [
+				"link" => "#",
+				"icon" => "fa fa-money-bill-alt text-white"
+			];
+
+			$this->userPushNotification($sender, 'USER_NOTIFY_COURIER_SHIPMENT', $msg, $action);
+			$this->adminPushNotification('ADMIN_NOTIFY_COURIER_SHIPMENT', $msg, $adminAction);
+
+			$this->sendMailSms($sender, $type = 'USER_MAIL_COURIER_SHIPMENT', [
+				'amount' => getAmount($amount),
+				'currency' => $basic->currency_symbol,
+				'shipment_id' => $shipmentId,
+				'date' => $date,
+			]);
+
 			return back()->with('success', 'Shipment created successfully');
-		}catch (\Exception $exp){
+
+		} catch (\Exception $exp) {
 			DB::rollBack();
-			return back()->with('error', 'failed to create shipment');
+			return back()->with('error', $exp->getMessage());
 		}
 	}
 
 
-
-	public function shipmentTypeList(){
+	public function shipmentTypeList()
+	{
 		$data['allShipmentType'] = config('shipmentTypeList');
 		return view('admin.shipmentType.index', $data);
 	}
@@ -138,7 +170,8 @@ class ShipmentController extends Controller
 		return back();
 	}
 
-	public function defaultRate(){
+	public function defaultRate()
+	{
 		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
 		$data['allShippingDates'] = ShippingDate::where('status', 1)->get();
 		$data['allParcelTypes'] = ParcelType::where('status', 1)->get();
@@ -147,7 +180,8 @@ class ShipmentController extends Controller
 		return view('admin.shippingRate.defaultRate', $data);
 	}
 
-	public function defaultShippingRateOperatorCountryUpdate(Request $request, $id){
+	public function defaultShippingRateOperatorCountryUpdate(Request $request, $id)
+	{
 
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -190,7 +224,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Default rate update successfully');
 	}
 
-	public function defaultShippingRateInternationallyUpdate(Request $request, $id){
+	public function defaultShippingRateInternationallyUpdate(Request $request, $id)
+	{
 
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -230,7 +265,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Default rate internationally update successfully');
 	}
 
-	public function operatorCountryRate(Request $request, $type=null){
+	public function operatorCountryRate(Request $request, $type = null)
+	{
 		$operatorCountryShippingRateManagement = config('operatorCountryShippingRateManagement');
 		$types = array_keys($operatorCountryShippingRateManagement);
 		abort_if(!in_array($type, $types), 404);
@@ -251,7 +287,8 @@ class ShipmentController extends Controller
 		return view($operatorCountryShippingRateManagement[$type]['shipping_rate_view'], $data);
 	}
 
-	public function operatorCountryShowRate(Request $request, $type=null, $id=null){
+	public function operatorCountryShowRate(Request $request, $type = null, $id = null)
+	{
 		$search = $request->all();
 		$operatorCountryShowShippingRateManagement = config('operatorCountryShowShippingRateManagement');
 		$types = array_keys($operatorCountryShowShippingRateManagement);
@@ -291,13 +328,13 @@ class ShipmentController extends Controller
 					return $q->whereRaw("name REGEXP '[[:<:]]{$search['to_area']}[[:>:]]'");
 				});
 			})
-			->when($type == 'state-list', function ($query){
+			->when($type == 'state-list', function ($query) {
 				$query->whereNull(['from_city_id', 'from_area_id']);
 			})
-			->when($type == 'city-list', function ($query){
+			->when($type == 'city-list', function ($query) {
 				$query->whereNotNull('from_city_id')->whereNull('from_area_id');
 			})
-			->when($type == 'area-list', function ($query){
+			->when($type == 'area-list', function ($query) {
 				$query->whereNotNull('from_area_id');
 			})
 			->where('parcel_type_id', $id)
@@ -307,7 +344,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function stateRateUpdate(Request $request, $id){
+	public function stateRateUpdate(Request $request, $id)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
@@ -349,7 +387,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate Update successfully');
 	}
 
-	public function cityRateUpdate(Request $request, $id){
+	public function cityRateUpdate(Request $request, $id)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
@@ -397,7 +436,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate Update successfully');
 	}
 
-	public function areaRateUpdate(Request $request, $id){
+	public function areaRateUpdate(Request $request, $id)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
@@ -452,15 +492,16 @@ class ShipmentController extends Controller
 	}
 
 
-
-	public function createShippingRateOperatorCountry(){
+	public function createShippingRateOperatorCountry()
+	{
 		$data['allCountries'] = Country::where('status', 1)->get();
 		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
 		$data['allParcelTypes'] = ParcelType::where('status', 1)->get();
 		return view('admin.shippingRate.operatorCountry.create', $data);
 	}
 
-	public function shippingRateOperatorCountryStore(Request $request, $type=null){
+	public function shippingRateOperatorCountryStore(Request $request, $type = null)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
@@ -482,12 +523,12 @@ class ShipmentController extends Controller
 			'parcel_type_id.required' => 'Please select parcel type',
 		];
 
-		if ($type == 'city-wise'){
+		if ($type == 'city-wise') {
 			$rules['from_city_id'] = ['required', 'exists:cities,id'];
 			$rules['to_city_id'] = ['required', 'exists:cities,id'];
 			$message['from_city_id.required'] = 'please select from city';
 			$message['to_city_id.required'] = 'please select to city';
-		}elseif ($type == 'area-wise'){
+		} elseif ($type == 'area-wise') {
 			$rules['from_area_id'] = ['required', 'exists:areas,id'];
 			$rules['to_area_id'] = ['required', 'exists:areas,id'];
 			$message['from_area_id.required'] = 'please select from area';
@@ -512,10 +553,10 @@ class ShipmentController extends Controller
 		$operatorCountry->insurance = $request->insurance == null ? 0 : $request->insurance;
 		$operatorCountry->cash_on_delivery_cost = $request->cash_on_delivery_cost == null ? 0 : $request->cash_on_delivery_cost;
 
-		if ($type == 'city-wise'){
+		if ($type == 'city-wise') {
 			$operatorCountry->from_city_id = $request->from_city_id;
 			$operatorCountry->to_city_id = $request->to_city_id;
-		}elseif ($type == 'area-wise'){
+		} elseif ($type == 'area-wise') {
 			$operatorCountry->from_city_id = $request->from_city_id;
 			$operatorCountry->to_city_id = $request->to_city_id;
 			$operatorCountry->from_area_id = $request->from_area_id;
@@ -528,7 +569,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function internationallyRate(Request $request, $type=null){
+	public function internationallyRate(Request $request, $type = null)
+	{
 		$internationallyShippingRateManagement = config('internationallyShippingRateManagement');
 		$types = array_keys($internationallyShippingRateManagement);
 		abort_if(!in_array($type, $types), 404);
@@ -550,13 +592,15 @@ class ShipmentController extends Controller
 	}
 
 
-	public function createShippingRateInternationally(){
+	public function createShippingRateInternationally()
+	{
 		$data['allCountries'] = Country::where('status', 1)->get();
 		$data['allParcelTypes'] = ParcelType::where('status', 1)->get();
 		return view('admin.shippingRate.internationally.create', $data);
 	}
 
-	public function shippingRateInternationallyStore(Request $request, $type=null){
+	public function shippingRateInternationallyStore(Request $request, $type = null)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
@@ -575,12 +619,12 @@ class ShipmentController extends Controller
 			'parcel_type_id.required' => 'Please select parcel type',
 		];
 
-		if ($type == 'state-wise'){
+		if ($type == 'state-wise') {
 			$rules['from_state_id'] = ['required', 'exists:states,id'];
 			$rules['to_state_id'] = ['required', 'exists:states,id'];
 			$message['from_state_id.required'] = 'please select from state';
 			$message['to_state_id.required'] = 'please select to state';
-		}elseif ($type == 'city-wise'){
+		} elseif ($type == 'city-wise') {
 			$rules['from_city_id'] = ['required', 'exists:cities,id'];
 			$rules['to_city_id'] = ['required', 'exists:cities,id'];
 			$message['from_city_id.required'] = 'please select from city';
@@ -603,10 +647,10 @@ class ShipmentController extends Controller
 		$internationallyRate->tax = $request->tax == null ? 0 : $request->tax;
 		$internationallyRate->insurance = $request->insurance == null ? 0 : $request->insurance;
 
-		if ($type == 'state-wise'){
+		if ($type == 'state-wise') {
 			$internationallyRate->from_state_id = $request->from_state_id;
 			$internationallyRate->to_state_id = $request->to_state_id;
-		}elseif ($type == 'city-wise'){
+		} elseif ($type == 'city-wise') {
 			$internationallyRate->from_state_id = $request->from_state_id;
 			$internationallyRate->to_state_id = $request->to_state_id;
 			$internationallyRate->from_city_id = $request->from_city_id;
@@ -618,7 +662,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate added successfully');
 	}
 
-	public function internationallyShowRate(Request $request, $type=null, $id=null){
+	public function internationallyShowRate(Request $request, $type = null, $id = null)
+	{
 		$search = $request->all();
 		$internationallyShowShippingRateManagement = config('internationallyShowShippingRateManagement');
 		$types = array_keys($internationallyShowShippingRateManagement);
@@ -659,13 +704,13 @@ class ShipmentController extends Controller
 					return $q->whereRaw("name REGEXP '[[:<:]]{$search['to_city']}[[:>:]]'");
 				});
 			})
-			->when($type == 'country-list', function ($query){
+			->when($type == 'country-list', function ($query) {
 				$query->whereNull(['from_state_id', 'from_city_id']);
 			})
-			->when($type == 'state-list', function ($query){
+			->when($type == 'state-list', function ($query) {
 				$query->whereNotNull('from_state_id')->whereNull('from_city_id');
 			})
-			->when($type == 'city-list', function ($query){
+			->when($type == 'city-list', function ($query) {
 				$query->whereNotNull('from_city_id');
 			})
 			->where('parcel_type_id', $id)
@@ -675,7 +720,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function countryRateUpdateInternationally(Request $request, $id){
+	public function countryRateUpdateInternationally(Request $request, $id)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
@@ -715,7 +761,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate Update successfully');
 	}
 
-	public function stateRateUpdateInternationally(Request $request, $id){
+	public function stateRateUpdateInternationally(Request $request, $id)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 
@@ -763,7 +810,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function cityRateUpdateInternationally(Request $request, $id){
+	public function cityRateUpdateInternationally(Request $request, $id)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 
@@ -817,8 +865,8 @@ class ShipmentController extends Controller
 	}
 
 
-
-	public function shippingDateStore(Request $request){
+	public function shippingDateStore(Request $request)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [
@@ -848,7 +896,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function OCGetSelectedLocationShipRate(Request $request){
+	public function OCGetSelectedLocationShipRate(Request $request)
+	{
 		$operatorCountryId = BasicControl::first('operator_country');
 		$parcelTypeId = $request->parcelTypeId;
 		if ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->fromAreaId == null) {

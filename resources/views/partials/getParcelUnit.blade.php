@@ -99,6 +99,7 @@
 		window.OCGetShippingRates();
 	})
 
+
 	window.OCGetShippingRates = function OCGetShippingRates(){
 		let fromStateId = $('.selectedFromState').val();
 		let fromCityId = $('.selectedFromCity').val();
@@ -108,10 +109,10 @@
 		let toCityId   = $('.selectedToCity').val();
 		let toAreaId   = $('.selectedToArea').val();
 
+
 		let totalShippingCost = 0;
 		let totalTax = 0;
 		let totalInsurance = 0;
-
 
 		$('.OCParcelTypeWiseShippingRate').each(function (key, value){
 			let parcelTypeId = $(value).val();

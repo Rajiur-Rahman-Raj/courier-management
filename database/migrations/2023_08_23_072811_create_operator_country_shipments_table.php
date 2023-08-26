@@ -16,6 +16,7 @@ class CreateOperatorCountryShipmentsTable extends Migration
         Schema::create('operator_country_shipments', function (Blueprint $table) {
 			$table->id();
 			$table->string('shipment_type')->nullable();
+			$table->string('shipment_id')->nullable();
 			$table->double('receive_amount')->nullable();
 			$table->timestamp('shipment_date')->nullable();
 			$table->timestamp('delivery_date')->nullable();
@@ -32,7 +33,7 @@ class CreateOperatorCountryShipmentsTable extends Migration
 			$table->integer('payment_by')->nullable();
 			$table->string('payment_type')->nullable();
 			$table->integer('payment_status')->nullable();
-			$table->json('packing_service')->nullable();
+			$table->json('packing_services')->nullable();
 			$table->json('parcel_information')->nullable();
 			$table->longText('parcel_details')->nullable();
 			$table->double('discount')->nullable();
