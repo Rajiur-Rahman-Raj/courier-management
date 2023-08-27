@@ -28,12 +28,17 @@
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Shipments')</span>
 					</a>
 					<ul class="dropdown-menu">
-
 						<li class="{{ activeMenu(['shipmentList']) }}">
-							<a class="nav-link " href="{{ route('shipmentList') }}">
+							<a class="nav-link " href="{{ route('shipmentList', 'operator_country') }}">
 								@lang('Shipment List')
 							</a>
 						</li>
+
+{{--						<li class="{{ activeMenu(['operatorCountryRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate']) }}">--}}
+{{--							<a class="nav-link " href="{{ route('operatorCountryRate', 'state') }}">--}}
+{{--								@lang('Operator Country Rate')--}}
+{{--							</a>--}}
+{{--						</li>--}}
 
 					</ul>
 				</li>

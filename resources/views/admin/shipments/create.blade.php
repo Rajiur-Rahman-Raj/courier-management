@@ -54,7 +54,7 @@
 							</ul>
 
 							<div class="tab-content mt-2" id="myTabContent">
-								@include('partials.operatorCountryShipmentForm')
+								@include('partials.OCCShipmentForm')
 								{{--@include('partials.internationallyShipmentForm')--}}
 							</div>
 						</div>

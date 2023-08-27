@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShipmentRequest;
+use App\Models\Shipment;
 use App\Traits\OCShipmentStoreTrait;
 use App\Traits\Notify;
 use App\Traits\Upload;
@@ -33,9 +34,23 @@ class ShipmentController extends Controller
 {
 	use Upload, Notify, OCShipmentStoreTrait;
 
-	public function shipmentList()
+	public function shipmentList(Request $request, $type = null)
 	{
-		return view('admin.shipments.index');
+		$shipmentManagement = config('shipmentManagement');
+		$types = array_keys($shipmentManagement);
+		abort_if(!in_array($type, $types), 404);
+		$data['title'] = $shipmentManagement[$type]['title'];
+
+		$data['allShipments'] = Shipment::with('senderBranch','receiverBranch','sender','receiver','fromState','fromCity','fromArea','toState','toCity','toArea')
+		->when($type == 'operator_country', function ($query){
+			$query->where('shipment_identifier', 1);
+		})
+		->when($type == 'internationally', function ($query){
+			$query->where('shipment_identifier', 2);
+		})
+		->paginate(config('basic.paginate'));
+
+		return view($shipmentManagement[$type]['shipment_view'], $data);
 	}
 
 	public function createShipment()
@@ -55,13 +70,30 @@ class ShipmentController extends Controller
 		return view('admin.shipments.create', $data);
 	}
 
+	public function editShipment($id){
+		$data['shipmentTypeList'] = config('shipmentTypeList');
+		$data['allBranches'] = Branch::where('status', 1)->get();
+		$data['users'] = User::where('user_type', '!=', '0')->get();
+		$data['senders'] = $data['users']->where('user_type', 1);
+		$data['receivers'] = $data['users']->where('user_type', 2);
+		$data['allCountries'] = Country::where('status', 1)->get();
+		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
+		$data['packageList'] = Package::where('status', 1)->get();
+		$data['parcelTypes'] = ParcelType::where('status', 1)->get();
+		$data['defaultShippingRateOC'] = DefaultShippingRateOperatorCountry::first();
+
+		$data['singleShipment'] = Shipment::findOrFail($id);
+
+		return view('admin.shipments.edit', $data);
+	}
+
 	public function shipmentStore(ShipmentRequest $request)
 	{
 		try {
 			DB::beginTransaction();
-			$OperatorCountryShipment = new OperatorCountryShipment();
+			$shipment = new Shipment();
 			$shipmentId = strRandom();
-			$fillData = $request->only($OperatorCountryShipment->getFillable());
+			$fillData = $request->only($shipment->getFillable());
 			$fillData['shipment_id'] = $shipmentId;
 			$fillData['receive_amount'] = $request->receive_amount != null ? $request->receive_amount : null;
 			$fillData['from_city_id'] = $request->from_city_id ?? null;
@@ -70,13 +102,13 @@ class ShipmentController extends Controller
 			$fillData['to_area_id'] = $request->to_area_id ?? null;
 
 			if ($request->packing_service == 'yes'){
-				$this->storePackingService($request, $OperatorCountryShipment);
+				$this->storePackingService($request, $shipment);
 			}else{
 				$fillData['packing_services'] = null;
 			}
 
 			if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup'){
-				$this->storeParcelInformation($request, $OperatorCountryShipment);
+				$this->storeParcelInformation($request, $shipment);
 			}else{
 				$fillData['parcel_information'] = null;
 			}
@@ -89,10 +121,10 @@ class ShipmentController extends Controller
 				$this->walletPaymentCalculation($request, $shipmentId);
 			}
 
-			$OperatorCountryShipment->fill($fillData)->save();
+			$shipment->fill($fillData)->save();
 
 			if ($request->hasFile('shipment_image')){
-				$getShipmentAttachments = $this->storeShipmentAttatchments($request, $OperatorCountryShipment);
+				$getShipmentAttachments = $this->storeShipmentAttatchments($request, $shipment);
 				if ($getShipmentAttachments['status'] == 'error'){
 					throw new \Exception($getShipmentAttachments['message']);
 				}
