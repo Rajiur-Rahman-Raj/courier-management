@@ -1,6 +1,4 @@
-<div class="tab-pane fade show active"
-	 id="tab1" role="tabpanel">
-	<form method="post" action="{{ route('shipmentStore') }}"
+<form method="post" action="{{ route('shipmentStore') }}"
 		  class="mt-4" enctype="multipart/form-data">
 		@csrf
 		<div class="row mb-3">
@@ -988,4 +986,3 @@
 
 		<button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 	</form>
-</div>

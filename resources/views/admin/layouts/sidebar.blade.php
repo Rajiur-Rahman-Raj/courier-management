@@ -23,23 +23,16 @@
 
 			@if(checkPermission('manage_shipments') == true)
 				<li class="menu-header">@lang('Manage Shipments')</li>
-				<li class="dropdown {{ activeMenu(['branchList', 'branchManagerList', 'branchEmployeeList', 'createEmployee', 'branchEmployeeEdit', 'createBranchManager', 'branchManagerEdit', 'createBranch', 'branchEdit', 'showBranchProfile']) }}">
+				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Shipments')</span>
 					</a>
 					<ul class="dropdown-menu">
-						<li class="{{ activeMenu(['shipmentList']) }}">
-							<a class="nav-link " href="{{ route('shipmentList', 'operator_country') }}">
+						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment']) }}">
+							<a class="nav-link " href="{{ route('shipmentList', 'operator-country') }}">
 								@lang('Shipment List')
 							</a>
 						</li>
-
-{{--						<li class="{{ activeMenu(['operatorCountryRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate']) }}">--}}
-{{--							<a class="nav-link " href="{{ route('operatorCountryRate', 'state') }}">--}}
-{{--								@lang('Operator Country Rate')--}}
-{{--							</a>--}}
-{{--						</li>--}}
-
 					</ul>
 				</li>
 			@endif

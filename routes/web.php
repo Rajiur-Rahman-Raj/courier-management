@@ -128,9 +128,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 	// Manage Shipments
 	Route::middleware('module:manage_shipments')->group(function () {
 		Route::get('shipment-list/{type?}', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
-		Route::get('create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
+		Route::get('{type?}/create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
 		Route::get('edit-shipment/{id}', [ShipmentController::class, 'editShipment'])->name('editShipment');
 		Route::post('shipment-store', [ShipmentController::class, 'shipmentStore'])->name('shipmentStore');
+		Route::post('shipment-update/{id}', [ShipmentController::class, 'shipmentUpdate'])->name('shipmentUpdate');
 
 		Route::post('oc-get-selected-location-ship-rate', [ShipmentController::class, 'OCGetSelectedLocationShipRate'])->name('OCGetSelectedLocationShipRate');
 	});

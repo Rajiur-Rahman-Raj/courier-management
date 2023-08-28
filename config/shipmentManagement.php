@@ -1,13 +1,13 @@
 <?php
 
 	return [
-		'operator_country' => [
+		'operator-country' => [
 			'title' => 'Operator Country Shipment List',
-			'shipment_view' => 'admin.shipments.operatorCountry'
+			'shipment_view' => 'admin.shipments.operatorCountryList'
 		],
 
 		'internationally' => [
 			'title' => 'Internationally Shipment List',
-			'shipment_view' => 'admin.shipments.internationally'
+			'shipment_view' => 'admin.shipments.internationallyList'
 		],
 	];
