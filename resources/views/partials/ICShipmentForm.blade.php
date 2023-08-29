@@ -1,4 +1,4 @@
-<form method="post" action="{{ route('shipmentStore') }}"
+<form method="post" action="{{ route('shipmentStore', 'internationally') }}"
 		  class="mt-4" enctype="multipart/form-data">
 		@csrf
 		<div class="row mb-3">
@@ -19,7 +19,7 @@
 					<input type="radio" id="shipmentTypePickup"
 						   name="shipment_type"
 						   value="pickup"
-						   data-resource="{{ $defaultShippingRateOC }}"
+						   data-resource="{{ $defaultShippingRateInternationally }}"
 						   class="custom-control-input" @if(old('shipment_type') === 'pickup') checked @endif>
 					<label class="custom-control-label"
 						   for="shipmentTypePickup">@lang($shipmentTypeList[1]['shipment_type'])
@@ -191,13 +191,22 @@
 			</div>
 
 			<div class="col-sm-12 col-md-3 mb-3">
-				<label for="from_state_id">@lang('From State') </label>
-				<select name="from_state_id"
-						class="form-control @error('from_state_id') is-invalid @enderror select2 select2State selectedFromState">
-					<option value="" selected disabled>@lang('Select State')</option>
-					@foreach(optional($basicControl->operatorCountry)->state() as $state)
-						<option value="{{ $state->id }}" {{ old('from_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
+				<label for="from_country_id">@lang('From Country') </label>
+				<select name="from_country_id"
+						class="form-control @error('from_country_id') is-invalid @enderror select2 select2Country selectedFromCountry">
+					<option value="" selected disabled>@lang('Select Country')</option>
+					@foreach($allCountries as $country)
+						<option value="{{ $country->id }}" {{ old('from_country_id') == $country->id ? 'selected' : ''}}>@lang($country->name)</option>
 					@endforeach
+				</select>
+				<div class="invalid-feedback">
+					@error('from_country_id') @lang($message) @enderror
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-3 mb-3">
+				<label for="from_state_id">@lang('Select State') <span class="text-dark  font-weight-bold">(@lang('optional'))</span></label>
+				<select name="from_state_id" class="form-control @error('from_state_id') is-invalid @enderror select2 select2State selectedFromState">
 				</select>
 				<div class="invalid-feedback">
 					@error('from_state_id') @lang($message) @enderror
@@ -216,24 +225,23 @@
 			</div>
 
 			<div class="col-sm-12 col-md-3 mb-3">
-				<label for="from_area_id">@lang('Select Area') <span
-						class="text-dark font-weight-bold">(@lang('optional'))</span></label>
-				<select name="from_area_id"
-						class="form-control @error('from_area_id') is-invalid @enderror select2 select2Area selectedFromArea" data-oldfromareaid="{{ old('from_area_id') }}">
+				<label for="to_country_id">@lang('To Country') </label>
+				<select name="to_country_id"
+						class="form-control @error('to_country_id') is-invalid @enderror select2 select2Country selectedToCountry">
+					<option value="" selected disabled>@lang('Select Country')</option>
+					@foreach($allCountries as $country)
+						<option value="{{ $country->id }}" {{ old('to_country_id') == $country->id ? 'selected' : ''}}>@lang($country->name)</option>
+					@endforeach
 				</select>
 				<div class="invalid-feedback">
-					@error('from_area_id') @lang($message) @enderror
+					@error('to_country_id') @lang($message) @enderror
 				</div>
 			</div>
 
 			<div class="col-sm-12 col-md-3 mb-3">
-				<label for="to_state_id">@lang('To State') </label>
-				<select name="to_state_id"
-						class="form-control @error('to_state_id') is-invalid @enderror select2 select2State selectedToState">
-					<option value="" selected disabled>@lang('Select State')</option>
-					@foreach(optional($basicControl->operatorCountry)->state() as $state)
-						<option value="{{ $state->id }}" {{ old('to_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
-					@endforeach
+				<label for="to_state_id">@lang('Select State') <span
+						class="text-dark font-weight-bold">(@lang('optional'))</span> </label>
+				<select name="to_state_id" class="form-control @error('to_state_id') is-invalid @enderror select2 select2State selectedToState">
 				</select>
 				<div class="invalid-feedback">
 					@error('to_state_id') @lang($message) @enderror
@@ -248,19 +256,6 @@
 				</select>
 				<div class="invalid-feedback">
 					@error('to_city_id') @lang($message) @enderror
-				</div>
-			</div>
-
-
-			<div class="col-sm-12 col-md-3 mb-3">
-				<label for="to_area_id">@lang('Select Area') <span
-						class="text-dark font-weight-bold">(@lang('optional'))</span>
-				</label>
-				<select name="to_area_id"
-						class="form-control @error('to_area_id') is-invalid @enderror select2 select2Area selectedToArea" data-oldtoareaid="{{ old('to_area_id') }}">
-				</select>
-				<div class="invalid-feedback">
-					@error('to_area_id') @lang($message) @enderror
 				</div>
 			</div>
 
@@ -313,16 +308,16 @@
 				<h6 class="text-dark font-weight-bold"> @lang('Packing Service') </h6>
 				<div class="custom-control custom-radio">
 					<input type="radio" id="packingServiceOn" name="packing_service"
-						   class="custom-control-input" checked @if(old('packing_service') === 'yes') checked
+						   class="custom-control-input cursor-pointer" checked @if(old('packing_service') === 'yes') checked
 						   @endif value="yes">
-					<label class="custom-control-label"
+					<label class="custom-control-label cursor-pointer"
 						   for="packingServiceOn">@lang('Yes')</label>
 				</div>
 				<div class="custom-control custom-radio">
 					<input type="radio" id="packingServiceOff" value="no"
 						   name="packing_service"
-						   class="custom-control-input" @if(old('packing_service') === 'no') checked @endif>
-					<label class="custom-control-label"
+						   class="custom-control-input cursor-pointer" @if(old('packing_service') === 'no') checked @endif>
+					<label class="custom-control-label cursor-pointer"
 						   for="packingServiceOff">@lang('No')</label>
 				</div>
 			</div>
@@ -330,7 +325,7 @@
 			<div class="col-md-12 addPackingFieldButton d-none">
 				<div class="form-group">
 					<a href="javascript:void(0)"
-					   class="btn btn-success float-right"
+					   class="btn btn-primary float-right shipment_add_more_btn"
 					   id="packingGenerate"><i
 							class="fa fa-plus-circle"></i> {{ trans('Add More') }}
 					</a>
@@ -479,7 +474,7 @@
 				<div class="addParcelFieldButton">
 					<div class="form-group">
 						<a href="javascript:void(0)"
-						   class="btn btn-success float-right"
+						   class="btn btn-primary float-right shipment_add_more_btn"
 						   id="parcelGenerate"><i
 								class="fa fa-plus-circle"></i> {{ trans('Add More') }}
 						</a>
@@ -987,4 +982,8 @@
 
 
 		<button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
+
 	</form>
+
+
+

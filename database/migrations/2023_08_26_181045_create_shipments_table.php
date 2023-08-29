@@ -25,9 +25,11 @@ class CreateShipmentsTable extends Migration
 			$table->foreignId('receiver_branch')->index()->nullable();
 			$table->foreignId('sender_id')->index()->nullable();
 			$table->foreignId('receiver_id')->index()->nullable();
+			$table->foreignId('from_country_id')->index()->nullable();
 			$table->foreignId('from_state_id')->index()->nullable();
 			$table->foreignId('from_city_id')->index()->nullable();
 			$table->foreignId('from_area_id')->index()->nullable();
+			$table->foreignId('to_country_id')->index()->nullable();
 			$table->foreignId('to_state_id')->index()->nullable();
 			$table->foreignId('to_city_id')->index()->nullable();
 			$table->foreignId('to_area_id')->index()->nullable();

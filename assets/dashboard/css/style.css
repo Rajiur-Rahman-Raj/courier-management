@@ -27,6 +27,10 @@ a {
 	opacity: 0;
 }
 
+.shipment_add_more_btn{
+	border-radius: 30px !important;
+}
+
 a:not(.btn-social-icon):not(.btn-social):not(.page-link) .ion,
 a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fas,
 a:not(.btn-social-icon):not(.btn-social):not(.page-link) .far,

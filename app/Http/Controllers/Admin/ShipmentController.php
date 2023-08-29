@@ -28,8 +28,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Stevebauman\Purify\Facades\Purify;
+use Illuminate\Validation\Rule;
 
 class ShipmentController extends Controller
 {
@@ -74,8 +74,7 @@ class ShipmentController extends Controller
 			$data['defaultShippingRateOC'] = DefaultShippingRateOperatorCountry::firstOrFail();
 			return view('admin.shipments.operatorCountryShipmentCreate', $data);
 		}elseif ($type == 'internationally'){
-			$data['basicControl'] = BasicControl::with('operatorCountry')->first();
-			$data['defaultShippingRateOC'] = DefaultShippingRateOperatorCountry::first();
+			$data['defaultShippingRateInternationally'] = DefaultShippingRateInternationally::first();
 			return view('admin.shipments.internationallyShipmentCreate', $data);
 		}
 	}
@@ -102,15 +101,27 @@ class ShipmentController extends Controller
 		return view('admin.shipments.operatorCountryShipmentEdit', $data);
 	}
 
-	public function shipmentStore(ShipmentRequest $request)
+	public function shipmentStore(ShipmentRequest $request, $type = null)
 	{
+
 		try {
 			DB::beginTransaction();
 			$shipment = new Shipment();
-			$shipmentId = strRandom();
 			$fillData = $request->only($shipment->getFillable());
+			if ($type == 'operator-country'){
+				$fillData['shipment_identifier'] = 1;
+			}elseif($type == 'internationally'){
+				$fillData['shipment_identifier'] = 2;
+			}
+
+			$shipmentId = strRandom();
+
 			$fillData['shipment_id'] = $shipmentId;
 			$fillData['receive_amount'] = $request->receive_amount != null ? $request->receive_amount : null;
+			$fillData['from_country_id'] = $request->from_country_id ?? null;
+			$fillData['to_country_id'] = $request->to_country_id ?? null;
+			$fillData['from_state_id'] = $request->from_state_id ?? null;
+			$fillData['to_state_id'] = $request->to_state_id ?? null;
 			$fillData['from_city_id'] = $request->from_city_id ?? null;
 			$fillData['from_area_id'] = $request->from_area_id ?? null;
 			$fillData['to_city_id'] = $request->to_city_id ?? null;
@@ -1037,41 +1048,88 @@ class ShipmentController extends Controller
 
 	public function OCGetSelectedLocationShipRate(Request $request)
 	{
-		$operatorCountryId = BasicControl::first('operator_country');
 		$parcelTypeId = $request->parcelTypeId;
-		if ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->fromAreaId == null) {
-			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
-				->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
-					$query->where('parcel_type_id', $parcelTypeId);
-				})
-				->where('from_state_id', $request->fromStateId)
-				->where('to_state_id', $request->toStateId)
+
+		if ($request->fromCountryId == null && $request->toCountryId == null){
+			$operatorCountryId = BasicControl::first('operator_country');
+			if ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->fromAreaId == null) {
+				$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
+					->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
+						$query->where('parcel_type_id', $parcelTypeId);
+					})
+					->where([
+						['from_state_id', '=', $request->fromStateId],
+						['to_state_id', '=', $request->toStateId]
+					])
+					->whereNull(['from_city_id', 'to_city_id'])
+					->first();
+				return response($shippingRate);
+			} elseif ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null && $request->fromAreaId == null && $request->toAreaId == null) {
+				$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
+					->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
+						$query->where('parcel_type_id', $parcelTypeId);
+					})
+
+					->where([
+						['from_state_id', '=', $request->fromStateId],
+						['to_state_id', '=', $request->toStateId],
+						['from_city_id', '=', $request->fromCityId],
+						['to_city_id', '=', $request->toCityId]
+					])
+					->whereNull(['from_area_id', 'to_area_id'])
+					->first();
+				return response($shippingRate);
+			} elseif ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null && $request->fromAreaId != null && $request->toAreaId != null) {
+				$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
+					->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
+						$query->where('parcel_type_id', $parcelTypeId);
+					})
+					->where([
+						['from_state_id', '=', $request->fromStateId],
+						['to_state_id', '=', $request->toStateId],
+						['from_city_id', '=', $request->fromCityId],
+						['to_city_id', '=', $request->toCityId],
+						['from_area_id', '=', $request->fromAreaId],
+						['to_area_id', '=', $request->toAreaId]
+					])
+					->first();
+				return response($shippingRate);
+			}
+		}elseif ($request->fromCountryId != null && $request->toCountryId != null){
+			if ($request->fromCountryId != null && $request->toCountryId != null && $request->fromStateId == null && $request->toStateId == null) {
+				$shippingRate = ShippingRateInternationally::where([
+					['from_country_id', '=', $request->fromCountryId],
+					['to_country_id', '=', $request->toCountryId]
+				])
+				->whereNull(['from_state_id', 'to_state_id'])
+				->where('parcel_type_id', $parcelTypeId)
 				->first();
-			return response($shippingRate);
-		} elseif ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null && $request->fromAreaId == null && $request->toAreaId == null) {
-			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
-				->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
-					$query->where('parcel_type_id', $parcelTypeId);
-				})
-				->where('from_state_id', $request->fromStateId)
-				->where('to_state_id', $request->toStateId)
-				->where('from_city_id', $request->fromCityId)
-				->where('to_city_id', $request->toCityId)
+				return response($shippingRate);
+			}elseif ($request->fromCountryId != null && $request->toCountryId != null && $request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->toCityId == null) {
+				$shippingRate = ShippingRateInternationally::where([
+					['from_country_id', '=', $request->fromCountryId],
+					['to_country_id', '=', $request->toCountryId],
+					['from_state_id', '=', $request->fromStateId],
+					['to_state_id', '=', $request->toStateId],
+				])
+				->whereNull(['from_city_id', 'to_city_id'])
+				->where('parcel_type_id', $parcelTypeId)
 				->first();
-			return response($shippingRate);
-		} elseif ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null && $request->fromAreaId != null && $request->toAreaId != null) {
-			$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
-				->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
-					$query->where('parcel_type_id', $parcelTypeId);
-				})
-				->where('from_state_id', $request->fromStateId)
-				->where('to_state_id', $request->toStateId)
-				->where('from_city_id', $request->fromCityId)
-				->where('to_city_id', $request->toCityId)
-				->where('from_area_id', $request->fromAreaId)
-				->where('to_area_id', $request->toAreaId)
+				return response($shippingRate);
+			}elseif ($request->fromCountryId != null && $request->toCountryId != null && $request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null) {
+				$shippingRate = ShippingRateInternationally::where([
+					['from_country_id', '=', $request->fromCountryId],
+					['to_country_id', '=', $request->toCountryId],
+					['from_state_id', '=', $request->fromStateId],
+					['to_state_id', '=', $request->toStateId],
+					['from_city_id', '=', $request->fromCityId],
+					['to_city_id', '=', $request->toCityId],
+				])
+				->where('parcel_type_id', $parcelTypeId)
 				->first();
-			return response($shippingRate);
+				return response($shippingRate);
+			}
 		}
 	}
+
 }
