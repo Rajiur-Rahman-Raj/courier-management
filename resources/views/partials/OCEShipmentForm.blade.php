@@ -533,7 +533,7 @@
 							  id="cod_parcel_details"
 							  value="{{ old('parcel_details', $singleShipment->parcel_details) }}"
 							  placeholder="@lang('parcel details')" rows="20"
-							  cols="20">{{ $singleShipment->parcel_details }}</textarea>
+							  cols="20">{{ old('parcel_details', $singleShipment->parcel_details) }}</textarea>
 					<div class="invalid-feedback d-block">
 						@error('parcel_details') @lang($message) @enderror
 					</div>

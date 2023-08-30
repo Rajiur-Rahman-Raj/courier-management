@@ -45,7 +45,7 @@ class ShipmentRequest extends FormRequest
 			'variant_quantity' => ['required_if:packing_service, yes'],
 		];
 
-		if ($this->type == 'operator_country'){
+		if ($this->type == 'operator-country'){
 			$rules['from_state_id'] = ['required', 'exists:states,id'];
 			$rules['to_state_id'] = ['required', 'exists:states,id'];
 

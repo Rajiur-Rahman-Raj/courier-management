@@ -3,14 +3,21 @@
 
 	let oldPackingValue = "{{ $oldPackingCounts }}"
 
+	let oldFromStateIdPresent = "{{ $oldFromStateIdPresent }}"
 	let oldFromCityIdPresent = "{{ $oldFromCityIdPresent }}"
 	let oldFromAreaIdPresent = "{{ $oldFromAreaIdPresent }}"
 
+	let oldToStateIdPresent = "{{ $oldToStateIdPresent }}"
 	let oldToCityIdPresent = "{{ $oldToCityIdPresent }}"
 	let oldToAreaIdPresent = "{{ $oldToAreaIdPresent }}"
 
-
-	if (oldFromCityIdPresent == 1 && oldFromAreaIdPresent == 1) {
+	if(oldFromStateIdPresent == 1 && oldFromCityIdPresent == 1){
+		let oldFromCountryId = $('.selectedFromCountry').val();
+		let oldFromStateId = $('.selectedFromState').data('oldfromstateid');
+		let oldFromCityId = $('.selectedFromCity').data('oldfromcityid');
+		getOldFromState(oldFromCountryId, oldFromStateId);
+		getOldFromCity(oldFromStateId, oldFromCityId);
+	}else if (oldFromCityIdPresent == 1 && oldFromAreaIdPresent == 1) {
 		let oldFromStateId = $('.selectedFromState').val();
 		let oldFromCityId = $('.selectedFromCity').data('oldfromcityid');
 		let oldFromAreaId = $('.selectedFromArea').data('oldfromareaid');
@@ -22,7 +29,13 @@
 		getOldFromCity(oldFromStateId, oldFromCityId);
 	}
 
-	if (oldToCityIdPresent == 1 && oldToAreaIdPresent == 1) {
+	if(oldToStateIdPresent == 1 && oldToCityIdPresent == 1){
+		let oldToCountryId = $('.selectedToCountry').val();
+		let oldToStateId = $('.selectedToState').data('oldtostateid');
+		let oldToCityId = $('.selectedToCity').data('oldtocityid');
+		getOldToState(oldToCountryId, oldToStateId);
+		getOldToCity(oldToStateId, oldToCityId);
+	}else if (oldToCityIdPresent == 1 && oldToAreaIdPresent == 1) {
 		let oldToStateId = $('.selectedToState').val();
 		let oldToCityId = $('.selectedToCity').data('oldtocityid');
 		let oldToAreaId = $('.selectedToArea').data('oldtoareaid');
@@ -34,6 +47,25 @@
 		getOldToCity(oldToStateId, oldToCityId);
 	}
 
+	function getOldFromState(oldFromCountryId, oldFromStateId) {
+		$.ajax({
+			url: "{{ route('getSeletedCountryState') }}",
+			method: 'POST',
+			data: {
+				id: oldFromCountryId,
+			},
+			success: function (response) {
+				let responseData = response;
+				responseData.forEach(res => {
+					$('.selectedFromState').append(`<option value="${res.id}" ${res.id == oldFromStateId ? 'selected' : ''}>${res.name}</option>`)
+				})
+			},
+			error: function (xhr, status, error) {
+				console.log(error)
+			}
+		});
+	}
+
 	function getOldFromCity(oldFromStateId, oldFromCityId) {
 		$.ajax({
 			url: "{{ route('getSeletedStateCity') }}",
@@ -42,7 +74,6 @@
 				id: oldFromStateId,
 			},
 			success: function (response) {
-				$('.selectedFromCity').empty();
 				let responseData = response;
 				responseData.forEach(res => {
 					$('.selectedFromCity').append(`<option value="${res.id}" ${res.id == oldFromCityId ? 'selected' : ''}>${res.name}</option>`)
@@ -62,10 +93,29 @@
 				id: oldFromCityId,
 			},
 			success: function (response) {
-				$('.selectedFromArea').empty();
 				let responseData = response;
 				responseData.forEach(res => {
 					$('.selectedFromArea').append(`<option value="${res.id}" ${res.id == oldFromAreaId ? 'selected' : ''}>${res.name}</option>`)
+				})
+			},
+			error: function (xhr, status, error) {
+				console.log(error)
+			}
+		});
+	}
+
+
+	function getOldToState(oldToCountryId, oldToStateId) {
+		$.ajax({
+			url: "{{ route('getSeletedCountryState') }}",
+			method: 'POST',
+			data: {
+				id: oldToCountryId,
+			},
+			success: function (response) {
+				let responseData = response;
+				responseData.forEach(res => {
+					$('.selectedToState').append(`<option value="${res.id}" ${res.id == oldToStateId ? 'selected' : ''}>${res.name}</option>`)
 				})
 			},
 			error: function (xhr, status, error) {
@@ -82,7 +132,6 @@
 				id: oldToStateId,
 			},
 			success: function (response) {
-				$('.selectedFromCity').empty();
 				let responseData = response;
 				responseData.forEach(res => {
 					$('.selectedToCity').append(`<option value="${res.id}" ${res.id == oldToCityId ? 'selected' : ''}>${res.name}</option>`)
@@ -102,7 +151,6 @@
 				id: oldToCityId,
 			},
 			success: function (response) {
-				$('.selectedToArea').empty();
 				let responseData = response;
 				responseData.forEach(res => {
 					$('.selectedToArea').append(`<option value="${res.id}" ${res.id == oldToAreaId ? 'selected' : ''}>${res.name}</option>`)
@@ -635,15 +683,5 @@
 		let totalPackingCost = quantity * variantPrice;
 		$(`.totalPackingCost_${id}`).val(totalPackingCost);
 	}
-
-	let shipingImageOptions = {
-		imagesInputName: 'shipment_image',
-		label: 'Drag & Drop files here or click to browse images',
-		extensions: ['.jpg', '.jpeg', '.png'],
-		mimes: ['image/jpeg', 'image/png'],
-		maxSize: 5242880
-	};
-
-	$('.shipment_image').imageUploader(shipingImageOptions);
 
 </script>

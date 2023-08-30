@@ -1,4 +1,4 @@
-<form method="post" action="{{ route('shipmentStore') }}"
+<form method="post" action="{{ route('shipmentStore', 'operator-country') }}"
 		  class="mt-4" enctype="multipart/form-data">
 		@csrf
 		<div class="row mb-3">
@@ -496,7 +496,7 @@
 							  id="cod_parcel_details"
 							  value="{{ old('parcel_details') }}"
 							  placeholder="@lang('parcel details')" rows="20"
-							  cols="20"></textarea>
+							  cols="20">{{ old('parcel_details') }}</textarea>
 					<div class="invalid-feedback d-block">
 						@error('parcel_details') @lang($message) @enderror
 					</div>
@@ -837,7 +837,7 @@
 
 
 		<div class="border-line-area">
-			<h6 class="border-line-title">Summary</h6>
+			<h6 class="border-line-title">@lang('Summary')</h6>
 		</div>
 
 		<div class="d-flex justify-content-end shipmentsDiscount">

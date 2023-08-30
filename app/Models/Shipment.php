@@ -22,9 +22,11 @@ class Shipment extends Model
 		'receiver_branch',
 		'sender_id',
 		'receiver_id',
+		'from_country_id',
 		'from_state_id',
 		'from_city_id',
 		'from_area_id',
+		'to_country_id',
 		'to_state_id',
 		'to_city_id',
 		'to_area_id',
@@ -42,6 +44,8 @@ class Shipment extends Model
 		'insurance',
 		'pickup_cost',
 		'supply_cost',
+		'first_fiv',
+		'last_fiv',
 		'total_pay',
 		'status'
 	];
@@ -67,6 +71,10 @@ class Shipment extends Model
 		return $this->belongsTo(User::class, 'receiver_id', 'id');
 	}
 
+	public function fromCountry(){
+		return $this->belongsTo(Country::class, 'from_country_id', 'id');
+	}
+
 	public function fromState(){
 		return $this->belongsTo(State::class, 'from_state_id', 'id');
 	}
@@ -77,6 +85,10 @@ class Shipment extends Model
 
 	public function fromArea(){
 		return $this->belongsTo(Area::class, 'from_area_id', 'id');
+	}
+
+	public function toCountry(){
+		return $this->belongsTo(Country::class, 'to_country_id', 'id');
 	}
 
 	public function toState(){

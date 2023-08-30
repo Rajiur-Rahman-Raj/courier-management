@@ -37,20 +37,67 @@ class ShipmentController extends Controller
 
 	public function shipmentList(Request $request, $type = null)
 	{
+		$search = $request->all();
+		$fromDate = Carbon::parse($request->from_date);
+		$toDate = Carbon::parse($request->to_date)->addDay();
+
 		$shipmentManagement = config('shipmentManagement');
 		$types = array_keys($shipmentManagement);
 		abort_if(!in_array($type, $types), 404);
 		$data['title'] = $shipmentManagement[$type]['title'];
 
-		$data['allShipments'] = Shipment::with('senderBranch','receiverBranch','sender','receiver','fromState','fromCity','fromArea','toState','toCity','toArea')
-		->when($type == 'operator-country', function ($query){
-			$query->where('shipment_identifier', 1);
-		})
-		->when($type == 'internationally', function ($query){
-			$query->where('shipment_identifier', 2);
-		})
-		->paginate(config('basic.paginate'));
-
+		$data['allShipments'] = Shipment::with('senderBranch','receiverBranch','sender','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')
+			->when(isset($search['shipment_id']), function ($query) use ($search) {
+				return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
+			})
+			->when(isset($search['shipment_type']), function ($query) use ($search) {
+				return $query->where('shipment_type', $search['shipment_type']);
+			})
+			->when(isset($search['sender_branch']), function ($query) use ($search) {
+				return $query->whereHas('senderBranch', function ($q) use ($search) {
+					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['sender_branch']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['receiver_branch']), function ($query) use ($search) {
+				return $query->whereHas('receiverBranch', function ($q) use ($search) {
+					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['receiver_branch']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['sender']), function ($query) use ($search) {
+				return $query->whereHas('sender', function ($q) use ($search) {
+					$q->whereRaw("name REGEXP '[[:<:]]{$search['sender']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['receiver']), function ($query) use ($search) {
+				return $query->whereHas('receiver', function ($q) use ($search) {
+					$q->whereRaw("name REGEXP '[[:<:]]{$search['receiver']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['shipment_date']), function ($query) use ($search) {
+					$query->whereDate("shipment_date", $search['shipment_date']);
+			})
+			->when(isset($search['delivery_date']), function ($query) use ($search) {
+				$query->whereDate("delivery_date", $search['delivery_date']);
+			})
+			->when(isset($search['from_date']), function ($query) use ($fromDate) {
+				return $query->whereDate('created_at', '>=', $fromDate);
+			})
+			->when(isset($search['to_date']), function ($query) use ($fromDate, $toDate) {
+				return $query->whereBetween('created_at', [$fromDate, $toDate]);
+			})
+			->when(isset($search['status']) && $search['status'] == 'active', function ($query) use ($search) {
+				return $query->where('status', 1);
+			})
+			->when(isset($search['status']) && $search['status'] == 'deactive', function ($query) use ($search) {
+				return $query->where('status', 0);
+			})
+			->when($type == 'operator-country', function ($query){
+				$query->where('shipment_identifier', 1);
+			})
+			->when($type == 'internationally', function ($query){
+				$query->where('shipment_identifier', 2);
+			})
+			->paginate(config('basic.paginate'));
 		return view($shipmentManagement[$type]['shipment_view'], $data);
 	}
 
@@ -79,26 +126,32 @@ class ShipmentController extends Controller
 		}
 	}
 
-	public function editShipment($id){
+	public function editShipment($id = null, $shipmentIdentifier = null){
+
 		$data['shipmentTypeList'] = config('shipmentTypeList');
 		$data['allBranches'] = Branch::where('status', 1)->get();
 		$data['users'] = User::where('user_type', '!=', '0')->get();
 		$data['senders'] = $data['users']->where('user_type', 1);
 		$data['receivers'] = $data['users']->where('user_type', 2);
 		$data['allCountries'] = Country::where('status', 1)->get();
-		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
 		$data['packageList'] = Package::where('status', 1)->get();
 		$data['parcelTypes'] = ParcelType::where('status', 1)->get();
-		$data['defaultShippingRateOC'] = DefaultShippingRateOperatorCountry::first();
 
 		$data['singleShipment'] = Shipment::findOrFail($id);
-
 		$data['shipmentAttatchments'] = ShipmentAttatchment::where('shipment_id', $id)->get()->map(function ($image){
 			$image->src = getFile($image->driver, $image->image);
 			return $image;
 		});
 
-		return view('admin.shipments.operatorCountryShipmentEdit', $data);
+		if ($shipmentIdentifier == 1){
+			$data['basicControl'] = BasicControl::with('operatorCountry')->first();
+			$data['defaultShippingRateOC'] = DefaultShippingRateOperatorCountry::first();
+			return view('admin.shipments.operatorCountryShipmentEdit', $data);
+		}else{
+			$data['defaultShippingRateInternationally'] = DefaultShippingRateInternationally::first();
+			return view('admin.shipments.internationallyShipmentEdit', $data);
+		}
+
 	}
 
 	public function shipmentStore(ShipmentRequest $request, $type = null)
@@ -108,23 +161,19 @@ class ShipmentController extends Controller
 			DB::beginTransaction();
 			$shipment = new Shipment();
 			$fillData = $request->only($shipment->getFillable());
+			$shipmentId = strRandom();
+			$fillData['shipment_id'] = $shipmentId;
+
 			if ($type == 'operator-country'){
 				$fillData['shipment_identifier'] = 1;
+				$fillData['receive_amount'] = $request->receive_amount != null ? $request->receive_amount : null;
 			}elseif($type == 'internationally'){
 				$fillData['shipment_identifier'] = 2;
 			}
 
-			$shipmentId = strRandom();
-
-			$fillData['shipment_id'] = $shipmentId;
-			$fillData['receive_amount'] = $request->receive_amount != null ? $request->receive_amount : null;
-			$fillData['from_country_id'] = $request->from_country_id ?? null;
-			$fillData['to_country_id'] = $request->to_country_id ?? null;
-			$fillData['from_state_id'] = $request->from_state_id ?? null;
-			$fillData['to_state_id'] = $request->to_state_id ?? null;
 			$fillData['from_city_id'] = $request->from_city_id ?? null;
-			$fillData['from_area_id'] = $request->from_area_id ?? null;
 			$fillData['to_city_id'] = $request->to_city_id ?? null;
+			$fillData['from_area_id'] = $request->from_area_id ?? null;
 			$fillData['to_area_id'] = $request->to_area_id ?? null;
 
 			if ($request->packing_service == 'yes'){

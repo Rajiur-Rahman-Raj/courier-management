@@ -129,7 +129,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 	Route::middleware('module:manage_shipments')->group(function () {
 		Route::get('shipment-list/{type?}', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
 		Route::get('{type?}/create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
-		Route::get('edit-shipment/{id}', [ShipmentController::class, 'editShipment'])->name('editShipment');
+		Route::get('shipment/{id}/edit/{shipment_identifier}', [ShipmentController::class, 'editShipment'])->name('editShipment');
 		Route::post('shipment-store/{type?}', [ShipmentController::class, 'shipmentStore'])->name('shipmentStore');
 		Route::post('shipment-update/{id}', [ShipmentController::class, 'shipmentUpdate'])->name('shipmentUpdate');
 

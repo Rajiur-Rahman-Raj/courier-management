@@ -139,8 +139,8 @@
 																		<th scope="col">@lang('Shipment Type')</th>
 																		<th scope="col">@lang('Sender Branch')</th>
 																		<th scope="col">@lang('Receiver Branch')</th>
-																		<th scope="col">@lang('From State')</th>
-																		<th scope="col">@lang('To State')</th>
+																		<th scope="col">@lang('From Country')</th>
+																		<th scope="col">@lang('To Country')</th>
 																		<th scope="col">@lang('Total Cost')</th>
 																		<th scope="col">@lang('Payment Status')</th>
 																		<th scope="col">@lang('Shipment Date')</th>
@@ -150,52 +150,52 @@
 																	</thead>
 
 																	<tbody>
-{{--																	@forelse($allShipments as $key => $shipment)--}}
-{{--																		<tr>--}}
-{{--																			<td data-label="SL."> {{ ++$key }} </td>--}}
-{{--																			<td data-label="Shipment Id"> {{ $shipment->shipment_id }} </td>--}}
-{{--																			<td data-label="Shipment Type"> {{ $shipment->shipment_type }} </td>--}}
-{{--																			<td data-label="Sender Branch"> @lang(optional($shipment->senderBranch)->branch_name) </td>--}}
-{{--																			<td data-label="Receiver Branch"> @lang(optional($shipment->receiverBranch)->branch_name) </td>--}}
-{{--																			<td data-label="From State"> @lang(optional($shipment->fromState)->name) </td>--}}
-{{--																			<td data-label="To State"> @lang(optional($shipment->toState)->name) </td>--}}
-{{--																			<td data-label="Total Cost"> {{ $shipment->total_pay }} </td>--}}
-{{--																			<td data-label="Payment Status">--}}
-{{--																				@if($shipment->payment_status == 1)--}}
-{{--																					<span class="badge badge-primary"><i class="fa fa-circle text-white danger font-12"></i> @lang('Paid')</span>--}}
-{{--																				@else--}}
-{{--																					<span class="badge badge-warning"><i class="fa fa-circle text-white danger font-12"></i> @lang('Due')</span>--}}
-{{--																				@endif--}}
-{{--																			</td>--}}
-{{--																			<td data-label="Shipment Date"> {{ dateTime($shipment->shipment_date) }} </td>--}}
+																	@forelse($allShipments as $key => $shipment)
+																		<tr>
+																			<td data-label="SL."> {{ ++$key }} </td>
+																			<td data-label="Shipment Id"> {{ $shipment->shipment_id }} </td>
+																			<td data-label="Shipment Type"> {{ $shipment->shipment_type }} </td>
+																			<td data-label="Sender Branch"> @lang(optional($shipment->senderBranch)->branch_name) </td>
+																			<td data-label="Receiver Branch"> @lang(optional($shipment->receiverBranch)->branch_name) </td>
+																			<td data-label="From Country"> @lang(optional($shipment->fromCountry)->name) </td>
+																			<td data-label="To Country"> @lang(optional($shipment->toCountry)->name) </td>
+																			<td data-label="Total Cost"> {{ $basic->currency_symbol }}{{ $shipment->total_pay }} </td>
+																			<td data-label="Payment Status">
+																				@if($shipment->payment_status == 1)
+																					<span class="badge badge-primary"><i class="fa fa-circle text-white danger font-12"></i> @lang('Paid')</span>
+																				@else
+																					<span class="badge badge-warning"><i class="fa fa-circle text-white danger font-12"></i> @lang('Due')</span>
+																				@endif
+																			</td>
+																			<td data-label="Shipment Date"> {{ dateTime($shipment->shipment_date) }} </td>
 
-{{--																			<td data-label="Status">--}}
-{{--																				@if($shipment->payment_status == 1)--}}
-{{--																					<span class="badge badge-success"><i class="fa fa-circle text-white danger font-12"></i> @lang('Active')</span>--}}
-{{--																				@else--}}
-{{--																					<span class="badge badge-danger"><i class="fa fa-circle text-white danger font-12"></i> @lang('Deactive')</span>--}}
-{{--																				@endif--}}
-{{--																			</td>--}}
+																			<td data-label="Status">
+																				@if($shipment->status == 1)
+																					<span class="badge badge-success"><i class="fa fa-circle text-white danger font-12"></i> @lang('Active')</span>
+																				@else
+																					<span class="badge badge-danger"><i class="fa fa-circle text-white danger font-12"></i> @lang('Deactive')</span>
+																				@endif
+																			</td>
 
-{{--																			<td data-label="@lang('Action')">--}}
-{{--																				<a href="{{ route('editShipment', $shipment->id) }}"--}}
-{{--																				   class="btn btn-outline-primary btn-sm"--}}
-{{--																				   title="@lang('Edit Shipment')"><i--}}
-{{--																						class="fa fa-eye"--}}
-{{--																						aria-hidden="true"></i> @lang('Edit')--}}
-{{--																				</a>--}}
-{{--																			</td>--}}
-{{--																		</tr>--}}
-{{--																	@empty--}}
-{{--																		<tr>--}}
-{{--																			<th colspan="100%"--}}
-{{--																				class="text-center">@lang('No data found')</th>--}}
-{{--																		</tr>--}}
-{{--																	@endforelse--}}
+																			<td data-label="@lang('Action')">
+																				<a href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier]) }}"
+																				   class="btn btn-outline-primary btn-sm"
+																				   title="@lang('Edit Shipment')"><i
+																						class="fa fa-eye"
+																						aria-hidden="true"></i> @lang('Edit')
+																				</a>
+																			</td>
+																		</tr>
+																	@empty
+																		<tr>
+																			<th colspan="100%"
+																				class="text-center">@lang('No data found')</th>
+																		</tr>
+																	@endforelse
 																	</tbody>
 																</table>
 															</div>
-{{--															<div class="card-footer d-flex justify-content-center">{{ $allShipments->links() }}</div>--}}
+															<div class="card-footer d-flex justify-content-center">{{ $allShipments->links() }}</div>
 														</div>
 
 													</div>

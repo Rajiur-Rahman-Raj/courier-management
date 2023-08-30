@@ -3,25 +3,60 @@
 
 	// Manage location for edit shipment
 	let singleShipment = @json($singleShipment);
+	let fromCountryId = $('.selectedFromCountry').val();
 	let fromStateId = $('.selectedFromState').val();
+	if (fromStateId == null){
+		fromStateId = $('.selectedFromState').data('fromstateid');
+	}
+
 	let fromCityId = $('.selectedFromCity').data('fromcityid');
+
+	let toCountryId = $('.selectedToCountry').val();
 	let toStateId = $('.selectedToState').val();
+	if (toStateId == null){
+		toStateId = $('.selectedToState').data('tostateid');
+	}
 	let toCityId = $('.selectedToCity').data('tocityid');
 
-	if (singleShipment.from_city_id != null && singleShipment.from_area_id == null) {
+	if (singleShipment.from_state_id != null && singleShipment.from_city_id == null) {
+		getFromCountryState(fromCountryId);
+	}else if (singleShipment.from_city_id != null && singleShipment.from_area_id == null) {
+		getFromCountryState(fromCountryId);
 		getFromStateCity(fromStateId);
 	} else if (singleShipment.from_area_id != null) {
 		getFromStateCity(fromStateId);
 		getFromCityArea(fromCityId);
 	}
 
-	if (singleShipment.to_city_id != null && singleShipment.to_area_id == null) {
+	if (singleShipment.to_state_id != null && singleShipment.to_city_id == null) {
+		getToCountryState(toCountryId);
+	}else if (singleShipment.to_city_id != null && singleShipment.to_area_id == null) {
+		getToCountryState(toCountryId);
 		getToStateCity(toStateId);
 	} else if (singleShipment.from_area_id != null) {
 		getToStateCity(toStateId);
 		getToCityArea(toCityId);
 	}
 
+
+	function getFromCountryState(fromCountryId) {
+		$.ajax({
+			url: "{{ route('getSeletedCountryState') }}",
+			method: 'POST',
+			data: {
+				id: fromCountryId,
+			},
+			success: function (response) {
+				let responseData = response;
+				responseData.forEach(res => {
+					$('.selectedFromState').append(`<option value="${res.id}" ${res.id == singleShipment.from_state_id ? 'selected' : ''}>${res.name}</option>`)
+				})
+			},
+			error: function (xhr, status, error) {
+				console.log(error)
+			}
+		});
+	}
 
 	function getFromStateCity(fromStateId) {
 		$.ajax({
@@ -61,6 +96,25 @@
 		});
 	}
 
+
+	function getToCountryState(toCountryId) {
+		$.ajax({
+			url: "{{ route('getSeletedCountryState') }}",
+			method: 'POST',
+			data: {
+				id: toCountryId,
+			},
+			success: function (response) {
+				let responseData = response;
+				responseData.forEach(res => {
+					$('.selectedToState').append(`<option value="${res.id}" ${res.id == singleShipment.to_state_id ? 'selected' : ''}>${res.name}</option>`)
+				})
+			},
+			error: function (xhr, status, error) {
+				console.log(error)
+			}
+		});
+	}
 
 	function getToStateCity(toStateId) {
 		$.ajax({
@@ -171,7 +225,6 @@
 	var shipment_images = {!! json_encode($shipmentAttatchments->toArray()) !!};
 	let preloaded = [];
 	shipment_images.forEach(function (value, index) {
-		console.log(value);
 		preloaded.push({
 			id: value.id,
 			shipment_id: value.shipment_id,

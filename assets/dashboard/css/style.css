@@ -42,6 +42,11 @@ a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fab {
 	cursor: pointer;
 }
 
+.custom-text{
+	color:#343a40 !important;
+	font-weight: bold;
+}
+
 .bg-primary {
 	background-color: #6777ef !important;
 }

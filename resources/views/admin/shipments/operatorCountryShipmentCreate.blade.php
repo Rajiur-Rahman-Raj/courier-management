@@ -48,9 +48,11 @@
 			$oldPackingCounts = old('variant_price') ? count(old('variant_price')) : 0;
             $oldParcelCounts = old('parcel_name') ? count(old('parcel_name')) : 0;
 
+            $oldFromStateIdPresent = 0;
             $oldFromCityIdPresent = old('from_city_id') ? 1 : 0;
             $oldFromAreaIdPresent = old('from_area_id') ? 1 : 0;
 
+            $oldToStateIdPresent = 0;
             $oldToCityIdPresent = old('to_city_id') ? 1 : 0;
             $oldToAreaIdPresent = old('to_area_id') ? 1 : 0;
 		@endphp
@@ -69,5 +71,18 @@
 			@include('partials.select2Create')
 			@include('partials.packageVariant')
 			@include('partials.createShipmentJs')
+
+			<script>
+				'use strict'
+				let shipingImageOptions = {
+					imagesInputName: 'shipment_image',
+					label: 'Drag & Drop files here or click to browse images',
+					extensions: ['.jpg', '.jpeg', '.png'],
+					mimes: ['image/jpeg', 'image/png'],
+					maxSize: 5242880
+				};
+
+				$('.shipment_image').imageUploader(shipingImageOptions);
+			</script>
 
 @endsection
