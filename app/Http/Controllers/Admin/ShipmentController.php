@@ -98,7 +98,7 @@ class ShipmentController extends Controller
 				$query->where('shipment_identifier', 2);
 			})
 			->paginate(config('basic.paginate'));
-		return view($shipmentManagement[$type]['shipment_view'], $data);
+		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type'));
 	}
 
 	public function createShipment($type = null)
@@ -151,7 +151,11 @@ class ShipmentController extends Controller
 			$data['defaultShippingRateInternationally'] = DefaultShippingRateInternationally::first();
 			return view('admin.shipments.internationallyShipmentEdit', $data);
 		}
+	}
 
+	public function viewShipment($id){
+		$data['singleShipment'] = Shipment::with('senderBranch','receiverBranch','sender','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')->findOrFail($id);
+		return view('admin.shipments.viewShipment', $data);
 	}
 
 	public function shipmentStore(ShipmentRequest $request, $type = null)

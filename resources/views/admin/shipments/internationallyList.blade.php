@@ -29,67 +29,7 @@
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Search')</h6>
 										</div>
 										<div class="card-body">
-											<form action="" method="get">
-												<div class="row">
-													<div class="col-md-2">
-														<div class="form-group">
-															<input placeholder="@lang('Branch name')" name="name"
-																   value="{{ old('name',request()->name) }}" type="text"
-																   class="form-control form-control-sm">
-														</div>
-													</div>
-													<div class="col-md-2">
-														<div class="form-group">
-															<input placeholder="@lang('Phone')" name="phone"
-																   value="{{ old('phone',request()->phone) }}"
-																   type="text" class="form-control form-control-sm">
-														</div>
-													</div>
-													<div class="col-md-2">
-														<div class="form-group">
-															<input placeholder="@lang('E-mail')" name="email"
-																   value="{{ old('email',request()->email) }}"
-																   type="text" class="form-control form-control-sm">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group search-currency-dropdown">
-															<select name="status" class="form-control form-control-sm">
-																<option value="all">@lang('All Status')</option>
-																<option
-																	value="active" {{  request()->status == 'active' ? 'selected' : '' }}>@lang('Active')</option>
-																<option
-																	value="deactive" {{  request()->status == 'deactive' ? 'selected' : '' }}>@lang('Deactive')</option>
-															</select>
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group search-currency-dropdown">
-															<select name="branch_type"
-																	class="form-control form-control-sm">
-																<option value="">@lang('All Branch')</option>
-																<option
-																	value="head_office" {{  request()->branch_type == 'head_office' ? 'selected' : '' }}>@lang('Head Office')</option>
-																<option
-																	value="main_branch" {{  request()->branch_type == 'main_branch' ? 'selected' : '' }}>@lang('Main Branch')</option>
-																<option
-																	value="sub_branch" {{  request()->branch_type == 'sub_branch' ? 'selected' : '' }}>@lang('Sub Branch')</option>
-															</select>
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<button type="submit"
-																	class="btn btn-primary btn-sm btn-block"><i
-																	class="fas fa-search"></i> @lang('Search')</button>
-														</div>
-													</div>
-												</div>
-
-											</form>
+											@include('partials.shipmentSearchForm')
 										</div>
 									</div>
 								</div>
@@ -183,6 +123,12 @@
 																				   title="@lang('Edit Shipment')"><i
 																						class="fa fa-eye"
 																						aria-hidden="true"></i> @lang('Edit')
+																				</a>
+																				<a href="{{ route('viewShipment', $shipment->id) }}"
+																				   class="btn btn-outline-primary btn-sm"
+																				   title="@lang('Edit Shipment')"><i
+																						class="fa fa-eye"
+																						aria-hidden="true"></i> @lang('Show')
 																				</a>
 																			</td>
 																		</tr>

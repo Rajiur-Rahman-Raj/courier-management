@@ -29,135 +29,7 @@
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Search')</h6>
 										</div>
 										<div class="card-body">
-											<form action="" method="get">
-												<div class="row">
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="shipment_id" class="custom-text">@lang('Shipment id')</label>
-															<input placeholder="@lang('shipment id')" name="shipment_id"
-																   value="{{ old('name',request()->shipment_id) }}" type="text"
-																   class="form-control form-control-sm">
-														</div>
-													</div>
-													<div class="col-md-2">
-														<div class="form-group search-currency-dropdown">
-															<label for="shipment_type" class="custom-text">@lang('Shipment Type')</label>
-															<select name="shipment_type" class="form-control form-control-sm">
-																<option value="">@lang('All Shipments')</option>
-																<option
-																	value="drop_off" {{  request()->shipment_type == 'drop_off' ? 'selected' : '' }}>@lang('Drop Off')</option>
-																<option
-																	value="pickup" {{  request()->status == 'pickup' ? 'selected' : '' }}>@lang('Pickup')</option>
-																<option
-																	value="condition" {{  request()->status == 'condition' ? 'selected' : '' }}>@lang('Condition')</option>
-															</select>
-														</div>
-													</div>
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="sender_branch" class="custom-text">@lang('Sender Branch')</label>
-															<input placeholder="@lang('sender branch')" name="sender_branch"
-																   value="{{ old('sender_branch',request()->sender_branch) }}"
-																   type="text" class="form-control form-control-sm">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="receiver_branch" class="custom-text">@lang('Receiver Branch')</label>
-															<input placeholder="@lang('receiver branch')" name="receiver_branch"
-																   value="{{ old('receiver_branch',request()->receiver_branch) }}"
-																   type="text" class="form-control form-control-sm">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="receiver_branch" class="custom-text">@lang('Sender')</label>
-															<input placeholder="@lang('sender')" name="sender"
-																   value="{{ old('sender',request()->sender) }}"
-																   type="text" class="form-control form-control-sm">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="receiver_branch" class="custom-text">@lang('Receiver')</label>
-															<input placeholder="@lang('receiver')" name="receiver"
-																   value="{{ old('receiver',request()->receiver) }}"
-																   type="text" class="form-control form-control-sm">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="address" class="custom-text">@lang('Location')</label>
-															<input placeholder="@lang('search address')" name="address"
-																   value="{{ old('address',request()->address) }}"
-																   type="text" class="form-control form-control-sm">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="shipment_date" class="custom-text">@lang('Shipment Date')</label>
-															<input placeholder="@lang('shipment date')" name="shipment_date"
-																   value="{{ old('shipment_date', request()->shipment_date) }}" type="date"
-																   class="form-control form-control-sm" autocomplete="off">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="delivery_date" class="custom-text">@lang('Delivery Date')</label>
-															<input placeholder="@lang('delivery date')" name="delivery_date"
-																   value="{{ old('delivery_date', request()->delivery_date) }}" type="date"
-																   class="form-control form-control-sm" autocomplete="off">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="shipment_type" class="custom-text">@lang('From Date')</label>
-															<input placeholder="@lang('from date')" name="from_date"
-																   value="{{ old('from_date', request()->from_date) }}" type="date"
-																   class="form-control form-control-sm" autocomplete="off">
-														</div>
-													</div>
-
-													<div class="col-md-2">
-														<div class="form-group">
-															<label for="shipment_type" class="custom-text">@lang('To Date')</label>
-															<input placeholder="@lang('to date')" name="to_date"
-																   value="{{ old('to_date',request()->to_date) }}"
-																   type="date" class="form-control form-control-sm">
-														</div>
-													</div>
-
-
-													<div class="col-md-2">
-														<div class="form-group search-currency-dropdown">
-															<label for="status" class="custom-text">@lang('Status')</label>
-															<select name="status" class="form-control form-control-sm">
-																<option value="">@lang('All Status')</option>
-																<option
-																	value="active" {{  request()->status == 'active' ? 'selected' : '' }}>@lang('Active')</option>
-																<option
-																	value="deactive" {{  request()->status == 'deactive' ? 'selected' : '' }}>@lang('Deactive')</option>
-															</select>
-														</div>
-													</div>
-
-													<div class="col-md-12">
-														<div class="form-group">
-															<button type="submit"
-																	class="btn btn-primary btn-sm btn-block"><i
-																	class="fas fa-search"></i> @lang('Search')</button>
-														</div>
-													</div>
-												</div>
-
-											</form>
+											@include('partials.shipmentSearchForm')
 										</div>
 									</div>
 								</div>
@@ -210,7 +82,6 @@
 																		<th scope="col" class="custom-text">@lang('From State')</th>
 																		<th scope="col" class="custom-text">@lang('To State')</th>
 																		<th scope="col" class="custom-text">@lang('Total Cost')</th>
-																		<th scope="col" class="custom-text">@lang('Payment Status')</th>
 																		<th scope="col" class="custom-text">@lang('Shipment Date')</th>
 																		<th scope="col" class="custom-text">@lang('Status')</th>
 																		<th scope="col" class="custom-text">@lang('Action')</th>
@@ -229,14 +100,8 @@
 																			<td data-label="From State"> @lang(optional($shipment->fromState)->name) </td>
 																			<td data-label="To State"> @lang(optional($shipment->toState)->name) </td>
 																			<td data-label="Total Cost"> {{ $basic->currency_symbol }}{{ $shipment->total_pay }} </td>
-																			<td data-label="Payment Status">
-																				@if($shipment->payment_status == 1)
-																					<span class="badge badge-primary"><i class="fa fa-circle text-white danger font-12"></i> @lang('Paid')</span>
-																				@else
-																					<span class="badge badge-warning"><i class="fa fa-circle text-white danger font-12"></i> @lang('Due')</span>
-																				@endif
-																			</td>
-																			<td data-label="Shipment Date"> {{ dateTime($shipment->shipment_date) }} </td>
+
+																			<td data-label="Shipment Date"> {{ customDate($shipment->shipment_date) }} </td>
 
 																			<td data-label="Status">
 																				@if($shipment->status == 1)
@@ -250,9 +115,16 @@
 																				<a href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier]) }}"
 																				   class="btn btn-outline-primary btn-sm"
 																				   title="@lang('Edit Shipment')"><i
-																						class="fa fa-eye"
+																						class="fa fa-edit"
 																						aria-hidden="true"></i> @lang('Edit')
 																				</a>
+																				<a href="{{ route('viewShipment', $shipment->id) }}"
+																				   class="btn btn-outline-primary btn-sm"
+																				   title="@lang('Edit Shipment')"><i
+																						class="fa fa-eye"
+																						aria-hidden="true"></i> @lang('Show')
+																				</a>
+
 																			</td>
 																		</tr>
 																	@empty

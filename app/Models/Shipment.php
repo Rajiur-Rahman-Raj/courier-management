@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Shipment extends Model
 {
@@ -101,5 +102,9 @@ class Shipment extends Model
 
 	public function toArea(){
 		return $this->belongsTo(Area::class, 'to_area_id', 'id');
+	}
+
+	public function shipmentTypeFormat(){
+		return Str::title(str_replace('_', ' ', $this->shipment_type));
 	}
 }
