@@ -4899,3 +4899,9 @@ a:hover {
 #cod_parcel_details{
 	height: 80px !important;
 }
+.shipment-view-ul li{
+	list-style-type: none !important;
+}
+.border-bottom-2{
+	border-bottom: 2px solid #dee2e6 !important;
+}

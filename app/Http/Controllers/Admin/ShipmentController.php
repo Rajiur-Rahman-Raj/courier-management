@@ -154,7 +154,7 @@ class ShipmentController extends Controller
 	}
 
 	public function viewShipment($id){
-		$data['singleShipment'] = Shipment::with('senderBranch','receiverBranch','sender','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')->findOrFail($id);
+		$data['singleShipment'] = Shipment::with('senderBranch','receiverBranch','sender.profile','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')->findOrFail($id);
 		return view('admin.shipments.viewShipment', $data);
 	}
 

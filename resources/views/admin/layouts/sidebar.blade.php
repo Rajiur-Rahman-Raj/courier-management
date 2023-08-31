@@ -23,12 +23,12 @@
 
 			@if(checkPermission('manage_shipments') == true)
 				<li class="menu-header">@lang('Manage Shipments')</li>
-				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment']) }}">
+				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Shipments')</span>
 					</a>
 					<ul class="dropdown-menu">
-						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment']) }}">
+						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
 							<a class="nav-link " href="{{ route('shipmentList', 'operator-country') }}">
 								@lang('Shipment List')
 							</a>

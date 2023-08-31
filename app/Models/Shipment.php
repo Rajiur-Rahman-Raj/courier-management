@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Admin\PackageVariant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -106,5 +107,25 @@ class Shipment extends Model
 
 	public function shipmentTypeFormat(){
 		return Str::title(str_replace('_', ' ', $this->shipment_type));
+	}
+
+	public function packageName($packageId){
+		$package = Package::findOrFail($packageId);
+		return $package->package_name;
+	}
+
+	public function variantName($variantId){
+		$packageVariant = PackageVariant::findOrFail($variantId);
+		return $packageVariant->variant;
+	}
+
+	public function parcelType($parcelTypeId){
+		$parcelType = ParcelType::findOrFail($parcelTypeId);
+		return $parcelType->parcel_type;
+	}
+
+	public function parcelUnit($parcelUnitId){
+		$parcelUnit = ParcelUnit::findOrFail($parcelUnitId);
+		return $parcelUnit->unit;
 	}
 }
