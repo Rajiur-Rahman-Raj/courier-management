@@ -57,6 +57,10 @@ class Shipment extends Model
 		'parcel_information' => 'array',
 	];
 
+	public function shipmentAttachments(){
+		return $this->hasMany(ShipmentAttatchment::class, 'shipment_id', 'id');
+	}
+
 	public function senderBranch(){
 		return $this->belongsTo(Branch::class, 'sender_branch', 'id');
 	}
@@ -128,4 +132,5 @@ class Shipment extends Model
 		$parcelUnit = ParcelUnit::findOrFail($parcelUnitId);
 		return $parcelUnit->unit;
 	}
+
 }

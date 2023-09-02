@@ -112,9 +112,15 @@
 				<select name="status" class="form-control form-control-sm">
 					<option value="">@lang('All Status')</option>
 					<option
-						value="active" {{  request()->status == 'active' ? 'selected' : '' }}>@lang('Active')</option>
+						value="queue" {{  request()->status == 'queue' ? 'selected' : '' }}>@lang('In Queue')</option>
 					<option
-						value="deactive" {{  request()->status == 'deactive' ? 'selected' : '' }}>@lang('Deactive')</option>
+						value="dispatch" {{  request()->status == 'dispatch' ? 'selected' : '' }}>@lang('Dispatch')</option>
+					<option
+						value="upcoming" {{  request()->status == 'upcoming' ? 'selected' : '' }}>@lang('Upcoming')</option>
+					<option
+						value="received" {{  request()->status == 'received' ? 'selected' : '' }}>@lang('Received')</option>
+					<option
+						value="delivered" {{  request()->status == 'delivered' ? 'selected' : '' }}>@lang('Delivered')</option>
 				</select>
 			</div>
 		</div>

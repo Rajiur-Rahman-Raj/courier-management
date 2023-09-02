@@ -41,18 +41,18 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Shipment List')</h6>
-											<a href="{{route('createShipment', 'operator-country')}}"
+											<a href="{{route('createShipment', ['shipment_type' => 'operator-country', 'shipment_status' => $status])}}"
 											   class="btn btn-sm btn-outline-primary add"><i
 													class="fas fa-plus-circle"></i> @lang('Create Shipment')</a>
 										</div>
 
 										<div class="card-body">
 											<div class="switcher">
-												<a href="{{ route('shipmentList', 'operator-country') }}">
+												<a href="{{ route('shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country']) }}">
 													<button
 														class="custom-text @if(lastUriSegment() == 'operator-country') active @endif">@lang(optional(basicControl()->operatorCountry)->name)</button>
 												</a>
-												<a href="{{ route('shipmentList', 'internationally') }}">
+												<a href="{{ route('shipmentList', ['shipment_status' => $status, 'shipment_type' => 'internationally']) }}">
 													<button
 														class="custom-text @if(lastUriSegment() == 'internationally') active @endif">@lang('Internationally')</button>
 												</a>
@@ -74,17 +74,28 @@
 																	id="data-table">
 																	<thead class="thead-light">
 																	<tr>
-																		<th scope="col" class="custom-text">@lang('SL.')</th>
-																		<th scope="col"  class="custom-text">@lang('Shipment Id')</th>
-																		<th scope="col" class="custom-text">@lang('Shipment Type')</th>
-																		<th scope="col" class="custom-text">@lang('Sender Branch')</th>
-																		<th scope="col" class="custom-text">@lang('Receiver Branch')</th>
-																		<th scope="col" class="custom-text">@lang('From State')</th>
-																		<th scope="col" class="custom-text">@lang('To State')</th>
-																		<th scope="col" class="custom-text">@lang('Total Cost')</th>
-																		<th scope="col" class="custom-text">@lang('Shipment Date')</th>
-																		<th scope="col" class="custom-text">@lang('Status')</th>
-																		<th scope="col" class="custom-text">@lang('Action')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('SL.')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('Shipment Id')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('Shipment Type')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('Sender Branch')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('Receiver Branch')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('From State')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('To State')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('Total Cost')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('Shipment Date')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('Status')</th>
+																		<th scope="col"
+																			class="custom-text">@lang('Action')</th>
 																	</tr>
 																	</thead>
 
@@ -105,26 +116,52 @@
 
 																			<td data-label="Status">
 																				@if($shipment->status == 1)
-																					<span class="badge badge-success"><i class="fa fa-circle text-white danger font-12"></i> @lang('Active')</span>
-																				@else
-																					<span class="badge badge-danger"><i class="fa fa-circle text-white danger font-12"></i> @lang('Deactive')</span>
+																					<span class="badge badge-info">@lang('In Queue')</span>
+																				@elseif($shipment->status == 2)
+																					<span class="badge badge-warning">@lang('Dispatch')</span>
+																				@elseif($shipment->status == 3)
+																					<span class="badge badge-primary">@lang('Sent')</span>
+																				@elseif($shipment->status == 4)
+																					<span class="badge badge-success">@lang('Delivery')</span>
 																				@endif
 																			</td>
 
 																			<td data-label="@lang('Action')">
-																				<a href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier]) }}"
-																				   class="btn btn-outline-primary btn-sm"
-																				   title="@lang('Edit Shipment')"><i
-																						class="fa fa-edit"
-																						aria-hidden="true"></i> @lang('Edit')
-																				</a>
-																				<a href="{{ route('viewShipment', $shipment->id) }}"
-																				   class="btn btn-outline-primary btn-sm"
-																				   title="@lang('Edit Shipment')"><i
-																						class="fa fa-eye"
-																						aria-hidden="true"></i> @lang('Show')
-																				</a>
+																				<div class="btn-group">
+																					<button type="button"
+																							class="btn btn-primary btn-sm dropdown-toggle"
+																							data-toggle="dropdown"
+																							aria-haspopup="true"
+																							aria-expanded="false">
+																						Options
+																					</button>
+																					<div class="dropdown-menu">
+																						@if($shipment->status == 1)
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-route="{{route('shipmentStatusUpdate', $shipment->id)}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
+																									class="fas fa-file-invoice mr-2"></i> @lang('Dispatch')
+																							</a>
+																						@endif
 
+																						<a class="dropdown-item btn-outline-primary btn-sm"
+																						   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier]) }}"><i
+																								class="fa fa-edit mr-2"
+																								aria-hidden="true"></i> @lang('Edit')
+																						</a>
+																						<a class="dropdown-item btn-outline-primary btn-sm"
+																						   href="#"><i
+																								class="fas fa-file-invoice mr-2"></i> @lang('Invoice')
+																						</a>
+																						<a class="dropdown-item btn-outline-primary btn-sm"
+																						   href="{{ route('viewShipment', $shipment->id) }}"><i
+																								class="fa fa-eye mr-2"
+																								aria-hidden="true"></i> @lang('Details')
+																						</a>
+																					</div>
+																				</div>
 																			</td>
 																		</tr>
 																	@empty
@@ -136,7 +173,8 @@
 																	</tbody>
 																</table>
 															</div>
-															<div class="card-footer d-flex justify-content-center">{{ $allShipments->links() }}</div>
+															<div
+																class="card-footer d-flex justify-content-center">{{ $allShipments->links() }}</div>
 														</div>
 														`
 													</div>
@@ -154,9 +192,45 @@
 		</section>
 	</div>
 
+	{{-- Edit Shipment Status Modal --}}
+	<div id="updateShipmentStatus" class="modal fade" tabindex="-1" role="dialog"
+		 aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-dark font-weight-bold"
+						id="primary-header-modalLabel">@lang('Confirmation')</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				</div>
+				<form action="" method="post" id="editShipmentStatusForm">
+					@csrf
+					@method('put')
+					<div class="modal-body">
+						<p>@lang('Are you sure to dispatch this shipment?')</p>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 @endsection
 
 @section('scripts')
+	<script>
+		'use strict'
+		$(document).ready(function () {
+			$(document).on('click', '.editShipmentStatus', function () {
+				let dataRoute = $(this).data('route');
+				$('#editShipmentStatusForm').attr('action', dataRoute);
+			});
+		})
+	</script>
+
 	@if ($errors->any())
 		@php
 			$collection = collect($errors->all());

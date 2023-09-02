@@ -41,20 +41,20 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Shipment List')</h6>
-											<a href="{{route('createShipment', 'internationally')}}"
+											<a href="{{route('createShipment', ['shipment_type' => 'internationally', 'shipment_status' => $status])}}"
 											   class="btn btn-sm btn-outline-primary add"><i
 													class="fas fa-plus-circle"></i> @lang('Create Shipment')</a>
 										</div>
 
 										<div class="card-body">
 											<div class="switcher">
-												<a href="{{ route('shipmentList', 'operator-country') }}">
+												<a href="{{ route('shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country']) }}">
 													<button
-														class="@if(lastUriSegment() == 'operator-country') active @endif">@lang(optional(basicControl()->operatorCountry)->name)</button>
+														class="custom-text @if(lastUriSegment() == 'operator-country') active @endif">@lang(optional(basicControl()->operatorCountry)->name)</button>
 												</a>
-												<a href="{{ route('shipmentList', 'internationally') }}">
+												<a href="{{ route('shipmentList', ['shipment_status' => $status, 'shipment_type' => 'internationally']) }}">
 													<button
-														class="@if(lastUriSegment() == 'internationally') active @endif">@lang('Internationally')</button>
+														class="custom-text @if(lastUriSegment() == 'internationally') active @endif">@lang('Internationally')</button>
 												</a>
 											</div>
 
@@ -111,25 +111,27 @@
 
 																			<td data-label="Status">
 																				@if($shipment->status == 1)
-																					<span class="badge badge-success"><i class="fa fa-circle text-white danger font-12"></i> @lang('Active')</span>
-																				@else
-																					<span class="badge badge-danger"><i class="fa fa-circle text-white danger font-12"></i> @lang('Deactive')</span>
+																					<span class="badge badge-info">@lang('In Queue')</span>
+																				@elseif($shipment->status == 2)
+																					<span class="badge badge-warning">@lang('Dispatch')</span>
+																				@elseif($shipment->status == 3)
+																					<span class="badge badge-primary">@lang('Sent')</span>
+																				@elseif($shipment->status == 4)
+																					<span class="badge badge-success">@lang('Delivery')</span>
 																				@endif
 																			</td>
 
 																			<td data-label="@lang('Action')">
-																				<a href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier]) }}"
-																				   class="btn btn-outline-primary btn-sm"
-																				   title="@lang('Edit Shipment')"><i
-																						class="fa fa-eye"
-																						aria-hidden="true"></i> @lang('Edit')
-																				</a>
-																				<a href="{{ route('viewShipment', $shipment->id) }}"
-																				   class="btn btn-outline-primary btn-sm"
-																				   title="@lang('Edit Shipment')"><i
-																						class="fa fa-eye"
-																						aria-hidden="true"></i> @lang('Show')
-																				</a>
+																				<div class="btn-group">
+																					<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																						Options
+																					</button>
+																					<div class="dropdown-menu">
+																						<a class="dropdown-item btn-outline-primary btn-sm" href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier]) }}"><i class="fa fa-edit mr-2" aria-hidden="true"></i>  @lang('Edit')</a>
+																						<a class="dropdown-item btn-outline-primary btn-sm" href="#"><i class="fas fa-file-invoice mr-2"></i>  @lang('Invoice')</a>
+																						<a class="dropdown-item btn-outline-primary btn-sm" href="{{ route('viewShipment', $shipment->id) }}"><i class="fa fa-eye mr-2" aria-hidden="true"></i>  @lang('Details')</a>
+																					</div>
+																				</div>
 																			</td>
 																		</tr>
 																	@empty

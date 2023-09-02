@@ -122,17 +122,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::post('branch-employee-store', [BranchController::class, 'branchEmployeeStore'])->name('branchEmployeeStore');
 		Route::get('branch-employee-edit/{id}', [BranchController::class, 'branchEmployeeEdit'])->name('branchEmployeeEdit');
 		Route::post('branch-employee-update/{id}', [BranchController::class, 'branchEmployeeUpdate'])->name('branchEmployeeUpdate');
-
 	});
 
 	// Manage Shipments
 	Route::middleware('module:manage_shipments')->group(function () {
-		Route::get('shipment-list/{type?}', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
-		Route::get('{type?}/create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
+		Route::get('shipment-list/{shipment_status}/{shipment_type}', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
+		Route::get('{shipment_type}/create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
 		Route::get('shipment/{id}/edit/{shipment_identifier}', [ShipmentController::class, 'editShipment'])->name('editShipment');
 		Route::get('view-shipment/{id}', [ShipmentController::class, 'viewShipment'])->name('viewShipment');
 		Route::post('shipment-store/{type?}', [ShipmentController::class, 'shipmentStore'])->name('shipmentStore');
 		Route::post('shipment-update/{id}', [ShipmentController::class, 'shipmentUpdate'])->name('shipmentUpdate');
+
+		Route::put('shipment-status-update/{id}', [ShipmentController::class, 'shipmentStatusUpdate'])->name('shipmentStatusUpdate');
 
 		Route::post('oc-get-selected-location-ship-rate', [ShipmentController::class, 'OCGetSelectedLocationShipRate'])->name('OCGetSelectedLocationShipRate');
 	});

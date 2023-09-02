@@ -35,8 +35,9 @@ class ShipmentController extends Controller
 {
 	use Upload, Notify, OCShipmentStoreTrait;
 
-	public function shipmentList(Request $request, $type = null)
+	public function shipmentList(Request $request, $status = null, $type = null)
 	{
+//		dd($status, $type);
 		$search = $request->all();
 		$fromDate = Carbon::parse($request->from_date);
 		$toDate = Carbon::parse($request->to_date)->addDay();
@@ -85,24 +86,32 @@ class ShipmentController extends Controller
 			->when(isset($search['to_date']), function ($query) use ($fromDate, $toDate) {
 				return $query->whereBetween('created_at', [$fromDate, $toDate]);
 			})
-			->when(isset($search['status']) && $search['status'] == 'active', function ($query) use ($search) {
+			->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search) {
 				return $query->where('status', 1);
 			})
-			->when(isset($search['status']) && $search['status'] == 'deactive', function ($query) use ($search) {
-				return $query->where('status', 0);
+			->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search) {
+				return $query->where('status', 2);
 			})
-			->when($type == 'operator-country', function ($query){
+			->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search) {
+				return $query->where('status', 3);
+			})
+			->when($type == 'operator-country' && $status == 'all', function ($query){
 				$query->where('shipment_identifier', 1);
+			})
+			->when($type == 'operator-country' && $status == 'in_queue', function ($query){
+				$query->where('shipment_identifier', 1)
+						->where('status', 1);
 			})
 			->when($type == 'internationally', function ($query){
 				$query->where('shipment_identifier', 2);
 			})
 			->paginate(config('basic.paginate'));
-		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type'));
+		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status'));
 	}
 
-	public function createShipment($type = null)
+	public function createShipment($type = null, Request $request)
 	{
+		$data['status'] = $request->input('shipment_status');
 		$createShipmentType = ['operator-country', 'internationally'];
 		abort_if(!in_array($type, $createShipmentType), 404);
 
@@ -154,7 +163,7 @@ class ShipmentController extends Controller
 	}
 
 	public function viewShipment($id){
-		$data['singleShipment'] = Shipment::with('senderBranch','receiverBranch','sender.profile','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')->findOrFail($id);
+		$data['singleShipment'] = Shipment::with('shipmentAttachments','senderBranch','receiverBranch','sender.profile','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')->findOrFail($id);
 		return view('admin.shipments.viewShipment', $data);
 	}
 
@@ -1183,6 +1192,14 @@ class ShipmentController extends Controller
 				return response($shippingRate);
 			}
 		}
+	}
+
+	public function shipmentStatusUpdate(Request $request, $id){
+
+		$shipment = Shipment::findOrFail($id);
+		$shipment->status = 2;
+		$shipment->save();
+		return back()->with('success', 'shipment status update successfully!');
 	}
 
 }

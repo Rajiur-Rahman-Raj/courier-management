@@ -29,10 +29,17 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
-							<a class="nav-link " href="{{ route('shipmentList', 'operator-country') }}">
-								@lang('Shipment List')
+							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">
+								@lang('All Shipments')
 							</a>
 						</li>
+
+						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
+							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => 'operator-country']) }}">
+								@lang('In Queue')
+							</a>
+						</li>
+
 					</ul>
 				</li>
 			@endif

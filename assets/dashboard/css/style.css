@@ -4905,3 +4905,51 @@ a:hover {
 .border-bottom-2{
 	border-bottom: 2px solid #dee2e6 !important;
 }
+.shipmentAttachments img{
+	width: 100% !important;
+	height: 200px !important;
+}
+.custom-badge {
+	display: inline-block;
+	font-size: 0.75em;
+	font-weight: 700;
+	line-height: 1;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: 0.25em;
+	padding-right: 6px;
+}
+.custom-badge {
+	font-family: "Jost", sans-serif;
+	padding: 5px 5px 5px 20px;
+	position: relative;
+	background: #f2f5fa !important;
+	color: #0c2239;
+}
+.custom-badge::before {
+	content: "";
+	position: absolute;
+	left: 5px;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	width: 9px;
+	height: 9px;
+	border-radius: 10px;
+	background: #26cc8c;
+}
+.badge {
+	display: inline-block;
+	padding: 6px 33px;
+	text-align: center;
+	vertical-align: baseline;
+	border-radius: 2px;
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	font-size: 12px;
+}
+.badge-pill {
+	padding-right: .5rem;
+	padding-left: .5rem;
+	border-radius: 10rem;
+}
