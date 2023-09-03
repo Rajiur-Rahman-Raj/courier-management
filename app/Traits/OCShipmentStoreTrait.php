@@ -3,11 +3,12 @@
 namespace App\Traits;
 
 use App\Models\OCSAttatchment;
+use App\Models\ShipmentAttatchment;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 trait OCShipmentStoreTrait {
-	public function storePackingService($request, $OperatorCountryShipment){
+	public function storePackingService($request, $shipment){
 			$packingService = [];
 			foreach($request->package_id as $key => $value){
 				$packingService[] = [
@@ -18,10 +19,10 @@ trait OCShipmentStoreTrait {
 					'package_cost' => $request->package_cost[$key],
 				];
 			}
-		$OperatorCountryShipment['packing_services'] = $packingService;
+		$shipment['packing_services'] = $packingService;
 	}
 
-	public function storeParcelInformation($request, $OperatorCountryShipment){
+	public function storeParcelInformation($request, $shipment){
 			$parcelInformation = [];
 			foreach ($request->parcel_name as $key => $value){
 				$parcelInformation[] = [
@@ -37,21 +38,21 @@ trait OCShipmentStoreTrait {
 					'parcel_height' => $request->parcel_height[$key],
 				];
 			}
-		$OperatorCountryShipment['parcel_information'] = $parcelInformation;
+		$shipment['parcel_information'] = $parcelInformation;
 	}
 
 
-	public function storeShipmentAttatchments($request, $OperatorCountryShipment){
+	public function storeShipmentAttatchments($request, $shipment){
 			foreach ($request->shipment_image as $key => $value){
 				try {
-					$OCSAttatchment = new OCSAttatchment();
-					$OCSAttatchment->operator_country_shipment_id = $OperatorCountryShipment->id;
-					$image = $this->fileUpload($request->shipment_image[$key], config('location.shipmentAttatchments.path'), $OCSAttatchment->driver, null);
+					$shipmentAttatchment = new ShipmentAttatchment();
+					$shipmentAttatchment->shipment_id = $shipment->id;
+					$image = $this->fileUpload($request->shipment_image[$key], config('location.shipmentAttatchments.path'), $shipmentAttatchment->driver, null);
 					if ($image) {
-						$OCSAttatchment->image = $image['path'];
-						$OCSAttatchment->driver = $image['driver'];
+						$shipmentAttatchment->image = $image['path'];
+						$shipmentAttatchment->driver = $image['driver'];
 					}
-					$OCSAttatchment->save();
+					$shipmentAttatchment->save();
 				} catch (\Exception $exp) {
 					return [
 						'status' => 'error',

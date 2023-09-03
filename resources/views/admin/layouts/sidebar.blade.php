@@ -23,15 +23,20 @@
 
 			@if(checkPermission('manage_shipments') == true)
 				<li class="menu-header">@lang('Manage Shipments')</li>
-				<li class="dropdown {{ activeMenu(['branchList', 'branchManagerList', 'branchEmployeeList', 'createEmployee', 'branchEmployeeEdit', 'createBranchManager', 'branchManagerEdit', 'createBranch', 'branchEdit', 'showBranchProfile']) }}">
+				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Shipments')</span>
 					</a>
 					<ul class="dropdown-menu">
+						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
+							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">
+								@lang('All Shipments')
+							</a>
+						</li>
 
-						<li class="{{ activeMenu(['shipmentList']) }}">
-							<a class="nav-link " href="{{ route('shipmentList') }}">
-								@lang('Shipment List')
+						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
+							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => 'operator-country']) }}">
+								@lang('In Queue')
 							</a>
 						</li>
 

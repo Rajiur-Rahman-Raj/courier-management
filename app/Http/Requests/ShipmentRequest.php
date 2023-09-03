@@ -25,6 +25,7 @@ class ShipmentRequest extends FormRequest
     public function rules()
     {
 		$rules = [
+			'shipment_identifier' => ['nullable'],
 			'shipment_type' => ['required', Rule::in(['drop_off', 'pickup', 'condition'])],
 			'shipment_date' => ['required'],
 			'delivery_date' => ['required'],
@@ -32,10 +33,8 @@ class ShipmentRequest extends FormRequest
 			'receiver_branch' => ['required', 'exists:branches,id'],
 			'sender_id' => ['required', 'exists:users,id'],
 			'receiver_id' => ['required', 'exists:users,id'],
-			'from_state_id' => ['required', 'exists:states,id'],
 			'from_city_id' => ['nullable'],
 			'from_area_id' => ['nullable'],
-			'to_state_id' => ['required', 'exists:states,id'],
 			'to_city_id' => ['nullable'],
 			'to_area_id' => ['nullable'],
 			'payment_by' => ['required', Rule::in(['1', '2'])],
@@ -45,6 +44,17 @@ class ShipmentRequest extends FormRequest
 			'variant_id' => ['required_if:packing_service, yes'],
 			'variant_quantity' => ['required_if:packing_service, yes'],
 		];
+
+		if ($this->type == 'operator-country'){
+			$rules['from_state_id'] = ['required', 'exists:states,id'];
+			$rules['to_state_id'] = ['required', 'exists:states,id'];
+
+		}elseif ($this->type == 'internationally'){
+			$rules['from_country_id'] = ['required', 'exists:countries,id'];
+			$rules['to_country_id'] = ['required', 'exists:countries,id'];
+			$rules['from_state_id'] = ['nullable'];
+			$rules['to_state_id'] = ['nullable'];
+		}
 
 		if ($this->input('shipment_type') === 'drop_off' || $this->input('shipment_type') === 'pickup') {
 			$rules['parcel_name'] = ['required'];

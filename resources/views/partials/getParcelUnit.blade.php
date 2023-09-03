@@ -101,10 +101,13 @@
 
 
 	window.OCGetShippingRates = function OCGetShippingRates(){
+
+		let fromCountryId = $('.selectedFromCountry').val();
 		let fromStateId = $('.selectedFromState').val();
 		let fromCityId = $('.selectedFromCity').val();
 		let fromAreaId = $('.selectedFromArea').val();
 
+		let toCountryId = $('.selectedToCountry').val();
 		let toStateId   = $('.selectedToState').val();
 		let toCityId   = $('.selectedToCity').val();
 		let toAreaId   = $('.selectedToArea').val();
@@ -127,30 +130,34 @@
 				method: 'POST',
 				data: {
 					parcelTypeId: parcelTypeId,
+					fromCountryId: fromCountryId,
 					fromStateId: fromStateId,
 					fromCityId: fromCityId,
 					fromAreaId: fromAreaId,
 
+					toCountryId: toCountryId,
 					toStateId: toStateId,
 					toCityId: toCityId,
 					toAreaId: toAreaId,
 				},
 				success: function (response) {
+					console.log(response);
 						let responseData = response;
 						let shippingCost = parseFloat(responseData.shipping_cost);
-						let shippingTax  = responseData.tax;
+						let shippingTax  = parseFloat(responseData.tax);
 						let shippingInsurance = parseFloat(responseData.insurance);
 
 						totalShippingCost = isNaN(shippingCost) ? 0 : totalShippingCost + shippingCost;
 
 						let tax = isNaN(shippingCost) || isNaN(shippingTax) ? 0 : shippingCost * shippingTax / 100;
-						totalTax += tax;
+						totalTax = totalTax + tax;
 
 						totalInsurance = isNaN(shippingInsurance) ? 0 : totalInsurance + shippingInsurance;
 
 						parseFloat($('.OCShippingCost').val(totalShippingCost)).toFixed(2);
-						$('.OCTax').val(totalTax)
+						parseFloat($('.OCTax').val(totalTax)).toFixed(2);
 						parseFloat($('.OCInsurance').val(totalInsurance)).toFixed(2);
+						finalTotalAmountCalculation();
 				},
 				error: function (xhr, status, error) {
 					console.log(error)
