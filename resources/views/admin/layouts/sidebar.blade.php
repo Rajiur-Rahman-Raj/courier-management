@@ -23,20 +23,50 @@
 
 			@if(checkPermission('manage_shipments') == true)
 				<li class="menu-header">@lang('Manage Shipments')</li>
-				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
+				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment', 'trashShipmentList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Shipments')</span>
 					</a>
 					<ul class="dropdown-menu">
-						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
+						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment'], null, 'all') }}">
 							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">
 								@lang('All Shipments')
 							</a>
 						</li>
 
-						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment']) }}">
+						<li class="{{ activeMenu(['shipmentList'], null, 'in_queue') }}">
 							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => 'operator-country']) }}">
 								@lang('In Queue')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'dispatch') }}">
+							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => 'operator-country']) }}">
+								@lang('Dispatch')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'upcoming') }}">
+							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'upcoming', 'shipment_type' => 'operator-country']) }}">
+								@lang('Upcoming')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'received') }}">
+							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'received', 'shipment_type' => 'operator-country']) }}">
+								@lang('Received')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'delivered') }}">
+							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => 'operator-country']) }}">
+								@lang('Delivered')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['trashShipmentList']) }}">
+							<a class="nav-link " href="{{ route('trashShipmentList') }}">
+								@lang('Trash Shipments')
 							</a>
 						</li>
 

@@ -24,7 +24,7 @@
 								<h4 class="card-title">@lang("Shipment Details")</h4>
 
 								<div>
-									<a href="{{route('shipmentList', ['shipment_type' => 'operator-country', 'shipment_status' => 'all'])}}"
+									<a href="{{route('shipmentList', ['shipment_status' => $status, 'shipment_type' => $shipment_type])}}"
 									   class="btn btn-sm  btn-primary mr-2">
 										<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 									</a>
@@ -232,13 +232,15 @@
                                             <span class="font-weight-bold text-dark"><i
 													class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
 												@if($singleShipment->status == 1)
-													<p class="badge badge-pill badge-primary">@lang('In Queue')</p>
+													<p class="badge badge-info">@lang('In Queue')</p>
 												@elseif($singleShipment->status == 2)
-													<p class="badge badge-pill badge-orange">@lang('Dispatch')</p>
+													<p class="badge badge-warning">@lang('Dispatch')</p>
 												@elseif($singleShipment->status == 3)
-													<p class="badge badge-pill badge-info">@lang('Sent')</p>
+													<p class="badge badge-primary">@lang('Upcoming')</p>
 												@elseif($singleShipment->status == 4)
-													<p class="badge badge-pill badge-success">@lang('Delivery')</p>
+													<p class="badge badge-success">@lang('Received')</p>
+												@elseif($singleShipment->status == 5)
+													<p class="badge badge-danger">@lang('Delivered')</p>
 												@endif
                                             </span>
 											</li>

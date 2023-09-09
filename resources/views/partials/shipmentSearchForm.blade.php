@@ -17,7 +17,7 @@
 						value="drop_off" {{  request()->shipment_type == 'drop_off' ? 'selected' : '' }}>@lang('Drop Off')</option>
 					<option
 						value="pickup" {{  request()->status == 'pickup' ? 'selected' : '' }}>@lang('Pickup')</option>
-					@if($type == 'operator-country')
+					@if($type ?? '' == 'operator-country')
 						<option value="condition" {{  request()->status == 'condition' ? 'selected' : '' }}>@lang('Condition')</option>
 					@endif
 

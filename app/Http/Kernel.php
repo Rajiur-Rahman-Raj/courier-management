@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
 		'verifyUser' => VerifyUser::class,
 		'Ensure' => EnsureUserHasService::class,
 		'demo' => Demo::class,
+		'permission' => \App\Http\Middleware\AdminAuthorizeMiddleware::class,
 		'module' => CheckModule::class,
     ];
 }

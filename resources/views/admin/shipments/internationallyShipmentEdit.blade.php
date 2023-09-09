@@ -16,7 +16,7 @@
 				<h1>@lang("Edit Shipment")</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active"><a href="{{ route('admin.home') }}">@lang("Dashboard")</a></div>
-					<div class="breadcrumb-item"><a href="{{route('shipmentList', 'internationally')}}">@lang("Shipments List")</a></div>
+					<div class="breadcrumb-item"><a href="{{route('shipmentList', ['shipment_status' => $status, 'shipment_type' => $shipment_type])}}">@lang("Shipments List")</a></div>
 					<div class="breadcrumb-item">@lang("Edit Shipment")</div>
 				</div>
 			</div>
@@ -28,7 +28,7 @@
 						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 							<h5>@lang("Update Shipment")</h5>
 
-							<a href="{{route('shipmentList', 'internationally')}}"
+							<a href="{{route('shipmentList', ['shipment_status' => $status, 'shipment_type' => $shipment_type])}}"
 							   class="btn btn-sm  btn-primary mr-2">
 								<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 							</a>

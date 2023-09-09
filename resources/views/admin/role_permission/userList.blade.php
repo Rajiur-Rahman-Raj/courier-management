@@ -138,7 +138,7 @@
 								<div class="col-12">
 									<label for="">@lang('Role') </label>
 									<select
-										class="form-select form-control"
+										class="form-control"
 										v-model="item.role"
 										aria-label="Default select example">
 										<option value="" selected disabled>@lang('Select Role')</option>
@@ -236,11 +236,11 @@
 								<div class="col-12">
 									<label for="">@lang('Role') </label>
 									<select
-										class="form-select form-control staffRole"
+										class="form-control staffRole"
 										name="role_id"
 										aria-label="Default select example">
 										@forelse($roles as $item)
-											<option value="{{$item->id}}">{{$item->name}}</option>
+											<option value="{{$item->id}}" >{{$item->name}}</option>
 										@empty
 										@endforelse
 									</select>
@@ -451,25 +451,25 @@
 						});
 					}
 				},
-				rolePermissionUpdate() {
-					var $url = '{{route('admin.role.update')}}'
-					axios.post($url, this.item)
-						.then(function (response) {
-							if (response.data.result) {
-								location.reload();
-							}
-						})
-						.catch(function (error) {
-							let errors = error.response.data;
-							errors = errors.errors
-							for (let err in errors) {
-								let selector = document.querySelector(`.${err}-error`);
-								if (selector) {
-									selector.innerText = `${errors[err]}`;
-								}
-							}
-						});
-				},
+				{{--rolePermissionUpdate() {--}}
+				{{--	var $url = '{{route('admin.role.update')}}'--}}
+				{{--	axios.post($url, this.item)--}}
+				{{--		.then(function (response) {--}}
+				{{--			if (response.data.result) {--}}
+				{{--				location.reload();--}}
+				{{--			}--}}
+				{{--		})--}}
+				{{--		.catch(function (error) {--}}
+				{{--			let errors = error.response.data;--}}
+				{{--			errors = errors.errors--}}
+				{{--			for (let err in errors) {--}}
+				{{--				let selector = document.querySelector(`.${err}-error`);--}}
+				{{--				if (selector) {--}}
+				{{--					selector.innerText = `${errors[err]}`;--}}
+				{{--				}--}}
+				{{--			}--}}
+				{{--		});--}}
+				{{--},--}}
 			}
 		})
 	</script>

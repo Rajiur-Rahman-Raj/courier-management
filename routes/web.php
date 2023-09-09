@@ -85,7 +85,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permission']], function () {
 
 	/* ===== ADMIN STORAGE ===== */
 	Route::get('storage', [AdminStorageController::class, 'index'])->name('storage.index');
@@ -132,6 +132,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('view-shipment/{id}', [ShipmentController::class, 'viewShipment'])->name('viewShipment');
 		Route::post('shipment-store/{type?}', [ShipmentController::class, 'shipmentStore'])->name('shipmentStore');
 		Route::post('shipment-update/{id}', [ShipmentController::class, 'shipmentUpdate'])->name('shipmentUpdate');
+		Route::delete('shipment-delete/{id}', [ShipmentController::class, 'deleteShipment'])->name('deleteShipment');
+		Route::get('trash-shipment-list', [ShipmentController::class, 'trashShipmentList'])->name('trashShipmentList');
+		Route::get('restore-shipment/{id}', [ShipmentController::class, 'restoreShipment'])->name('restoreShipment');
+		Route::delete('force-shipment-delete/{id}', [ShipmentController::class, 'forceDeleteShipment'])->name('forceDeleteShipment');
 
 		Route::put('shipment-status-update/{id}', [ShipmentController::class, 'shipmentStatusUpdate'])->name('shipmentStatusUpdate');
 
@@ -299,10 +303,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 	/* ROLES AND PERMISSION BY ADMIN */
 	Route::middleware('module:role_permissions')->group(function () {
-		Route::get('role/list', [RolesPermissionController::class, 'index'])->name('admin.role');
-		Route::post('role/create', [RolesPermissionController::class, 'roleCreate'])->name('admin.role.create');
-		Route::post('role/update', [RolesPermissionController::class, 'roleUpdate'])->name('admin.role.update');
-		Route::delete('role/delete/{id}', [RolesPermissionController::class, 'roleDelete'])->name('admin.role.delete');
+		Route::get('role/list', [RolesPermissionController::class, 'roleList'])->name('admin.role');
+		Route::get('create/role', [RolesPermissionController::class, 'createRole'])->name('createRole');
+		Route::post('role/store', [RolesPermissionController::class, 'roleStore'])->name('roleStore');
+		Route::get('edit/role/{id}', [RolesPermissionController::class, 'editRole'])->name('editRole');
+		Route::post('role/update/{id}', [RolesPermissionController::class, 'roleUpdate'])->name('roleUpdate');
+		Route::delete('delete/role/{id}', [RolesPermissionController::class, 'deleteRole'])->name('deleteRole');
 
 		Route::get('manage/staffs', [RolesPermissionController::class, 'staffList'])->name('admin.role.staff');
 		Route::post('manage/staffs/create', [RolesPermissionController::class, 'staffCreate'])->name('admin.role.usersCreate');

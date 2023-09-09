@@ -72,4 +72,12 @@
                     </li>`);
 	});
 
+	$('.select-role').select2({
+		width: '100%'
+	}).on('select2:open', () => {
+		$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" href="{{ route('admin.role') }}"
+                    class="btn btn-outline-primary" target="_blank">+ Create New Role </a>
+                    </li>`);
+	});
+
 </script>

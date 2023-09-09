@@ -6,13 +6,15 @@ use App\Models\Admin\PackageVariant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shipment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
 	protected $guarded = ['id'];
 	protected $table = 'shipments';
+	protected $dates = ['deleted_at'];
 	protected $fillable = [
 		'shipment_identifier',
 		'shipment_type',

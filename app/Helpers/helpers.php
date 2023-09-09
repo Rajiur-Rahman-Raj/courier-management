@@ -48,6 +48,7 @@ function hex2rgba($color, $opacity = false)
 
 function collapsedMenu($routeNames = [], $segment = null)
 {
+
 	$lastSegment = last(request()->segments());
 	$currentName = request()->route()->getName();
 	if (isset($segment)) {
@@ -56,13 +57,21 @@ function collapsedMenu($routeNames = [], $segment = null)
 	return in_array($currentName, $routeNames) ? '' : 'collapsed';
 }
 
-function activeMenu($routeNames = [], $segment = null)
+function activeMenu($routeNames = [], $segment = null, $shipmentSegment = null)
 {
+
 	$lastSegment = last(request()->segments());
+	$shipment_segment =  request()->segment(3);
 	$currentName = request()->route()->getName();
+
 	if (isset($segment)) {
 		return (in_array($currentName, $routeNames) && $lastSegment == $segment) ? 'active' : '';
 	}
+
+	if (isset($shipmentSegment)) {
+		return (in_array($currentName, $routeNames) && $shipment_segment == $shipmentSegment) ? 'active' : '';
+	}
+
 	return in_array($currentName, $routeNames) ? 'active' : '';
 }
 
@@ -511,5 +520,9 @@ function lastUriSegment(){
 	$uriSegments = explode("/", parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 	$lastUriSegment = array_pop($uriSegments);
 	return $lastUriSegment;
+}
+
+function in_array_any($needles, $haystack) {
+	return (bool) array_intersect($needles, $haystack);
 }
 

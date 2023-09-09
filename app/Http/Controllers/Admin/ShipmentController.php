@@ -37,7 +37,6 @@ class ShipmentController extends Controller
 
 	public function shipmentList(Request $request, $status = null, $type = null)
 	{
-//		dd($status, $type);
 		$search = $request->all();
 		$fromDate = Carbon::parse($request->from_date);
 		$toDate = Carbon::parse($request->to_date)->addDay();
@@ -95,6 +94,12 @@ class ShipmentController extends Controller
 			->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search) {
 				return $query->where('status', 3);
 			})
+			->when(isset($search['status']) && $search['status'] == 'received', function ($query) use ($search) {
+				return $query->where('status', 4);
+			})
+			->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
+				return $query->where('status', 5);
+			})
 			->when($type == 'operator-country' && $status == 'all', function ($query){
 				$query->where('shipment_identifier', 1);
 			})
@@ -102,14 +107,50 @@ class ShipmentController extends Controller
 				$query->where('shipment_identifier', 1)
 						->where('status', 1);
 			})
-			->when($type == 'internationally', function ($query){
+			->when($type == 'operator-country' && $status == 'dispatch', function ($query){
+				$query->where('shipment_identifier', 1)
+					->where('status', 2);
+			})
+			->when($type == 'operator-country' && $status == 'upcoming', function ($query){
+				$query->where('shipment_identifier', 1)
+					->where('status', 3);
+			})
+			->when($type == 'operator-country' && $status == 'received', function ($query){
+				$query->where('shipment_identifier', 1)
+					->where('status', 4);
+			})
+			->when($type == 'operator-country' && $status == 'delivered', function ($query){
+				$query->where('shipment_identifier', 1)
+					->where('status', 5);
+			})
+			->when($type == 'internationally' && $status == 'all', function ($query){
 				$query->where('shipment_identifier', 2);
+			})
+			->when($type == 'internationally' && $status == 'in_queue', function ($query){
+				$query->where('shipment_identifier', 2)
+						->where('status', 1);
+			})
+			->when($type == 'internationally' && $status == 'dispatch', function ($query){
+				$query->where('shipment_identifier', 2)
+					->where('status', 2);
+			})
+			->when($type == 'internationally' && $status == 'upcoming', function ($query){
+				$query->where('shipment_identifier', 2)
+					->where('status', 3);
+			})
+			->when($type == 'internationally' && $status == 'received', function ($query){
+				$query->where('shipment_identifier', 2)
+					->where('status', 4);
+			})
+			->when($type == 'internationally' && $status == 'delivered', function ($query){
+				$query->where('shipment_identifier', 2)
+					->where('status', 5);
 			})
 			->paginate(config('basic.paginate'));
 		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status'));
 	}
 
-	public function createShipment($type = null, Request $request)
+	public function createShipment(Request $request, $type = null)
 	{
 		$data['status'] = $request->input('shipment_status');
 		$createShipmentType = ['operator-country', 'internationally'];
@@ -135,7 +176,9 @@ class ShipmentController extends Controller
 		}
 	}
 
-	public function editShipment($id = null, $shipmentIdentifier = null){
+	public function editShipment(Request $request, $id = null, $shipmentIdentifier = null){
+		$data['status'] = $request->input('segment');
+		$data['shipment_type'] = $request->input('shipment_type');
 
 		$data['shipmentTypeList'] = config('shipmentTypeList');
 		$data['allBranches'] = Branch::where('status', 1)->get();
@@ -162,7 +205,9 @@ class ShipmentController extends Controller
 		}
 	}
 
-	public function viewShipment($id){
+	public function viewShipment(Request $request, $id){
+		$data['status'] = $request->input('segment');
+		$data['shipment_type'] = $request->input('shipment_type');
 		$data['singleShipment'] = Shipment::with('shipmentAttachments','senderBranch','receiverBranch','sender.profile','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')->findOrFail($id);
 		return view('admin.shipments.viewShipment', $data);
 	}
@@ -1194,8 +1239,49 @@ class ShipmentController extends Controller
 		}
 	}
 
-	public function shipmentStatusUpdate(Request $request, $id){
+	public function deleteShipment($id){
+		Shipment::findOrFail($id)->delete();
+		return back()->with('success', 'Shipment deleted successfully');
+	}
 
+	public function trashShipmentList(Request $request){
+		$search = $request->all();
+		$data['trashShipments'] = Shipment::when(isset($search['shipment_id']), function ($query) use ($search) {
+			return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
+		})
+		->when(isset($search['shipment_date']), function ($query) use ($search) {
+			$query->whereDate("shipment_date", $search['shipment_date']);
+		})
+		->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search) {
+			return $query->where('status', 1);
+		})
+		->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search) {
+			return $query->where('status', 2);
+		})
+		->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search) {
+			return $query->where('status', 3);
+		})
+		->when(isset($search['status']) && $search['status'] == 'received', function ($query) use ($search) {
+			return $query->where('status', 4);
+		})
+		->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
+			return $query->where('status', 5);
+		})
+		->onlyTrashed()->paginate(config('basic.paginate'));
+		return view('admin.shipments.trashShipmentList', $data);
+	}
+
+	public function restoreShipment($id){
+		Shipment::onlyTrashed()->findOrFail($id)->restore();
+		return back()->with('success', 'Shipment restore successfully!');
+	}
+
+	public function forceDeleteShipment($id){
+		Shipment::onlyTrashed()->findOrFail($id)->forceDelete();
+		return back()->with('success', 'shipment is permanent deleted!');
+	}
+
+	public function shipmentStatusUpdate(Request $request, $id){
 		$shipment = Shipment::findOrFail($id);
 		$shipment->status = 2;
 		$shipment->save();

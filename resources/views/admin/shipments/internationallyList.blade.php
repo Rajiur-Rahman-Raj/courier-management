@@ -82,7 +82,6 @@
 																		<th scope="col">@lang('From Country')</th>
 																		<th scope="col">@lang('To Country')</th>
 																		<th scope="col">@lang('Total Cost')</th>
-																		<th scope="col">@lang('Payment Status')</th>
 																		<th scope="col">@lang('Shipment Date')</th>
 																		<th scope="col">@lang('Status')</th>
 																		<th scope="col">@lang('Action')</th>
@@ -100,13 +99,7 @@
 																			<td data-label="From Country"> @lang(optional($shipment->fromCountry)->name) </td>
 																			<td data-label="To Country"> @lang(optional($shipment->toCountry)->name) </td>
 																			<td data-label="Total Cost"> {{ $basic->currency_symbol }}{{ $shipment->total_pay }} </td>
-																			<td data-label="Payment Status">
-																				@if($shipment->payment_status == 1)
-																					<span class="badge badge-primary"><i class="fa fa-circle text-white danger font-12"></i> @lang('Paid')</span>
-																				@else
-																					<span class="badge badge-warning"><i class="fa fa-circle text-white danger font-12"></i> @lang('Due')</span>
-																				@endif
-																			</td>
+
 																			<td data-label="Shipment Date"> {{ dateTime($shipment->shipment_date) }} </td>
 
 																			<td data-label="Status">
@@ -115,9 +108,11 @@
 																				@elseif($shipment->status == 2)
 																					<span class="badge badge-warning">@lang('Dispatch')</span>
 																				@elseif($shipment->status == 3)
-																					<span class="badge badge-primary">@lang('Sent')</span>
+																					<span class="badge badge-primary">@lang('Upcoming')</span>
 																				@elseif($shipment->status == 4)
-																					<span class="badge badge-success">@lang('Delivery')</span>
+																					<span class="badge badge-success">@lang('Received')</span>
+																				@elseif($shipment->status == 5)
+																					<span class="badge badge-danger">@lang('Delivered')</span>
 																				@endif
 																			</td>
 
@@ -127,9 +122,20 @@
 																						Options
 																					</button>
 																					<div class="dropdown-menu">
-																						<a class="dropdown-item btn-outline-primary btn-sm" href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier]) }}"><i class="fa fa-edit mr-2" aria-hidden="true"></i>  @lang('Edit')</a>
 																						<a class="dropdown-item btn-outline-primary btn-sm" href="#"><i class="fas fa-file-invoice mr-2"></i>  @lang('Invoice')</a>
-																						<a class="dropdown-item btn-outline-primary btn-sm" href="{{ route('viewShipment', $shipment->id) }}"><i class="fa fa-eye mr-2" aria-hidden="true"></i>  @lang('Details')</a>
+																						<a class="dropdown-item btn-outline-primary btn-sm"
+																						   href="{{ route('viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'internationally']) }}"><i
+																								class="fa fa-eye mr-2"
+																								aria-hidden="true"></i> @lang('Details')
+																						</a>
+																						<a class="dropdown-item btn-outline-primary btn-sm" href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'internationally']) }}"><i class="fa fa-edit mr-2" aria-hidden="true"></i>  @lang('Edit')</a>
+																						<a data-target="#deleteShipment"
+																						   data-toggle="modal"
+																						   data-route="{{route('deleteShipment', $shipment->id)}}"
+																						   href="javascript:void(0)"
+																						   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
+																								class="fas fa-trash mr-2"></i> @lang('Delete')
+																						</a>
 																					</div>
 																				</div>
 																			</td>

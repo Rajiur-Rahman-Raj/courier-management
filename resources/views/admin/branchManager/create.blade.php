@@ -35,7 +35,7 @@
 								<div class="row mb-3">
 									<div class="col-sm-12 col-md-12 mb-3">
 										<label for="branch_id"> @lang('Select Branch') <span class="text-danger">*</span></label>
-										<select name="branch_id" class="form-control @error('branch_id') is-invalid @enderror select2">
+										<select name="branch_id" class="form-control @error('branch_id') is-invalid @enderror select2 select-branch">
 											<option value="" disabled selected>@lang('Select Branch')</option>
 											@foreach($allBranches as $branch)
 												<option value="{{ $branch->id }}">@lang($branch->branch_name)</option>
@@ -52,7 +52,7 @@
 								<div class="row mb-3">
 									<div class="col-sm-12 col-md-12 mb-3">
 										<label for="role_id"> @lang('Select Role') <span class="text-danger">*</span></label>
-										<select name="role_id" class="form-control @error('role_id') is-invalid @enderror select2 selectRole">
+										<select name="role_id" class="form-control @error('role_id') is-invalid @enderror select2 selectRole select-role">
 											<option value="" disabled selected>@lang('Select Role')</option>
 											@foreach($allRoles as $role)
 												<option value="{{ $role->id }}">@lang($role->name)</option>
@@ -187,6 +187,7 @@
 		@endpush
 
 		@section('scripts')
+			@include('partials.select2Create')
 			<script type="text/javascript">
 				'use strict';
 				$(document).ready(function () {

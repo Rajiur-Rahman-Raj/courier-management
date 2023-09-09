@@ -516,19 +516,6 @@ class BranchController extends Controller
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public function getRoleUser(Request $request){
 		$results = Admin::where('status', 1)->where('role_id', $request->id)->get();
 		return response($results);

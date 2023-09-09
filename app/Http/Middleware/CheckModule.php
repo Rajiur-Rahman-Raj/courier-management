@@ -17,6 +17,7 @@ class CheckModule
 	 */
 	public function handle(Request $request, Closure $next, $role)
 	{
+
 		$loginUser = auth()->user();
 
 		if ($loginUser->status != 1) {
