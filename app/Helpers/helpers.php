@@ -526,3 +526,62 @@ function in_array_any($needles, $haystack) {
 	return (bool) array_intersect($needles, $haystack);
 }
 
+function adminAccessRoute($search)
+{
+
+	$user = auth()->guard('admin')->user();
+
+	if ($user->role_id == null){
+		return true;
+	}
+
+	foreach (optional($user->role)->permission as $permission) {
+		if (in_array($permission, $search)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+//function adminAccessRoute($search) {
+//
+//	$user = auth()->guard('admin')->user();
+//
+//	if($user->role_id == null){
+//		return true;
+//	}
+//
+//	$permissionLists = collect(config('permissionList'));
+//
+//	$permissions = [];
+//	foreach ($permissionLists as $permissionList){
+//		$permissions[] = collect($permissionList)->pluck('permission')->flatten();
+//	}
+//
+//	$userPermission = [];
+//	foreach ($permissions as $permission){
+//		$userPermission[] = $permission->intersect(optional($user->role)->permission);
+//	}
+//
+//
+//	foreach ($userPermission as $key => $permission){
+//		if (is_array($search)){
+//			$list = $permission->intersect($search);
+//
+//			if (0 < count($list)){
+//				return true;
+//			}
+//			return false;
+//		}
+//		else{
+//			$permission->search(function ($item) use ($search){
+//				if ($search == $item){
+//					return true;
+//				}
+//				return  false;
+//			});
+//		}
+//	}
+//
+//}
+

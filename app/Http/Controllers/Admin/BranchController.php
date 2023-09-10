@@ -525,4 +525,5 @@ class BranchController extends Controller
 		$results = Admin::where('status', 1)->where('id', $request->id)->first();
 		return response($results);
 	}
+
 }

@@ -58,7 +58,7 @@
                     <a href="javascript:void(0)" class="notification-clear-btn no-underline text-capitalize"
                        v-if="items.length > 0" @click.prevent="readAll">@lang('Clear all')</a>
                     <a href="javascript:void(0)" class="no-underline text-capitalize"
-                       v-else="">@lang('No notification found')</a>
+                       v-else>@lang('No notification found')</a>
                 </div>
             </div>
         </li>

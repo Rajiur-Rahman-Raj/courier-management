@@ -17,6 +17,7 @@ class AdminController extends Controller
 {
 	public function index()
 	{
+
 		$basicControl = basicControl();
 		$last30 = date('Y-m-d', strtotime('-30 days'));
 		$last7 = date('Y-m-d', strtotime('-7 days'));
@@ -171,5 +172,10 @@ class AdminController extends Controller
 			$user->save();
 			return back()->with('success', 'Password changed successfully');
 		}
+	}
+//
+	public function forbidden()
+	{
+		return view('admin.errors.403');
 	}
 }

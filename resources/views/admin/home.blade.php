@@ -73,7 +73,7 @@
 							<h4>@lang('New User')</h4>
 						</div>
 						<div class="card-body">
-							{{ _(getAmount($userRecord['todayJoin'])) }}
+							{{ (getAmount($userRecord['todayJoin'])) }}
 						</div>
 					</div>
 				</div>

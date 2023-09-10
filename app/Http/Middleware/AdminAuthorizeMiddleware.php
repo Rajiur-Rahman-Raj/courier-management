@@ -18,13 +18,18 @@ class AdminAuthorizeMiddleware
 	public function handle(Request $request, Closure $next)
 	{
 		$user = Auth::guard('admin')->user();
-		$list = collect(config('role'))->pluck(['access'])->flatten();
-		$filtered = $list->intersect($user->admin_access);
 
-		if(!in_array($request->route()->getName(), $list->toArray()) ||  in_array($request->route()->getName(), $filtered->toArray()) ){
+
+		if ($user->role_id == null){
 			return $next($request);
 		}
 
-		return  redirect()->route('admin.403');
+		$userPermission = optional($user->role)->permission;
+		if (in_array($request->route()->getName(), $userPermission)){
+			return $next($request);
+		}
+
+		return  redirect()->route('403');
+
 	}
 }

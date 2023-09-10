@@ -10,7 +10,8 @@
 		</div>
 		<div class="sidebar-brand sidebar-brand-sm">
 			<a href="{{ route('admin.home') }}">
-				<img src="{{ getFile(config('basic.default_file_driver'),config('basic.favicon_image')) }}" class="dashboard-logo-sm" alt="@lang('Logo')">
+				<img src="{{ getFile(config('basic.default_file_driver'),config('basic.favicon_image')) }}"
+					 class="dashboard-logo-sm" alt="@lang('Logo')">
 			</a>
 		</div>
 
@@ -21,7 +22,7 @@
 						class="fas fa-tachometer-alt text-primary"></i><span>@lang('Dashboard')</span></a>
 			</li>
 
-			@if(checkPermission('manage_shipments') == true)
+{{--			@if(checkPermission('manage_shipments') == true)--}}
 				<li class="menu-header">@lang('Manage Shipments')</li>
 				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment', 'trashShipmentList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -29,37 +30,43 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment'], null, 'all') }}">
-							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">
 								@lang('All Shipments')
 							</a>
 						</li>
 
 						<li class="{{ activeMenu(['shipmentList'], null, 'in_queue') }}">
-							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => 'operator-country']) }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => 'operator-country']) }}">
 								@lang('In Queue')
 							</a>
 						</li>
 
 						<li class="{{ activeMenu(['shipmentList'], null, 'dispatch') }}">
-							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => 'operator-country']) }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => 'operator-country']) }}">
 								@lang('Dispatch')
 							</a>
 						</li>
 
 						<li class="{{ activeMenu(['shipmentList'], null, 'upcoming') }}">
-							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'upcoming', 'shipment_type' => 'operator-country']) }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'upcoming', 'shipment_type' => 'operator-country']) }}">
 								@lang('Upcoming')
 							</a>
 						</li>
 
 						<li class="{{ activeMenu(['shipmentList'], null, 'received') }}">
-							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'received', 'shipment_type' => 'operator-country']) }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'received', 'shipment_type' => 'operator-country']) }}">
 								@lang('Received')
 							</a>
 						</li>
 
 						<li class="{{ activeMenu(['shipmentList'], null, 'delivered') }}">
-							<a class="nav-link " href="{{ route('shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => 'operator-country']) }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => 'operator-country']) }}">
 								@lang('Delivered')
 							</a>
 						</li>
@@ -72,10 +79,10 @@
 
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
 
-			@if(checkPermission('manage_shipment_types') == true)
+{{--			@if(checkPermission('manage_shipment_types') == true)--}}
 				<li class="menu-header">@lang('Manage Shipment Types')</li>
 				<li class="dropdown {{ activeMenu(['shipmentTypeList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -89,9 +96,9 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('manage_shipping_rates') == true)
+{{--			@if(checkPermission('manage_shipping_rates') == true)--}}
 				<li class="menu-header">@lang('Manage Shipping Rates')</li>
 				<li class="dropdown {{ activeMenu(['defaultRate', 'operatorCountryRate', 'internationallyRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate', 'internationallyShowRate', 'createShippingRateInternationally']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -118,9 +125,9 @@
 
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('manage_packing_service') == true)
+{{--			@if(checkPermission('manage_packing_service') == true)--}}
 				<li class="menu-header">@lang('Manage Packing Service')</li>
 				<li class="dropdown {{ activeMenu(['packingServiceList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -134,9 +141,9 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('manage_parcel_service') == true)
+{{--			@if(checkPermission('manage_parcel_service') == true)--}}
 				<li class="menu-header">@lang('Manage Parcel Service')</li>
 				<li class="dropdown {{ activeMenu(['parcelServiceList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -150,37 +157,42 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('manage_branch') == true)
+			@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_List.permission.view')) == true || adminAccessRoute(config('permissionList.Manage_Branch.Branch_Manager.permission.view')) == true || adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.view')) == true)
 				<li class="menu-header">@lang('Manage Branch')</li>
 				<li class="dropdown {{ activeMenu(['branchList', 'branchManagerList', 'branchEmployeeList', 'createEmployee', 'branchEmployeeEdit', 'createBranchManager', 'branchManagerEdit', 'createBranch', 'branchEdit', 'showBranchProfile']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Branch')</span>
 					</a>
 					<ul class="dropdown-menu">
-						<li class="{{ activeMenu(['branchList']) }}">
-							<a class="nav-link " href="{{ route('branchList') }}">
-								@lang('Branch List')
-							</a>
-						</li>
+						@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_List.permission.view')) == true)
+							<li class="{{ activeMenu(['branchList']) }}">
+								<a class="nav-link " href="{{ route('branchList') }}">
+									@lang('Branch List')
+								</a>
+							</li>
+						@endif
 
-						<li class="{{ activeMenu(['branchManagerList']) }}">
-							<a class="nav-link " href="{{ route('branchManagerList') }}">
-								@lang('Branch Manager')
-							</a>
-						</li>
+						@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_Manager.permission.view')) == true)
+							<li class="{{ activeMenu(['branchManagerList']) }}">
+								<a class="nav-link " href="{{ route('branchManagerList') }}">
+									@lang('Branch Manager')
+								</a>
+							</li>
+						@endif
 
-						<li class="{{ activeMenu(['branchEmployeeList']) }}">
-							<a class="nav-link " href="{{ route('branchEmployeeList') }}">
-								@lang('Employee List')
-							</a>
-						</li>
+						@if(adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.view')) == true)
+							<li class="{{ activeMenu(['branchEmployeeList']) }}">
+								<a class="nav-link " href="{{ route('branchEmployeeList') }}">
+									@lang('Employee List')
+								</a>
+							</li>
+						@endif
 					</ul>
 				</li>
 			@endif
-
-			@if(checkPermission('manage_department') == true)
+			@if(adminAccessRoute(config('permissionList.Manage_Department.Department_List.permission.view')) == true)
 				<li class="menu-header">@lang('Manage Departments')</li>
 				<li class="dropdown {{ activeMenu(['departmentList', 'createDepartment', 'editDepartment']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -196,7 +208,9 @@
 				</li>
 			@endif
 
-			@if(checkPermission('manage_location') == true)
+
+
+{{--			@if(checkPermission('manage_location') == true)--}}
 				<li class="menu-header">@lang('Manage Locations')</li>
 				<li class="dropdown {{ activeMenu(['areaList', 'countryList', 'stateList', 'cityList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -229,9 +243,9 @@
 
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('manage_clients') == true)
+{{--			@if(checkPermission('manage_clients') == true)--}}
 				<li class="menu-header">@lang('Manage Clients')</li>
 				<li class="dropdown {{ activeMenu(['clientList', 'createClient', 'clientStore']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -245,9 +259,9 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('user_management') == true)
+{{--			@if(checkPermission('user_management') == true)--}}
 				<li class="menu-header">@lang('User Panel')</li>
 				<li class="dropdown {{ activeMenu(['user-list','user.search','inactive.user.search','send.mail.user','inactive.user.list']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -271,17 +285,17 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('tickets') == true)
+{{--			@if(checkPermission('tickets') == true)--}}
 				<li class="menu-header">@lang('Support Tickets')</li>
 				<li class="dropdown {{ activeMenu(['admin.ticket','admin.ticket.view','admin.ticket.search']) }}">
 					<a href="{{ route('admin.ticket') }}" class="nav-link"><i
 							class="fas fa-headset text-info"></i><span>@lang('Tickets')</span></a>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('transaction') == true)
+{{--			@if(checkPermission('transaction') == true)--}}
 				<li class="menu-header">@lang('Transactions')</li>
 				<li class="dropdown {{ activeMenu(['admin.fund.add.index','admin.fund.add.search']) }}">
 					<a href="{{ route('admin.fund.add.index') }}" class="nav-link"><i
@@ -297,19 +311,19 @@
 					<a href="{{ route('admin.transaction.index') }}" class="nav-link"><i
 							class="fas fa-chart-line text-success"></i><span>@lang('Transaction List')</span></a>
 				</li>
-			@endif
+{{--			@endif--}}
 
 
 			<li class="menu-header">@lang('Settings Panel')</li>
 
-			@if(checkPermission('control_panel') == true)
+{{--			@if(checkPermission('control_panel') == true)--}}
 				<li class="dropdown {{ activeMenu(['settings','seo.update','plugin.config','tawk.control','google.analytics.control','google.recaptcha.control','fb.messenger.control','service.control','logo.update','breadcrumb.update','seo.update','currency.exchange.api.config','sms.config', 'sms.template.index','sms.template.edit','voucher.settings','basic.control','securityQuestion.index','securityQuestion.create','securityQuestion.edit','pusher.config','notify.template.index','notify.template.edit','language.index','language.create', 'language.edit','language.keyword.edit', 'email.config','email.template.index','email.template.default', 'email.template.edit', 'charge.index', 'charge.edit', 'currency.index', 'currency.create', 'currency.edit', 'charge.chargeEdit' ]) }}">
 					<a href="{{ route('settings') }}" class="nav-link"><i
 							class="fas fa-cog text-primary"></i><span>@lang('Control Panel')</span></a>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('payment_settings') == true)
+{{--			@if(checkPermission('payment_settings') == true)--}}
 				<li class="dropdown {{ activeMenu(['payment.methods','edit.payment.methods','admin.deposit.manual.index','admin.deposit.manual.create','admin.deposit.manual.edit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-money-check-alt text-success"></i> <span>@lang('Payment Settings')</span>
@@ -338,9 +352,9 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('payout_settings') == true)
+{{--			@if(checkPermission('payout_settings') == true)--}}
 				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-users-cog text-danger"></i> <span>@lang('Payout Settings')</span>
@@ -358,9 +372,9 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('role_permissions') == true)
+{{--			@if(checkPermission('role_permissions') == true)--}}
 				<li class="dropdown {{ activeMenu(['admin.role','admin.role.staff']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-user-friends text-success"></i> <span>@lang('Roles and Permission')</span>
@@ -379,9 +393,9 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('ui_settings') == true)
+{{--			@if(checkPermission('ui_settings') == true)--}}
 				<li class="dropdown {{ activeMenu(['template.show']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-users text-info"></i> <span>@lang('UI Settings')</span>
@@ -396,9 +410,9 @@
 						@endforeach
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('content_settings') == true)
+{{--			@if(checkPermission('content_settings') == true)--}}
 				<li class="dropdown {{ activeMenu(['content.index','content.create','content.show']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-cogs text-dark"></i> <span>@lang('Content Settings')</span>
@@ -413,9 +427,9 @@
 						@endforeach
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 
-			@if(checkPermission('blog_settings') == true)
+{{--			@if(checkPermission('blog_settings') == true)--}}
 				<li class="dropdown {{ activeMenu(['blogCategory','blogCategoryEdit','blogCategoryCreate', 'blogList', 'blogCreate', 'blogEdit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-cogs text-dark"></i> <span>@lang('Blog Settings')</span>
@@ -434,7 +448,7 @@
 						</li>
 					</ul>
 				</li>
-			@endif
+{{--			@endif--}}
 		</ul>
 
 		<div class="mt-4 mb-4 p-3 hide-sidebar-mini">
