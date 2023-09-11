@@ -1,44 +1,335 @@
 <?php
 
 $arr = [
+	"Manage_Shipments" => [
+		"Shipment_List" => [
+			'permission' => [
+				'view' => ['shipmentList', 'viewShipment'],
+				'add' => ['createShipment', 'shipmentStore'],
+				'edit' => ['editShipment', 'shipmentUpdate'],
+				'delete' => ['deleteShipment', 'trashShipmentList', 'restoreShipment', 'forceDeleteShipment'],
+				'dispatch' => ['shipmentStatusUpdate'],
+			],
+		],
+	],
+
+	"Shipment_Types" => [
+		"Shipment_Type_List" => [
+			'permission' => [
+				'view' => ['shipmentTypeList'],
+				'edit' => ['shipmentTypeUpdate'],
+			],
+		],
+	],
+
+	"Shipping_Rates" => [
+		"Default_Rate" => [
+			'permission' => [
+				'view' => ['defaultRate'],
+				'add' => [],
+				'show' => [],
+				'edit' => ['defaultShippingRateOperatorCountryUpdate', 'defaultShippingRateInternationallyUpdate'],
+				'delete' => [],
+			],
+		],
+		"Operator_Country_Rate" => [
+			'permission' => [
+				'view' => ['operatorCountryRate'],
+				'add' => ['createShippingRateOperatorCountry', 'shippingRateOperatorCountry.store'],
+				'show' => ['operatorCountryShowRate'],
+				'edit' => ['stateRateUpdate', 'cityRateUpdate', 'areaRateUpdate'],
+				'delete' => ['deleteStateRate', 'deleteCityRate', 'deleteAreaRate'],
+			],
+		],
+		"Internationally_Rate" => [
+			'permission' => [
+				'view' => ['internationallyRate'],
+				'add' => ['createShippingRateInternationally', 'shippingRateInternationally.store'],
+				'show' => ['internationallyShowRate'],
+				'edit' => ['countryRateUpdateInternationally', 'stateRateUpdateInternationally', 'cityRateUpdateInternationally'],
+				'delete' => ['deleteICountryRate', 'deleteIStateRate', 'deleteICityRate'],
+			],
+		],
+	],
+
+	"Packing_Service" => [
+		"Service_List" => [
+			'permission' => [
+				'view' => ['parcelServiceList'],
+				'add' => ['parcelTypeStore', 'parcelUnitStore', 'parcelServiceStore'],
+				'edit' => ['parcelTypeUpdate', 'parcelUnitUpdate', 'parcelServiceUpdate'],
+			],
+		],
+	],
+
+	"Parcel_Service" => [
+		"Service_List" => [
+			'permission' => [
+				'view' => ['packingServiceList'],
+				'add' => ['packageStore', 'variantStore', 'packingServiceStore'],
+				'edit' => ['packageUpdate', 'variantUpdate', 'packingServiceUpdate'],
+			],
+		],
+	],
+
 	"Manage_Branch" => [
 		"Branch_List" => [
-			'label' => "Branch List",
 			'permission' => [
-				'view' => ['branchList', 'showBranchProfile'],
+				'view' => ['branchList'],
 				'add' => ['createBranch', 'branchStore'],
 				'edit' => ['branchEdit'],
 				'delete' => [],
+				'show_profile' => ['showBranchProfile'],
+				'show_staff_list' => [],
+				'login_as' => [],
 			],
 		],
 		"Branch_Manager" => [
-			'label' => "Branch Manager",
 			'permission' => [
-				'view' => [],
-				'add' => [],
-				'edit' => [],
+				'view' => ['branchManagerList', ],
+				'add' => ['createBranchManager', 'branchManagerStore'],
+				'edit' => ['branchManagerEdit', 'branchManagerUpdate'],
 				'delete' => [],
+				'show_profile' => [],
+				'show_staff_list' => ['branchStaffList'],
+				'login_as' => ['admin.role.usersLogin'],
 			],
 		],
 		"Employee_List" => [
-			'label' => "Employee List",
 			'permission' => [
 				'view' => ['branchEmployeeList'],
 				'add' => ['createEmployee'],
 				'edit' => ['branchEmployeeEdit'],
 				'delete' => [],
+				'show_profile' => [],
+				'show_staff_list' => [],
+				'login_as' => ['admin.role.usersLogin'],
 			],
 		],
 	],
 
 	'Manage_Department' => [
 		"Department_List" => [
-			'label' => "Department List",
 			'permission' => [
 				'view' => ['departmentList'],
 				'add' => ['createDepartment', 'departmentStore'],
 				'edit' => ['departmentEdit'],
 				'delete' => [],
+			],
+		],
+	],
+
+	'Manage_Clients' => [
+		"Client_List" => [
+			'permission' => [
+				'view' => ['clientList'],
+				'add' => ['createClient', 'clientStore'],
+				'edit' => ['clientEdit', 'clientUpdate', 'user.balance.update'],
+				'delete' => [],
+				'show_profile' => ['user.edit'],
+				'login_as' => ['user.asLogin'],
+			],
+		],
+	],
+
+	'Manage_Locations' => [
+		"Country_List" => [
+			'permission' => [
+				'view' => ['countryList'],
+				'add' => ['countryStore'],
+				'edit' => ['countryUpdate'],
+				'delete' => [],
+			],
+		],
+		"State_List" => [
+			'permission' => [
+				'view' => ['stateList'],
+				'add' => ['stateStore'],
+				'edit' => ['stateUpdate'],
+				'delete' => [],
+			],
+		],
+		"City_List" => [
+			'permission' => [
+				'view' => ['cityList'],
+				'add' => ['cityStore'],
+				'edit' => ['cityUpdate'],
+				'delete' => [],
+			],
+		],
+		"Area_List" => [
+			'permission' => [
+				'view' => ['areaList'],
+				'add' => ['areaStore'],
+				'edit' => ['areaUpdate'],
+				'delete' => [],
+			],
+		],
+	],
+
+	'User_Panel' => [
+		"Manage_Users" => [
+			'permission' => [
+				'view' => ['user-list','inactive.user.list'],
+				'add' => [],
+				'edit' => ['user.edit', 'user.balance.update'],
+				'delete' => [],
+				'send_mail' => ['send.mail.user'],
+				'login_as' => ['user.asLogin'],
+			],
+		],
+	],
+
+	'Support_Tickets' => [
+		"Tickets" => [
+			'permission' => [
+				'view' => ['admin.ticket','admin.ticket.view'],
+				'add' => [],
+				'edit' => ['admin.ticket.reply', 'admin.ticket.download'],
+				'delete' => ['admin.ticket.delete'],
+			],
+		],
+	],
+
+	'Transactions' => [
+		"Add_Fund_List" => [
+			'permission' => [
+				'view' => ['admin.ticket','admin.ticket.view'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Payout_List" => [
+			'permission' => [
+				'view' => ['payout.index', 'payout.details'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Transaction_List" => [
+			'permission' => [
+				'view' => ['admin.transaction.index'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+	],
+
+	'Control_Panel' => [
+		"Control_Panel" => [
+			'permission' => [
+				'view' => ['settings', 'notify.template.index', 'email.template.index', 'sms.template.index', 'sms.template.edit', 'language.index', 'storage.index', 'plugin.config'],
+				'add' => ['payment.methods'],
+				'edit' => ['basic.control', 'logo.update', 'seo.update', 'pusher.config', 'notify.template.edit', 'email.config', 'email.template.default', 'email.template.edit', 'sms.config', 'sms.template.update', 'language.edit', 'language.update', 'language.keyword.edit', 'language.keyword.update', 'language.import.json', 'language.store.key', 'language.update.key', 'storage.edit', 'storage.setDefault', 'tawk.control', 'fb.messenger.control', 'google.recaptcha.control', 'google.analytics.control'],
+				'delete' => ['language.delete', 'language.delete.key'],
+			],
+		],
+	],
+
+	'Payment_Settings' => [
+		"Payment_Methods" => [
+			'permission' => [
+				'view' => ['payment.methods'],
+				'add' => [],
+				'edit' => ['edit.payment.methods', 'update.payment.methods', 'sort.payment.methods'],
+				'delete' => [],
+			],
+		],
+		"Manual_Gateway" => [
+			'permission' => [
+				'view' => ['admin.deposit.manual.index'],
+				'add' => ['admin.deposit.manual.create', 'admin.deposit.manual.store'],
+				'edit' => ['admin.deposit.manual.edit', 'admin.deposit.manual.update'],
+				'delete' => [],
+			],
+		],
+		"Payment_Request" => [
+			'permission' => [
+				'view' => ['admin.payment.pending', 'admin.payment.search'],
+				'add' => [],
+				'edit' => ['admin.payment.action'],
+				'delete' => [],
+			],
+		],
+		"Payment_Log" => [
+			'permission' => [
+				'view' => ['admin.payment.log'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+	],
+
+	'Payout_Settings' => [
+		"Payout_Methods" => [
+			'permission' => [
+				'view' => ['payout.method.list'],
+				'add' => ['payout.method.add'],
+				'edit' => ['payout.method.edit'],
+				'delete' => [],
+			],
+		],
+	],
+
+	'Role_&_Permissions' => [
+		"Available_Roles" => [
+			'permission' => [
+				'view' => ['admin.role'],
+				'add' => ['payout.method.add'],
+				'edit' => ['payout.method.edit'],
+				'delete' => [],
+				'login_as' => [],
+			],
+		],
+		"Manage_Staff" => [
+			'permission' => [
+				'view' => ['admin.role.staff'],
+				'add' => ['admin.role.usersCreate', 'roleStore'],
+				'edit' => ['admin.role.usersEdit', 'admin.role.statusChange'],
+				'delete' => [],
+				'login_as' => ['admin.role.usersLogin'],
+			],
+		],
+	],
+
+	'Theme_Settings' => [
+		"Ui_Settings" => [
+			'permission' => [
+				'view' => ['template.show'],
+				'add' => [],
+				'edit' => ['template.update'],
+				'delete' => [],
+			],
+		],
+		"Content_Settings" => [
+			'permission' => [
+				'view' => ['content.index'],
+				'add' => ['content.create', 'content.store'],
+				'edit' => ['content.show', 'content.update'],
+				'delete' => ['content.delete'],
+			],
+		],
+	],
+
+	'Blog_Settings' => [
+		"Category_List" => [
+			'permission' => [
+				'view' => ['blogCategory'],
+				'add' => ['blogCategoryCreate', 'blogCategoryStore'],
+				'edit' => ['blogCategoryEdit', 'blogCategoryUpdate'],
+				'delete' => ['blogCategoryDelete'],
+			],
+		],
+		"Blog_List" => [
+			'permission' => [
+				'view' => ['blogList'],
+				'add' => ['blogCreate', 'blogStore'],
+				'edit' => ['blogEdit', 'blogUpdate'],
+				'delete' => ['blogDelete'],
 			],
 		],
 	],

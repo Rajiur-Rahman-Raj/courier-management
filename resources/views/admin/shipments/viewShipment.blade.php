@@ -68,16 +68,7 @@
 
 												<a class="ml-3 text-decoration-none"
 												   href="{{ route('user.edit',optional($singleShipment->sender)->id) }}">
-													<div class="d-lg-flex d-block align-items-center">
-														<div class="mr-2"><img
-																src="{{ getFile(optional($singleShipment->sender->profile)->driver,optional($singleShipment->sender->profile)->profile_picture) }}"
-																alt="user" class="rounded-circle" width="45"
-																height="45"></div>
-														<div class="">
-															<h6 class="text-dark mb-0 font-16 font-weight-medium">@lang(optional($singleShipment->sender)->name)</h6>
-															<p class="text-muted mb-0 font-12 font-weight-normal">@lang(optional($singleShipment->sender)->email)</p>
-														</div>
-													</div>
+													 <span class="font-weight-bold">@lang(optional($singleShipment->sender)->name)</span>
 												</a>
 											</li>
 
@@ -87,16 +78,7 @@
 
 												<a class="ml-3 text-decoration-none"
 												   href="{{ route('user.edit',optional($singleShipment->receiver)->id) }}">
-													<div class="d-lg-flex d-block align-items-center">
-														<div class="mr-2"><img
-																src="{{ getFile(optional($singleShipment->receiver->profile)->driver,optional($singleShipment->receiver->profile)->profile_picture) }}"
-																alt="user" class="rounded-circle" width="45"
-																height="45"></div>
-														<div class="">
-															<h6 class="text-dark mb-0 font-16 font-weight-medium">@lang(optional($singleShipment->receiver)->name)</h6>
-															<p class="text-muted mb-0 font-12 font-weight-medium">@lang(optional($singleShipment->receiver)->email)</p>
-														</div>
-													</div>
+													<span class="font-weight-bold">@lang(optional($singleShipment->receiver)->name)</span>
 												</a>
 											</li>
 
@@ -114,16 +96,7 @@
 
 												<a class="ml-3 text-decoration-none"
 												   href="{{ route('branchEdit', optional($singleShipment->senderBranch)->id) }}">
-													<div class="d-lg-flex d-block align-items-center">
-														<div class="mr-2"><img
-																src="{{getFile(optional($singleShipment->senderBranch)->driver,optional($singleShipment->senderBranch)->image) }}"
-																alt="user" class="rounded-circle" width="45"
-																height="45"></div>
-														<div class="">
-															<h6 class="text-dark mb-0 font-16 font-weight-medium">@lang(optional($singleShipment->senderBranch)->branch_name)</h6>
-															<p class="text-muted mb-0 font-12 font-weight-medium">@lang(optional($singleShipment->senderBranch)->email)</p>
-														</div>
-													</div>
+													<span class="font-weight-bold">@lang(optional($singleShipment->senderBranch)->branch_name)</span>
 												</a>
 											</li>
 
@@ -133,17 +106,9 @@
 
 												<a class="ml-3 text-decoration-none"
 												   href="{{ route('branchEdit', optional($singleShipment->receiverBranch)->id) }}">
-													<div class="d-lg-flex d-block align-items-center">
-														<div class="mr-2"><img
-																src="{{getFile(optional($singleShipment->receiverBranch)->driver,optional($singleShipment->receiverBranch)->image) }}"
-																alt="user" class="rounded-circle" width="45"
-																height="45"></div>
-														<div class="">
-															<h6 class="text-dark mb-0 font-16 font-weight-medium">@lang(optional($singleShipment->receiverBranch)->branch_name)</h6>
-															<p class="text-muted mb-0 font-12 font-weight-medium">@lang(optional($singleShipment->receiverBranch)->email)</p>
-														</div>
-													</div>
+													<span class="font-weight-bold">@lang(optional($singleShipment->receiverBranch)->branch_name)</span>
 												</a>
+
 											</li>
 
 
@@ -221,9 +186,9 @@
                                             <span class="font-weight-bold text-dark"><i
 													class="fas fa-money-check-alt  mr-2 text-primary"></i> @lang('Payment Status') :
                                                 @if($singleShipment->payment_status == 1)
-													<p class="badge badge-success">@lang('Paid')</p>
+													<p class="badge badge-success rounded">@lang('Paid')</p>
 												@else
-													<p class="badge badge-warning">@lang('Unpaid')</p>
+													<p class="badge badge-warning rounded">@lang('Unpaid')</p>
 												@endif
                                             </span>
 											</li>
@@ -232,15 +197,15 @@
                                             <span class="font-weight-bold text-dark"><i
 													class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
 												@if($singleShipment->status == 1)
-													<p class="badge badge-info">@lang('In Queue')</p>
+													<p class="badge badge-info rounded">@lang('In Queue')</p>
 												@elseif($singleShipment->status == 2)
-													<p class="badge badge-warning">@lang('Dispatch')</p>
+													<p class="badge badge-warning rounded">@lang('Dispatch')</p>
 												@elseif($singleShipment->status == 3)
-													<p class="badge badge-primary">@lang('Upcoming')</p>
+													<p class="badge badge-primary rounded">@lang('Upcoming')</p>
 												@elseif($singleShipment->status == 4)
-													<p class="badge badge-success">@lang('Received')</p>
+													<p class="badge badge-success rounded">@lang('Received')</p>
 												@elseif($singleShipment->status == 5)
-													<p class="badge badge-danger">@lang('Delivered')</p>
+													<p class="badge badge-danger rounded">@lang('Delivered')</p>
 												@endif
                                             </span>
 											</li>

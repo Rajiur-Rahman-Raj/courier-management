@@ -27,34 +27,7 @@
 <body id="body">
 	<div id="app">
 		<div class="main-wrapper main-wrapper-1">
-
-			<!-- Top Navbar -->
 			<div class="navbar-bg" style="height: 90px"></div>
-			<nav class="navbar navbar-expand-lg main-navbar mt-2">
-
-				<!--------------- Search -------------->
-				<form class="form-inline mr-auto">
-					<ul class="navbar-nav mr-3">
-						<li><a href="javascript:void(0)" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
-
-					</ul>
-
-				</form>
-
-				<ul class="navbar-nav navbar-right">
-					<li class="dropdown dropdown-list-toggle" >
-						<a href="{{route('home')}}" class="nav-link nav-link-lg">
-							<i class="fas fa-globe-americas"></i>
-							<div class="d-sm-none d-lg-inline-block"> @lang('Visit Site')</div>
-
-						</a>
-					</li>
-
-				</ul>
-			</nav>
-
-
-			@include('admin.layouts.sidebar')
 			@section('content')
 			@show
 			@include('admin.layouts.footer')
@@ -93,9 +66,6 @@
 		});
 	</script>
 	@stack('extra_scripts')
-
-
-
 
 	@include('admin.layouts.flash-message')
 @stack('loadModal')

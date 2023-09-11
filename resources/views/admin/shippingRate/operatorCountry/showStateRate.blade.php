@@ -129,6 +129,13 @@
 																		data-property="{{ $shippingState }}"
 																		class="btn btn-sm btn-outline-primary editStateRate">
 																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
+
+																<button data-target="#deleteStateRateModal"
+																		data-toggle="modal"
+																		data-route="{{route('deleteStateRate', $shippingState->id)}}"
+																		class="btn btn-sm btn-outline-danger deleteStateRate">
+																	<i class="fas fa-trash"></i> @lang(' Delete')</button>
+
 															</td>
 														</tr>
 													@empty
@@ -352,6 +359,33 @@
 		</div>
 	</div>
 
+	{{-- Delete State Rate Modal --}}
+	<div id="deleteStateRateModal" class="modal fade" tabindex="-1" role="dialog"
+		 aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-dark font-weight-bold"
+						id="primary-header-modalLabel">@lang('Confirmation')</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				</div>
+				<form action="" method="post" id="deleteStateRateForm">
+					@csrf
+					@method('delete')
+					<div class="modal-body">
+						<p>@lang('Are you sure to delete this shipping rate?')</p>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 @endsection
 
 @section('scripts')
@@ -360,6 +394,12 @@
 	<script>
 		'use strict'
 		$(document).ready(function () {
+
+			$(document).on('click', '.deleteStateRate', function () {
+				let dataRoute = $(this).data('route');
+				$('#deleteStateRateForm').attr('action', dataRoute);
+			});
+
 			$(document).on('click', '.editStateRate', function () {
 
 				let dataRoute = $(this).data('route');

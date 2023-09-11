@@ -208,7 +208,19 @@
 				</li>
 			@endif
 
-
+			<li class="menu-header">@lang('Manage Clients')</li>
+			<li class="dropdown {{ activeMenu(['clientList', 'createClient', 'clientStore']) }}">
+				<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
+					<i class="fas fa-map-marker-alt"></i> <span>@lang('Manage Clients')</span>
+				</a>
+				<ul class="dropdown-menu">
+					<li class="{{ activeMenu(['clientList']) }}">
+						<a class="nav-link " href="{{ route('clientList') }}">
+							@lang('Client List')
+						</a>
+					</li>
+				</ul>
+			</li>
 
 {{--			@if(checkPermission('manage_location') == true)--}}
 				<li class="menu-header">@lang('Manage Locations')</li>
@@ -245,27 +257,12 @@
 				</li>
 {{--			@endif--}}
 
-{{--			@if(checkPermission('manage_clients') == true)--}}
-				<li class="menu-header">@lang('Manage Clients')</li>
-				<li class="dropdown {{ activeMenu(['clientList', 'createClient', 'clientStore']) }}">
-					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-map-marker-alt"></i> <span>@lang('Manage Clients')</span>
-					</a>
-					<ul class="dropdown-menu">
-						<li class="{{ activeMenu(['clientList']) }}">
-							<a class="nav-link " href="{{ route('clientList') }}">
-								@lang('Client List')
-							</a>
-						</li>
-					</ul>
-				</li>
-{{--			@endif--}}
 
 {{--			@if(checkPermission('user_management') == true)--}}
 				<li class="menu-header">@lang('User Panel')</li>
 				<li class="dropdown {{ activeMenu(['user-list','user.search','inactive.user.search','send.mail.user','inactive.user.list']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-users text-dark"></i> <span>@lang('User Management')</span>
+						<i class="fas fa-users text-dark"></i> <span>@lang('Manage Users')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['user-list','user.search']) }}">
@@ -314,7 +311,7 @@
 {{--			@endif--}}
 
 
-			<li class="menu-header">@lang('Settings Panel')</li>
+			<li class="menu-header">@lang('Control Panel')</li>
 
 {{--			@if(checkPermission('control_panel') == true)--}}
 				<li class="dropdown {{ activeMenu(['settings','seo.update','plugin.config','tawk.control','google.analytics.control','google.recaptcha.control','fb.messenger.control','service.control','logo.update','breadcrumb.update','seo.update','currency.exchange.api.config','sms.config', 'sms.template.index','sms.template.edit','voucher.settings','basic.control','securityQuestion.index','securityQuestion.create','securityQuestion.edit','pusher.config','notify.template.index','notify.template.edit','language.index','language.create', 'language.edit','language.keyword.edit', 'email.config','email.template.index','email.template.default', 'email.template.edit', 'charge.index', 'charge.edit', 'currency.index', 'currency.create', 'currency.edit', 'charge.chargeEdit' ]) }}">
@@ -323,6 +320,7 @@
 				</li>
 {{--			@endif--}}
 
+			<li class="menu-header">@lang('Payment Settings')</li>
 {{--			@if(checkPermission('payment_settings') == true)--}}
 				<li class="dropdown {{ activeMenu(['payment.methods','edit.payment.methods','admin.deposit.manual.index','admin.deposit.manual.create','admin.deposit.manual.edit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -353,7 +351,7 @@
 					</ul>
 				</li>
 {{--			@endif--}}
-
+			<li class="menu-header">@lang('Payout Settings')</li>
 {{--			@if(checkPermission('payout_settings') == true)--}}
 				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -362,18 +360,13 @@
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['payout.method.list','payout.method.edit']) }}">
 							<a class="nav-link" href="{{ route('payout.method.list') }}">
-								@lang('Available Methods')
-							</a>
-						</li>
-						<li class="{{ activeMenu(['payout.method.add']) }}">
-							<a class="nav-link" href="{{ route('payout.method.add') }}">
-								@lang('Add Method')
+								@lang('Payout Methods')
 							</a>
 						</li>
 					</ul>
 				</li>
 {{--			@endif--}}
-
+				<li class="menu-header">@lang('Role & Permissions')</li>
 {{--			@if(checkPermission('role_permissions') == true)--}}
 				<li class="dropdown {{ activeMenu(['admin.role','admin.role.staff']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
@@ -394,7 +387,7 @@
 					</ul>
 				</li>
 {{--			@endif--}}
-
+			<li class="menu-header">@lang('Theme Settings')</li>
 {{--			@if(checkPermission('ui_settings') == true)--}}
 				<li class="dropdown {{ activeMenu(['template.show']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">

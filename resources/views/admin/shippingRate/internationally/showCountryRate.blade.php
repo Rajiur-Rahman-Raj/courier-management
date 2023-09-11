@@ -129,6 +129,12 @@
 																		data-property="{{ $shippingCountry }}"
 																		class="btn btn-sm btn-outline-primary editCountryRate">
 																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
+
+																<button data-target="#deleteICountryRateModal"
+																		data-toggle="modal"
+																		data-route="{{route('deleteICountryRate', $shippingCountry->id)}}"
+																		class="btn btn-sm btn-outline-danger deleteICountryRate">
+																	<i class="fas fa-trash"></i> @lang(' Delete')</button>
 															</td>
 														</tr>
 													@empty
@@ -324,6 +330,34 @@
 		</div>
 	</div>
 
+	{{-- Delete Internationally Country Rate Modal --}}
+	<div id="deleteICountryRateModal" class="modal fade" tabindex="-1" role="dialog"
+		 aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-dark font-weight-bold"
+						id="primary-header-modalLabel">@lang('Confirmation')</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				</div>
+				<form action="" method="post" id="deleteICountryRateForm">
+					@csrf
+					@method('delete')
+					<div class="modal-body">
+						<p>@lang('Are you sure to delete this shipping rate?')</p>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
 @endsection
 
 @section('scripts')
@@ -331,6 +365,10 @@
 	<script>
 		'use strict'
 		$(document).ready(function () {
+			$(document).on('click', '.deleteICountryRate', function () {
+				let dataRoute = $(this).data('route');
+				$('#deleteICountryRateForm').attr('action', dataRoute);
+			});
 			$(document).on('click', '.editCountryRate', function () {
 
 				let dataRoute = $(this).data('route');

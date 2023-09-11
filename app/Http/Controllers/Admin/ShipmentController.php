@@ -825,6 +825,19 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate created successfully');
 	}
 
+	public function deleteStateRate($id){
+		ShippingRateOperatorCountry::findOrFail($id)->delete();
+		return back()->with('success', 'Shipping rate deleted successfully!');
+	}
+	public function deleteCityRate($id){
+		ShippingRateOperatorCountry::findOrFail($id)->delete();
+		return back()->with('success', 'Shipping rate deleted successfully!');
+	}
+	public function deleteAreaRate($id){
+		ShippingRateOperatorCountry::findOrFail($id)->delete();
+		return back()->with('success', 'Shipping rate deleted successfully!');
+	}
+
 
 	public function internationallyRate(Request $request, $type = null)
 	{
@@ -1119,6 +1132,21 @@ class ShipmentController extends Controller
 		$internationallyRate->save();
 
 		return back()->with('success', 'Shipping rate Update successfully');
+	}
+
+	public function deleteICountryRate($id){
+		ShippingRateInternationally::findOrFail($id)->delete();
+		return back()->with('success', 'Shipping rate deleted successfully!');
+	}
+
+	public function deleteIStateRate($id){
+		ShippingRateInternationally::findOrFail($id)->delete();
+		return back()->with('success', 'Shipping rate deleted successfully!');
+	}
+
+	public function deleteICityRate($id){
+		ShippingRateInternationally::findOrFail($id)->delete();
+		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
 

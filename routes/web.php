@@ -148,7 +148,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 	// Manage Shipment Types
 //	Route::middleware('module:manage_shipment_types')->group(function () {
 		Route::get('shipment-type-list', [ShipmentController::class, 'shipmentTypeList'])->name('shipmentTypeList');
-		Route::post('shipping-type-store', [ShipmentController::class, 'shipmentTypeStore'])->name('shipmentTypeStore');
 		Route::put('shipment-type-update/{id}', [ShipmentController::class, 'shipmentTypeUpdate'])->name('shipmentTypeUpdate');
 //	});
 
@@ -165,6 +164,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::put('state-rete-update/{id}', [ShipmentController::class, 'stateRateUpdate'])->name('stateRateUpdate');
 		Route::put('city-rete-update/{id}', [ShipmentController::class, 'cityRateUpdate'])->name('cityRateUpdate');
 		Route::put('area-rete-update/{id}', [ShipmentController::class, 'areaRateUpdate'])->name('areaRateUpdate');
+		Route::delete('delete-state-rate-operator-country/{id}', [ShipmentController::class, 'deleteStateRate'])->name('deleteStateRate');
+		Route::delete('delete-city-rate-operator-country/{id}', [ShipmentController::class, 'deleteCityRate'])->name('deleteCityRate');
+		Route::delete('delete-area-rate-operator-country/{id}', [ShipmentController::class, 'deleteAreaRate'])->name('deleteAreaRate');
+
 
 		Route::get('internationally-shipping-rate/{type?}', [ShipmentController::class, 'internationallyRate'])->name('internationallyRate');
 		Route::get('create-shipping-rate-internationally', [ShipmentController::class, 'createShippingRateInternationally'])->name('createShippingRateInternationally');
@@ -174,6 +177,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::put('country-rete-update-internationally/{id}', [ShipmentController::class, 'countryRateUpdateInternationally'])->name('countryRateUpdateInternationally');
 		Route::put('state-rete-update-internationally/{id}', [ShipmentController::class, 'stateRateUpdateInternationally'])->name('stateRateUpdateInternationally');
 		Route::put('city-rete-update-internationally/{id}', [ShipmentController::class, 'cityRateUpdateInternationally'])->name('cityRateUpdateInternationally');
+
+		Route::delete('delete-internationally-country-rate/{id}', [ShipmentController::class, 'deleteICountryRate'])->name('deleteICountryRate');
+		Route::delete('delete-internationally-state-rate/{id}', [ShipmentController::class, 'deleteIStateRate'])->name('deleteIStateRate');
+		Route::delete('delete-internationally-city-rate/{id}', [ShipmentController::class, 'deleteICityRate'])->name('deleteICityRate');
 
 		Route::post('shipping-date-store', [ShipmentController::class, 'shippingDateStore'])->name('shippingDateStore');
 //	});

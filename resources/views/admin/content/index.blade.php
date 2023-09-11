@@ -57,7 +57,6 @@
 															@endif
 														</td>
 													@elseif($content == 'social-links')
-														@dd($value->contentMedia->description->social_icon)
 														<td>
 															<div class="social_area mt-50">
 																<ul class="d-flex">
