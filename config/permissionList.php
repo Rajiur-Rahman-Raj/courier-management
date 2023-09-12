@@ -68,6 +68,7 @@ $arr = [
 				'view' => ['packingServiceList'],
 				'add' => ['packageStore', 'variantStore', 'packingServiceStore'],
 				'edit' => ['packageUpdate', 'variantUpdate', 'packingServiceUpdate'],
+				'delete' => [],
 			],
 		],
 	],

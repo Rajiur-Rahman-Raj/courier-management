@@ -41,9 +41,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Shipment List')</h6>
-											<a href="{{route('createShipment', ['shipment_type' => 'internationally', 'shipment_status' => $status])}}"
-											   class="btn btn-sm btn-outline-primary add"><i
-													class="fas fa-plus-circle"></i> @lang('Create Shipment')</a>
+											@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.add')))
+												<a href="{{route('createShipment', ['shipment_type' => 'internationally', 'shipment_status' => $status])}}"
+												   class="btn btn-sm btn-outline-primary add"><i
+														class="fas fa-plus-circle"></i> @lang('Create Shipment')</a>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -104,38 +106,59 @@
 
 																			<td data-label="Status">
 																				@if($shipment->status == 1)
-																					<span class="badge badge-info">@lang('In Queue')</span>
+																					<span
+																						class="badge badge-info">@lang('In Queue')</span>
 																				@elseif($shipment->status == 2)
-																					<span class="badge badge-warning">@lang('Dispatch')</span>
+																					<span
+																						class="badge badge-warning">@lang('Dispatch')</span>
 																				@elseif($shipment->status == 3)
-																					<span class="badge badge-primary">@lang('Upcoming')</span>
+																					<span
+																						class="badge badge-primary">@lang('Upcoming')</span>
 																				@elseif($shipment->status == 4)
-																					<span class="badge badge-success">@lang('Received')</span>
+																					<span
+																						class="badge badge-success">@lang('Received')</span>
 																				@elseif($shipment->status == 5)
-																					<span class="badge badge-danger">@lang('Delivered')</span>
+																					<span
+																						class="badge badge-danger">@lang('Delivered')</span>
 																				@endif
 																			</td>
 
 																			<td data-label="@lang('Action')">
 																				<div class="btn-group">
-																					<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																						Options
+																					<button type="button"
+																							class="btn btn-primary btn-sm dropdown-toggle"
+																							data-toggle="dropdown"
+																							aria-haspopup="true"
+																							aria-expanded="false">
+																						@lang('Options')
 																					</button>
 																					<div class="dropdown-menu">
-																						<a class="dropdown-item btn-outline-primary btn-sm" href="#"><i class="fas fa-file-invoice mr-2"></i>  @lang('Invoice')</a>
+																						<a class="dropdown-item btn-outline-primary btn-sm"
+																						   href="#"><i
+																								class="fas fa-file-invoice mr-2"></i> @lang('Invoice')
+																						</a>
+
 																						<a class="dropdown-item btn-outline-primary btn-sm"
 																						   href="{{ route('viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'internationally']) }}"><i
 																								class="fa fa-eye mr-2"
 																								aria-hidden="true"></i> @lang('Details')
 																						</a>
-																						<a class="dropdown-item btn-outline-primary btn-sm" href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'internationally']) }}"><i class="fa fa-edit mr-2" aria-hidden="true"></i>  @lang('Edit')</a>
-																						<a data-target="#deleteShipment"
-																						   data-toggle="modal"
-																						   data-route="{{route('deleteShipment', $shipment->id)}}"
-																						   href="javascript:void(0)"
-																						   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
-																								class="fas fa-trash mr-2"></i> @lang('Delete')
-																						</a>
+																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
+																							<a class="dropdown-item btn-outline-primary btn-sm"
+																							   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'internationally']) }}"><i
+																									class="fa fa-edit mr-2"
+																									aria-hidden="true"></i> @lang('Edit')
+																							</a>
+																						@endif
+																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.delete')))
+																							<a data-target="#deleteShipment"
+																							   data-toggle="modal"
+																							   data-route="{{route('deleteShipment', $shipment->id)}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
+																									class="fas fa-trash mr-2"></i> @lang('Delete')
+																							</a>
+																						@endif
 																					</div>
 																				</div>
 																			</td>
@@ -149,7 +172,8 @@
 																	</tbody>
 																</table>
 															</div>
-															<div class="card-footer d-flex justify-content-center">{{ $allShipments->links() }}</div>
+															<div
+																class="card-footer d-flex justify-content-center">{{ $allShipments->links() }}</div>
 														</div>
 
 													</div>

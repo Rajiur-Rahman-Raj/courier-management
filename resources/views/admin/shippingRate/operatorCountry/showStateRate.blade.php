@@ -90,7 +90,9 @@
 														<th scope="col">@lang('Return Shipment Cost')</th>
 														<th scope="col">@lang('Tax')</th>
 														<th scope="col">@lang('Insurance')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.edit'), config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -121,22 +123,29 @@
 															<td data-label="@lang('Insurance')">
 																{{ config('basic.currency_symbol') }}@lang($shippingState->insurance)
 															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.edit'), config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.edit')))
+																		<button data-target="#editStateRateModal"
+																				data-toggle="modal"
+																				data-route="{{route('stateRateUpdate', $shippingState->id)}}"
+																				data-property="{{ $shippingState }}"
+																				class="btn btn-sm btn-outline-primary editStateRate">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
 
-															<td data-label="@lang('Action')">
-																<button data-target="#editStateRateModal"
-																		data-toggle="modal"
-																		data-route="{{route('stateRateUpdate', $shippingState->id)}}"
-																		data-property="{{ $shippingState }}"
-																		class="btn btn-sm btn-outline-primary editStateRate">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
+																	@if(adminAccessRoute(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.delete')))
+																		<button data-target="#deleteStateRateModal"
+																				data-toggle="modal"
+																				data-route="{{route('deleteStateRate', $shippingState->id)}}"
+																				class="btn btn-sm btn-outline-danger deleteStateRate">
+																			<i class="fas fa-trash"></i> @lang(' Delete')
+																		</button>
+																	@endif
 
-																<button data-target="#deleteStateRateModal"
-																		data-toggle="modal"
-																		data-route="{{route('deleteStateRate', $shippingState->id)}}"
-																		class="btn btn-sm btn-outline-danger deleteStateRate">
-																	<i class="fas fa-trash"></i> @lang(' Delete')</button>
-
-															</td>
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -147,8 +156,7 @@
 													</tbody>
 												</table>
 											</div>
-											<div
-												class="card-footer d-flex justify-content-center">{{ $showShippingRateList->links() }}</div>
+											<div class="card-footer d-flex justify-content-center">{{ $showShippingRateList->links() }}</div>
 										</div>
 									</div>
 								</div>

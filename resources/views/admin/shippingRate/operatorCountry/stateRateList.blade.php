@@ -21,9 +21,11 @@
 					<div class="card mb-4 card-primary shadow-sm">
 						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 							<h4>@lang('All Shipping Rate')</h4>
-							<a href="{{route('createShippingRateOperatorCountry')}}"
-							   class="btn btn-sm btn-outline-primary add"><i
-									class="fas fa-plus-circle"></i> @lang('Add Shipping Rate')</a>
+							@if(adminAccessRoute(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.add')))
+								<a href="{{route('createShippingRateOperatorCountry')}}"
+								   class="btn btn-sm btn-outline-primary add"><i
+										class="fas fa-plus-circle"></i> @lang('Add Shipping Rate')</a>
+							@endif
 						</div>
 
 						<div class="card-body">
@@ -67,7 +69,6 @@
 
 													<tbody>
 													@forelse($shippingRateList as $key => $stateList)
-
 														<tr>
 															<td data-label="Parcel Type"> @lang(optional($stateList->parcelType)->parcel_type) </td>
 															<td data-label="@lang('Shipping State')">

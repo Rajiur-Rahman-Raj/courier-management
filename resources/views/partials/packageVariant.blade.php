@@ -64,6 +64,7 @@
 									</td>
 
 									<td data-label="@lang('Action')">
+
 										<button data-target="#updateVariantModal"
 												data-toggle="modal"
 												data-id="${res.id}"

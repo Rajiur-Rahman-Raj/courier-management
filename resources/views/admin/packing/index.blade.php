@@ -28,10 +28,12 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Package List')</h6>
-											<button class="btn btn-sm btn-outline-primary"
-													data-target="#add-package-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add Package')</button>
+											@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary"
+														data-target="#add-package-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add Package')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -44,7 +46,9 @@
 													<tr>
 														<th scope="col">@lang('Package Name')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -59,15 +63,17 @@
 																class="font-weight-bold text-dark">
 																	<?php echo $package->statusMessage; ?>
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editPackageModal"
-																		data-toggle="modal"
-																		data-route="{{ route('packageUpdate', $package->id) }}"
-																		data-property="{{ $package }}"
-																		class="btn btn-sm btn-outline-primary editPackage">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
+															@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+																<td data-label="@lang('Action')">
+																	<button data-target="#editPackageModal"
+																			data-toggle="modal"
+																			data-route="{{ route('packageUpdate', $package->id) }}"
+																			data-property="{{ $package }}"
+																			class="btn btn-sm btn-outline-primary editPackage">
+																		<i class="fas fa-edit"></i> @lang(' Edit')
+																	</button>
+																</td>
+															@endif
 
 														</tr>
 													@empty
@@ -91,10 +97,12 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Package Variant')</h6>
-											<button class="btn btn-sm btn-outline-primary"
-													data-target="#add-variant-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add Variant')</button>
+											@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+												<button class="btn btn-sm btn-outline-primary"
+														data-target="#add-variant-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add Variant')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -134,7 +142,8 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%" class="text-center">@lang('No data found')</th>
+															<th colspan="100%"
+																class="text-center">@lang('No data found')</th>
 														</tr>
 													@endforelse
 													</tbody>
@@ -208,10 +217,12 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Packing Service List')</h6>
-											<button class="btn btn-sm btn-outline-primary"
-													data-target="#add-packingService-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add Service')</button>
+											@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary"
+														data-target="#add-packingService-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add Service')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -227,7 +238,9 @@
 														<th scope="col">@lang('Cost')</th>
 														<th scope="col">@lang('Weight')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.add'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -254,17 +267,21 @@
 																class="font-weight-bold text-dark">
 																	<?php echo $service->statusMessage; ?>
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#updatePackingServiceModal"
-																		data-toggle="modal"
-																		data-route="{{route('packingServiceUpdate', $service->id)}}"
-																		data-property="{{ $service }}"
-																		data-packages="{{ $allPackages }}"
-																		data-variants="{{ $allVariants }}"
-																		class="btn btn-sm btn-outline-primary editPackingService">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.edit'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.edit')))
+																		<button data-target="#updatePackingServiceModal"
+																				data-toggle="modal"
+																				data-route="{{route('packingServiceUpdate', $service->id)}}"
+																				data-property="{{ $service }}"
+																				data-packages="{{ $allPackages }}"
+																				data-variants="{{ $allVariants }}"
+																				class="btn btn-sm btn-outline-primary editPackingService">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -489,7 +506,9 @@
 								<th scope="col">@lang('Variant')</th>
 								<th scope="col">@lang('Image')</th>
 								<th scope="col">@lang('Status')</th>
-								<th scope="col">@lang('Action')</th>
+								@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+									<th scope="col">@lang('Action')</th>
+								@endif
 							</tr>
 							</thead>
 
@@ -583,7 +602,9 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('Close')</button>
-						<button type="submit" class="btn btn-primary">@lang('Update')</button>
+						@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+							<button type="submit" class="btn btn-primary">@lang('Update')</button>
+						@endif
 					</div>
 				</form>
 			</div>
@@ -718,7 +739,8 @@
 
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Variant') <span class="text-danger">*</span></label>
-							<select name="variant_id" class="form-control @error('variant_id') is-invalid @enderror selectedVariant"
+							<select name="variant_id"
+									class="form-control @error('variant_id') is-invalid @enderror selectedVariant"
 									id="variId">
 								@foreach($allPackageVariants as $variant)
 									<option value="{{ $variant->id }}">@lang($variant->variant)</option>
@@ -784,7 +806,9 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('Close')</button>
-						<button type="submit" class="btn btn-primary">@lang('Update')</button>
+						@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+							<button type="submit" class="btn btn-primary">@lang('Update')</button>
+						@endif
 					</div>
 				</form>
 			</div>
@@ -798,7 +822,7 @@
 @endpush
 
 @section('scripts')
-		@include('partials.packageVariant')
+	@include('partials.packageVariant')
 	<script>
 		'use strict'
 		$(document).ready(function () {

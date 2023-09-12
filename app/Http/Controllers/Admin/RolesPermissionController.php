@@ -59,6 +59,7 @@ class RolesPermissionController extends Controller
 	public function editRole($id){
 		$data['singleRole'] = Role::findOrFail($id);
 		return view('admin.role_permission.editRole', $data);
+
 	}
 
 	public function roleUpdate(Request $request, $id)

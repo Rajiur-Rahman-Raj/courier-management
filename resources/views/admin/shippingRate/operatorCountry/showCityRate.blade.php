@@ -82,7 +82,8 @@
 										<div class="card-body pt-0">
 											<form action="" class="d-flex py-2 align-items-center">
 												<input type="checkbox" id="showHideState" class="mr-2">
-												<label for="showHideState" class="cursor-pointer mb-0 ml">@lang('Show State')</label>
+												<label for="showHideState"
+													   class="cursor-pointer mb-0 ml">@lang('Show State')</label>
 											</form>
 											@include('errors.error')
 											<div class="table-responsive">
@@ -91,15 +92,19 @@
 													id="data-table">
 													<thead class="thead-light">
 													<tr>
-														<th scope="col" class="addRemoveState d-none">@lang('From State')</th>
+														<th scope="col"
+															class="addRemoveState d-none">@lang('From State')</th>
 														<th scope="col">@lang('From City')</th>
-														<th scope="col" class="addRemoveState d-none">@lang('To State')</th>
+														<th scope="col"
+															class="addRemoveState d-none">@lang('To State')</th>
 														<th scope="col">@lang('To City')</th>
 														<th scope="col">@lang('Shipping Cost')</th>
 														<th scope="col">@lang('Return Shipment Cost')</th>
 														<th scope="col">@lang('Tax')</th>
 														<th scope="col">@lang('Insurance')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.edit'), config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -107,7 +112,8 @@
 													@forelse($showShippingRateList as $key => $shippingCity)
 
 														<tr>
-															<td data-label="@lang('From State')" class="addRemoveState d-none">
+															<td data-label="@lang('From State')"
+																class="addRemoveState d-none">
 																@lang(optional($shippingCity->fromState)->name)
 															</td>
 
@@ -115,7 +121,8 @@
 																@lang(optional($shippingCity->fromCity)->name)
 															</td>
 
-															<td data-label="@lang('To State')" class="addRemoveState d-none">
+															<td data-label="@lang('To State')"
+																class="addRemoveState d-none">
 																@lang(optional($shippingCity->toState)->name)
 															</td>
 
@@ -138,21 +145,27 @@
 															<td data-label="@lang('Insurance')">
 																{{ config('basic.currency_symbol') }}@lang($shippingCity->insurance)
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editCityRateModal"
-																		data-toggle="modal"
-																		data-route="{{route('cityRateUpdate', $shippingCity->id)}}"
-																		data-property="{{ $shippingCity }}"
-																		class="btn btn-sm btn-outline-primary editCityRate">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-
-																<button data-target="#deleteCityRateModal"
-																		data-toggle="modal"
-																		data-route="{{route('deleteCityRate', $shippingCity->id)}}"
-																		class="btn btn-sm btn-outline-danger deleteCityRate">
-																	<i class="fas fa-trash"></i> @lang(' Delete')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.edit'), config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.edit')))
+																		<button data-target="#editCityRateModal"
+																				data-toggle="modal"
+																				data-route="{{route('cityRateUpdate', $shippingCity->id)}}"
+																				data-property="{{ $shippingCity }}"
+																				class="btn btn-sm btn-outline-primary editCityRate">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																	@if(adminAccessRoute(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.delete')))
+																		<button data-target="#deleteCityRateModal"
+																				data-toggle="modal"
+																				data-route="{{route('deleteCityRate', $shippingCity->id)}}"
+																				class="btn btn-sm btn-outline-danger deleteCityRate">
+																			<i class="fas fa-trash"></i> @lang(' Delete')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -209,7 +222,8 @@
 						<div class="col-12 mt-3">
 							<label for="from_city_id">@lang('City') <span
 									class="text-danger">*</span></label>
-							<select name="from_city_id" class="form-control @error('from_city_id') is-invalid @enderror selectedFromCity">
+							<select name="from_city_id"
+									class="form-control @error('from_city_id') is-invalid @enderror selectedFromCity">
 							</select>
 							<div class="invalid-feedback">
 								@error('from_city_id') @lang($message) @enderror
@@ -423,7 +437,6 @@
 		</div>
 	</div>
 
-
 @endsection
 
 @section('scripts')
@@ -437,11 +450,10 @@
 				let dataRoute = $(this).data('route');
 				$('#deleteCityRateForm').attr('action', dataRoute);
 			});
-			$(document).on('click', '#showHideState', function (){
-				if($(this).prop("checked") == true){
+			$(document).on('click', '#showHideState', function () {
+				if ($(this).prop("checked") == true) {
 					$('.addRemoveState').removeClass('d-none');
-				}
-				else if($(this).prop("checked") == false){
+				} else if ($(this).prop("checked") == false) {
 					$('.addRemoveState').addClass('d-none');
 				}
 			})

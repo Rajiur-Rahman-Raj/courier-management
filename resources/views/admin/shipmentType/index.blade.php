@@ -36,7 +36,9 @@
 													<tr>
 														<th scope="col">@lang('Shipment Type')</th>
 														<th scope="col">@lang('title')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(config('permissionList.Shipment_Types.Shipment_Type_List.permission.edit')))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -53,16 +55,18 @@
 															<td data-label="@lang('title')">
 																@lang($type->title)
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#updateShipmnetTypeModal"
-																		data-toggle="modal"
-																		data-route="{{route('shipmentTypeUpdate', $type->id)}}"
-																		data-shipmenttype="{{$type->shipment_type}}"
-																		data-title="{{$type->title}}"
-																		class="btn btn-sm btn-outline-primary editShipmentType">
-																	<i class="fas fa-edit"></i> @lang(' Update')</button>
-															</td>
+															@if(adminAccessRoute(config('permissionList.Shipment_Types.Shipment_Type_List.permission.edit')))
+																<td data-label="@lang('Action')">
+																	<button data-target="#updateShipmnetTypeModal"
+																			data-toggle="modal"
+																			data-route="{{route('shipmentTypeUpdate', $type->id)}}"
+																			data-shipmenttype="{{$type->shipment_type}}"
+																			data-title="{{$type->title}}"
+																			class="btn btn-sm btn-outline-primary editShipmentType">
+																		<i class="fas fa-edit"></i> @lang(' Update')
+																	</button>
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>

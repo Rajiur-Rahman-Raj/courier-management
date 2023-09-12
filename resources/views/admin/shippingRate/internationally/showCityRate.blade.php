@@ -80,7 +80,8 @@
 											@include('errors.error')
 											<form action="" class="d-flex py-2 align-items-center">
 												<input type="checkbox" id="showHideCountryState" class="mr-2">
-												<label for="showHideCountryState" class="cursor-pointer mb-0 ml">@lang('Show State')</label>
+												<label for="showHideCountryState"
+													   class="cursor-pointer mb-0 ml">@lang('Show State')</label>
 											</form>
 											<div class="table-responsive">
 												<table
@@ -88,17 +89,23 @@
 													id="data-table">
 													<thead class="thead-light">
 													<tr>
-														<th scope="col" class="addRemoveCountryState d-none">@lang('From Country')</th>
-														<th scope="col" class="addRemoveCountryState d-none">@lang('From State')</th>
+														<th scope="col"
+															class="addRemoveCountryState d-none">@lang('From Country')</th>
+														<th scope="col"
+															class="addRemoveCountryState d-none">@lang('From State')</th>
 														<th scope="col">@lang('From City')</th>
-														<th scope="col" class="addRemoveCountryState d-none">@lang('To Country')</th>
-														<th scope="col" class="addRemoveCountryState d-none">@lang('To State')</th>
+														<th scope="col"
+															class="addRemoveCountryState d-none">@lang('To Country')</th>
+														<th scope="col"
+															class="addRemoveCountryState d-none">@lang('To State')</th>
 														<th scope="col">@lang('To City')</th>
 														<th scope="col">@lang('Shipping Cost')</th>
 														<th scope="col">@lang('Return Shipment Cost')</th>
 														<th scope="col">@lang('Tax')</th>
 														<th scope="col">@lang('Insurance')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Shipping_Rates.Internationally_Rate.permission.edit'), config('permissionList.Shipping_Rates.Internationally_Rate.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -106,11 +113,13 @@
 													@forelse($showShippingRateList as $key => $shippingCity)
 
 														<tr>
-															<td data-label="@lang('From Country')" class="addRemoveCountryState d-none">
+															<td data-label="@lang('From Country')"
+																class="addRemoveCountryState d-none">
 																@lang(optional($shippingCity->fromCountry)->name)
 															</td>
 
-															<td data-label="@lang('From State')" class="addRemoveCountryState d-none">
+															<td data-label="@lang('From State')"
+																class="addRemoveCountryState d-none">
 																@lang(optional($shippingCity->fromState)->name)
 															</td>
 
@@ -118,11 +127,13 @@
 																@lang(optional($shippingCity->fromCity)->name)
 															</td>
 
-															<td data-label="@lang('To Country')" class="addRemoveCountryState d-none">
+															<td data-label="@lang('To Country')"
+																class="addRemoveCountryState d-none">
 																@lang(optional($shippingCity->toCountry)->name)
 															</td>
 
-															<td data-label="@lang('To State')" class="addRemoveCountryState d-none">
+															<td data-label="@lang('To State')"
+																class="addRemoveCountryState d-none">
 																@lang(optional($shippingCity->toState)->name)
 															</td>
 
@@ -145,21 +156,27 @@
 															<td data-label="@lang('Insurance')">
 																{{ config('basic.currency_symbol') }}@lang($shippingCity->insurance)
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editCityRateModal"
-																		data-toggle="modal"
-																		data-route="{{route('cityRateUpdateInternationally', $shippingCity->id)}}"
-																		data-property="{{ $shippingCity }}"
-																		class="btn btn-sm btn-outline-primary editCityRate">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-
-																<button data-target="#deleteICityRateModal"
-																		data-toggle="modal"
-																		data-route="{{route('deleteICityRate', $shippingCity->id)}}"
-																		class="btn btn-sm btn-outline-danger deleteICityRate">
-																	<i class="fas fa-trash"></i> @lang(' Delete')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Shipping_Rates.Internationally_Rate.permission.edit'), config('permissionList.Shipping_Rates.Internationally_Rate.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Shipping_Rates.Internationally_Rate.permission.edit')))
+																		<button data-target="#editCityRateModal"
+																				data-toggle="modal"
+																				data-route="{{route('cityRateUpdateInternationally', $shippingCity->id)}}"
+																				data-property="{{ $shippingCity }}"
+																				class="btn btn-sm btn-outline-primary editCityRate">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																	@if(adminAccessRoute(config('permissionList.Shipping_Rates.Internationally_Rate.permission.delete')))
+																		<button data-target="#deleteICityRateModal"
+																				data-toggle="modal"
+																				data-route="{{route('deleteICityRate', $shippingCity->id)}}"
+																				class="btn btn-sm btn-outline-danger deleteICityRate">
+																			<i class="fas fa-trash"></i> @lang(' Delete')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -216,7 +233,8 @@
 						<div class="col-12 mt-3">
 							<label for="from_state_id">@lang('State') <span
 									class="text-danger">*</span></label>
-							<select name="from_state_id" class="form-control @error('from_state_id') is-invalid @enderror fromState selectedFromState">
+							<select name="from_state_id"
+									class="form-control @error('from_state_id') is-invalid @enderror fromState selectedFromState">
 							</select>
 							<div class="invalid-feedback">
 								@error('from_state_id') @lang($message) @enderror

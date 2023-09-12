@@ -21,9 +21,11 @@
 					<div class="card mb-4 card-primary shadow-sm">
 						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 							<h4>@lang('All Shipping Rate')</h4>
-							<a href="{{route('createShippingRateOperatorCountry')}}"
-							   class="btn btn-sm btn-outline-primary add"><i
-									class="fas fa-plus-circle"></i> @lang('Add Shipping Rate')</a>
+							@if(adminAccessRoute(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.add')))
+								<a href="{{route('createShippingRateOperatorCountry')}}"
+								   class="btn btn-sm btn-outline-primary add"><i
+										class="fas fa-plus-circle"></i> @lang('Add Shipping Rate')</a>
+							@endif
 						</div>
 
 						<div class="card-body">
@@ -72,7 +74,8 @@
 
 															<td data-label="@lang('Shipping Area')">
 																<a href="{{ route('operatorCountryShowRate', ['area-list', $areaList->parcel_type_id]) }}"
-																   class="text-decoration-underline">({{ $areaList->getTotalArea($areaList->parcel_type_id) }})</a>
+																   class="text-decoration-underline">({{ $areaList->getTotalArea($areaList->parcel_type_id) }}
+																	)</a>
 															</td>
 
 															<td data-label="@lang('Action')">

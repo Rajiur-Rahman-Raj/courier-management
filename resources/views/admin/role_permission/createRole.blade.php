@@ -34,7 +34,8 @@
 								@csrf
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<h6 for="name" class="font-weight-bold text-dark"> @lang('Role Name') <span class="text-danger">*</span></h6>
+										<h6 for="name" class="font-weight-bold text-dark"> @lang('Role Name') <span
+												class="text-danger">*</span></h6>
 										<input type="text" name="name"
 											   style="height: 40px !important;"
 											   placeholder="@lang('Enter role name')"
@@ -54,11 +55,24 @@
 													<h5>@lang('Accessibility')</h5>
 												</div>
 											</div>
-											<div class="card-body">
+											<div class="card-body select-all-access">
+												<div class="form-group">
+													<label class="text-dark font-weight-bold"
+														   style="font-size: 16px"><input type="checkbox" class="selectAll" name="accessAll"> {{trans('Select All')}}
+													</label>
+												</div>
 												@if(config('permissionList'))
+													@php
+														$i = 0;
+													@endphp
 													@foreach(config('permissionList') as $key1 => $sidebarMenus)
-														<div class="title">
-															<h6 class="text-dark">@lang(str_replace('_', ' ', $key1))</h6>
+														@php
+															$i++;
+														@endphp
+
+														<div class="title d-flex justify-content-start">
+															<h6 class="text-dark mr-3">@lang(str_replace('_', ' ', $key1))</h6>
+															<label class="font-weight-bold"><input type="checkbox" class="partiallySelectAll{{$i}}" name="partiallyAccessAll" onclick="partiallySelectAll({{$i}})"> {{trans('Select All')}}</label>
 														</div>
 
 														<table
@@ -100,42 +114,57 @@
 															</thead>
 															<tbody>
 															@foreach($sidebarMenus as $key2 => $subMenu)
-																<tr>
+																<tr class="partiallyCheckAll{{ $i }}">
 																	<td class="text-left">@lang(str_replace('_', ' ', $key2))</td>
 																	<td data-label="View">
 																		@if(!empty($subMenu['permission']['view']))
-																		<input type="checkbox" value="{{join(",",$subMenu['permission']['view'])}}" class="cursor-pointer" name="permissions[]"/>
+																			<input type="checkbox"
+																				   value="{{join(",",$subMenu['permission']['view'])}}"
+																				   class="cursor-pointer"
+																				   name="permissions[]"/>
 																		@else
-																		<span>-</span>
+																			<span>-</span>
 																		@endif
 																	</td>
 
 																	<td data-label="Add">
 																		@if(!empty($subMenu['permission']['add']))
-																			<input type="checkbox" value="{{join(",",$subMenu['permission']['add'])}}" class="cursor-pointer" name="permissions[]"/>
+																			<input type="checkbox"
+																				   value="{{join(",",$subMenu['permission']['add'])}}"
+																				   class="cursor-pointer"
+																				   name="permissions[]"/>
 																		@else
 																			<span>-</span>
 																		@endif
 																	</td>
 																	@if($key1 == 'Shipping_Rates')
-																	<td data-label="Show">
-																		@if(!empty($subMenu['permission']['show']))
-																			<input type="checkbox" value="{{join(",",$subMenu['permission']['show'])}}" class="cursor-pointer" name="permissions[]"/>
-																		@else
-																			<span>-</span>
-																		@endif
-																	</td>
+																		<td data-label="Show">
+																			@if(!empty($subMenu['permission']['show']))
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
+																			@else
+																				<span>-</span>
+																			@endif
+																		</td>
 																	@endif
 																	<td data-label="Edit">
 																		@if(!empty($subMenu['permission']['edit']))
-																			<input type="checkbox" value="{{join(",",$subMenu['permission']['edit'])}}" class="cursor-pointer" name="permissions[]"/>
+																			<input type="checkbox"
+																				   value="{{join(",",$subMenu['permission']['edit'])}}"
+																				   class="cursor-pointer"
+																				   name="permissions[]"/>
 																		@else
 																			<span>-</span>
 																		@endif
 																	</td>
 																	<td data-label="Delete">
 																		@if(!empty($subMenu['permission']['delete']))
-																			<input type="checkbox" value="{{join(",",$subMenu['permission']['delete'])}}" class="cursor-pointer" name="permissions[]"/>
+																			<input type="checkbox"
+																				   value="{{join(",",$subMenu['permission']['delete'])}}"
+																				   class="cursor-pointer"
+																				   name="permissions[]"/>
 																		@else
 																			<span>-</span>
 																		@endif
@@ -143,7 +172,10 @@
 																	@if($key2 == 'Shipment_List')
 																		<td data-label="dispatch">
 																			@if(!empty($subMenu['permission']['dispatch']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['dispatch'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['dispatch'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -153,21 +185,30 @@
 																	@if($key2 == 'Branch_List')
 																		<td data-label="Profile">
 																			@if(!empty($subMenu['permission']['show_profile']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['show_profile'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_profile'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
 																		</td>
 																		<td data-label="Staff List">
 																			@if(!empty($subMenu['permission']['show_staff_list']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['show_staff_list'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_staff_list'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
 																		</td>
 																		<td data-label="Login As">
 																			@if(!empty($subMenu['permission']['login_as']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['login_as'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['login_as'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -178,21 +219,30 @@
 																	@if($key2 == 'Branch_Manager')
 																		<td data-label="Profile">
 																			@if(!empty($subMenu['permission']['show_profile']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['show_profile'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_profile'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
 																		</td>
 																		<td data-label="Staff List">
 																			@if(!empty($subMenu['permission']['show_staff_list']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['show_staff_list'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_staff_list'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
 																		</td>
 																		<td data-label="Login As">
 																			@if(!empty($subMenu['permission']['login_as']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['login_as'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['login_as'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -202,21 +252,30 @@
 																	@if($key2 == 'Employee_List')
 																		<td data-label="Profile">
 																			@if(!empty($subMenu['permission']['show_profile']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['show_profile'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_profile'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
 																		</td>
 																		<td data-label="Staff List">
 																			@if(!empty($subMenu['permission']['show_staff_list']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['show_staff_list'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_staff_list'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
 																		</td>
 																		<td data-label="Login As">
 																			@if(!empty($subMenu['permission']['login_as']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['login_as'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['login_as'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -226,7 +285,10 @@
 																	@if($key2 == 'Client_List')
 																		<td data-label="Profile">
 																			@if(!empty($subMenu['permission']['show_profile']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['show_profile'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_profile'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -234,7 +296,10 @@
 
 																		<td data-label="Login As">
 																			@if(!empty($subMenu['permission']['login_as']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['login_as'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['login_as'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -244,7 +309,10 @@
 																	@if($key1 == 'User_Panel')
 																		<td data-label="Send Mail">
 																			@if(!empty($subMenu['permission']['send_mail']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['send_mail'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['send_mail'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -252,7 +320,10 @@
 
 																		<td data-label="Login As">
 																			@if(!empty($subMenu['permission']['login_as']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['login_as'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['login_as'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -262,7 +333,10 @@
 																	@if($key1 == 'Role_&_Permissions')
 																		<td data-label="Login As">
 																			@if(!empty($subMenu['permission']['login_as']))
-																				<input type="checkbox" value="{{join(",",$subMenu['permission']['login_as'])}}" class="cursor-pointer" name="permissions[]"/>
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['login_as'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
 																			@else
 																				<span>-</span>
 																			@endif
@@ -283,7 +357,6 @@
 											</div>
 										</div>
 									</div>
-
 								</div>
 
 								<div class="row">
@@ -297,7 +370,8 @@
 											</label>
 											<label class="selectgroup-item">
 												<input type="radio" name="status" value="1"
-													   class="selectgroup-input" checked {{ old('status') == 1 ? 'checked' : ''}}>
+													   class="selectgroup-input"
+													   checked {{ old('status') == 1 ? 'checked' : ''}}>
 												<span class="selectgroup-button">@lang('ON')</span>
 											</label>
 										</div>
@@ -312,5 +386,27 @@
 				</div>
 			</div>
 		</div>
-@endsection
+		@endsection
 
+		@section('scripts')
+			<script type="text/javascript">
+				'use strict'
+				function partiallySelectAll($key1){
+					if($(`.partiallySelectAll${$key1}`).prop('checked') == true) {
+						$(`.partiallyCheckAll${$key1}`).find('input[type="checkbox"]').attr('checked', 'checked');
+					} else {
+						$(`.partiallyCheckAll${$key1}`).find('input[type="checkbox"]').removeAttr('checked');
+					}
+				}
+
+				$(document).ready(function () {
+					$('.selectAll').on('click', function () {
+						if ($(this).is(':checked')) {
+							$(this).parents('.select-all-access').find('input[type="checkbox"]').attr('checked', 'checked')
+						} else {
+							$(this).parents('.select-all-access').find('input[type="checkbox"]').removeAttr('checked')
+						}
+					})
+				})
+			</script>
+		@endsection

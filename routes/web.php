@@ -87,7 +87,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permission']], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], function () {
 
 	/* ===== ADMIN STORAGE ===== */
 	Route::get('storage', [AdminStorageController::class, 'index'])->name('storage.index');
@@ -99,7 +99,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 	Route::get('push-notification-readAt/{id}', [SiteNotificationController::class, 'readAt'])->name('admin.push.notification.readAt');
 
 	// Manage Branch
-//	Route::middleware('module:manage_branch')->group(function () {
+	Route::middleware('permission')->group(function () {
 		Route::get('branch-list', [BranchController::class, 'branchList'])->name('branchList');
 		Route::get('create-branch', [BranchController::class, 'createBranch'])->name('createBranch');
 		Route::post('branch-store', [BranchController::class, 'branchStore'])->name('branchStore');
@@ -114,20 +114,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::post('branch-manager-update/{id}', [BranchController::class, 'branchManagerUpdate'])->name('branchManagerUpdate');
 		Route::get('branch-staff-list/{id}', [BranchController::class, 'branchStaffList'])->name('branchStaffList');
 
-
-		Route::post('get-role-user', [BranchController::class, 'getRoleUser'])->name('getRoleUser');
-
-		Route::post('get-role-user-info', [BranchController::class, 'getRoleUserInfo'])->name('getRoleUserInfo');
+		//get role use & role user info ajax route here
 
 		Route::get('branch-employee-list', [BranchController::class, 'branchEmployeeList'])->name('branchEmployeeList');
 		Route::get('create-employee', [BranchController::class, 'createEmployee'])->name('createEmployee');
 		Route::post('branch-employee-store', [BranchController::class, 'branchEmployeeStore'])->name('branchEmployeeStore');
 		Route::get('branch-employee-edit/{id}', [BranchController::class, 'branchEmployeeEdit'])->name('branchEmployeeEdit');
 		Route::post('branch-employee-update/{id}', [BranchController::class, 'branchEmployeeUpdate'])->name('branchEmployeeUpdate');
-//	});
 
-	// Manage Shipments
-//	Route::middleware('module:manage_shipments')->group(function () {
+		// Manage Shipments
 		Route::get('shipment-list/{shipment_status}/{shipment_type}', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
 		Route::get('{shipment_type}/create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
 		Route::get('shipment/{id}/edit/{shipment_identifier}', [ShipmentController::class, 'editShipment'])->name('editShipment');
@@ -141,18 +136,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 
 		Route::put('shipment-status-update/{id}', [ShipmentController::class, 'shipmentStatusUpdate'])->name('shipmentStatusUpdate');
 
-		Route::post('oc-get-selected-location-ship-rate', [ShipmentController::class, 'OCGetSelectedLocationShipRate'])->name('OCGetSelectedLocationShipRate');
-//	});
-
-
-	// Manage Shipment Types
-//	Route::middleware('module:manage_shipment_types')->group(function () {
+		// Manage Shipment Types
 		Route::get('shipment-type-list', [ShipmentController::class, 'shipmentTypeList'])->name('shipmentTypeList');
 		Route::put('shipment-type-update/{id}', [ShipmentController::class, 'shipmentTypeUpdate'])->name('shipmentTypeUpdate');
-//	});
 
-	// Manage Shipping rates
-//	Route::middleware('module:manage_shipping_rates')->group(function () {
+		// Manage Shipping rates
 		Route::get('default-shipping-rate', [ShipmentController::class, 'defaultRate'])->name('defaultRate');
 		Route::put('default-shipping-rate-operator-country-update/{id}', [ShipmentController::class, 'defaultShippingRateOperatorCountryUpdate'])->name('defaultShippingRateOperatorCountryUpdate');
 		Route::put('default-shipping-rate-internationally-update/{id}', [ShipmentController::class, 'defaultShippingRateInternationallyUpdate'])->name('defaultShippingRateInternationallyUpdate');
@@ -183,53 +171,40 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::delete('delete-internationally-city-rate/{id}', [ShipmentController::class, 'deleteICityRate'])->name('deleteICityRate');
 
 		Route::post('shipping-date-store', [ShipmentController::class, 'shippingDateStore'])->name('shippingDateStore');
-//	});
 
-	// Manage Packing Service
-//	Route::middleware('module:manage_packing_service')->group(function () {
+		// Manage Packing Service
 		Route::get('packing-service-list', [PackingController::class, 'packingServiceList'])->name('packingServiceList');
 		Route::post('package-store', [PackingController::class, 'packageStore'])->name('packageStore');
 		Route::put('package-update/{id}', [PackingController::class, 'packageUpdate'])->name('packageUpdate');
 
 		Route::post('variant-store', [PackingController::class, 'variantStor1e'])->name('variantStore');
 		Route::put('variant-update/{id}', [PackingController::class, 'variantUpdate'])->name('variantUpdate');
-		Route::post('get-package-variant', [PackingController::class, 'getSelectedPackageVariant'])->name('getSelectedPackageVariant');
-		Route::post('get-variant-service', [PackingController::class, 'getSelectedVariantService'])->name('getSelectedVariantService');
 
 		Route::post('packing-service-store', [PackingController::class, 'packingServiceStore'])->name('packingServiceStore');
 		Route::put('packing-service-update/{id}', [PackingController::class, 'packingServiceUpdate'])->name('packingServiceUpdate');
-//	});
 
-	// Manage Parcel Service
-//	Route::middleware('module:manage_parcel_type')->group(function () {
+		// Manage Parcel Service
 		Route::get('parcel-service-list', [ParcelController::class, 'parcelServiceList'])->name('parcelServiceList');
 		Route::post('parcel-type-store', [ParcelController::class, 'parcelTypeStore'])->name('parcelTypeStore');
 		Route::put('package-type-update/{id}', [ParcelController::class, 'parcelTypeUpdate'])->name('parcelTypeUpdate');
 
 		Route::post('parcel-unit-store', [ParcelController::class, 'parcelUnitStore'])->name('parcelUnitStore');
 		Route::put('parcel-unit-update/{id}', [ParcelController::class, 'parcelUnitUpdate'])->name('parcelUnitUpdate');
-		Route::post('get-parcel-type-unit', [ParcelController::class, 'getSelectedParcelTypeUnit'])->name('getSelectedParcelTypeUnit');
 
-		Route::post('get-parcel-unit-service', [PackingController::class, 'getSelectedParcelUnitService'])->name('getSelectedParcelUnitService');
 
 		Route::post('parcel-service-store', [ParcelController::class, 'parcelServiceStore'])->name('parcelServiceStore');
 		Route::put('parcel-service-update/{id}', [ParcelController::class, 'parcelServiceUpdate'])->name('parcelServiceUpdate');
-//	});
 
-	// Manage Clients
-//	Route::middleware('module:manage_clients')->group(function () {
+		// Manage Clients
 		Route::get('client-list', [ClientController::class, 'clientList'])->name('clientList');
 		Route::get('client-create', [ClientController::class, 'createClient'])->name('createClient');
 		Route::post('client-store', [ClientController::class, 'clientStore'])->name('clientStore');
 
 		Route::get('client-edit/{id}', [ClientController::class, 'clientEdit'])->name('clientEdit');
 		Route::post('client-update/{id}', [ClientController::class, 'clientUpdate'])->name('clientUpdate');
-//	});
 
 
-	// Manage Locations
-//	Route::middleware('module:manage_location')->group(function () {
-
+		// Manage Locations
 		Route::get('country-list', [LocationController::class, 'countryList'])->name('countryList');
 		Route::post('country-store', [LocationController::class, 'countryStore'])->name('countryStore');
 		Route::put('country-update/{id}', [LocationController::class, 'countryUpdate'])->name('countryUpdate');
@@ -247,25 +222,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::post('area-store', [LocationController::class, 'areaStore'])->name('areaStore');
 		Route::put('area-update/{id}', [LocationController::class, 'areaUpdate'])->name('areaUpdate');
 
-		Route::post('get-country-state', [LocationController::class, 'getSeletedCountryState'])->name('getSeletedCountryState');
-		Route::post('get-state-city', [LocationController::class, 'getSeletedStateCity'])->name('getSeletedStateCity');
-		Route::post('get-city-area', [LocationController::class, 'getSeletedCityArea'])->name('getSeletedCityArea');
-
-//	});
-
-
-	// Manage Departments
-//	Route::middleware('module:manage_department')->group(function () {
+		// Manage Departments
 		Route::get('department-list', [DepartmentController::class, 'departmentList'])->name('departmentList');
 		Route::get('create-department', [DepartmentController::class, 'createDepartment'])->name('createDepartment');
 		Route::post('department-store', [DepartmentController::class, 'departmentStore'])->name('departmentStore');
 		Route::get('department-edit/{id}', [DepartmentController::class, 'departmentEdit'])->name('departmentEdit');
 		Route::post('department-update/{id}', [DepartmentController::class, 'departmentUpdate'])->name('departmentUpdate');
-//	});
 
 
-	/* USER LIST */
-//	Route::middleware('module:user_management')->group(function () {
+		/* USER LIST */
 		Route::get('user-list', [UserController::class, 'index'])->name('user-list');
 		Route::get('inactive-user-list', [UserController::class, 'inactiveUserList'])->name('inactive.user.list');
 
@@ -280,11 +245,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		/* PROFILE SHOW UPDATE BY USER */
 		Route::match(['get', 'post'], 'profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 		Route::match(['get', 'post'], 'change-password', [AdminController::class, 'changePassword'])->name('admin.change.password');
-//	});
 
 
-	/* PAYMENT METHOD MANAGE BY ADMIN*/
-//	Route::middleware('module:payment_settings')->group(function () {
+		/* PAYMENT METHOD MANAGE BY ADMIN*/
 		Route::get('payment-methods', [PaymentMethodController::class, 'index'])->name('payment.methods');
 		Route::get('edit-payment-methods/{id}', [PaymentMethodController::class, 'edit'])->name('edit.payment.methods');
 		Route::put('update-payment-methods/{id}', [PaymentMethodController::class, 'update'])->name('update.payment.methods');
@@ -301,17 +264,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::put('payment/action/{id}', [PaymentLogController::class, 'action'])->name('admin.payment.action');
 		Route::get('payment/log', [PaymentLogController::class, 'index'])->name('admin.payment.log');
 		Route::get('payment/search', [PaymentLogController::class, 'search'])->name('admin.payment.search');
-//	});
 
-	/* PAYOUT METHOD MANAGE BY ADMIN */
-//	Route::middleware('module:payout_settings')->group(function () {
+		/* PAYOUT METHOD MANAGE BY ADMIN */
 		Route::get('payout-method-list', [PayoutMethodController::class, 'index'])->name('payout.method.list');
 		Route::match(['get', 'put'], 'payout-method/{payoutMethod}', [PayoutMethodController::class, 'edit'])->name('payout.method.edit');
 		Route::match(['get', 'post'], 'payout-method-add', [PayoutMethodController::class, 'addMethod'])->name('payout.method.add');
-//	});
 
-	/* ROLES AND PERMISSION BY ADMIN */
-//	Route::middleware('module:role_permissions')->group(function () {
+		/* ROLES AND PERMISSION BY ADMIN */
 		Route::get('role/list', [RolesPermissionController::class, 'roleList'])->name('admin.role');
 		Route::get('create/role', [RolesPermissionController::class, 'createRole'])->name('createRole');
 		Route::post('role/store', [RolesPermissionController::class, 'roleStore'])->name('roleStore');
@@ -324,15 +283,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::put('manage/staffs/edit/{id}', [RolesPermissionController::class, 'staffEdit'])->name('admin.role.usersEdit');
 		Route::post('manage/staffs/status/change/{id}', [RolesPermissionController::class, 'statusChange'])->name('admin.role.statusChange');
 		Route::post('manage/staffs/login/{id}', [RolesPermissionController::class, 'userLogin'])->name('admin.role.usersLogin');
-//	});
 
+		/* ===== DEPOSIT VIEW MANAGE BY ADMIN ===== */
+		Route::match(['get', 'post'], 'add-balance-user/{userId}', [AdminDepositController::class, 'addBalanceUser'])->name('admin.user.add.balance');
 
-	/* ===== DEPOSIT VIEW MANAGE BY ADMIN ===== */
-	Route::match(['get', 'post'], 'add-balance-user/{userId}', [AdminDepositController::class, 'addBalanceUser'])->name('admin.user.add.balance');
-
-
-	/* ===== FUND ADD VIEW MANAGE BY ADMIN ===== */
-//	Route::middleware('module:transaction')->group(function () {
+		/* ===== FUND ADD VIEW MANAGE BY ADMIN ===== */
 		Route::get('fund-add-list', [AdminFundController::class, 'index'])->name('admin.fund.add.index');
 		Route::get('fund-add-search', [AdminFundController::class, 'search'])->name('admin.fund.add.search');
 		Route::get('fund-add-list/{userId}', [AdminFundController::class, 'showByUser'])->name('admin.user.fund.add.show');
@@ -352,11 +307,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::get('transaction-search', [AdminTransactionController::class, 'search'])->name('admin.transaction.search');
 		Route::get('transaction-list/{userId}', [AdminTransactionController::class, 'showByUser'])->name('admin.user.transaction.show');
 		Route::get('transaction-search/{userId}', [AdminTransactionController::class, 'searchByUser'])->name('admin.user.transaction.search');
-//	});
 
 
-	/* ===== BASIC CONTROL MANAGE BY ADMIN ===== */
-//	Route::middleware('module:transaction')->group(function () {
+		/* ===== BASIC CONTROL MANAGE BY ADMIN ===== */
 		Route::get('settings/{settings?}', [BasicControlController::class, 'index'])->name('settings');
 
 		Route::match(['get', 'post'], 'basic-control', [BasicControlController::class, 'basic_control'])->name('basic.control');
@@ -370,7 +323,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::match(['get', 'post'], 'fb-messenger-config', [BasicControlController::class, 'fbMessengerConfig'])->name('fb.messenger.control');
 		Route::match(['get', 'post'], 'google-recaptcha', [BasicControlController::class, 'googleRecaptchaConfig'])->name('google.recaptcha.control');
 		Route::match(['get', 'post'], 'google-analytics', [BasicControlController::class, 'googleAnalyticsConfig'])->name('google.analytics.control');
-
 
 		/* ===== ADMIN EMAIL-CONFIGURATION SETTINGS ===== */
 		Route::get('email-templates', [EmailTemplateController::class, 'index'])->name('email.template.index');
@@ -405,36 +357,27 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::put('update-key/{language}', [LanguageController::class, 'updateKey'])->name('language.update.key');
 		Route::delete('delete-key/{language}', [LanguageController::class, 'deleteKey'])->name('language.delete.key');
 
-//	});
 
-
-	/* ===== ADMIN SUPPORT TICKET ===== */
-//	Route::middleware('module:tickets')->group(function () {
+		/* ===== ADMIN SUPPORT TICKET ===== */
 		Route::get('tickets', [AdminTicketController::class, 'tickets'])->name('admin.ticket');
 		Route::get('tickets-search', [AdminTicketController::class, 'ticketSearch'])->name('admin.ticket.search');
 		Route::get('tickets-view/{id}', [AdminTicketController::class, 'ticketReply'])->name('admin.ticket.view');
 		Route::put('ticket-reply/{id}', [AdminTicketController::class, 'ticketReplySend'])->name('admin.ticket.reply');
 		Route::get('ticket-download/{ticket}', [AdminTicketController::class, 'ticketDownload'])->name('admin.ticket.download');
 		Route::post('ticket-delete', [AdminTicketController::class, 'ticketDelete'])->name('admin.ticket.delete');
-//	});
 
-	/* ===== ADMIN TEMPLATE SETTINGS ===== */
-//	Route::middleware('module:ui_settings')->group(function () {
+		/* ===== ADMIN TEMPLATE SETTINGS ===== */
 		Route::get('template/{section}', [TemplateController::class, 'show'])->name('template.show');
 		Route::put('template/{section}/{language}', [TemplateController::class, 'update'])->name('template.update');
-//	});
 
-//	Route::middleware('module:content_settings')->group(function () {
 		Route::get('contents/{content}', [ContentController::class, 'index'])->name('content.index');
 		Route::get('content-create/{content}', [ContentController::class, 'create'])->name('content.create');
 		Route::put('content-create/{content}/{language?}', [ContentController::class, 'store'])->name('content.store');
 		Route::get('content-show/{content}', [ContentController::class, 'show'])->name('content.show');
 		Route::put('content-update/{content}/{language?}', [ContentController::class, 'update'])->name('content.update');
 		Route::delete('content-delete/{id}', [ContentController::class, 'destroy'])->name('content.delete');
-//	});
 
-	/* ===== ADMIN BLOG SETTINGS ===== */
-//	Route::middleware('module:content_settings')->group(function () {
+		/* ===== ADMIN BLOG SETTINGS ===== */
 		Route::get('blog-category', [BlogController::class, 'categoryList'])->name('blogCategory');
 		Route::get('blog-category-create', [BlogController::class, 'blogCategoryCreate'])->name('blogCategoryCreate');
 		Route::post('blog-category-store/{language?}', [BlogController::class, 'blogCategoryStore'])->name('blogCategoryStore');
@@ -448,18 +391,32 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo', 'permi
 		Route::get('blog-edit/{id}', [BlogController::class, 'blogEdit'])->name('blogEdit');
 		Route::put('blog-update/{id}/{language?}', [BlogController::class, 'blogUpdate'])->name('blogUpdate');
 		Route::delete('blog-delete/{id}', [BlogController::class, 'blogDelete'])->name('blogDelete');
-//	});
 
+		Route::match(['get', 'post'], 'logo-settings', [HomeController::class, 'logoUpdate'])->name('logo.update');
+		Route::match(['get', 'post'], 'breadcrumb-settings', [HomeController::class, 'breadcrumbUpdate'])->name('breadcrumb.update');
+		Route::match(['get', 'post'], 'seo-settings', [HomeController::class, 'seoUpdate'])->name('seo.update');
 
-	Route::match(['get', 'post'], 'logo-settings', [HomeController::class, 'logoUpdate'])->name('logo.update');
-	Route::match(['get', 'post'], 'breadcrumb-settings', [HomeController::class, 'breadcrumbUpdate'])->name('breadcrumb.update');
-	Route::match(['get', 'post'], 'seo-settings', [HomeController::class, 'seoUpdate'])->name('seo.update');
+		/* ===== SUBSCRIBER VIEW MANAGE BY ADMIN ===== */
+		Route::get('subscriber-list', [SubscribeController::class, 'index'])->name('subscribe.index');
+		Route::get('subscriber-search', [SubscribeController::class, 'search'])->name('subscribe.search');
+		Route::match(['get', 'post'], 'send-mail-subscriber/{subscribe?}', [SubscribeController::class, 'sendMailSubscribe'])->name('send.mail.subscribe');
+	});
 
+	// All Ajax Route Here
+	Route::post('get-role-user', [BranchController::class, 'getRoleUser'])->name('getRoleUser');
+	Route::post('get-role-user-info', [BranchController::class, 'getRoleUserInfo'])->name('getRoleUserInfo');
+	Route::post('oc-get-selected-location-ship-rate', [ShipmentController::class, 'OCGetSelectedLocationShipRate'])->name('OCGetSelectedLocationShipRate');
 
-	/* ===== SUBSCRIBER VIEW MANAGE BY ADMIN ===== */
-	Route::get('subscriber-list', [SubscribeController::class, 'index'])->name('subscribe.index');
-	Route::get('subscriber-search', [SubscribeController::class, 'search'])->name('subscribe.search');
-	Route::match(['get', 'post'], 'send-mail-subscriber/{subscribe?}', [SubscribeController::class, 'sendMailSubscribe'])->name('send.mail.subscribe');
+	Route::post('get-package-variant', [PackingController::class, 'getSelectedPackageVariant'])->name('getSelectedPackageVariant');
+	Route::post('get-variant-service', [PackingController::class, 'getSelectedVariantService'])->name('getSelectedVariantService');
+
+	Route::post('get-parcel-type-unit', [ParcelController::class, 'getSelectedParcelTypeUnit'])->name('getSelectedParcelTypeUnit');
+	Route::post('get-parcel-unit-service', [PackingController::class, 'getSelectedParcelUnitService'])->name('getSelectedParcelUnitService');
+
+	Route::post('get-country-state', [LocationController::class, 'getSeletedCountryState'])->name('getSeletedCountryState');
+	Route::post('get-state-city', [LocationController::class, 'getSeletedStateCity'])->name('getSeletedStateCity');
+	Route::post('get-city-area', [LocationController::class, 'getSeletedCityArea'])->name('getSeletedCityArea');
+
 
 	Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.home');
 	Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');

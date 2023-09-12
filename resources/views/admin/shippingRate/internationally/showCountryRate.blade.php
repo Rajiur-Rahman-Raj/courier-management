@@ -33,7 +33,8 @@
 												<div class="row">
 													<div class="col-md-4">
 														<div class="form-group">
-															<input placeholder="@lang('From Country')" name="from_country"
+															<input placeholder="@lang('From Country')"
+																   name="from_country"
 																   value="{{ old('from_country',request()->from_country) }}"
 																   type="text"
 																   class="form-control form-control-sm">
@@ -90,7 +91,9 @@
 														<th scope="col">@lang('Return Shipment Cost')</th>
 														<th scope="col">@lang('Tax')</th>
 														<th scope="col">@lang('Insurance')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Shipping_Rates.Internationally_Rate.permission.edit'), config('permissionList.Shipping_Rates.Internationally_Rate.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -121,21 +124,28 @@
 															<td data-label="@lang('Insurance')">
 																{{ config('basic.currency_symbol') }}@lang($shippingCountry->insurance)
 															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Shipping_Rates.Internationally_Rate.permission.edit'), config('permissionList.Shipping_Rates.Internationally_Rate.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Shipping_Rates.Internationally_Rate.permission.edit')))
+																		<button data-target="#editCountryRateModal"
+																				data-toggle="modal"
+																				data-route="{{route('countryRateUpdateInternationally', $shippingCountry->id)}}"
+																				data-property="{{ $shippingCountry }}"
+																				class="btn btn-sm btn-outline-primary editCountryRate">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
 
-															<td data-label="@lang('Action')">
-																<button data-target="#editCountryRateModal"
-																		data-toggle="modal"
-																		data-route="{{route('countryRateUpdateInternationally', $shippingCountry->id)}}"
-																		data-property="{{ $shippingCountry }}"
-																		class="btn btn-sm btn-outline-primary editCountryRate">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-
-																<button data-target="#deleteICountryRateModal"
-																		data-toggle="modal"
-																		data-route="{{route('deleteICountryRate', $shippingCountry->id)}}"
-																		class="btn btn-sm btn-outline-danger deleteICountryRate">
-																	<i class="fas fa-trash"></i> @lang(' Delete')</button>
-															</td>
+																	@if(adminAccessRoute(config('permissionList.Shipping_Rates.Internationally_Rate.permission.delete')))
+																		<button data-target="#deleteICountryRateModal"
+																				data-toggle="modal"
+																				data-route="{{route('deleteICountryRate', $shippingCountry->id)}}"
+																				class="btn btn-sm btn-outline-danger deleteICountryRate">
+																			<i class="fas fa-trash"></i> @lang(' Delete')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -356,7 +366,6 @@
 			</div>
 		</div>
 	</div>
-
 
 @endsection
 
