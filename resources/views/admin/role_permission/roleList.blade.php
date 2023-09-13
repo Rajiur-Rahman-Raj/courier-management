@@ -71,9 +71,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Role List')</h6>
-											<a href="{{route('createRole')}}"
-											   class="btn btn-sm btn-outline-primary add"><i
-													class="fas fa-plus-circle"></i> @lang('Create New Role')</a>
+											@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Available_Roles.permission.add')))
+												<a href="{{route('createRole')}}"
+												   class="btn btn-sm btn-outline-primary add"><i
+														class="fas fa-plus-circle"></i> @lang('Create New Role')</a>
+											@endif
 										</div>
 										<div class="card-body">
 											<div class="table-responsive">
@@ -85,7 +87,9 @@
 														<th>@lang('SL.')</th>
 														<th>@lang('Name')</th>
 														<th>@lang('Status')</th>
-														<th>@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Role_&_Permissions.Available_Roles.permission.edit'), config('permissionList.Role_&_Permissions.Available_Roles.permission.delete'))))
+															<th>@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -105,21 +109,25 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
-
-															<td data-label="@lang('Action')">
-																<a href="{{ route('editRole', $value->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('Edit')"><i class="fa fa-edit"
-																							aria-hidden="true"></i> @lang('Edit')
-																</a>
-
-																<button
-																	class="btn btn-sm btn-outline-danger notiflix-confirm"
-																	data-target="#delete-modal"
-																	data-toggle="modal"
-																	data-route="{{route('deleteRole',$value->id)}}">
-																	@lang('Delete')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Role_&_Permissions.Available_Roles.permission.edit'), config('permissionList.Role_&_Permissions.Available_Roles.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Available_Roles.permission.edit')))
+																		<a href="{{ route('editRole', $value->id) }}"
+																		   class="btn btn-outline-primary btn-sm"
+																		   title="@lang('Edit')"><i class="fa fa-edit"
+																									aria-hidden="true"></i> @lang('Edit')
+																		</a>
+																	@endif
+																	@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Available_Roles.permission.delete')))
+																		<button
+																			class="btn btn-sm btn-outline-danger notiflix-confirm"
+																			data-target="#delete-modal"
+																			data-toggle="modal"
+																			data-route="{{route('deleteRole',$value->id)}}">
+																			@lang('Delete')</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>

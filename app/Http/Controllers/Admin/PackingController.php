@@ -48,6 +48,7 @@ class PackingController extends Controller
 			})
 			->orderBy('package_id', 'ASC')
 			->paginate(config('basic.paginate'));
+		$data['adminAccessRoute'] = adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit'));
 
 		return view('admin.packing.index', $data);
 	}

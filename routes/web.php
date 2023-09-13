@@ -238,8 +238,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('inactive-user-search', [UserController::class, 'inactiveUserSearch'])->name('inactive.user.search');
 
 		Route::match(['get', 'post'], 'user-edit/{user}', [UserController::class, 'edit'])->name('user.edit');
+		Route::match(['get', 'post'], 'vendor-edit/{user}', [UserController::class, 'edit'])->name('client.edit');
 		Route::post('user-balance/update/{id}', [UserController::class, 'userBalanceUpdate'])->name('user.balance.update');
+		Route::post('client-balance/update/{id}', [UserController::class, 'userBalanceUpdate'])->name('client.balance.update');
 		Route::match(['get', 'post'], 'user-asLogin/{user}', [UserController::class, 'asLogin'])->name('user.asLogin');
+		Route::match(['get', 'post'], 'user-clientLogin/{user}', [UserController::class, 'asLogin'])->name('user.clientLogin');
 		Route::match(['get', 'post'], 'send-mail-user/{user?}', [UserController::class, 'sendMailUser'])->name('send.mail.user');
 
 		/* PROFILE SHOW UPDATE BY USER */
@@ -282,6 +285,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::post('manage/staffs/create', [RolesPermissionController::class, 'staffCreate'])->name('admin.role.usersCreate');
 		Route::put('manage/staffs/edit/{id}', [RolesPermissionController::class, 'staffEdit'])->name('admin.role.usersEdit');
 		Route::post('manage/staffs/status/change/{id}', [RolesPermissionController::class, 'statusChange'])->name('admin.role.statusChange');
+
+		Route::post('manage/manager/login/{id}', [RolesPermissionController::class, 'userLogin'])->name('admin.role.managerLogin');
+		Route::post('manage/employee/login/{id}', [RolesPermissionController::class, 'userLogin'])->name('admin.role.employeeLogin');
 		Route::post('manage/staffs/login/{id}', [RolesPermissionController::class, 'userLogin'])->name('admin.role.usersLogin');
 
 		/* ===== DEPOSIT VIEW MANAGE BY ADMIN ===== */

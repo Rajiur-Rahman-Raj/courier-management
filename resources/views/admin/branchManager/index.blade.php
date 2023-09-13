@@ -99,9 +99,12 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Branch Manager List')</h6>
-											<a href="{{route('createBranchManager')}}"
-											   class="btn btn-sm btn-outline-primary add"><i
-													class="fas fa-plus-circle"></i> @lang('Create Branch Manager')</a>
+											@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_Manager.permission.add')))
+												<a href="{{route('createBranchManager')}}"
+												   class="btn btn-sm btn-outline-primary add"><i
+														class="fas fa-plus-circle"></i> @lang('Create Branch Manager')
+												</a>
+											@endif
 										</div>
 										<div class="card-body">
 											<div class="table-responsive">
@@ -114,7 +117,9 @@
 														<th scope="col">@lang('Branch')</th>
 														<th scope="col">@lang('Phone')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Branch.Branch_Manager.permission.edit'), config('permissionList.Manage_Branch.Branch_Manager.permission.login_as'), config('permissionList.Manage_Branch.Branch_Manager.permission.show_staff_list'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -185,29 +190,39 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Branch.Branch_Manager.permission.edit'), config('permissionList.Manage_Branch.Branch_Manager.permission.login_as'), config('permissionList.Manage_Branch.Branch_Manager.permission.show_staff_list'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_Manager.permission.edit')))
+																		<a href="{{ route('branchManagerEdit', $manager->id) }}"
+																		   class="btn btn-outline-primary btn-sm"
+																		   title="@lang('Edit')"><i class="fa fa-edit"
+																									aria-hidden="true"></i> @lang('Edit')
+																		</a>
+																	@endif
 
-															<td data-label="@lang('Action')">
-																<a href="{{ route('branchManagerEdit', $manager->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('Edit')"><i class="fa fa-edit" aria-hidden="true"></i> @lang('Edit')
-																</a>
+																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_Manager.permission.login_as')))
+																		<button data-target="#login_as"
+																				data-toggle="modal"
+																				data-route="{{route('admin.role.managerLogin',optional($manager->admin)->id)}}"
+																				class="btn btn-sm btn-outline-success loginUser">
+																			<i class="fas fa-sign-in-alt"></i> @lang(' Login As Manager')
+																		</button>
+																	@endif
 
-																<button data-target="#login_as" data-toggle="modal"
-																		data-route="{{route('admin.role.usersLogin',optional($manager->admin)->id)}}"
-																		class="btn btn-sm btn-outline-success loginUser"><i
-																		class="fas fa-sign-in-alt"></i> @lang(' Login As Manager')
-																</button>
-
-																<a href="{{ route('branchStaffList', optional($manager->branch)->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('Staff List')">
-																	<i class="fas fa-users"></i>
-																	@lang('Staff List')</a>
-															</td>
+																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_Manager.permission.show_staff_list')))
+																		<a href="{{ route('branchStaffList', optional($manager->branch)->id) }}"
+																		   class="btn btn-outline-primary btn-sm"
+																		   title="@lang('Staff List')">
+																			<i class="fas fa-users"></i>
+																			@lang('Staff List')</a>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%" class="text-center">@lang('No data found')</th>
+															<th colspan="100%"
+																class="text-center">@lang('No data found')</th>
 														</tr>
 													@endforelse
 													</tbody>

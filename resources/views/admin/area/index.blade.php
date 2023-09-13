@@ -89,9 +89,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Area List')</h6>
-											<button class="btn btn-sm btn-outline-primary" data-target="#add-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add Area')</button>
+											@if(adminAccessRoute(config('permissionList.Manage_Locations.Area_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary" data-target="#add-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add Area')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -126,7 +128,8 @@
 															</td>
 
 															<td data-label="@lang('Area')">
-																<a href="{{ route('areaList', ['show-area-list', optional($area->city)->id]) }}" class="text-decoration-underline">({{ optional($area->city)->getTotalArea() }})</a>
+																<a href="{{ route('areaList', ['show-area-list', optional($area->city)->id]) }}"
+																   class="text-decoration-underline">({{ optional($area->city)->getTotalArea() }})</a>
 
 															</td>
 
@@ -147,7 +150,8 @@
 													</tbody>
 												</table>
 											</div>
-											<div class="card-footer d-flex justify-content-center">{{ $allAreas->links() }}</div>
+											<div
+												class="card-footer d-flex justify-content-center">{{ $allAreas->links() }}</div>
 										</div>
 									</div>
 								</div>
@@ -176,10 +180,11 @@
 					<div class="modal-body">
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Country')</label>
-							<select name="country_id" class="form-control @error('country_id') is-invalid @enderror selectedCountry">
+							<select name="country_id"
+									class="form-control @error('country_id') is-invalid @enderror selectedCountry">
 								<option value="" disabled selected>@lang('Select Country')</option>
 								@foreach($allCountires as $country)
-									<option value="{{ $country->id }}" >@lang($country->name)</option>
+									<option value="{{ $country->id }}">@lang($country->name)</option>
 								@endforeach
 							</select>
 							<div class="invalid-feedback">
@@ -189,7 +194,8 @@
 
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select State')</label>
-							<select name="state_id" class="form-control @error('state_id') is-invalid @enderror selectedState">
+							<select name="state_id"
+									class="form-control @error('state_id') is-invalid @enderror selectedState">
 
 							</select>
 							<div class="invalid-feedback">
@@ -199,7 +205,8 @@
 
 						<div class="col-12 mt-3">
 							<label for="city_id">@lang('Select City')</label>
-							<select name="city_id" class="form-control @error('city_id') is-invalid @enderror selectedCity">
+							<select name="city_id"
+									class="form-control @error('city_id') is-invalid @enderror selectedCity">
 
 							</select>
 							<div class="invalid-feedback">

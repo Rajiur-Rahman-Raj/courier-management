@@ -55,9 +55,10 @@ $arr = [
 	"Packing_Service" => [
 		"Service_List" => [
 			'permission' => [
-				'view' => ['parcelServiceList'],
-				'add' => ['parcelTypeStore', 'parcelUnitStore', 'parcelServiceStore'],
-				'edit' => ['parcelTypeUpdate', 'parcelUnitUpdate', 'parcelServiceUpdate'],
+				'view' => ['packingServiceList'],
+				'add' => ['packageStore', 'variantStore', 'packingServiceStore'],
+				'edit' => ['packageUpdate', 'variantUpdate', 'packingServiceUpdate'],
+				'delete' => [],
 			],
 		],
 	],
@@ -65,9 +66,9 @@ $arr = [
 	"Parcel_Service" => [
 		"Service_List" => [
 			'permission' => [
-				'view' => ['packingServiceList'],
-				'add' => ['packageStore', 'variantStore', 'packingServiceStore'],
-				'edit' => ['packageUpdate', 'variantUpdate', 'packingServiceUpdate'],
+				'view' => ['parcelServiceList'],
+				'add' => ['parcelTypeStore', 'parcelUnitStore', 'parcelServiceStore'],
+				'edit' => ['parcelTypeUpdate', 'parcelUnitUpdate', 'parcelServiceUpdate'],
 				'delete' => [],
 			],
 		],
@@ -93,7 +94,7 @@ $arr = [
 				'delete' => [],
 				'show_profile' => [],
 				'show_staff_list' => ['branchStaffList'],
-				'login_as' => ['admin.role.usersLogin'],
+				'login_as' => ['admin.role.managerLogin'],
 			],
 		],
 		"Employee_List" => [
@@ -104,7 +105,7 @@ $arr = [
 				'delete' => [],
 				'show_profile' => [],
 				'show_staff_list' => [],
-				'login_as' => ['admin.role.usersLogin'],
+				'login_as' => ['admin.role.employeeLogin'],
 			],
 		],
 	],
@@ -125,10 +126,10 @@ $arr = [
 			'permission' => [
 				'view' => ['clientList'],
 				'add' => ['createClient', 'clientStore'],
-				'edit' => ['clientEdit', 'clientUpdate', 'user.balance.update'],
+				'edit' => ['clientEdit', 'clientUpdate', 'client.balance.update'],
 				'delete' => [],
-				'show_profile' => ['user.edit'],
-				'login_as' => ['user.asLogin'],
+				'show_profile' => ['client.edit'],
+				'login_as' => ['user.clientLogin'],
 			],
 		],
 	],
@@ -195,7 +196,7 @@ $arr = [
 	'Transactions' => [
 		"Add_Fund_List" => [
 			'permission' => [
-				'view' => ['admin.ticket','admin.ticket.view'],
+				'view' => ['admin.fund.add.index', 'admin.fund.add.search', 'admin.user.fund.add.show', 'admin.user.fund.add.search'],
 				'add' => [],
 				'edit' => [],
 				'delete' => [],
@@ -203,7 +204,7 @@ $arr = [
 		],
 		"Payout_List" => [
 			'permission' => [
-				'view' => ['payout.index', 'payout.details'],
+				'view' => ['admin.payout.index', 'admin.payout.search', 'payout.details'],
 				'add' => [],
 				'edit' => [],
 				'delete' => [],
@@ -223,7 +224,7 @@ $arr = [
 		"Control_Panel" => [
 			'permission' => [
 				'view' => ['settings', 'notify.template.index', 'email.template.index', 'sms.template.index', 'sms.template.edit', 'language.index', 'storage.index', 'plugin.config'],
-				'add' => ['payment.methods'],
+				'add' => ['language.create', 'language.store'],
 				'edit' => ['basic.control', 'logo.update', 'seo.update', 'pusher.config', 'notify.template.edit', 'email.config', 'email.template.default', 'email.template.edit', 'sms.config', 'sms.template.update', 'language.edit', 'language.update', 'language.keyword.edit', 'language.keyword.update', 'language.import.json', 'language.store.key', 'language.update.key', 'storage.edit', 'storage.setDefault', 'tawk.control', 'fb.messenger.control', 'google.recaptcha.control', 'google.analytics.control'],
 				'delete' => ['language.delete', 'language.delete.key'],
 			],
@@ -280,16 +281,16 @@ $arr = [
 		"Available_Roles" => [
 			'permission' => [
 				'view' => ['admin.role'],
-				'add' => ['payout.method.add'],
-				'edit' => ['payout.method.edit'],
-				'delete' => [],
+				'add' => ['createRole', 'roleStore'],
+				'edit' => ['editRole', 'roleUpdate'],
+				'delete' => ['deleteRole'],
 				'login_as' => [],
 			],
 		],
 		"Manage_Staff" => [
 			'permission' => [
 				'view' => ['admin.role.staff'],
-				'add' => ['admin.role.usersCreate', 'roleStore'],
+				'add' => ['admin.role.usersCreate'],
 				'edit' => ['admin.role.usersEdit', 'admin.role.statusChange'],
 				'delete' => [],
 				'login_as' => ['admin.role.usersLogin'],

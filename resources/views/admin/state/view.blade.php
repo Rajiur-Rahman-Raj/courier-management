@@ -6,7 +6,6 @@
 @endpush
 
 @section('content')
-
 	<div class="main-content">
 		<section class="section">
 			<div class="section-header">
@@ -15,7 +14,8 @@
 					<div class="breadcrumb-item active">
 						<a href="{{ route('admin.home') }}">@lang('Dashboard')</a>
 					</div>
-					<div class="breadcrumb-item">@lang(sizeof($allStates) ? optional($allStates[0]->country)->name.' '.$title : $title)</div>
+					<div
+						class="breadcrumb-item">@lang(sizeof($allStates) ? optional($allStates[0]->country)->name.' '.$title : $title)</div>
 				</div>
 			</div>
 
@@ -30,7 +30,6 @@
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Search')</h6>
 										</div>
-
 
 
 										<div class="card-body">
@@ -80,7 +79,8 @@
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('All List')</h6>
 
-											<a href="{{route('stateList', ['state-list'])}}" class="btn btn-sm  btn-primary mr-2">
+											<a href="{{route('stateList', ['state-list'])}}"
+											   class="btn btn-sm  btn-primary mr-2">
 												<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 											</a>
 										</div>
@@ -94,7 +94,9 @@
 													<tr>
 														<th scope="col">@lang('State')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.State_List.permission.edit'), config('permissionList.Manage_Locations.State_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -115,17 +117,21 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editStateModal"
-																		data-toggle="modal"
-																		data-route="{{route('stateUpdate', $state->id)}}"
-																		data-property="{{ $state }}"
-																		data-countries="{{ $allCountires }}"
-																		class="btn btn-sm btn-outline-primary editState">
-																	<i
-																		class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.State_List.permission.edit'), config('permissionList.Manage_Locations.State_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Manage_Locations.State_List.permission.edit')))
+																		<button data-target="#editStateModal"
+																				data-toggle="modal"
+																				data-route="{{route('stateUpdate', $state->id)}}"
+																				data-property="{{ $state }}"
+																				data-countries="{{ $allCountires }}"
+																				class="btn btn-sm btn-outline-primary editState">
+																			<i
+																				class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -136,7 +142,8 @@
 													</tbody>
 												</table>
 											</div>
-											<div class="card-footer d-flex justify-content-center">{{ $allStates->links() }}</div>
+											<div
+												class="card-footer d-flex justify-content-center">{{ $allStates->links() }}</div>
 										</div>
 									</div>
 								</div>

@@ -28,10 +28,13 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Parcel Type List')</h6>
-											<button class="btn btn-sm btn-outline-primary"
-													data-target="#add-parcel-type-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add Parcel Type')</button>
+											@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary"
+														data-target="#add-parcel-type-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add Parcel Type')
+												</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -44,7 +47,9 @@
 													<tr>
 														<th scope="col">@lang('Parcel Type')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.edit'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -59,16 +64,19 @@
 																class="font-weight-bold text-dark">
 																	<?php echo $types->statusMessage; ?>
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editParcelTypeModal"
-																		data-toggle="modal"
-																		data-route="{{route('parcelTypeUpdate', $types->id)}}"
-																		data-property="{{ $types }}"
-																		class="btn btn-sm btn-outline-primary editParcelType">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
-
+															@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.edit'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.edit')))
+																		<button data-target="#editParcelTypeModal"
+																				data-toggle="modal"
+																				data-route="{{route('parcelTypeUpdate', $types->id)}}"
+																				data-property="{{ $types }}"
+																				class="btn btn-sm btn-outline-primary editParcelType">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -91,10 +99,12 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Parcel Unit')</h6>
-											<button class="btn btn-sm btn-outline-primary"
-													data-target="#add-parcel-unit-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add Unit')</button>
+											@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary"
+														data-target="#add-parcel-unit-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add Unit')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -108,7 +118,9 @@
 														<th scope="col">@lang('Parcel Type')</th>
 														<th scope="col">@lang('Unit')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.edit'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -128,26 +140,31 @@
 																	<?php echo $types->statusMessage; ?>
 															</td>
 
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editParcelUnitModal"
-																		data-toggle="modal"
-																		data-route="{{ route('parcelUnitUpdate', $unit->id) }}"
-																		data-property="{{ $unit }}"
-																		class="btn btn-sm btn-outline-primary editParcelUnit">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
-
+															@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.edit'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.edit')))
+																		<button data-target="#editParcelUnitModal"
+																				data-toggle="modal"
+																				data-route="{{ route('parcelUnitUpdate', $unit->id) }}"
+																				data-property="{{ $unit }}"
+																				class="btn btn-sm btn-outline-primary editParcelUnit">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%" class="text-center">@lang('No data found')</th>
+															<th colspan="100%"
+																class="text-center">@lang('No data found')</th>
 														</tr>
 													@endforelse
 													</tbody>
 												</table>
 											</div>
-											<div class="card-footer d-flex justify-content-center">{{ $allParcelUnits->links() }}</div>
+											<div
+												class="card-footer d-flex justify-content-center">{{ $allParcelUnits->links() }}</div>
 										</div>
 									</div>
 								</div>
@@ -213,10 +230,12 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Parcel Service List')</h6>
-											<button class="btn btn-sm btn-outline-primary"
-													data-target="#add-parcelService-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add Service')</button>
+											@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary"
+														data-target="#add-parcelService-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add Service')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -231,7 +250,9 @@
 														<th scope="col">@lang('Unit')</th>
 														<th scope="col">@lang('Cost')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.edit'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -255,15 +276,19 @@
 																class="font-weight-bold text-dark">
 																	<?php echo $service->statusMessage; ?>
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#updateParcelServiceModal"
-																		data-toggle="modal"
-																		data-route="{{route('parcelServiceUpdate', $service->id)}}"
-																		data-property="{{ $service }}"
-																		class="btn btn-sm btn-outline-primary editParcelService">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.edit'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.edit')))
+																		<button data-target="#updateParcelServiceModal"
+																				data-toggle="modal"
+																				data-route="{{route('parcelServiceUpdate', $service->id)}}"
+																				data-property="{{ $service }}"
+																				class="btn btn-sm btn-outline-primary editParcelService">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -466,7 +491,8 @@
 					<div class="modal-body">
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Parcel Type') <span class="text-danger">*</span></label>
-							<select name="parcel_type_id" class="form-control @error('parcel_type_id') is-invalid @enderror"
+							<select name="parcel_type_id"
+									class="form-control @error('parcel_type_id') is-invalid @enderror"
 									id="parcelTypeId">
 								@foreach($allParcelTypes as $type)
 									<option value="{{ $type->id }}">@lang($type->parcel_type)</option>
@@ -557,7 +583,8 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('Cost per unit') <span class="text-danger">*</span> <span class=" text-dark font-weight-bold"></span></label>
+							<label for="">@lang('Cost per unit') <span class="text-danger">*</span> <span
+									class=" text-dark font-weight-bold"></span></label>
 
 							<div class="input-group">
 								<input type="text" class="form-control @error('cost') is-invalid @enderror" name="cost"
@@ -628,7 +655,8 @@
 
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Unit') <span class="text-danger">*</span></label>
-							<select name="parcel_unit_id" class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit"
+							<select name="parcel_unit_id"
+									class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit"
 									id="unitId">
 								@foreach($allParcelUnits as $unit)
 									<option value="{{ $unit->id }}">@lang($unit->unit)</option>
@@ -641,7 +669,8 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<label for="">@lang('Cost per unit') <span class="text-danger">*</span> <span class="font-weight-bold"></span></label>
+							<label for="">@lang('Cost per unit') <span class="text-danger">*</span> <span
+									class="font-weight-bold"></span></label>
 
 							<div class="input-group">
 								<input type="text" class="form-control @error('cost') is-invalid @enderror parcel-cost"
@@ -701,7 +730,6 @@
 			});
 
 
-
 			$(document).on('click', '.editParcelUnit', function () {
 
 				let dataRoute = $(this).data('route');
@@ -733,7 +761,6 @@
 				getSelectedParcelTypeUnit(dataProperty.parcel_type_id, unitId);
 
 			});
-
 
 
 		})

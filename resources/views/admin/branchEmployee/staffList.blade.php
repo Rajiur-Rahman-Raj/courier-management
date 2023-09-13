@@ -94,9 +94,6 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Branch Staff List')</h6>
-											<a href="{{route('createEmployee')}}"
-											   class="btn btn-sm btn-outline-primary add"><i
-													class="fas fa-plus-circle"></i> @lang('Create Employee')</a>
 										</div>
 										<div class="card-body">
 											<div class="table-responsive">
@@ -110,7 +107,6 @@
 														<th scope="col">@lang('Phone')</th>
 														<th scope="col">@lang('Address')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
 													</tr>
 													</thead>
 
@@ -163,13 +159,6 @@
 																@endif
 															</td>
 
-															<td data-label="@lang('Action')">
-																<a href="{{ route('branchEmployeeEdit', $employee->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('Edit')"><i class="fa fa-edit"
-																							aria-hidden="true"></i> @lang('Edit')
-																</a>
-															</td>
 														</tr>
 													@empty
 														<tr>

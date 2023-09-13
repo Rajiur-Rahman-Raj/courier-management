@@ -182,13 +182,14 @@
 																			<span>-</span>
 																		@endif
 																	</td>
+
 																	@if($key2 == 'Shipment_List')
 																		<td data-label="dispatch">
 																			@if(!empty($subMenu['permission']['dispatch']))
 																				<input type="checkbox"
 																					   value="{{join(",",$subMenu['permission']['dispatch'])}}"
 																					   class="cursor-pointer"
-																					   @if(in_array_any( $subMenu['permission']['dispatch'], $singleRole->permission??[] ))
+																					   @if(in_array_any($subMenu['permission']['dispatch'], $singleRole->permission??[] ))
 																						   checked
 																					   @endif
 																					   name="permissions[]"/>
@@ -225,6 +226,7 @@
 																				<span>-</span>
 																			@endif
 																		</td>
+
 																		<td data-label="Login As">
 																			@if(!empty($subMenu['permission']['login_as']))
 																				<input type="checkbox"
@@ -268,6 +270,8 @@
 																				<span>-</span>
 																			@endif
 																		</td>
+
+{{--																		@dd($singleRole)--}}
 																		<td data-label="Login As">
 																			@if(!empty($subMenu['permission']['login_as']))
 																				<input type="checkbox"

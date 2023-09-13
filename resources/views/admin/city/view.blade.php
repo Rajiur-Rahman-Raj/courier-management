@@ -13,7 +13,8 @@
 					<div class="breadcrumb-item active">
 						<a href="{{ route('admin.home') }}">@lang('Dashboard')</a>
 					</div>
-					<div class="breadcrumb-item">@lang(sizeof($allCities) ? optional($allCities[0]->state)->name.' '.$title : $title)</div>
+					<div
+						class="breadcrumb-item">@lang(sizeof($allCities) ? optional($allCities[0]->state)->name.' '.$title : $title)</div>
 				</div>
 			</div>
 
@@ -75,7 +76,8 @@
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('All List')</h6>
 
-											<a href="{{route('cityList', ['city-list'])}}" class="btn btn-sm  btn-primary mr-2">
+											<a href="{{route('cityList', ['city-list'])}}"
+											   class="btn btn-sm  btn-primary mr-2">
 												<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 											</a>
 										</div>
@@ -90,7 +92,9 @@
 													<tr>
 														<th scope="col">@lang('City')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.City_List.permission.edit'), config('permissionList.Manage_Locations.City_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -112,17 +116,21 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editCityModal"
-																		data-toggle="modal"
-																		data-route="{{route('cityUpdate', $city->id)}}"
-																		data-property="{{ $city }}"
-																		data-countries="{{ $allCountires }}"
-																		data-states="{{ $allStates }}"
-																		class="btn btn-sm btn-outline-primary editCity">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.City_List.permission.edit'), config('permissionList.Manage_Locations.City_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Manage_Locations.City_List.permission.edit')))
+																		<button data-target="#editCityModal"
+																				data-toggle="modal"
+																				data-route="{{route('cityUpdate', $city->id)}}"
+																				data-property="{{ $city }}"
+																				data-countries="{{ $allCountires }}"
+																				data-states="{{ $allStates }}"
+																				class="btn btn-sm btn-outline-primary editCity">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -133,7 +141,8 @@
 													</tbody>
 												</table>
 											</div>
-											<div class="card-footer d-flex justify-content-center">{{ $allCities->links() }}</div>
+											<div
+												class="card-footer d-flex justify-content-center">{{ $allCities->links() }}</div>
 										</div>
 									</div>
 								</div>
@@ -163,7 +172,9 @@
 
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Country')</label>
-							<select name="country_id" class="form-control @error('country_id') is-invalid @enderror selectedCountry" id="countryId">
+							<select name="country_id"
+									class="form-control @error('country_id') is-invalid @enderror selectedCountry"
+									id="countryId">
 								@foreach($allCountires as $country)
 									<option value="{{ $country->id }}">@lang($country->name)</option>
 								@endforeach
@@ -175,7 +186,9 @@
 
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select State')</label>
-							<select name="state_id" class="form-control @error('state_id') is-invalid @enderror selectedState" id="stateId">
+							<select name="state_id"
+									class="form-control @error('state_id') is-invalid @enderror selectedState"
+									id="stateId">
 								@foreach($allStates as $state)
 									<option value="{{ $state->id }}">@lang($state->name)</option>
 								@endforeach
@@ -262,13 +275,13 @@
 
 			});
 
-			$('.selectedCountry').on('change', function (){
+			$('.selectedCountry').on('change', function () {
 				let selectedValue = $(this).val();
 				let change = true;
 				getSeletedCountryState(selectedValue, change);
 			})
 
-			function getSeletedCountryState(value, change, stateId=null) {
+			function getSeletedCountryState(value, change, stateId = null) {
 				$.ajaxSetup({
 					headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -287,7 +300,7 @@
 						responseData.forEach(res => {
 							$('.selectedState').append(`<option value="${res.id}">${res.name}</option>`)
 						})
-						if(change == true){
+						if (change == true) {
 							$('.selectedState').prepend(`<option value="" selected disabled>@lang('Select State')</option>`)
 						}
 						$('#stateId').val(stateId);

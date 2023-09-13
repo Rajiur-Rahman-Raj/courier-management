@@ -1,5 +1,6 @@
 <script>
 	'use strict'
+	var variantEditAccessRoute = "{{ $adminAccessRoute }}"
 
 	$(document).on('change', '.selectedPackage', function () {
 		let selectedValue = $(this).val();
@@ -63,8 +64,7 @@
 										${res.statusMessage}
 									</td>
 
-									<td data-label="@lang('Action')">
-
+									${variantEditAccessRoute == 1 ? `<td data-label="@lang('Action')">
 										<button data-target="#updateVariantModal"
 												data-toggle="modal"
 												data-id="${res.id}"
@@ -75,7 +75,8 @@
 												data-route="${res.editVariantRoute}"
 												class="btn btn-sm btn-outline-primary editVariant">
 											<i class="fas fa-edit"></i> @lang(' Edit')</button>
-									</td>
+									</td>` : ''}
+
 								</tr>`
 
 							result[key] = tr;

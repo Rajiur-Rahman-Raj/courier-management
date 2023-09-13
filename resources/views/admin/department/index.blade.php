@@ -73,9 +73,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Department List')</h6>
-											<a href="{{route('createDepartment')}}"
-											   class="btn btn-sm btn-outline-primary add"><i
-													class="fas fa-plus-circle"></i> @lang('Create Department')</a>
+											@if(adminAccessRoute(config('permissionList.Manage_Department.Department_List.permission.add')))
+												<a href="{{route('createDepartment')}}"
+												   class="btn btn-sm btn-outline-primary add"><i
+														class="fas fa-plus-circle"></i> @lang('Create Department')</a>
+											@endif
 										</div>
 										<div class="card-body">
 											<div class="table-responsive">
@@ -87,7 +89,9 @@
 														<th scope="col">@lang('SL.')</th>
 														<th scope="col">@lang('Department Name')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Department.Department_List.permission.edit'), config('permissionList.Manage_Department.Department_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -109,14 +113,17 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
-
-															<td data-label="@lang('Action')">
-																<a href="{{ route('departmentEdit', $department->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('Edit')"><i class="fa fa-edit"
-																							aria-hidden="true"></i> @lang('Edit')
-																</a>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Department.Department_List.permission.edit'), config('permissionList.Manage_Department.Department_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Manage_Department.Department_List.permission.edit')))
+																		<a href="{{ route('departmentEdit', $department->id) }}"
+																		   class="btn btn-outline-primary btn-sm"
+																		   title="@lang('Edit')"><i class="fa fa-edit"
+																									aria-hidden="true"></i> @lang('Edit')
+																		</a>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>

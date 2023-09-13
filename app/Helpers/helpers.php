@@ -534,12 +534,12 @@ function adminAccessRoute($search)
 	if ($user->role_id == null){
 		return true;
 	}
-
 	foreach (optional($user->role)->permission as $permission) {
 		if (in_array($permission, $search)) {
 			return true;
 		}
 	}
+
 	return false;
 }
 

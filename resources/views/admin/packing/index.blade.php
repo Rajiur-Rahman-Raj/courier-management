@@ -46,7 +46,7 @@
 													<tr>
 														<th scope="col">@lang('Package Name')</th>
 														<th scope="col">@lang('Status')</th>
-														@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+														@if(adminAccessRoute(array_merge(config('permissionList.Packing_Service.Service_List.permission.edit'), config('permissionList.Packing_Service.Service_List.permission.delete'))))
 															<th scope="col">@lang('Action')</th>
 														@endif
 													</tr>
@@ -63,15 +63,17 @@
 																class="font-weight-bold text-dark">
 																	<?php echo $package->statusMessage; ?>
 															</td>
-															@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+															@if(adminAccessRoute(array_merge(config('permissionList.Packing_Service.Service_List.permission.edit'), config('permissionList.Packing_Service.Service_List.permission.delete'))))
 																<td data-label="@lang('Action')">
-																	<button data-target="#editPackageModal"
-																			data-toggle="modal"
-																			data-route="{{ route('packageUpdate', $package->id) }}"
-																			data-property="{{ $package }}"
-																			class="btn btn-sm btn-outline-primary editPackage">
-																		<i class="fas fa-edit"></i> @lang(' Edit')
-																	</button>
+																	@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+																		<button data-target="#editPackageModal"
+																				data-toggle="modal"
+																				data-route="{{ route('packageUpdate', $package->id) }}"
+																				data-property="{{ $package }}"
+																				class="btn btn-sm btn-outline-primary editPackage">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
 																</td>
 															@endif
 
@@ -97,7 +99,7 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Package Variant')</h6>
-											@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
+											@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.add')))
 												<button class="btn btn-sm btn-outline-primary"
 														data-target="#add-variant-modal"
 														data-toggle="modal"><i
@@ -217,7 +219,7 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Packing Service List')</h6>
-											@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.add')))
+											@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.add')))
 												<button class="btn btn-sm btn-outline-primary"
 														data-target="#add-packingService-modal"
 														data-toggle="modal"><i
@@ -238,7 +240,7 @@
 														<th scope="col">@lang('Cost')</th>
 														<th scope="col">@lang('Weight')</th>
 														<th scope="col">@lang('Status')</th>
-														@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.add'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+														@if(adminAccessRoute(array_merge(config('permissionList.Packing_Service.Service_List.permission.edit'), config('permissionList.Packing_Service.Service_List.permission.delete'))))
 															<th scope="col">@lang('Action')</th>
 														@endif
 													</tr>
@@ -267,9 +269,9 @@
 																class="font-weight-bold text-dark">
 																	<?php echo $service->statusMessage; ?>
 															</td>
-															@if(adminAccessRoute(array_merge(config('permissionList.Parcel_Service.Service_List.permission.edit'), config('permissionList.Parcel_Service.Service_List.permission.delete'))))
+															@if(adminAccessRoute(array_merge(config('permissionList.Packing_Service.Service_List.permission.edit'), config('permissionList.Packing_Service.Service_List.permission.delete'))))
 																<td data-label="@lang('Action')">
-																	@if(adminAccessRoute(config('permissionList.Parcel_Service.Service_List.permission.edit')))
+																	@if(adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit')))
 																		<button data-target="#updatePackingServiceModal"
 																				data-toggle="modal"
 																				data-route="{{route('packingServiceUpdate', $service->id)}}"
@@ -825,6 +827,7 @@
 	@include('partials.packageVariant')
 	<script>
 		'use strict'
+
 		$(document).ready(function () {
 			$.uploadPreview({
 				input_field: "#image-upload",

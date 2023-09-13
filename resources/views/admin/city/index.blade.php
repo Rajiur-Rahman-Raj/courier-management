@@ -80,9 +80,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('City List')</h6>
-											<button class="btn btn-sm btn-outline-primary" data-target="#add-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add City')</button>
+											@if(adminAccessRoute(config('permissionList.Manage_Locations.City_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary" data-target="#add-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add City')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -113,7 +115,8 @@
 
 
 															<td data-label="@lang('City')">
-																<a href="{{ route('cityList', ['show-city-list', optional($city->state)->id]) }}" class="text-decoration-underline">({{ optional($city->state)->getTotalCity() }})</a>
+																<a href="{{ route('cityList', ['show-city-list', optional($city->state)->id]) }}"
+																   class="text-decoration-underline">({{ optional($city->state)->getTotalCity() }})</a>
 															</td>
 
 															<td data-label="@lang('Action')">
@@ -133,7 +136,8 @@
 													</tbody>
 												</table>
 											</div>
-											<div class="card-footer d-flex justify-content-center">{{ $allCities->links() }}</div>
+											<div
+												class="card-footer d-flex justify-content-center">{{ $allCities->links() }}</div>
 										</div>
 									</div>
 								</div>
@@ -162,10 +166,11 @@
 					<div class="modal-body">
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Country')</label>
-							<select name="country_id" class="form-control @error('country_id') is-invalid @enderror selectedCountry">
+							<select name="country_id"
+									class="form-control @error('country_id') is-invalid @enderror selectedCountry">
 								<option value="" disabled selected>@lang('Select Country')</option>
 								@foreach($allCountires as $country)
-									<option value="{{ $country->id }}" >@lang($country->name)</option>
+									<option value="{{ $country->id }}">@lang($country->name)</option>
 								@endforeach
 							</select>
 							<div class="invalid-feedback">
@@ -175,7 +180,8 @@
 
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select State')</label>
-							<select name="state_id" class="form-control @error('state_id') is-invalid @enderror selectedState">
+							<select name="state_id"
+									class="form-control @error('state_id') is-invalid @enderror selectedState">
 
 							</select>
 							<div class="invalid-feedback">
@@ -217,7 +223,6 @@
 		</div>
 	</div>
 
-
 @endsection
 
 @section('scripts')
@@ -240,7 +245,7 @@
 
 		$(document).ready(function () {
 
-			$('.selectedCountry').on('change', function (){
+			$('.selectedCountry').on('change', function () {
 				let selectedValue = $(this).val();
 				getSeletedCountryState(selectedValue);
 			})

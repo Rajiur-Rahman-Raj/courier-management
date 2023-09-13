@@ -21,8 +21,10 @@
 								<div
 									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 									<h6 class="m-0 font-weight-bold text-primary">@lang('Payout Method List')</h6>
-									<a href="{{ route('payout.method.add') }}"
-									   class="btn btn-sm btn-outline-primary">@lang('Add New')</a>
+									@if(adminAccessRoute(config('permissionList.Payout_Settings.Payout_Methods.permission.add')))
+										<a href="{{ route('payout.method.add') }}"
+										   class="btn btn-sm btn-outline-primary">@lang('Add New')</a>
+									@endif
 								</div>
 
 								<div class="card-body">
@@ -35,7 +37,9 @@
 												<th>@lang('Min limit')</th>
 												<th>@lang('Max limit')</th>
 												<th>@lang('Status')</th>
-												<th>@lang('Action')</th>
+												@if(adminAccessRoute(array_merge(config('permissionList.Payout_Settings.Payout_Methods.permission.edit'), config('permissionList.Payout_Settings.Payout_Methods.permission.delete'))))
+													<th>@lang('Action')</th>
+												@endif
 											</tr>
 											</thead>
 											<tbody>
@@ -74,12 +78,16 @@
 															<span class="badge badge-warning">@lang('Inactive')</span>
 														@endif
 													</td>
-													<td data-label="@lang('Action')">
-														<a href="{{ route('payout.method.edit',$value) }}"
-														   class="btn btn-sm btn-outline-primary"><i
-																class="fas fa-edit"></i> @lang('Edit')
-														</a>
-													</td>
+													@if(adminAccessRoute(array_merge(config('permissionList.Payout_Settings.Payout_Methods.permission.edit'), config('permissionList.Payout_Settings.Payout_Methods.permission.delete'))))
+														<td data-label="@lang('Action')">
+															@if(adminAccessRoute(config('permissionList.Payout_Settings.Payout_Methods.permission.edit')))
+															<a href="{{ route('payout.method.edit',$value) }}"
+															   class="btn btn-sm btn-outline-primary"><i
+																	class="fas fa-edit"></i> @lang('Edit')
+															</a>
+															@endif
+														</td>
+													@endif
 												</tr>
 											@endforeach
 											</tbody>

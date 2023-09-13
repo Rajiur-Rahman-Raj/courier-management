@@ -26,10 +26,12 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Languages')</h6>
-											<span>
+											@if(adminAccessRoute(config('permissionList.Control_Panel.Control_Panel.permission.add')))
+												<span>
 												<a href="{{ route('language.create') }}"
 												   class="btn btn-sm btn-outline-primary">@lang('Add New')</a>
 											</span>
+											@endif
 										</div>
 										<div class="card-body">
 											<div class="table-responsive">
@@ -39,7 +41,9 @@
 														<th>@lang('Name')</th>
 														<th>@lang('Short Name')</th>
 														<th>@lang('Status')</th>
-														<th>@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Control_Panel.Control_Panel.permission.edit'), config('permissionList.Control_Panel.Control_Panel.permission.delete'))))
+															<th>@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 													<tbody>
@@ -68,24 +72,33 @@
 																		class="badge badge-warning">@lang('Inactive')</span>
 																@endif
 															</td>
-															<td data-label="@lang('Action')">
-																<a href="{{ route('language.edit',$language) }}"
-																   class="btn btn-sm btn-outline-primary"><i
-																		class="fas fa-edit"></i> @lang('Edit')</a>
-																<a href="{{ route('language.keyword.edit',$language) }}"
-																   class="btn btn-sm btn-outline-primary m-1"><i
-																		class="fas fa-code"></i> @lang('Edit Keywords')
-																</a>
-																@if(!$language->default_status)
-																	<a href="javascript:void(0)"
-																	   data-route="{{ route('language.delete',$language) }}"
-																	   data-toggle="modal"
-																	   data-target="#delete-modal"
-																	   class="btn btn-outline-danger btn-sm delete">
-																		<i class="fas fa-trash-alt"></i> @lang('Delete')
-																	</a>
-																@endif
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Control_Panel.Control_Panel.permission.edit'), config('permissionList.Control_Panel.Control_Panel.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Control_Panel.Control_Panel.permission.edit')))
+																		<a href="{{ route('language.edit',$language) }}"
+																		   class="btn btn-sm btn-outline-primary"><i
+																				class="fas fa-edit"></i> @lang('Edit')
+																		</a>
+
+																		<a href="{{ route('language.keyword.edit',$language) }}"
+																		   class="btn btn-sm btn-outline-primary m-1"><i
+																				class="fas fa-code"></i> @lang('Edit Keywords')
+																		</a>
+																	@endif
+
+																	@if(adminAccessRoute(config('permissionList.Control_Panel.Control_Panel.permission.delete')))
+																		@if(!$language->default_status)
+																			<a href="javascript:void(0)"
+																			   data-route="{{ route('language.delete',$language) }}"
+																			   data-toggle="modal"
+																			   data-target="#delete-modal"
+																			   class="btn btn-outline-danger btn-sm delete">
+																				<i class="fas fa-trash-alt"></i> @lang('Delete')
+																			</a>
+																		@endif
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@endforeach
 													</tbody>

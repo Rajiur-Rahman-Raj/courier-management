@@ -19,11 +19,15 @@
 					<div class="row justify-content-md-center">
 						<div class="col-lg-12">
 							<div class="card mb-4 card-primary shadow">
-								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+								<div
+									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 									<h6 class="m-0 font-weight-bold text-primary">@lang(ucfirst(kebab2Title($content)))</h6>
-									<span>
-										<a href="{{ route('content.create',$content) }}" class="btn btn-sm btn-outline-primary">@lang('Add New')</a>
+									@if(adminAccessRoute(config('permissionList.Theme_Settings.Content_Settings.permission.add')))
+										<span>
+										<a href="{{ route('content.create',$content) }}"
+										   class="btn btn-sm btn-outline-primary">@lang('Add New')</a>
 									</span>
+									@endif
 								</div>
 								<div class="card-body">
 									<div class="table-responsive">
@@ -39,16 +43,19 @@
 												@else
 													<th>@lang('title')</th>
 												@endif
-												<th>@lang('Action')</th>
+												@if(adminAccessRoute(array_merge(config('permissionList.Theme_Settings.Content_Settings.permission.edit'), config('permissionList.Theme_Settings.Content_Settings.permission.delete'))))
+													<th>@lang('Action')</th>
+												@endif
 											</tr>
 											</thead>
 											<tbody>
 											@foreach($contents as $key => $value)
-
 												<tr>
 													@if($content == 'hero')
 														<td data-label="@lang('')" class="p-3">
-															<img src="{{ getFile($value->contentMedia->driver, $value->contentMedia->description->image) }}" alt="@lang('hero image')" width="100" height="80">
+															<img
+																src="{{ getFile($value->contentMedia->driver, $value->contentMedia->description->image) }}"
+																alt="@lang('hero image')" width="100" height="80">
 														</td>
 													@elseif($content == 'testimonial')
 														<td data-label="@lang('Title')">
@@ -60,7 +67,8 @@
 														<td>
 															<div class="social_area mt-50">
 																<ul class="d-flex">
-																	<li><a href=""><i class="fab fa-twitter"></i></a></li>
+																	<li><a href=""><i class="fab fa-twitter"></i></a>
+																	</li>
 																</ul>
 															</div>
 														</td>
@@ -73,16 +81,23 @@
 															@endif
 														</td>
 													@endif
-
-													<td data-label="@lang('Action')" >
-														<a href="{{ route('content.show',$value) }}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i> @lang('Edit')</a>
-														<a href="javascript:void(0)"
-														   data-route="{{ route('content.delete',$value->id) }}"
-														   data-toggle="modal"
-														   data-target="#delete-modal"
-														   class="btn btn-outline-danger btn-sm delete"
-														><i class="fas fa-trash-alt"></i> @lang('Delete')</a>
-													</td>
+													@if(adminAccessRoute(array_merge(config('permissionList.Theme_Settings.Content_Settings.permission.edit'), config('permissionList.Theme_Settings.Content_Settings.permission.delete'))))
+														<td data-label="@lang('Action')">
+															@if(adminAccessRoute(config('permissionList.Theme_Settings.Content_Settings.permission.edit')))
+																<a href="{{ route('content.show',$value) }}"
+																   class="btn btn-sm btn-outline-primary"><i
+																		class="fas fa-edit"></i> @lang('Edit')</a>
+															@endif
+															@if(adminAccessRoute(config('permissionList.Theme_Settings.Content_Settings.permission.delete')))
+																<a href="javascript:void(0)"
+																   data-route="{{ route('content.delete',$value->id) }}"
+																   data-toggle="modal"
+																   data-target="#delete-modal"
+																   class="btn btn-outline-danger btn-sm delete"
+																><i class="fas fa-trash-alt"></i> @lang('Delete')</a>
+															@endif
+														</td>
+													@endif
 												</tr>
 											@endforeach
 											</tbody>
@@ -98,7 +113,8 @@
 		</section>
 	</div>
 
-	<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+	<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -119,8 +135,8 @@
 			</div>
 		</div>
 	</div>
-
 @endsection
+
 @section('scripts')
 	<script>
 		'use strict'

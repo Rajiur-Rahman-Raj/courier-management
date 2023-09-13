@@ -22,7 +22,6 @@ class BranchController extends Controller
 
 	public function branchList(Request $request)
 	{
-
 		$search = $request->all();
 		$data['allBranches'] = Branch::when(isset($search['name']), function ($query) use ($search) {
 				return $query->whereRaw("branch_name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");

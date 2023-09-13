@@ -23,8 +23,10 @@
 									<div
 										class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 										<h6 class="m-0 font-weight-bold text-primary">@lang('Staff List')</h6>
-										<button class="btn btn-sm btn-primary" data-target="#add-modal"
-												data-toggle="modal" @click="makeDataEmpty">@lang('Add New')</button>
+										@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.add')))
+											<button class="btn btn-sm btn-primary" data-target="#add-modal"
+													data-toggle="modal" @click="makeDataEmpty">@lang('Add New')</button>
+										@endif
 									</div>
 									<div class="card-body">
 										<div class="table-responsive">
@@ -35,7 +37,9 @@
 													<th>@lang('User')</th>
 													<th>@lang('Role')</th>
 													<th>@lang('Status')</th>
-													<th>@lang('Action')</th>
+													@if(adminAccessRoute(array_merge(config('permissionList.Role_&_Permissions.Manage_Staff.permission.edit'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.delete'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.login_as'))))
+														<th>@lang('Action')</th>
+													@endif
 												</tr>
 												</thead>
 												<tbody>
@@ -74,35 +78,46 @@
 																	class="badge badge-danger">@lang('Inactive')</span>
 															@endif
 														</td>
-
-														<td data-label="@lang('Action')">
-															<button data-target="#editStafModal"
-																	data-toggle="modal"
-																	data-route="{{route('admin.role.usersEdit', $value->id)}}"
-																	data-property="{{ $value }}"
-																	class="btn btn-sm btn-outline-primary editStaf"><i
-																	class="fas fa-edit"></i> @lang(' Edit')</button>
-
-															<button data-target="#login_as" data-toggle="modal"
-																	data-route="{{route('admin.role.usersLogin',$value->id)}}"
-																	class="btn btn-sm btn-outline-success loginUser"><i
-																	class="fas fa-sign-in-alt"></i> @lang(' Login As Staff')
-															</button>
-															@if($value->status == 0)
-																<button data-target="#status_change" data-toggle="modal"
-																		data-route="{{route('admin.role.statusChange',$value->id)}}"
-																		class="btn btn-sm btn-outline-success enableStatus">
-																	<i
-																		class="fas fa-check-circle"></i> @lang('Active')
-																</button>
-															@else
-																<button data-target="#status_change" data-toggle="modal"
-																		data-route="{{route('admin.role.statusChange',$value->id)}}"
-																		class="btn btn-sm btn-outline-danger disableStatus">
-																	<i class="fas fa-times"></i> @lang('Inactive')
-																</button>
-															@endif
-														</td>
+														@if(adminAccessRoute(array_merge(config('permissionList.Role_&_Permissions.Manage_Staff.permission.edit'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.delete'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.login_as'))))
+															<td data-label="@lang('Action')">
+																@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.edit')))
+																	<button data-target="#editStafModal"
+																			data-toggle="modal"
+																			data-route="{{route('admin.role.usersEdit', $value->id)}}"
+																			data-property="{{ $value }}"
+																			class="btn btn-sm btn-outline-primary editStaf">
+																		<i
+																			class="fas fa-edit"></i> @lang(' Edit')
+																	</button>
+																@endif
+																@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.login_as')))
+																	<button data-target="#login_as" data-toggle="modal"
+																			data-route="{{route('admin.role.usersLogin',$value->id)}}"
+																			class="btn btn-sm btn-outline-success loginUser">
+																		<i
+																			class="fas fa-sign-in-alt"></i> @lang(' Login As Staff')
+																	</button>
+																@endif
+																@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.edit')))
+																	@if($value->status == 0)
+																		<button data-target="#status_change"
+																				data-toggle="modal"
+																				data-route="{{route('admin.role.statusChange',$value->id)}}"
+																				class="btn btn-sm btn-outline-success enableStatus">
+																			<i
+																				class="fas fa-check-circle"></i> @lang('Active')
+																		</button>
+																	@else
+																		<button data-target="#status_change"
+																				data-toggle="modal"
+																				data-route="{{route('admin.role.statusChange',$value->id)}}"
+																				class="btn btn-sm btn-outline-danger disableStatus">
+																			<i class="fas fa-times"></i> @lang('Inactive')
+																		</button>
+																	@endif
+																@endif
+															</td>
+														@endif
 													</tr>
 												@empty
 													<tr>
@@ -240,7 +255,7 @@
 										name="role_id"
 										aria-label="Default select example">
 										@forelse($roles as $item)
-											<option value="{{$item->id}}" >{{$item->name}}</option>
+											<option value="{{$item->id}}">{{$item->name}}</option>
 										@empty
 										@endforelse
 									</select>

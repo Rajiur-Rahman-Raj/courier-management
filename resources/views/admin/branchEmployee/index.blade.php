@@ -34,7 +34,8 @@
 													<div class="col-md-2">
 														<div class="form-group">
 															<input placeholder="@lang('Branch')" name="branch"
-																   value="{{ old('branch',request()->branch) }}" type="text"
+																   value="{{ old('branch',request()->branch) }}"
+																   type="text"
 																   class="form-control form-control-sm">
 														</div>
 													</div>
@@ -42,7 +43,8 @@
 													<div class="col-md-2">
 														<div class="form-group">
 															<input placeholder="@lang('Department')" name="department"
-																   value="{{ old('department',request()->department) }}" type="text"
+																   value="{{ old('department',request()->department) }}"
+																   type="text"
 																   class="form-control form-control-sm">
 														</div>
 													</div>
@@ -94,9 +96,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Branch Employee List')</h6>
-											<a href="{{route('createEmployee')}}"
-											   class="btn btn-sm btn-outline-primary add"><i
-													class="fas fa-plus-circle"></i> @lang('Create Employee')</a>
+											@if(adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.add')))
+												<a href="{{route('createEmployee')}}"
+												   class="btn btn-sm btn-outline-primary add"><i
+														class="fas fa-plus-circle"></i> @lang('Create Employee')</a>
+											@endif
 										</div>
 										<div class="card-body">
 											<div class="table-responsive">
@@ -110,7 +114,9 @@
 														<th scope="col">@lang('Department')</th>
 														<th scope="col">@lang('Phone')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Branch.Employee_List.permission.edit'), config('permissionList.Manage_Branch.Employee_List.permission.login_as'), config('permissionList.Manage_Branch.Employee_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -134,7 +140,8 @@
 																			class="d-inline-flex d-lg-block align-items-center ms-2">
 																			<p class="text-dark mb-0 font-16 font-weight-medium">
 																				{{ __(optional($employee->admin)->name) }}</p>
-																			<span class="text-dark font-weight-bold font-14 ml-1">{{$employee->email}}</span>
+																			<span
+																				class="text-dark font-weight-bold font-14 ml-1">{{$employee->email}}</span>
 																		</div>
 																	</div>
 																</a>
@@ -157,7 +164,8 @@
 																			class="d-inline-flex d-lg-block align-items-center ms-2">
 																			<p class="text-dark mb-0 font-16 font-weight-medium">
 																				{{ __(optional($employee->branch)->branch_name) }}</p>
-																			<span class="text-dark font-weight-bold font-14 ml-1">{{ __(optional($employee->branch)->email) }}</span>
+																			<span
+																				class="text-dark font-weight-bold font-14 ml-1">{{ __(optional($employee->branch)->email) }}</span>
 																		</div>
 																	</div>
 																</a>
@@ -181,19 +189,26 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
-
-															<td data-label="@lang('Action')">
-																<a href="{{ route('branchEmployeeEdit', $employee->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('Edit')"><i class="fa fa-edit"
-																							aria-hidden="true"></i> @lang('Edit')
-																</a>
-																<button data-target="#login_as" data-toggle="modal"
-																		data-route="{{route('admin.role.usersLogin',optional($employee->admin)->id)}}"
-																		class="btn btn-sm btn-outline-success loginUser"><i
-																		class="fas fa-sign-in-alt"></i> @lang(' Login As Employee')
-																</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Branch.Employee_List.permission.edit'), config('permissionList.Manage_Branch.Employee_List.permission.login_as'), config('permissionList.Manage_Branch.Employee_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.edit')))
+																		<a href="{{ route('branchEmployeeEdit', $employee->id) }}"
+																		   class="btn btn-outline-primary btn-sm"
+																		   title="@lang('Edit')"><i class="fa fa-edit"
+																									aria-hidden="true"></i> @lang('Edit')
+																		</a>
+																	@endif
+																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.login_as')))
+																		<button data-target="#login_as"
+																				data-toggle="modal"
+																				data-route="{{route('admin.role.employeeLogin',optional($employee->admin)->id)}}"
+																				class="btn btn-sm btn-outline-success loginUser">
+																			<i
+																				class="fas fa-sign-in-alt"></i> @lang(' Login As Employee')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -239,7 +254,6 @@
 			</div>
 		</div>
 	</div>
-
 
 @endsection
 

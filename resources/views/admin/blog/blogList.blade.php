@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    @lang('Blog List')
+	@lang('Blog List')
 @endsection
 
 @section('content')
@@ -21,17 +21,21 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="card mb-4 card-primary shadow">
-								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+								<div
+									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 									<h6 class="m-0 font-weight-bold text-primary">@lang('Blog List')</h6>
 									<div class="media mb-4 float-right">
-										<a href="{{route('blogCreate')}}" class="btn btn-sm btn-primary mr-2">
-											<span><i class="fa fa-plus-circle"></i> @lang('Add New')</span>
-										</a>
+										@if(adminAccessRoute(config('permissionList.Blog_Settings.Blog_List.permission.add')))
+											<a href="{{route('blogCreate')}}" class="btn btn-sm btn-primary mr-2">
+												<span><i class="fa fa-plus-circle"></i> @lang('Add New')</span>
+											</a>
+										@endif
 									</div>
 								</div>
 								<div class="card-body">
 									<div class="table-responsive">
-										<table class="table table-striped table-hover align-items-center table-borderless">
+										<table
+											class="table table-striped table-hover align-items-center table-borderless">
 											<thead class="thead-light">
 											<tr>
 												<th scope="col">@lang('SL No.')</th>
@@ -39,7 +43,9 @@
 												<th scope="col">@lang('Author')</th>
 												<th scope="col">@lang('Title')</th>
 												<th scope="col">@lang('Status')</th>
-												<th scope="col" class="text-center">@lang('Action')</th>
+												@if(adminAccessRoute(array_merge(config('permissionList.Blog_Settings.Blog_List.permission.edit'), config('permissionList.Blog_Settings.Blog_List.permission.delete'))))
+													<th scope="col" class="text-center">@lang('Action')</th>
+												@endif
 											</tr>
 											</thead>
 											<tbody>
@@ -60,27 +66,33 @@
 
 													<td data-label="@lang('Status')" class="font-weight-bold text-dark">
 														@if($blog->status == 1)
-															<span class="badge badge-success rounded">@lang('Active')</span>
+															<span
+																class="badge badge-success rounded">@lang('Active')</span>
 														@else
 															<span class="badge badge-danger">@lang('Deactive')</span>
 														@endif
 													</td>
+													@if(adminAccessRoute(array_merge(config('permissionList.Blog_Settings.Blog_List.permission.edit'), config('permissionList.Blog_Settings.Blog_List.permission.delete'))))
+														<td data-label="@lang('Action')" class="text-center">
+															@if(adminAccessRoute(config('permissionList.Blog_Settings.Blog_List.permission.edit')))
+																<a href="{{ route('blogEdit',$blog->id) }}"
+																   class="btn btn-outline-primary btn-rounded btn-sm editBtn"
+																>
+																	<i class="fas fa-edit"></i>
+																</a>
+															@endif
 
-													<td data-label="@lang('Action')" class="text-center">
-
-														<a href="{{ route('blogEdit',$blog->id) }}"
-														   class="btn btn-outline-primary btn-rounded btn-sm editBtn"
-														>
-															<i class="fas fa-edit"></i>
-														</a>
-														<a href="javascript:void(0)"
-														   data-route="{{ route('blogDelete',$blog->id) }}"
-														   data-toggle="modal"
-														   data-target="#delete-modal"
-														   class="btn btn-outline-danger btn-rounded btn-sm deleteItem"><i class="fas fa-trash-alt"></i>
-														</a>
-
-													</td>
+															@if(adminAccessRoute(config('permissionList.Blog_Settings.Blog_List.permission.delete')))
+																<a href="javascript:void(0)"
+																   data-route="{{ route('blogDelete',$blog->id) }}"
+																   data-toggle="modal"
+																   data-target="#delete-modal"
+																   class="btn btn-outline-danger btn-rounded btn-sm deleteItem"><i
+																		class="fas fa-trash-alt"></i>
+																</a>
+															@endif
+														</td>
+													@endif
 												</tr>
 											@empty
 												<tr>
@@ -102,8 +114,9 @@
 		</section>
 	</div>
 
-    <!-- Delete Modal -->
-	<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel" aria-hidden="true">
+	<!-- Delete Modal -->
+	<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

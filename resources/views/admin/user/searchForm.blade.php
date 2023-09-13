@@ -33,7 +33,7 @@
 			</select>
 		</div>
 	</div>
-	<div class="col-md-2">
+	<div class="col-md-12">
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary btn-sm btn-block"><i
 				class="fas fa-search"></i> @lang('Search')</button>

@@ -508,8 +508,11 @@
 	<div class="modal fade" id="balance">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
-				<form method="post" action="{{ route('user.balance.update',$user->id) }}"
-					  enctype="multipart/form-data">
+				@if(in_array($user->user_type, [1,2]))
+					<form method="post" action="{{ route('client.balance.update',$user->id) }}" enctype="multipart/form-data">
+				@else
+					<form method="post" action="{{ route('user.balance.update',$user->id) }}" enctype="multipart/form-data">
+				@endif
 					@csrf
 					<!-- Modal Header -->
 					<div class="modal-header modal-colored-header bg-primary">

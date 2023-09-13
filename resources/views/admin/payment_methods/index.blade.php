@@ -35,7 +35,9 @@
 											<tr>
 												<th col="scope">@lang('Name')</th>
 												<th col="scope">@lang('Status')</th>
-												<th col="scope">@lang('Action')</th>
+												@if(adminAccessRoute(array_merge(config('permissionList.Payment_Settings.Payment_Methods.permission.edit'), config('permissionList.Payment_Settings.Payment_Methods.permission.delete'))))
+													<th col="scope">@lang('Action')</th>
+												@endif
 											</tr>
 											</thead>
 											<tbody id="sortable">
@@ -64,15 +66,19 @@
 														<td data-label="@lang('Status')">
 															{!!  $method->status == 1 ? '<span class="badge badge-success badge-sm">'.__('Active').'</span>' : '<span class="badge badge-danger badge-sm">'.__('Inactive').'</span>' !!}
 														</td>
-														<td data-label="@lang('Action')">
-															<a href="{{ route('edit.payment.methods', $method->id) }}"
-															   class="btn btn-sm btn-outline-primary btn-circle"
-															   data-toggle="tooltip"
-															   data-placement="top"
-															   data-original-title="@lang('Edit this Payment Methods info')">
-																<i class="fa fa-edit"></i> @lang('Edit')
-															</a>
-														</td>
+														@if(adminAccessRoute(array_merge(config('permissionList.Payment_Settings.Payment_Methods.permission.edit'), config('permissionList.Payment_Settings.Payment_Methods.permission.delete'))))
+															<td data-label="@lang('Action')">
+																@if(adminAccessRoute(config('permissionList.Payment_Settings.Payment_Methods.permission.edit')))
+																	<a href="{{ route('edit.payment.methods', $method->id) }}"
+																	   class="btn btn-sm btn-outline-primary btn-circle"
+																	   data-toggle="tooltip"
+																	   data-placement="top"
+																	   data-original-title="@lang('Edit this Payment Methods info')">
+																		<i class="fa fa-edit"></i> @lang('Edit')
+																	</a>
+																@endif
+															</td>
+														@endif
 													</tr>
 												@endforeach
 											@else

@@ -230,10 +230,12 @@
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">@lang('Close')</button>
 						@if(Request::routeIs('admin.payment.pending'))
 							<input type="hidden" class="action_id" name="id">
-							<button type="submit" class="btn btn-primary" name="status"
-									value="1">@lang('Approve')</button>
-							<button type="submit" class="btn btn-danger" name="status"
-									value="3">@lang('Reject')</button>
+							@if(adminAccessRoute(config('permissionList.Payment_Settings.Payment_Request.permission.edit')))
+								<button type="submit" class="btn btn-primary" name="status"
+										value="1">@lang('Approve')</button>
+								<button type="submit" class="btn btn-danger" name="status"
+										value="3">@lang('Reject')</button>
+							@endif
 						@endif
 					</div>
 				</form>

@@ -71,9 +71,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('State List')</h6>
-											<button class="btn btn-sm btn-outline-primary" data-target="#add-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang('Add State')</button>
+											@if(adminAccessRoute(config('permissionList.Manage_Locations.State_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary" data-target="#add-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang('Add State')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -98,7 +100,8 @@
 															</td>
 
 															<td data-label="@lang('State')">
-																<a href="{{ route('stateList', ['show-state-list', optional($state->country)->id]) }}" class="text-decoration-underline">({{ optional($state->country)->getTotalState() }})</a>
+																<a href="{{ route('stateList', ['show-state-list', optional($state->country)->id]) }}"
+																   class="text-decoration-underline">({{ optional($state->country)->getTotalState() }})</a>
 
 															</td>
 
@@ -120,7 +123,8 @@
 													</tbody>
 												</table>
 											</div>
-											<div class="card-footer d-flex justify-content-center">{{ $allStates->links() }}</div>
+											<div
+												class="card-footer d-flex justify-content-center">{{ $allStates->links() }}</div>
 										</div>
 									</div>
 								</div>
@@ -152,7 +156,7 @@
 							<select name="country_id" class="form-control @error('country_id') is-invalid @enderror">
 								<option value="" disabled selected>@lang('Select Country')</option>
 								@foreach($allCountires as $country)
-									<option value="{{ $country->id }}" >@lang($country->name)</option>
+									<option value="{{ $country->id }}">@lang($country->name)</option>
 								@endforeach
 							</select>
 							<div class="invalid-feedback">

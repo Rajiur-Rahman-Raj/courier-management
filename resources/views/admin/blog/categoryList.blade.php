@@ -26,9 +26,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Category List')</h6>
-											<a href="{{route('blogCategoryCreate')}}"
-											   class="btn btn-sm btn-outline-primary add"><i
-													class="fas fa-plus-circle"></i> @lang('Add New')</a>
+											@if(adminAccessRoute(config('permissionList.Blog_Settings.Category_List.permission.add')))
+												<a href="{{route('blogCategoryCreate')}}"
+												   class="btn btn-sm btn-outline-primary add"><i
+														class="fas fa-plus-circle"></i> @lang('Add New')</a>
+											@endif
 										</div>
 										<div class="card-body">
 											<div class="table-responsive">
@@ -40,34 +42,47 @@
 														<th scope="col">@lang('SL.')</th>
 														<th scope="col">@lang('Category Name')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Blog_Settings.Category_List.permission.edit'), config('permissionList.Blog_Settings.Category_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 													<tbody>
 													@forelse($manageBlogCategory as $key => $item)
 														<tr>
 															<td data-label="@lang('SL.')">{{++$key}}</td>
-															<td data-label="@lang('Category Name')" class="font-weight-bold text-dark">@lang(optional($item->details)->name)</td>
-															<td data-label="@lang('Status')" class="font-weight-bold text-dark">
+															<td data-label="@lang('Category Name')"
+																class="font-weight-bold text-dark">@lang(optional($item->details)->name)</td>
+															<td data-label="@lang('Status')"
+																class="font-weight-bold text-dark">
 																@if($item->status == 1)
-																	<span class="badge badge-success rounded">@lang('Active')</span>
+																	<span
+																		class="badge badge-success rounded">@lang('Active')</span>
 																@else
-																	<span class="badge badge-danger">@lang('Deactive')</span>
+																	<span
+																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
-															<td data-label="@lang('Action')">
-																<a href="{{ route('blogCategoryEdit',$item->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('Edit')"><i class="fa fa-edit" aria-hidden="true"></i> @lang('Edit')</a>
-
-																<a href="javascript:void(0)" data-target="#delete-category"
-																   data-toggle="modal"
-																   data-route="{{ route('blogCategoryDelete', $item->id) }}"
-																   class="btn btn-sm btn-outline-danger deleteClass">
-																	<i class="fa fa-trash"> @lang('Delete')</i>
-																</a>
-
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Blog_Settings.Category_List.permission.edit'), config('permissionList.Blog_Settings.Category_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Blog_Settings.Category_List.permission.edit')))
+																		<a href="{{ route('blogCategoryEdit',$item->id) }}"
+																		   class="btn btn-outline-primary btn-sm"
+																		   title="@lang('Edit')"><i class="fa fa-edit"
+																									aria-hidden="true"></i> @lang('Edit')
+																		</a>
+																	@endif
+																	@if(adminAccessRoute(config('permissionList.Blog_Settings.Category_List.permission.delete')))
+																		<a href="javascript:void(0)"
+																		   data-target="#delete-category"
+																		   data-toggle="modal"
+																		   data-route="{{ route('blogCategoryDelete', $item->id) }}"
+																		   class="btn btn-sm btn-outline-danger deleteClass">
+																			<i class="fa fa-trash"> @lang('Delete')</i>
+																		</a>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>

@@ -101,10 +101,13 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Branch List')</h6>
-											<a href="{{route('createBranch')}}"
-											   class="btn btn-sm btn-outline-primary add"><i
-													class="fas fa-plus-circle"></i> @lang('Create Branch')</a>
+											@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_List.permission.add')))
+												<a href="{{route('createBranch')}}"
+												   class="btn btn-sm btn-outline-primary add"><i
+														class="fas fa-plus-circle"></i> @lang('Create Branch')</a>
+											@endif
 										</div>
+
 										<div class="card-body">
 											<div class="table-responsive">
 												<table
@@ -117,7 +120,9 @@
 														<th scope="col">@lang('Phone')</th>
 														<th scope="col">@lang('Address')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Branch.Branch_List.permission.edit'), config('permissionList.Manage_Branch.Branch_List.permission.delete'), config('permissionList.Manage_Branch.Branch_List.permission.show_profile'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -167,20 +172,25 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Branch.Branch_List.permission.edit'), config('permissionList.Manage_Branch.Branch_List.permission.delete'), config('permissionList.Manage_Branch.Branch_List.permission.show_profile'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_List.permission.edit')))
+																		<a href="{{ route('branchEdit', $branch->id) }}"
+																		   class="btn btn-outline-primary btn-sm"
+																		   title="@lang('Edit')"><i class="fa fa-edit"
+																									aria-hidden="true"></i> @lang('Edit')
+																		</a>
+																	@endif
 
-															<td data-label="@lang('Action')">
-																<a href="{{ route('branchEdit', $branch->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('Edit')"><i class="fa fa-edit"
-																							aria-hidden="true"></i> @lang('Edit')
-																</a>
-
-																<a href="{{ route('showBranchProfile', $branch->id) }}"
-																   class="btn btn-outline-primary btn-sm"
-																   title="@lang('view profile')">
-																	<i class="fas fa-male"></i>
-																	@lang('Profile')</a>
-															</td>
+																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_List.permission.show_profile')))
+																		<a href="{{ route('showBranchProfile', $branch->id) }}"
+																		   class="btn btn-outline-primary btn-sm"
+																		   title="@lang('view profile')">
+																			<i class="fas fa-male"></i>
+																			@lang('Profile')</a>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>

@@ -94,8 +94,10 @@
 								<div
 									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 									<h6 class="m-0 font-weight-bold text-primary">@lang('Client List')</h6>
-									<a href="{{ route('createClient') }}" class="btn btn-sm btn-outline-primary"><i
-											class="fas fa-plus-circle"></i> @lang('Create New Client')</a>
+									@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.add')))
+										<a href="{{ route('createClient') }}" class="btn btn-sm btn-outline-primary"><i
+												class="fas fa-plus-circle"></i> @lang('Create New Client')</a>
+									@endif
 								</div>
 								<div class="card-body">
 									<div class="table-responsive">
@@ -109,12 +111,13 @@
 												<th>@lang('Join date')</th>
 												<th>@lang('User Type')</th>
 												<th>@lang('Status')</th>
-												<th>@lang('Action')</th>
+												@if(adminAccessRoute(array_merge(config('permissionList.Manage_Clients.Client_List.permission.edit'), config('permissionList.Manage_Clients.Client_List.permission.delete'), config('permissionList.Manage_Clients.Client_List.permission.show_profile'), config('permissionList.Manage_Clients.Client_List.permission.login_as'))))
+													<th>@lang('Action')</th>
+												@endif
 											</tr>
 											</thead>
 											<tbody>
 											@forelse($allClients as $key => $value)
-
 												<tr>
 													<td data-label="@lang('Name')">
 														<div
@@ -156,18 +159,27 @@
 															<span class="badge badge-warning">@lang('Inactive')</span>
 														@endif
 													</td>
+													@if(adminAccessRoute(array_merge(config('permissionList.Manage_Clients.Client_List.permission.edit'), config('permissionList.Manage_Clients.Client_List.permission.delete'), config('permissionList.Manage_Clients.Client_List.permission.show_profile'), config('permissionList.Manage_Clients.Client_List.permission.login_as'))))
+														<td data-label="@lang('Action')">
+															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.edit')))
+																<a href="{{ route('clientEdit',$value->id) }}"
+																   class="btn btn-sm btn-outline-primary mb-1"><i
+																		class="fas fa-edit"></i> @lang('Edit')</a>
+															@endif
+															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.show_profile')))
+																<a href="{{ route('client.edit',$value) }}"
+																   class="btn btn-sm btn-outline-primary mb-1"><i
+																		class="fas fa-user"></i> @lang('Profile')</a>
+															@endif
 
-													<td data-label="@lang('Action')">
-														<a href="{{ route('clientEdit',$value->id) }}"
-														   class="btn btn-sm btn-outline-primary mb-1"><i
-																class="fas fa-edit"></i> @lang('Edit')</a>
-														<a href="{{ route('user.edit',$value) }}"
-														   class="btn btn-sm btn-outline-primary mb-1"><i
-																class="fas fa-user"></i> @lang('Profile')</a>
-														<a href="{{ route('user.asLogin',$value) }}"
-														   class="btn btn-sm btn-outline-dark mb-1"><i
-																class="fas fa-sign-in-alt"></i> @lang('Login')</a>
-													</td>
+															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.login_as')))
+																<a href="{{ route('user.clientLogin',$value) }}"
+																   class="btn btn-sm btn-outline-dark mb-1"><i
+																		class="fas fa-sign-in-alt"></i> @lang('Login')
+																</a>
+															@endif
+														</td>
+													@endif
 												</tr>
 											@empty
 												<tr>

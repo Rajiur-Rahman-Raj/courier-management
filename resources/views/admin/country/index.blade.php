@@ -74,9 +74,11 @@
 										<div
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Country List')</h6>
-											<button class="btn btn-sm btn-outline-primary" data-target="#add-modal"
-													data-toggle="modal"><i
-													class="fas fa-plus-circle"></i> @lang(' Add Country')</button>
+											@if(adminAccessRoute(config('permissionList.Manage_Locations.Country_List.permission.add')))
+												<button class="btn btn-sm btn-outline-primary" data-target="#add-modal"
+														data-toggle="modal"><i
+														class="fas fa-plus-circle"></i> @lang(' Add Country')</button>
+											@endif
 										</div>
 
 										<div class="card-body">
@@ -89,7 +91,9 @@
 													<tr>
 														<th scope="col">@lang('Country')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.Country_List.permission.edit'), config('permissionList.Manage_Locations.Country_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -110,16 +114,20 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editCountryModal"
-																		data-toggle="modal"
-																		data-route="{{route('countryUpdate', $country->id)}}"
-																		data-property="{{ $country }}"
-																		class="btn btn-sm btn-outline-primary editCountry">
-																	<i
-																		class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.Country_List.permission.edit'), config('permissionList.Manage_Locations.Country_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Manage_Locations.Country_List.permission.edit')))
+																		<button data-target="#editCountryModal"
+																				data-toggle="modal"
+																				data-route="{{route('countryUpdate', $country->id)}}"
+																				data-property="{{ $country }}"
+																				class="btn btn-sm btn-outline-primary editCountry">
+																			<i
+																				class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
@@ -130,7 +138,8 @@
 													</tbody>
 												</table>
 											</div>
-											<div class="card-footer d-flex justify-content-center">{{ $allCountries->links() }}</div>
+											<div
+												class="card-footer d-flex justify-content-center">{{ $allCountries->links() }}</div>
 										</div>
 									</div>
 								</div>

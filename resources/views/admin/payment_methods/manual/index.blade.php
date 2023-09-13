@@ -22,9 +22,11 @@
 								<div
 									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 									<h6 class="m-0 font-weight-bold text-primary">@lang('Payment Methods')</h6>
-									<a href="{{route('admin.deposit.manual.create')}}"
-									   class="btn btn-success btn-sm float-right mb-3"><i
-											class="fa fa-plus-circle"></i> {{trans('Add New')}}</a>
+									@if(adminAccessRoute(config('permissionList.Payment_Settings.Manual_Gateway.permission.add')))
+										<a href="{{route('admin.deposit.manual.create')}}"
+										   class="btn btn-success btn-sm float-right mb-3"><i
+												class="fa fa-plus-circle"></i> {{trans('Add New')}}</a>
+									@endif
 								</div>
 								<div class="card-body">
 									<table class="table ">
@@ -32,7 +34,9 @@
 										<tr>
 											<th scope="col">@lang('Name')</th>
 											<th scope="col">@lang('Status')</th>
-											<th scope="col">@lang('Action')</th>
+											@if(adminAccessRoute(array_merge(config('permissionList.Payment_Settings.Manual_Gateway.permission.edit'), config('permissionList.Payment_Settings.Manual_Gateway.permission.delete'))))
+												<th scope="col">@lang('Action')</th>
+											@endif
 										</tr>
 
 										</thead>
@@ -63,16 +67,19 @@
 
 														{!!  $method->status == 1 ? '<span class="badge badge-light"><i class="fa fa-circle text-success font-12"></i> '.trans('Active').'</span>' : '<span class="badge badge-light"><i class="fa fa-circle text-danger font-12"></i> '.trans('DeActive').'</span>' !!}
 													</td>
+													@if(adminAccessRoute(array_merge(config('permissionList.Payment_Settings.Manual_Gateway.permission.edit'), config('permissionList.Payment_Settings.Manual_Gateway.permission.delete'))))
+														<td data-label="@lang('Action')">
+															@if(adminAccessRoute(config('permissionList.Payment_Settings.Manual_Gateway.permission.edit')))
+																<a href="{{ route('admin.deposit.manual.edit', $method->id) }}"
+																   class="btn btn-outline-primary btn-circle"
+																   data-toggle="tooltip"
+																   data-placement="top"
+																   data-original-title="@lang('Edit this Payment Methods info')">
+																	<i class="fa fa-edit"></i></a>
+															@endif
 
-													<td data-label="@lang('Action')">
-														<a href="{{ route('admin.deposit.manual.edit', $method->id) }}"
-														   class="btn btn-outline-primary btn-circle"
-														   data-toggle="tooltip"
-														   data-placement="top"
-														   data-original-title="@lang('Edit this Payment Methods info')">
-															<i class="fa fa-edit"></i></a>
-
-													</td>
+														</td>
+													@endif
 												</tr>
 											@endforeach
 										@else

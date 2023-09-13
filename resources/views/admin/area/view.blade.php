@@ -92,7 +92,9 @@
 													<tr>
 														<th scope="col">@lang('Area')</th>
 														<th scope="col">@lang('Status')</th>
-														<th scope="col">@lang('Action')</th>
+														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.Area_List.permission.edit'), config('permissionList.Manage_Locations.Area_List.permission.delete'))))
+															<th scope="col">@lang('Action')</th>
+														@endif
 													</tr>
 													</thead>
 
@@ -113,18 +115,22 @@
 																		class="badge badge-danger">@lang('Deactive')</span>
 																@endif
 															</td>
-
-															<td data-label="@lang('Action')">
-																<button data-target="#editAreaModal"
-																		data-toggle="modal"
-																		data-route="{{route('areaUpdate', $area->id)}}"
-																		data-property="{{ $area }}"
-																		data-countries="{{ $allCountires }}"
-																		data-states="{{ $allStates }}"
-																		data-cities="{{ $allCities }}"
-																		class="btn btn-sm btn-outline-primary editArea">
-																	<i class="fas fa-edit"></i> @lang(' Edit')</button>
-															</td>
+															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.Area_List.permission.edit'), config('permissionList.Manage_Locations.Area_List.permission.delete'))))
+																<td data-label="@lang('Action')">
+																	@if(adminAccessRoute(config('permissionList.Manage_Locations.City_List.permission.edit')))
+																		<button data-target="#editAreaModal"
+																				data-toggle="modal"
+																				data-route="{{route('areaUpdate', $area->id)}}"
+																				data-property="{{ $area }}"
+																				data-countries="{{ $allCountires }}"
+																				data-states="{{ $allStates }}"
+																				data-cities="{{ $allCities }}"
+																				class="btn btn-sm btn-outline-primary editArea">
+																			<i class="fas fa-edit"></i> @lang(' Edit')
+																		</button>
+																	@endif
+																</td>
+															@endif
 														</tr>
 													@empty
 														<tr>
