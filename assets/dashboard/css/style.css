@@ -42,6 +42,7 @@ a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fab {
 	cursor: pointer;
 }
 
+
 .custom-text{
 	color:#343a40 !important;
 	font-weight: bold;
@@ -3960,7 +3961,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 .search-currency-dropdown select.form-control:not([size]):not([multiple]), .form-control:not(.form-control-sm):not(.form-control-lg) {
 	font-size: 14px;
 	padding: 4px 15px;
-	height: 31px;
+	/*height: 31px;*/
 }
 
 /*-----------page alert text -------------*/
@@ -4838,7 +4839,7 @@ a:hover {
 .search-currency-dropdown select.form-control:not([size]):not([multiple]), .form-control:not(.form-control-sm):not(.form-control-lg) {
 	font-size: 14px;
 	padding: 4px 15px;
-	height: 32px !important;
+	/*height: 32px !important;*/
 }
 
 .switcher button {
@@ -5034,3 +5035,6 @@ body {
 	transition: all 0.2s ease-in-out;
 }
 
+.details_height{
+	height: 200px !important;
+}

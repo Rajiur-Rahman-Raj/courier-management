@@ -61,10 +61,9 @@ class BranchController extends Controller
 	{
 
 		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
-		$branchType = ['head_office', 'main_branch', 'sub_branch'];
 
 		$rules = [
-			'branch_type' => ['required', Rule::in($branchType)],
+			'branch_type' => ['nullable'],
 			'branch_name' => ['required', 'max:60', 'string'],
 			'email' => ['email', 'nullable', 'max:100'],
 			'phone' => ['numeric', 'nullable'],
@@ -74,7 +73,6 @@ class BranchController extends Controller
 		];
 
 		$message = [
-			'branch_type.required' => 'Branch type field is required',
 			'branch_name.required' => 'Branch name field is required',
 			'address.required' => 'Address field is required',
 		];
@@ -88,7 +86,6 @@ class BranchController extends Controller
 
 		$branch = new Branch();
 
-		$branch->branch_type = $request->branch_type;
 		$branch->branch_name = $request->branch_name;
 		$branch->email = $request->email;
 		$branch->phone = $request->phone;
@@ -121,10 +118,8 @@ class BranchController extends Controller
 	public function branchUpdate(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
-		$branchType = ['head_office', 'main_branch', 'sub_branch'];
 
 		$rules = [
-			'branch_type' => ['required', Rule::in($branchType)],
 			'branch_name' => ['required', 'max:60', 'string'],
 			'email' => ['email', 'nullable', 'max:100'],
 			'phone' => ['numeric', 'nullable'],
@@ -134,7 +129,6 @@ class BranchController extends Controller
 		];
 
 		$message = [
-			'branch_type.required' => 'Branch type field is required',
 			'branch_name.required' => 'Branch name field is required',
 			'address.required' => 'Address field is required',
 		];
@@ -147,7 +141,6 @@ class BranchController extends Controller
 
 		$branch = Branch::findOrFail($id);
 
-		$branch->branch_type = $request->branch_type;
 		$branch->branch_name = $request->branch_name;
 		$branch->email = $request->email;
 		$branch->phone = $request->phone;

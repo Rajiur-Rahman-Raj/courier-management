@@ -32,24 +32,6 @@
 							<form method="post" action="{{ route('branchUpdate', $singleBranchInfo->id) }}"
 								  class="mt-4" enctype="multipart/form-data">
 								@csrf
-								<div class="row mb-3">
-									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="branch_type"> @lang('Branch Type') <span class="text-danger">*</span></label>
-										<select name="branch_type"
-												class="form-control @error('branch_type') is-invalid @enderror">
-											<option value="" disabled selected>@lang('Select Branch type')</option>
-											<option value="head_office" {{ $singleBranchInfo->branch_type == 'head_office' ? 'selected' : '' }}>@lang('Head Office')</option>
-											<option value="main_branch" {{ $singleBranchInfo->branch_type == 'main_branch' ? 'selected' : '' }}>@lang('Main Branch')</option>
-											<option value="sub_branch" {{ $singleBranchInfo->branch_type == 'sub_branch' ? 'selected' : '' }}>@lang('Sub Branch')</option>
-										</select>
-
-										<div class="invalid-feedback">
-											@error('branch_type') @lang($message) @enderror
-										</div>
-										<div class="valid-feedback"></div>
-									</div>
-								</div>
-
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
 										<label for="branch_name"> @lang('Branch Name') <span class="text-danger">*</span></label>
@@ -108,7 +90,7 @@
 											<label for="details"> @lang('Details') </label>
 
 											<textarea class="form-control @error('details') is-invalid @enderror"
-													  name="details" rows="5" value="{{ old('details', $singleBranchInfo->details) }}">{{old('details', $singleBranchInfo->details)}}</textarea>
+													  name="details" rows="10" cols="20" value="{{ old('details', $singleBranchInfo->details) }}">{{old('details', $singleBranchInfo->details)}}</textarea>
 
 											<div class="invalid-feedback">
 												@error('details') @lang($message) @enderror

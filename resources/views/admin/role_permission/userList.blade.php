@@ -187,7 +187,7 @@
 								<input
 									type="text"
 									class="form-control" v-model="item.phone"
-									placeholder="@lang('Email')"/>
+									placeholder="@lang('Phone')"/>
 								<span class="text-danger email-error"></span>
 							</div>
 

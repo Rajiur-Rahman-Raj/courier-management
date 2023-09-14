@@ -32,23 +32,6 @@
 							<form method="post" action="{{ route('branchStore') }}"
 								  class="mt-4" enctype="multipart/form-data">
 								@csrf
-								<div class="row mb-3">
-									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="branch_type"> @lang('Branch Type') <span class="text-danger">*</span></label>
-										<select name="branch_type"
-												class="form-control @error('branch_type') is-invalid @enderror">
-											<option value="" disabled selected>@lang('Select Branch type')</option>
-											<option value="head_office">@lang('Head Office')</option>
-											<option value="main_branch">@lang('Main Branch')</option>
-											<option value="sub_branch">@lang('Sub Branch')</option>
-										</select>
-
-										<div class="invalid-feedback">
-											@error('branch_type') @lang($message) @enderror
-										</div>
-										<div class="valid-feedback"></div>
-									</div>
-								</div>
 
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
@@ -107,8 +90,8 @@
 										<div class="form-group ">
 											<label for="details"> @lang('Details') </label>
 
-											<textarea class="form-control @error('details') is-invalid @enderror"
-													  name="details" rows="5" value="{{ old('details') }}">{{old('details')}}</textarea>
+											<textarea class="form-control details_height @error('details') is-invalid @enderror"
+													  name="details" value="{{ old('details') }}">{{old('details')}}</textarea>
 
 											<div class="invalid-feedback">
 												@error('details') @lang($message) @enderror
@@ -145,7 +128,7 @@
 											</label>
 											<label class="selectgroup-item">
 												<input type="radio" name="status" value="1"
-													   class="selectgroup-input" {{ old('status') == 1 ? 'checked' : ''}}>
+													   class="selectgroup-input" checked {{ old('status') == 1 ? 'checked' : ''}}>
 												<span class="selectgroup-button">@lang('ON')</span>
 											</label>
 										</div>

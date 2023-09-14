@@ -164,7 +164,7 @@
 											</label>
 											<label class="selectgroup-item">
 												<input type="radio" name="status" value="1"
-													   class="selectgroup-input" {{ old('status') == 1 ? 'checked' : ''}}>
+													   class="selectgroup-input" checked {{ old('status') == 1 ? 'checked' : ''}}>
 												<span class="selectgroup-button">@lang('ON')</span>
 											</label>
 										</div>
