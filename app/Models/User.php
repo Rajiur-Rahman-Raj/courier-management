@@ -73,4 +73,8 @@ class User extends Authenticatable
 		*/
 	}
 
+	public function branch(){
+		return $this->hasOne(BranchManager::class, 'admin_id');
+	}
+
 }

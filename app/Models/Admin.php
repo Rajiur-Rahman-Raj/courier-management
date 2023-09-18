@@ -26,6 +26,10 @@ class Admin extends Authenticatable
 		return $this->belongsTo(Role::class, 'role_id', 'id');
 	}
 
+	public function branch(){
+		return $this->hasOne(BranchManager::class, 'admin_id');
+	}
+
 	public function profile()
 	{
 		return $this->hasOne(AdminProfile::class, 'admin_id', 'id');

@@ -45,7 +45,8 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="username"> @lang('Username') <span class="text-danger">*</span></label>
+										<label for="username"> @lang('Username') <span
+												class="text-danger">*</span></label>
 										<input type="text" name="username"
 											   class="form-control @error('username') is-invalid @enderror managerEmail"
 											   value="{{ old('username') }}">
@@ -100,30 +101,36 @@
 										<div class="valid-feedback"></div>
 									</div>
 
-									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="branch_id"> @lang('Select Branch') <span
-												class="text-danger">*</span></label>
-										<select name="branch_id"
-												class="form-control @error('branch_id') is-invalid @enderror select2">
-											<option value="" disabled selected>@lang('Select Branch')</option>
-											@foreach($allBranches as $branch)
-												<option value="{{ $branch->id }}">@lang($branch->branch_name)</option>
-											@endforeach
-										</select>
+									@if($authenticateRole->role_id == null)
+										<div class="col-sm-12 col-md-3 mb-3">
+											<label for="branch_id"> @lang('Select Branch') <span
+													class="text-danger">*</span></label>
+											<select name="branch_id"
+													class="form-control @error('branch_id') is-invalid @enderror select2">
+												<option value="" disabled selected>@lang('Select Branch')</option>
+												@foreach($allBranches as $branch)
+													<option
+														value="{{ $branch->id }}">@lang($branch->branch_name)</option>
+												@endforeach
+											</select>
 
-										<div class="invalid-feedback">
-											@error('branch_id') @lang($message) @enderror
+											<div class="invalid-feedback">
+												@error('branch_id') @lang($message) @enderror
+											</div>
+											<div class="valid-feedback"></div>
 										</div>
-										<div class="valid-feedback"></div>
-									</div>
-
+									@else
+										<input type="hidden" name="branch_id" class="form-control"
+											   value="{{ $allBranches[0]->id }}">
+									@endif
 									<div class="col-sm-12 col-md-3 mb-3">
 										<label for="country_id"> @lang('Select Country') <span
 												class="text-danger">*</span></label>
-										<select name="country_id" class="form-control @error('country_id') is-invalid @enderror selectedCountry select2">
+										<select name="country_id"
+												class="form-control @error('country_id') is-invalid @enderror selectedCountry select2">
 											<option value="" disabled selected>@lang('Select Country')</option>
 											@foreach($allCountires as $country)
-												<option value="{{ $country->id }}" >@lang($country->name)</option>
+												<option value="{{ $country->id }}">@lang($country->name)</option>
 											@endforeach
 										</select>
 
@@ -133,10 +140,11 @@
 										<div class="valid-feedback"></div>
 									</div>
 
-									<div class="col-sm-12 col-md-4 mb-3">
+									<div class="col-sm-12 col-md-3 mb-3">
 										<label for="state_id"> @lang('Select State') <span
 												class="text-danger">*</span></label>
-										<select name="state_id" class="form-control @error('state_id') is-invalid @enderror selectedState select2">
+										<select name="state_id"
+												class="form-control @error('state_id') is-invalid @enderror selectedState select2">
 
 										</select>
 
@@ -146,9 +154,10 @@
 										<div class="valid-feedback"></div>
 									</div>
 
-									<div class="col-sm-12 col-md-4 mb-3">
+									<div class="col-sm-12 col-md-3 mb-3">
 										<label for="city_id"> @lang('Select city')</label>
-										<select name="city_id" class="form-control @error('city_id') is-invalid @enderror selectedCity select2">
+										<select name="city_id"
+												class="form-control @error('city_id') is-invalid @enderror selectedCity select2">
 
 										</select>
 
@@ -158,9 +167,10 @@
 										<div class="valid-feedback"></div>
 									</div>
 
-									<div class="col-sm-12 col-md-4 mb-3">
+									<div class="col-sm-12 col-md-3 mb-3">
 										<label for="area_id"> @lang('Select Area')</label>
-										<select name="area_id" class="form-control @error('area_id') is-invalid @enderror selectedArea select2">
+										<select name="area_id"
+												class="form-control @error('area_id') is-invalid @enderror selectedArea select2">
 
 										</select>
 
@@ -176,7 +186,8 @@
 									<div class="col-sm-12 col-md-12 mb-3">
 										<label for="address"> @lang('Address') <span
 												class="text-danger">*</span></label>
-										<textarea class="form-control @error(' ') is-invalid @enderror" name="address" rows="5" value="{{ old('address') }}">
+										<textarea class="form-control @error(' ') is-invalid @enderror" name="address"
+												  rows="5" value="{{ old('address') }}">
 											{{old('address')}}
 										</textarea>
 
@@ -199,7 +210,7 @@
 													   id="image-upload"/>
 											</div>
 											@error('image')
-												<span class="text-danger">{{ $message }}</span>
+											<span class="text-danger">{{ $message }}</span>
 											@enderror
 										</div>
 									</div>
@@ -209,7 +220,8 @@
 										<div class="selectgroup w-100">
 											<label class="selectgroup-item">
 												<input type="radio" name="client_type" value="1"
-													   class="selectgroup-input" checked {{ old('client_type') == 1 ? 'checked' : ''}}>
+													   class="selectgroup-input"
+													   checked {{ old('client_type') == 1 ? 'checked' : ''}}>
 												<span class="selectgroup-button">@lang('Sender/Customer')</span>
 											</label>
 											<label class="selectgroup-item">
@@ -230,41 +242,43 @@
 											</label>
 											<label class="selectgroup-item">
 												<input type="radio" name="status" value="1"
-													   class="selectgroup-input" checked {{ old('status') == 1 ? 'checked' : ''}}>
+													   class="selectgroup-input"
+													   checked {{ old('status') == 1 ? 'checked' : ''}}>
 												<span class="selectgroup-button">@lang('ON')</span>
 											</label>
 										</div>
 									</div>
 								</div>
 
-								<button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
+								<button type="submit"
+										class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 							</form>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-@endsection
+		@endsection
 
-@push('extra_scripts')
-	<script src="{{ asset('assets/dashboard/js/jquery.uploadPreview.min.js') }}"></script>
-@endpush
+		@push('extra_scripts')
+			<script src="{{ asset('assets/dashboard/js/jquery.uploadPreview.min.js') }}"></script>
+		@endpush
 
-@section('scripts')
-	@include('partials.locationJs')
-	<script>
-		'use strict';
-		$(document).ready(function () {
-			$.uploadPreview({
-				input_field: "#image-upload",
-				preview_box: "#image-preview",
-				label_field: "#image-label",
-				label_default: "Choose File",
-				label_selected: "Change File",
-				no_label: false
-			});
-		});
+		@section('scripts')
+			@include('partials.locationJs')
+			<script>
+				'use strict';
+				$(document).ready(function () {
+					$.uploadPreview({
+						input_field: "#image-upload",
+						preview_box: "#image-preview",
+						label_field: "#image-label",
+						label_default: "Choose File",
+						label_selected: "Change File",
+						no_label: false
+					});
+				});
 
 
-	</script>
+			</script>
 @endsection

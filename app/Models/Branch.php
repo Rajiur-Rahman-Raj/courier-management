@@ -10,4 +10,8 @@ class Branch extends Model
     use HasFactory;
 
 	protected $guarded = ['id'];
+
+	public function branchManager(){
+		return $this->hasOne(BranchManager::class, 'branch_id');
+	}
 }
