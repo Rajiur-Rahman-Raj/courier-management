@@ -95,8 +95,10 @@
 									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 									<h6 class="m-0 font-weight-bold text-primary">@lang('Client List')</h6>
 									@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.add')))
-										<a href="{{ route('createClient') }}" class="btn btn-sm btn-outline-primary"><i
-												class="fas fa-plus-circle"></i> @lang('Create New Client')</a>
+										@if($authenticateUser->branch != null || $authenticateUser->role_id == null)
+											<a href="{{ route('createClient') }}" class="btn btn-sm btn-outline-primary"><i
+													class="fas fa-plus-circle"></i> @lang('Create New Client')</a>
+										@endif
 									@endif
 								</div>
 								<div class="card-body">
@@ -122,8 +124,7 @@
 												@forelse($allClients as $key => $value)
 													<tr>
 														<td data-label="@lang('Name')">
-															<div
-																class="d-lg-flex d-block align-items-center branch-list-img">
+															<div class="d-lg-flex d-block align-items-center branch-list-img">
 																<div class="mr-3"><img
 																		src="{{ getFile(optional($value->profile)->driver, optional($value->profile)->profile_picture) }}"
 																		alt="user" class="rounded-circle"

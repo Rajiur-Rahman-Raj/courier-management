@@ -238,7 +238,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('inactive-user-search', [UserController::class, 'inactiveUserSearch'])->name('inactive.user.search');
 
 		Route::match(['get', 'post'], 'user-edit/{user}', [UserController::class, 'edit'])->name('user.edit');
-		Route::match(['get', 'post'], 'vendor-edit/{user}', [UserController::class, 'edit'])->name('client.edit');
+		Route::match(['get', 'post'], 'vendor-edit/{user}', [UserController::class, 'vendorEdit'])->name('client.edit');
 		Route::post('user-balance/update/{id}', [UserController::class, 'userBalanceUpdate'])->name('user.balance.update');
 		Route::post('client-balance/update/{id}', [UserController::class, 'userBalanceUpdate'])->name('client.balance.update');
 		Route::match(['get', 'post'], 'user-asLogin/{user}', [UserController::class, 'asLogin'])->name('user.asLogin');

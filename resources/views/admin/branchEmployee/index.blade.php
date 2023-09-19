@@ -97,9 +97,11 @@
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Branch Employee List')</h6>
 											@if(adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.add')))
+												@if($authenticateUser->branch != null || $authenticateUser->role_id == null)
 												<a href="{{route('createEmployee')}}"
 												   class="btn btn-sm btn-outline-primary add"><i
 														class="fas fa-plus-circle"></i> @lang('Create Employee')</a>
+												@endif
 											@endif
 										</div>
 										<div class="card-body">

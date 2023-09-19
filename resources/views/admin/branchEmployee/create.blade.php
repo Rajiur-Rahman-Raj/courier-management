@@ -11,7 +11,8 @@
 				<h1>@lang("Create Branch Employee")</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active"><a href="{{ route('admin.home') }}">@lang("Dashboard")</a></div>
-					<div class="breadcrumb-item"><a href="{{route('branchEmployeeList')}}">@lang("Branch Employee List")</a></div>
+					<div class="breadcrumb-item"><a
+							href="{{route('branchEmployeeList')}}">@lang("Branch Employee List")</a></div>
 					<div class="breadcrumb-item">@lang("Create Branch Employee")</div>
 				</div>
 			</div>
@@ -33,27 +34,34 @@
 							<form method="post" action="{{ route('branchEmployeeStore') }}"
 								  class="mt-4" enctype="multipart/form-data">
 								@csrf
-								<div class="row mb-3">
-									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="branch_id"> @lang('Select Branch') <span class="text-danger">*</span></label>
-										<select name="branch_id" class="form-control @error('branch_id') is-invalid @enderror select2">
-											<option value="" disabled selected>@lang('Select Branch')</option>
-											@foreach($allBranches as $branch)
-												<option value="{{ $branch->id }}">@lang($branch->branch_name)</option>
-											@endforeach
-										</select>
+								@if($authenticateUser->role_id == null)
+									<div class="row mb-3">
+										<div class="col-sm-12 col-md-12 mb-3">
+											<label for="branch_id"> @lang('Select Branch')</label>
+											<select name="branch_id"
+													class="form-control @error('branch_id') is-invalid @enderror select2">
+												<option value="" disabled selected>@lang('Select Branch')</option>
+												@foreach($allBranches as $branch)
+													<option value="{{ $branch->id }}">@lang($branch->branch_name)</option>
+												@endforeach
+											</select>
 
-										<div class="invalid-feedback">
-											@error('branch_id') @lang($message) @enderror
+											<div class="invalid-feedback">
+												@error('branch_id') @lang($message) @enderror
+											</div>
+											<div class="valid-feedback"></div>
 										</div>
-										<div class="valid-feedback"></div>
 									</div>
-								</div>
+								@else
+									<input type="hidden" name="branch_id" class="form-control"
+										   value="{{ $allBranches[0]->id }}">
+								@endif
 
 								<div class="row mb-3">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="role_id"> @lang('Select Role') <span class="text-danger">*</span></label>
-										<select name="role_id" class="form-control @error('role_id') is-invalid @enderror select2 selectRole">
+										<label for="role_id"> @lang('Select Role') </label>
+										<select name="role_id"
+												class="form-control @error('role_id') is-invalid @enderror select2 selectRole">
 											<option value="" disabled selected>@lang('Select Role')</option>
 											@foreach($allRoles as $role)
 												<option value="{{ $role->id }}">@lang($role->name)</option>
@@ -69,8 +77,10 @@
 
 								<div class="row mb-3">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="branch_employee_id"> @lang('Select Employee') <span class="text-danger">*</span></label>
-										<select name="branch_employee_id" class="form-control @error('branch_employee_id') is-invalid @enderror select2 branchEmployee"  id="branchEmployee">
+										<label for="branch_employee_id"> @lang('Select Employee')</label>
+										<select name="branch_employee_id"
+												class="form-control @error('branch_employee_id') is-invalid @enderror select2 branchEmployee"
+												id="branchEmployee">
 											<option value="" disabled selected>@lang('Select Employee')</option>
 										</select>
 
@@ -83,8 +93,9 @@
 
 								<div class="row mb-3">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="department_id"> @lang('Select Department') <span class="text-danger">*</span></label>
-										<select name="department_id" class="form-control @error('department_id') is-invalid @enderror select2">
+										<label for="department_id"> @lang('Select Department') </label>
+										<select name="department_id"
+												class="form-control @error('department_id') is-invalid @enderror select2">
 											<option value="" disabled selected>@lang('Select Department')</option>
 											@foreach($allDepartments as $department)
 												<option value="{{ $department->id }}">@lang($department->name)</option>
@@ -100,7 +111,7 @@
 
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="email"> @lang('Email') <span class="text-danger">*</span></label>
+										<label for="email"> @lang('Email')</label>
 										<input type="text" name="email"
 											   class="form-control @error('email') is-invalid @enderror employeeEmail"
 											   value="{{ old('email') }}">
@@ -113,8 +124,7 @@
 
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="phone"> @lang('phone') <span
-												class="text-danger">*</span></label>
+										<label for="phone"> @lang('phone')</label>
 										<input type="text" name="phone"
 											   class="form-control @error('phone') is-invalid @enderror employeePhone"
 											   value="{{ old('phone') }}">
@@ -128,7 +138,7 @@
 								<div class="row">
 									<div class="col-sm-12 col-md-12 my-3">
 										<div class="form-group ">
-											<label for="address"> @lang('Address') <span class="text-danger">*</span></label>
+											<label for="address"> @lang('Address')</label>
 
 											<textarea class="form-control @error('address') is-invalid @enderror"
 													  name="address" rows="5"
@@ -144,7 +154,7 @@
 
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="national_id"> @lang('National Id') </label>
+										<label for="national_id"> @lang('National Id') <span class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 										<input type="text" name="national_id"
 											   class="form-control @error('national_id') is-invalid @enderror"
 											   value="{{ old('national_id') }}">
@@ -182,7 +192,7 @@
 											</label>
 											<label class="selectgroup-item">
 												<input type="radio" name="status" value="1"
-													   class="selectgroup-input" {{ old('status') == 1 ? 'checked' : ''}}>
+													   class="selectgroup-input" checked {{ old('status') == 1 ? 'checked' : ''}}>
 												<span class="selectgroup-button">@lang('ON')</span>
 											</label>
 										</div>
@@ -217,7 +227,7 @@
 						no_label: false
 					});
 
-					$('.selectRole').on('change', function (){
+					$('.selectRole').on('change', function () {
 						let selectedValue = $(this).val();
 						getSeletedRoleUser(selectedValue);
 					})
@@ -251,7 +261,7 @@
 					}
 
 
-					$('.branchEmployee').on('change', function (){
+					$('.branchEmployee').on('change', function () {
 						let selectedValue = $(this).val();
 						getSeletedRoleUserInfo(selectedValue);
 					})

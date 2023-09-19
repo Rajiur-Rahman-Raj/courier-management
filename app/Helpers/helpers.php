@@ -528,7 +528,6 @@ function in_array_any($needles, $haystack) {
 
 function adminAccessRoute($search)
 {
-
 	$user = auth()->guard('admin')->user();
 
 	if ($user->role_id == null){
@@ -539,7 +538,6 @@ function adminAccessRoute($search)
 			return true;
 		}
 	}
-
 	return false;
 }
 

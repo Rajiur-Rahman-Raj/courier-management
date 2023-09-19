@@ -30,4 +30,8 @@ class UserProfile extends Model
 	public function area(){
 		return $this->belongsTo(Area::class, 'area_id', 'id');
 	}
+
+	public function getBranch(){
+		return $this->belongsTo(BranchManager::class, 'branch_id', 'user_id');
+	}
 }

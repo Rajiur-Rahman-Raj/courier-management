@@ -16,6 +16,7 @@
 				</div>
 			</div>
 		</section>
+
 		<div class="section-body">
 			<div class="row">
 				<div class="col-12 col-md-12 col-lg-12">
@@ -34,7 +35,7 @@
 								@csrf
 								<div class="row">
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="name"> @lang('Name') <span class="text-danger">*</span></label>
+										<label for="name"> @lang('Name')</label>
 										<input type="text" name="name"
 											   class="form-control @error('name') is-invalid @enderror managerEmail"
 											   value="{{ old('name') }}">
@@ -45,8 +46,7 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="username"> @lang('Username') <span
-												class="text-danger">*</span></label>
+										<label for="username"> @lang('Username')</label>
 										<input type="text" name="username"
 											   class="form-control @error('username') is-invalid @enderror managerEmail"
 											   value="{{ old('username') }}">
@@ -57,7 +57,7 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="email"> @lang('Email') <span class="text-danger">*</span></label>
+										<label for="email"> @lang('Email')</label>
 										<input type="text" name="email"
 											   class="form-control @error('email') is-invalid @enderror"
 											   value="{{ old('email') }}">
@@ -68,7 +68,7 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="phone"> @lang('Phone') <span class="text-danger">*</span></label>
+										<label for="phone"> @lang('Phone')</label>
 										<input type="text" name="phone"
 											   class="form-control @error('phone') is-invalid @enderror"
 											   value="{{ old('phone') }}">
@@ -79,7 +79,7 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="national_id"> @lang('National Id')</label>
+										<label for="national_id"> @lang('National Id') <span class="text-dark font-weight-bold"> (@lang('optional')) </span></label>
 										<input type="text" name="national_id"
 											   class="form-control @error('national_id') is-invalid @enderror"
 											   value="{{ old('national_id') }}">
@@ -90,8 +90,7 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="password"> @lang('Password') <span
-												class="text-danger">*</span></label>
+										<label for="password"> @lang('Password') </label>
 										<input type="password" name="password"
 											   class="form-control @error('password') is-invalid @enderror"
 											   value="{{ old('password') }}">
@@ -101,10 +100,9 @@
 										<div class="valid-feedback"></div>
 									</div>
 
-									@if($authenticateRole->role_id == null)
+									@if($authenticateUser->role_id == null)
 										<div class="col-sm-12 col-md-3 mb-3">
-											<label for="branch_id"> @lang('Select Branch') <span
-													class="text-danger">*</span></label>
+											<label for="branch_id"> @lang('Select Branch')</label>
 											<select name="branch_id"
 													class="form-control @error('branch_id') is-invalid @enderror select2">
 												<option value="" disabled selected>@lang('Select Branch')</option>
@@ -124,8 +122,7 @@
 											   value="{{ $allBranches[0]->id }}">
 									@endif
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="country_id"> @lang('Select Country') <span
-												class="text-danger">*</span></label>
+										<label for="country_id"> @lang('Select Country')</label>
 										<select name="country_id"
 												class="form-control @error('country_id') is-invalid @enderror selectedCountry select2">
 											<option value="" disabled selected>@lang('Select Country')</option>
@@ -141,12 +138,8 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="state_id"> @lang('Select State') <span
-												class="text-danger">*</span></label>
-										<select name="state_id"
-												class="form-control @error('state_id') is-invalid @enderror selectedState select2">
-
-										</select>
+										<label for="state_id"> @lang('Select State')</label>
+										<select name="state_id" class="form-control @error('state_id') is-invalid @enderror selectedState select2"></select>
 
 										<div class="invalid-feedback">
 											@error('state_id') @lang($message) @enderror
@@ -155,11 +148,8 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="city_id"> @lang('Select city')</label>
-										<select name="city_id"
-												class="form-control @error('city_id') is-invalid @enderror selectedCity select2">
-
-										</select>
+										<label for="city_id"> @lang('Select city') <span class="text-dark font-weight-bold">(@lang('optional'))</span></label>
+										<select name="city_id" class="form-control @error('city_id') is-invalid @enderror selectedCity select2"></select>
 
 										<div class="invalid-feedback">
 											@error('city_id') @lang($message) @enderror
@@ -168,7 +158,7 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="area_id"> @lang('Select Area')</label>
+										<label for="area_id"> @lang('Select Area') <span class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 										<select name="area_id"
 												class="form-control @error('area_id') is-invalid @enderror selectedArea select2">
 
@@ -184,17 +174,15 @@
 
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="address"> @lang('Address') <span
-												class="text-danger">*</span></label>
+										<label for="address"> @lang('Address') </label>
 										<textarea class="form-control @error(' ') is-invalid @enderror" name="address"
 												  rows="5" value="{{ old('address') }}">
 											{{old('address')}}
 										</textarea>
 
-										<div class="invalid-feedback">
+										<div class="invalid-feedback d-block">
 											@error('address') @lang($message) @enderror
 										</div>
-										<div class="valid-feedback"></div>
 									</div>
 								</div>
 

@@ -125,7 +125,106 @@ class UserController extends Controller
 
 	public function edit(Request $request, user $user)
 	{
+
 		$userProfile = UserProfile::firstOrCreate(['user_id' => $user->id]);
+		$languages = Language::get();
+		if ($request->isMethod('get')) {
+			$userId = $user->id;
+			$countries = config('country');
+
+			$data['allBranches'] = Branch::where('status', 1)->get();
+			$data['allCountries'] = Country::where('status', 1)->get();
+			$data['allStates'] = State::where('status', 1)->get();
+			$data['allCities'] = City::where('status', 1)->get();
+			$data['allAreas'] = Area::where('status', 1)->get();
+
+			$addFundCount = Fund::where(['user_id' => $userId])->count();
+			$payoutCount = Payout::where(['user_id' => $userId])->count();
+
+			$transactionCount = [
+				'fund' => $addFundCount,
+				'payout' => $payoutCount
+			];
+
+			return view('admin.user.show', $data, compact('user', 'userProfile', 'transactionCount', 'countries', 'languages'));
+		} elseif ($request->isMethod('post')) {
+			$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
+
+			$validator = Validator::make($purifiedData, [
+				'name' => 'required|min:3|max:100|string',
+				'username' => 'required|min:5|max:50|unique:users,username,' . $user->id,
+				'email' => 'required|email|min:5|max:100|unique:users,email,' . $user->id,
+				'phone' => 'required|max:32',
+				'national_id' => ['nullable', 'max:100', 'min:6'],
+				'password' => 'nullable|min:5|max:50',
+				'branch_id' => ['nullable', 'exists:branches,id'],
+				'country_id' => ['nullable', 'exists:countries,id'],
+				'state_id' => ['nullable', 'exists:states,id'],
+				'city_id' => ['nullable', 'exists:cities,id'],
+				'area_id' => ['nullable', 'exists:areas,id'],
+				'address' => ['nullable', 'max:1000'],
+				'language' => 'required|numeric|not_in:0',
+				'image' => ['nullable', 'max:3072', 'mimes:jpg,jpeg,png']
+			]);
+
+			if ($validator->fails()) {
+				return back()->withErrors($validator)->withInput();
+			}
+
+			$purifiedData = (object)$purifiedData;
+
+			$user->name = $purifiedData->name;
+			$user->username = $purifiedData->username;
+			$user->email = $purifiedData->email;
+			$user->password = $purifiedData->password == null ? $user->password : Hash::make($request->password);
+			$user->language_id = $purifiedData->language;
+			$user->user_type = (int)$purifiedData->client_type;
+			$user->email_verification = $purifiedData->email_verification;
+			$user->sms_verification = $purifiedData->sms_verification;
+			$user->status = $purifiedData->status;
+
+			$user->save();
+
+
+			$userProfile->phone = $purifiedData->phone;
+			$userProfile->phone_code = isset($purifiedData->phone_code) ? $purifiedData->phone_code : null;
+			$userProfile->address = empty($purifiedData->address) ? null : $purifiedData->address;
+			$userProfile->national_id = empty($purifiedData->national_id) ? null : $purifiedData->national_id;
+			$userProfile->branch_id = isset($purifiedData->branch_id) ? $purifiedData->branch_id : null;
+			$userProfile->country_id = isset($purifiedData->country_id) ? $purifiedData->country_id : null;
+			$userProfile->state_id = isset($purifiedData->state_id) ? $purifiedData->state_id : null;
+			$userProfile->city_id = isset($purifiedData->city_id) ? $purifiedData->city_id : null;
+			$userProfile->area_id = isset($purifiedData->area_id) ? $purifiedData->area_id : null;
+
+			if ($request->hasFile('image')) {
+				try {
+					$image = $this->fileUpload($request->image, config('location.user.path'));
+					if ($image) {
+						$userProfile->profile_picture = $image['path'] ?? null;
+						$userProfile->driver = $image['driver'] ?? null;
+					}
+				} catch (\Exception $exp) {
+					return back()->with('error', 'Image could not be uploaded.');
+				}
+			}
+
+
+			$userProfile->save();
+
+			return back()->with('success', 'Profile Update Successfully');
+		}
+	}
+
+	public function vendorEdit(Request $request, user $user)
+	{
+		$authenticateUser = Auth::guard('admin')->user();
+
+		if (optional($authenticateUser->branch)->branch_id == optional($user->profile)->branch_id || $authenticateUser->role_id == null){
+			$userProfile = UserProfile::firstOrCreate(['user_id' => $user->id]);
+		}else{
+			return abort(404);
+		}
+
 		$languages = Language::get();
 		if ($request->isMethod('get')) {
 			$userId = $user->id;

@@ -77,20 +77,20 @@ class ClientController extends Controller
 
 	public function clientList(Request $request)
 	{
-		$authenticateUser = Auth::user();
+		$authenticateUser = Auth::guard('admin')->user();
 		$branchId = null;
-		if ($authenticateUser->role_id == null){
+		if ($authenticateUser->role_id == null) {
 			$branchId = null;
 		}
 		if ($authenticateUser->role_id != null && $authenticateUser->branch != null) {
 			$branchId = optional($authenticateUser->branch)->branch_id;
-		}elseif ($authenticateUser->role_id != null && $authenticateUser->branch == null){
-			$branchId = 0;
+		} elseif ($authenticateUser->role_id != null && $authenticateUser->branch == null) {
+			$branchId = 'not-assign';
 		}
 
-
 		$search = $request->all();
-		$query = User::with('profile')->whereIn('user_type', [1, 2])
+
+		$query = User::with('profile', 'branch')->whereIn('user_type', [1, 2])
 			->when($branchId != null && $authenticateUser->branch != null && $branchId != 0, function ($query) use ($branchId) {
 				return $query->whereHas('profile', function ($q) use ($branchId) {
 					$q->where('branch_id', $branchId);
@@ -122,31 +122,32 @@ class ClientController extends Controller
 			$query->where('status', 0);
 		}
 
-
-		if ($branchId == 0 && $branchId != null) {
-			$data['allClients'] = $query->limit(0)->get();   // kono branch er under e ei role user/manager ti nei.
-
-		}else {
-			$data['allClients'] = $query->latest()->paginate(config('basic.paginate')); // for admin and branch manager
+		if ($branchId == 'not-assign' && $branchId != null) {
+			$data['allClients'] = [];   // kono branch er under e ei role user/manager ti nei.
+		} elseif ($branchId != null && $authenticateUser->branch != null) {
+			$data['allClients'] = $query->whereHas('profile', function ($q) use ($authenticateUser) {
+				$q->where('branch_id', optional($authenticateUser->branch)->id);
+			})->latest()->paginate(config('basic.paginate')); // for branch manager
+		} else {
+			$data['allClients'] = $query->latest()->paginate(config('basic.paginate')); // for admin
 		}
 
-		return view('admin.clients.index', $data);
+		return view('admin.clients.index', $data, compact('authenticateUser'));
 	}
-
 
 
 	public function createClient()
 	{
-		$authenticateRole = Auth::user();
+		$authenticateUser = Auth::guard('admin')->user();
 		$data['allBranches'] = Branch::with('branchManager')
-			->when(isset($authenticateRole->role_id), function ($query) use ($authenticateRole) {
-				return $query->whereHas('branchManager', function ($q) use ($authenticateRole) {
-					$q->where('admin_id', $authenticateRole->id);
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branchManager', function ($q) use ($authenticateUser) {
+					$q->where('admin_id', $authenticateUser->id);
 				});
 			})
 			->where('status', 1)->get();
 		$data['allCountires'] = Country::where('status', 1)->get();
-		return view('admin.clients.create', $data, compact('authenticateRole'));
+		return view('admin.clients.create', $data, compact('authenticateUser'));
 	}
 
 	public function clientStore(Request $request)
@@ -227,12 +228,19 @@ class ClientController extends Controller
 
 	public function clientEdit($id)
 	{
+		$authenticateUser = Auth::guard('admin')->user();
 		$data['allBranches'] = Branch::where('status', 1)->get();
 		$data['allCountries'] = Country::where('status', 1)->get();
 		$data['allStates'] = State::where('status', 1)->get();
 		$data['allCities'] = City::where('status', 1)->get();
 		$data['allAreas'] = Area::where('status', 1)->get();
-		$data['singleClientInfo'] = User::with('profile', 'profile.branch', 'profile.country', 'profile.state', 'profile.city', 'profile.area')->findOrFail($id);
+		$data['singleClientInfo'] = User::with('profile', 'profile.branch', 'profile.country', 'profile.state', 'profile.city', 'profile.area')
+			->when($authenticateUser->role_id != null, function ($query) use ($authenticateUser){
+				$query->whereHas('profile', function ($q) use ($authenticateUser) {
+					$q->where('branch_id', optional($authenticateUser->branch)->branch_id);
+				});
+			})
+			->findOrFail($id);
 		return view('admin.clients.edit', $data);
 	}
 

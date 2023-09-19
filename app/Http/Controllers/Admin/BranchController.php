@@ -10,6 +10,7 @@ use App\Models\BranchManager;
 use App\Models\Department;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Validation\Rule;
@@ -332,7 +333,7 @@ class BranchController extends Controller
 	public function branchEmployeeList(Request $request){
 
 		$search = $request->all();
-
+		$authenticateUser = Auth::guard('admin')->user();
 		$data['allBranchEmployees'] = BranchEmployee::with('branch', 'admin', 'department')
 			->when(isset($search['branch']), function ($query) use ($search){
 				return $query->whereHas('branch', function ($q) use ($search) {
@@ -358,14 +359,22 @@ class BranchController extends Controller
 			})
 			->paginate(config('basic.paginate'));
 
-		return view('admin.branchEmployee.index', $data);
+		return view('admin.branchEmployee.index', $data, compact('authenticateUser'));
 	}
 
 	public function createEmployee(){
-		$data['allBranches'] = Branch::where('status', 1)->get();
+		$authenticateUser = Auth::guard('admin')->user();
+		$data['allBranches'] = Branch::with('branchManager')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branchManager', function ($q) use ($authenticateUser) {
+					$q->where('admin_id', $authenticateUser->id);
+				});
+			})
+			->where('status', 1)->get();
+
 		$data['allRoles']  = Role::where('status', 1)->get();
 		$data['allDepartments']  = Department::where('status', 1)->get();
-		return view('admin.branchEmployee.create', $data);
+		return view('admin.branchEmployee.create', $data, compact('authenticateUser'));
 	}
 
 
