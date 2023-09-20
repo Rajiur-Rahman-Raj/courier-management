@@ -222,9 +222,9 @@ class ShipmentController extends Controller
 		return view('admin.shipments.viewShipment', $data);
 	}
 
-	public function shipmentStore(ShipmentRequest $request, $type = null)
+	public function shipmentStore(Request $request, $type = null)
 	{
-
+//		ShipmentRequest $request
 		try {
 			DB::beginTransaction();
 			$shipment = new Shipment();
@@ -309,7 +309,7 @@ class ShipmentController extends Controller
 
 		} catch (\Exception $exp) {
 			DB::rollBack();
-			return back()->with('error', $exp->getMessage());
+			return back()->with('error', $exp->getMessage())->withInput();
 		}
 	}
 
