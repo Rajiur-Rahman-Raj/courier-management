@@ -96,7 +96,8 @@
 									<h6 class="m-0 font-weight-bold text-primary">@lang('Client List')</h6>
 									@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.add')))
 										@if($authenticateUser->branch != null || $authenticateUser->role_id == null)
-											<a href="{{ route('createClient') }}" class="btn btn-sm btn-outline-primary"><i
+											<a href="{{ route('createClient') }}"
+											   class="btn btn-sm btn-outline-primary"><i
 													class="fas fa-plus-circle"></i> @lang('Create New Client')</a>
 										@endif
 									@endif
@@ -120,90 +121,83 @@
 											</thead>
 											<tbody>
 
-											@if(sizeof($allClients) > 0)
-												@forelse($allClients as $key => $value)
-													<tr>
-														<td data-label="@lang('Name')">
-															<div class="d-lg-flex d-block align-items-center branch-list-img">
-																<div class="mr-3"><img
-																		src="{{ getFile(optional($value->profile)->driver, optional($value->profile)->profile_picture) }}"
-																		alt="user" class="rounded-circle"
-																		width="40" height="40"
-																		data-toggle="tooltip"
-																		title=""
-																		data-original-title="{{$value->name}}">
-																</div>
-
-																<div
-																	class="d-inline-flex d-lg-block align-items-center ms-2">
-																	<p class="text-dark mb-0 font-16 font-weight-medium">
-																		{{$value->name}}</p>
-																	<span
-																		class="text-dark font-weight-bold font-14 ml-1">{{ '@'.$value->username}}</span>
-																</div>
+											@forelse($clients as $key => $client)
+												<tr>
+													<td data-label="@lang('Name')">
+														<div
+															class="d-lg-flex d-block align-items-center branch-list-img">
+															<div class="mr-3"><img
+																	src="{{ getFile(optional($client->profile)->driver, optional($client->profile)->profile_picture) }}"
+																	alt="user" class="rounded-circle"
+																	width="40" height="40"
+																	data-toggle="tooltip"
+																	title=""
+																	data-original-title="{{$client->name}}">
 															</div>
 
-														</td>
-														<td data-label="@lang('Phone')">{{ __(optional($value->profile)->phone ?? __('N/A')) }}</td>
-														<td data-label="@lang('Email')">{{ __($value->email) }}</td>
-														<td data-label="@lang('Join date')">{{ __(date('d M,Y - H:i',strtotime($value->created_at))) }}</td>
-														<td data-label="@lang('Status')">
-															@if($value->user_type == 1)
+															<div
+																class="d-inline-flex d-lg-block align-items-center ms-2">
+																<p class="text-dark mb-0 font-16 font-weight-medium">
+																	{{$client->name}}</p>
 																<span
-																	class="badge badge-primary">@lang('Sender/Customer')</span>
-															@else
-																<span class="badge badge-info">@lang('Receiver')</span>
-															@endif
-														</td>
-														<td data-label="@lang('Status')">
-															@if($value->status)
-																<span class="badge badge-success">@lang('Active')</span>
-															@else
-																<span
-																	class="badge badge-warning">@lang('Inactive')</span>
-															@endif
-														</td>
-														@if(adminAccessRoute(array_merge(config('permissionList.Manage_Clients.Client_List.permission.edit'), config('permissionList.Manage_Clients.Client_List.permission.delete'), config('permissionList.Manage_Clients.Client_List.permission.show_profile'), config('permissionList.Manage_Clients.Client_List.permission.login_as'))))
-															<td data-label="@lang('Action')">
-																@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.edit')))
-																	<a href="{{ route('clientEdit',$value->id) }}"
-																	   class="btn btn-sm btn-outline-primary mb-1"><i
-																			class="fas fa-edit"></i> @lang('Edit')</a>
-																@endif
-																@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.show_profile')))
-																	<a href="{{ route('client.edit',$value) }}"
-																	   class="btn btn-sm btn-outline-primary mb-1"><i
-																			class="fas fa-user"></i> @lang('Profile')
-																	</a>
-																@endif
+																	class="text-dark font-weight-bold font-14 ml-1">{{ '@'.$client->username}}</span>
+															</div>
+														</div>
 
-																@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.login_as')))
-																	<a href="{{ route('user.clientLogin',$value) }}"
-																	   class="btn btn-sm btn-outline-dark mb-1"><i
-																			class="fas fa-sign-in-alt"></i> @lang('Login')
-																	</a>
-																@endif
-															</td>
+													</td>
+													<td data-label="@lang('Phone')">{{ optional($client->profile)->phone ?? __('N/A') }}</td>
+													<td data-label="@lang('Email')">{{ $client->email }}</td>
+													<td data-label="@lang('Join date')">{{ __(date('d M,Y - H:i',strtotime($client->created_at))) }}</td>
+													<td data-label="@lang('Status')">
+														@if($client->user_type == 1)
+															<span
+																class="badge badge-primary">@lang('Sender')</span>
+														@else
+															<span class="badge badge-info">@lang('Receiver')</span>
 														@endif
-													</tr>
-												@empty
-													<tr>
-														<th colspan="100%"
-															class="text-center">@lang('No data found')</th>
-													</tr>
-												@endforelse
-											@else
-												<tr>
-													<th colspan="100%" class="text-center">@lang('No data found')</th>
+													</td>
+													<td data-label="@lang('Status')">
+														@if($client->status)
+															<span class="badge badge-success">@lang('Active')</span>
+														@else
+															<span
+																class="badge badge-warning">@lang('Inactive')</span>
+														@endif
+													</td>
+													@if(adminAccessRoute(array_merge(config('permissionList.Manage_Clients.Client_List.permission.edit'), config('permissionList.Manage_Clients.Client_List.permission.delete'), config('permissionList.Manage_Clients.Client_List.permission.show_profile'), config('permissionList.Manage_Clients.Client_List.permission.login_as'))))
+														<td data-label="@lang('Action')">
+															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.edit')))
+																<a href="{{ route('clientEdit',$client->id) }}"
+																   class="btn btn-sm btn-outline-primary mb-1"><i
+																		class="fas fa-edit"></i> @lang('Edit')</a>
+															@endif
+															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.show_profile')))
+																<a href="{{ route('client.edit', $client) }}"
+																   class="btn btn-sm btn-outline-primary mb-1"><i
+																		class="fas fa-user"></i> @lang('Profile')
+																</a>
+															@endif
+
+															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.login_as')))
+																<a href="{{ route('user.clientLogin',$client) }}"
+																   class="btn btn-sm btn-outline-dark mb-1"><i
+																		class="fas fa-sign-in-alt"></i> @lang('Login')
+																</a>
+															@endif
+														</td>
+													@endif
 												</tr>
-											@endif
+											@empty
+												<tr>
+													<th colspan="100%"
+														class="text-center">@lang('No data found')</th>
+												</tr>
+											@endforelse
 
 											</tbody>
 										</table>
 									</div>
-									@if(sizeof($allClients) > 0)
-										<div class="card-footer">{{ $allClients->links() }}</div>
-									@endif
+									<div class="card-footer">{{ $clients->links() }}</div>
 								</div>
 							</div>
 						</div>

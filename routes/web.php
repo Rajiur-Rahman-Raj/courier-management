@@ -423,6 +423,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 	Route::post('get-state-city', [LocationController::class, 'getSeletedStateCity'])->name('getSeletedStateCity');
 	Route::post('get-city-area', [LocationController::class, 'getSeletedCityArea'])->name('getSeletedCityArea');
 
+	Route::post('selected-branch-sender', [ShipmentController::class, 'getSelectedBranchSender'])->name('getSelectedBranchSender');
+	Route::post('selected-branch-receiver', [ShipmentController::class, 'getSelectedBranchReceiver'])->name('getSelectedBranchReceiver');
+
 
 	Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.home');
 	Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');

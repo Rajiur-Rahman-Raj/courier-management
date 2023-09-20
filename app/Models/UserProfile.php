@@ -11,6 +11,10 @@ class UserProfile extends Model
 
 	protected $fillable = ['user_id'];
 
+	public function user(){
+		return $this->belongsTo(User::class, 'user_id', 'id');
+	}
+
 	public function branch(){
 		return $this->belongsTo(Branch::class, 'branch_id', 'id');
 	}
@@ -34,4 +38,5 @@ class UserProfile extends Model
 	public function getBranch(){
 		return $this->belongsTo(BranchManager::class, 'branch_id', 'user_id');
 	}
+
 }

@@ -42,9 +42,11 @@
 											class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Shipment List')</h6>
 											@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.add')))
-												<a href="{{route('createShipment', ['shipment_type' => 'internationally', 'shipment_status' => $status])}}"
-												   class="btn btn-sm btn-outline-primary add"><i
-														class="fas fa-plus-circle"></i> @lang('Create Shipment')</a>
+												@if($authenticateUser->branch != null || $authenticateUser->role_id == null)
+													<a href="{{route('createShipment', ['shipment_type' => 'internationally', 'shipment_status' => $status])}}"
+													   class="btn btn-sm btn-outline-primary add"><i
+															class="fas fa-plus-circle"></i> @lang('Create Shipment')</a>
+												@endif
 											@endif
 										</div>
 

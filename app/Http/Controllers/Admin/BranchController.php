@@ -25,8 +25,8 @@ class BranchController extends Controller
 	{
 		$search = $request->all();
 		$data['allBranches'] = Branch::when(isset($search['name']), function ($query) use ($search) {
-				return $query->whereRaw("branch_name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");
-			})
+			return $query->whereRaw("branch_name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");
+		})
 			->when(isset($search['phone']), function ($q) use ($search) {
 				return $q->where('phone', $search['phone']);
 			})
@@ -172,17 +172,18 @@ class BranchController extends Controller
 	}
 
 
-	public function branchManagerList(Request $request){
+	public function branchManagerList(Request $request)
+	{
 
 		$search = $request->all();
 
 		$data['allBranchManagers'] = BranchManager::with('branch', 'admin')
-			->when(isset($search['manager']), function ($query) use ($search){
+			->when(isset($search['manager']), function ($query) use ($search) {
 				return $query->whereHas('admin', function ($q) use ($search) {
 					$q->whereRaw("name REGEXP '[[:<:]]{$search['manager']}[[:>:]]'");
 				});
 			})
-			->when(isset($search['branch']), function ($query) use ($search){
+			->when(isset($search['branch']), function ($query) use ($search) {
 				return $query->whereHas('branch', function ($q) use ($search) {
 					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['branch']}[[:>:]]'");
 				});
@@ -203,13 +204,15 @@ class BranchController extends Controller
 		return view('admin.branchManager.index', $data);
 	}
 
-	public function createBranchManager(){
+	public function createBranchManager()
+	{
 		$data['allBranches'] = Branch::where('status', 1)->get();
-		$data['allRoles']  = Role::where('status', 1)->get();
+		$data['allRoles'] = Role::where('status', 1)->get();
 		return view('admin.branchManager.create', $data);
 	}
 
-	public function branchManagerStore(Request $request){
+	public function branchManagerStore(Request $request)
+	{
 
 		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
 
@@ -265,16 +268,18 @@ class BranchController extends Controller
 		return back()->with('success', 'Branch Manager Created Successfully!');
 	}
 
-	public function branchManagerEdit($id){
+	public function branchManagerEdit($id)
+	{
 		$data['allBranches'] = Branch::where('status', 1)->get();
-		$data['allRoles']  = Role::where('status', 1)->get();
+		$data['allRoles'] = Role::where('status', 1)->get();
 		$data['singleBranchManagerInfo'] = BranchManager::with('branch', 'admin')->findOrFail($id);
 		$data['allManagers'] = Admin::where('role_id', $data['singleBranchManagerInfo']->role_id)->get();
 
 		return view('admin.branchManager.edit', $data);
 	}
 
-	public function branchManagerUpdate(Request $request, $id){
+	public function branchManagerUpdate(Request $request, $id)
+	{
 
 		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
 
@@ -330,17 +335,23 @@ class BranchController extends Controller
 		return back()->with('success', 'Branch Manager Updated Successfully!');
 	}
 
-	public function branchEmployeeList(Request $request){
-
+	public function branchEmployeeList(Request $request)
+	{
 		$search = $request->all();
 		$authenticateUser = Auth::guard('admin')->user();
-		$data['allBranchEmployees'] = BranchEmployee::with('branch', 'admin', 'department')
-			->when(isset($search['branch']), function ($query) use ($search){
+
+		$data['branchEmployees'] = BranchEmployee::with('branch.branchManager', 'admin', 'department')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
+				});
+			})
+			->when(isset($search['branch']), function ($query) use ($search) {
 				return $query->whereHas('branch', function ($q) use ($search) {
 					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['branch']}[[:>:]]'");
 				});
 			})
-			->when(isset($search['department']), function ($query) use ($search){
+			->when(isset($search['department']), function ($query) use ($search) {
 				return $query->whereHas('department', function ($q) use ($search) {
 					$q->whereRaw("name REGEXP '[[:<:]]{$search['department']}[[:>:]]'");
 				});
@@ -362,7 +373,8 @@ class BranchController extends Controller
 		return view('admin.branchEmployee.index', $data, compact('authenticateUser'));
 	}
 
-	public function createEmployee(){
+	public function createEmployee()
+	{
 		$authenticateUser = Auth::guard('admin')->user();
 		$data['allBranches'] = Branch::with('branchManager')
 			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
@@ -372,13 +384,14 @@ class BranchController extends Controller
 			})
 			->where('status', 1)->get();
 
-		$data['allRoles']  = Role::where('status', 1)->get();
-		$data['allDepartments']  = Department::where('status', 1)->get();
+		$data['allRoles'] = Role::where('status', 1)->get();
+		$data['allDepartments'] = Department::where('status', 1)->get();
 		return view('admin.branchEmployee.create', $data, compact('authenticateUser'));
 	}
 
 
-	public function branchEmployeeStore(Request $request){
+	public function branchEmployeeStore(Request $request)
+	{
 
 		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
 
@@ -439,18 +452,27 @@ class BranchController extends Controller
 	}
 
 
-	public function branchEmployeeEdit($id){
+	public function branchEmployeeEdit($id)
+	{
+		$authenticateUser = Auth::guard('admin')->user();
 		$data['allBranches'] = Branch::where('status', 1)->get();
-		$data['allRoles']  = Role::where('status', 1)->get();
-		$data['allDepartments']  = Department::where('status', 1)->get();
-		$data['singleBranchEmployeeInfo'] = BranchEmployee::with('branch', 'admin', 'department')->where('status', 1)->findOrFail($id);
+		$data['allRoles'] = Role::where('status', 1)->get();
+		$data['allDepartments'] = Department::where('status', 1)->get();
+		$data['singleBranchEmployeeInfo'] = BranchEmployee::with('branch', 'admin', 'department')->where('status', 1)
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
+				});
+			})
+			->findOrFail($id);
 		$data['allEmployees'] = Admin::where('role_id', $data['singleBranchEmployeeInfo']->role_id)->where('status', 1)->get();
 
 		return view('admin.branchEmployee.edit', $data);
 	}
 
 
-	public function branchEmployeeUpdate(Request $request, $id){
+	public function branchEmployeeUpdate(Request $request, $id)
+	{
 		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
 
 		$rules = [
@@ -509,20 +531,23 @@ class BranchController extends Controller
 		return back()->with('success', 'Branch Employee Updated Successfully!');
 	}
 
-	public function branchStaffList($id){
+	public function branchStaffList($id)
+	{
 		$data['branchStaffList'] = BranchEmployee::with('branch', 'admin', 'department')
-		->where('branch_id', $id)
-		->get();
+			->where('branch_id', $id)
+			->get();
 		return view('admin.branchEmployee.staffList', $data);
 	}
 
 
-	public function getRoleUser(Request $request){
+	public function getRoleUser(Request $request)
+	{
 		$results = Admin::where('status', 1)->where('role_id', $request->id)->get();
 		return response($results);
 	}
 
-	public function getRoleUserInfo(Request $request){
+	public function getRoleUserInfo(Request $request)
+	{
 		$results = Admin::where('status', 1)->where('id', $request->id)->first();
 		return response($results);
 	}

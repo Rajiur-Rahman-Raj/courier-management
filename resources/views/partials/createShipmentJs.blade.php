@@ -3,6 +3,7 @@
 
 	let oldPackingValue = "{{ $oldPackingCounts }}"
 
+
 	let oldFromStateIdPresent = "{{ $oldFromStateIdPresent }}"
 	let oldFromCityIdPresent = "{{ $oldFromCityIdPresent }}"
 	let oldFromAreaIdPresent = "{{ $oldFromAreaIdPresent }}"
@@ -682,6 +683,106 @@
 
 		let totalPackingCost = quantity * variantPrice;
 		$(`.totalPackingCost_${id}`).val(totalPackingCost);
+	}
+
+//	get sender and receiver from your branch
+	$(document).on('change', '.sender_branch', function (){
+
+		let selectedBranchId = $(this).val();
+
+		$.ajax({
+			url: "{{ route('getSelectedBranchSender') }}",
+			method: 'POST',
+			data: {
+				branchId: selectedBranchId,
+			},
+			success: function (response) {
+				let responseData = response;
+				responseData.forEach(res => {
+					$('.getSender').append(`<option value="${res.id}">${res.name}</option>`)
+				})
+				$('.getSender').prepend(`<option value="" selected disabled>@lang('Select Sender')</option>`)
+			},
+			error: function (xhr, status, error) {
+				console.log(error)
+			}
+		});
+	})
+
+	$(document).on('change', '.receiver_branch', function (){
+
+		let selectedBranchId = $(this).val();
+
+		$.ajax({
+			url: "{{ route('getSelectedBranchReceiver') }}",
+			method: 'POST',
+			data: {
+				branchId: selectedBranchId,
+			},
+			success: function (response) {
+				let responseData = response;
+				responseData.forEach(res => {
+					$('.getReceiver').append(`<option value="${res.id}">${res.name}</option>`)
+				})
+				$('.getReceiver').prepend(`<option value="" selected disabled>@lang('Select Receiver')</option>`)
+			},
+			error: function (xhr, status, error) {
+				console.log(error)
+			}
+		});
+	})
+
+
+
+	let oldSenderIdPresent = "{{ $oldSenderIdPresent }}"
+	let oldReceiverIdPresent = "{{ $oldReceiverIdPresent }}"
+
+
+	if(oldSenderIdPresent == 1 || oldReceiverIdPresent == 1){
+		let oldSenderBranch = $('.sender_branch').val();
+		let oldReceiverBranch = $('.receiver_branch').val();
+		let oldSenderId = $('.getSender').data('oldsenderid');
+		let oldReceiverId = $('.getReceiver').data('oldreceiverid');
+		getOldSender(oldSenderBranch, oldSenderId);
+		getOldReceiver(oldReceiverBranch, oldReceiverId);
+	}
+
+	function getOldSender(oldSenderBranch, oldSenderId) {
+		$.ajax({
+			url: "{{ route('getSelectedBranchSender') }}",
+			method: 'POST',
+			data: {
+				branchId: oldSenderBranch,
+			},
+			success: function (response) {
+				let responseData = response;
+				responseData.forEach(res => {
+					$('.getSender').append(`<option value="${res.id}" ${res.id == oldSenderId ? 'selected' : ''}>${res.name}</option>`)
+				})
+			},
+			error: function (xhr, status, error) {
+				console.log(error)
+			}
+		});
+	}
+
+	function getOldReceiver(oldReceiverBranch, oldReceiverId) {
+		$.ajax({
+			url: "{{ route('getSelectedBranchReceiver') }}",
+			method: 'POST',
+			data: {
+				branchId: oldReceiverBranch,
+			},
+			success: function (response) {
+				let responseData = response;
+				responseData.forEach(res => {
+					$('.getReceiver').append(`<option value="${res.id}" ${res.id == oldReceiverId ? 'selected' : ''}>${res.name}</option>`)
+				})
+			},
+			error: function (xhr, status, error) {
+				console.log(error)
+			}
+		});
 	}
 
 </script>

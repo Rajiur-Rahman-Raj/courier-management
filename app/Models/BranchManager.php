@@ -18,4 +18,12 @@ class BranchManager extends Model
 	public function admin(){
 		return $this->belongsTo(Admin::class, 'admin_id', 'id');
 	}
+
+	public function branchEmployees(){
+		return $this->hasMany(BranchEmployee::class, 'branch_id', 'branch_id');
+	}
+
+	public function branchClients(){
+		return $this->hasMany(UserProfile::class, 'branch_id', 'branch_id');
+	}
 }

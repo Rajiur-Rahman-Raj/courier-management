@@ -16,7 +16,9 @@
 				<h1>@lang("Create New Shipment")</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active"><a href="{{ route('admin.home') }}">@lang("Dashboard")</a></div>
-					<div class="breadcrumb-item"><a href="{{route('shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country'])}} ">@lang("Shipments List")</a></div>
+					<div class="breadcrumb-item"><a
+							href="{{route('shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country'])}} ">@lang("Shipments List")</a>
+					</div>
 					<div class="breadcrumb-item">@lang("Create Shipment")</div>
 				</div>
 			</div>
@@ -28,7 +30,8 @@
 						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 							<h5>@lang("Create Shipment")</h5>
 
-							<a href="{{route('shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country'])}}" class="btn btn-sm  btn-primary mr-2">
+							<a href="{{route('shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country'])}}"
+							   class="btn btn-sm  btn-primary mr-2">
 								<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 							</a>
 						</div>
@@ -47,6 +50,9 @@
 		@php
 			$oldPackingCounts = old('variant_price') ? count(old('variant_price')) : 0;
             $oldParcelCounts = old('parcel_name') ? count(old('parcel_name')) : 0;
+
+            $oldSenderIdPresent = old('sender_id') ? 1 : 0;
+            $oldReceiverIdPresent = old('receiver_id') ? 1 : 0;
 
             $oldFromStateIdPresent = 0;
             $oldFromCityIdPresent = old('from_city_id') ? 1 : 0;

@@ -98,9 +98,9 @@
 											<h6 class="m-0 font-weight-bold text-primary">@lang('Branch Employee List')</h6>
 											@if(adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.add')))
 												@if($authenticateUser->branch != null || $authenticateUser->role_id == null)
-												<a href="{{route('createEmployee')}}"
-												   class="btn btn-sm btn-outline-primary add"><i
-														class="fas fa-plus-circle"></i> @lang('Create Employee')</a>
+													<a href="{{route('createEmployee')}}"
+													   class="btn btn-sm btn-outline-primary add"><i
+															class="fas fa-plus-circle"></i> @lang('Create Employee')</a>
 												@endif
 											@endif
 										</div>
@@ -123,7 +123,7 @@
 													</thead>
 
 													<tbody>
-													@forelse($allBranchEmployees as $key => $employee)
+													@forelse($branchEmployees as $key => $employee)
 														<tr>
 															<td data-label="@lang('Employee')">
 																<a href="javascript:void(0)"
@@ -196,8 +196,9 @@
 																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.edit')))
 																		<a href="{{ route('branchEmployeeEdit', $employee->id) }}"
 																		   class="btn btn-outline-primary btn-sm"
-																		   title="@lang('Edit')"><i class="fa fa-edit"
-																									aria-hidden="true"></i> @lang('Edit')
+																		   title="@lang('Edit')"><i
+																				class="fa fa-edit"
+																				aria-hidden="true"></i> @lang('Edit')
 																		</a>
 																	@endif
 																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Employee_List.permission.login_as')))

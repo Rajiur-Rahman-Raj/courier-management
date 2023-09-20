@@ -61,7 +61,7 @@ function activeMenu($routeNames = [], $segment = null, $shipmentSegment = null)
 {
 
 	$lastSegment = last(request()->segments());
-	$shipment_segment =  request()->segment(3);
+	$shipment_segment = request()->segment(3);
 	$currentName = request()->route()->getName();
 
 	if (isset($segment)) {
@@ -452,10 +452,10 @@ function wordSplice($string, $word = -1)
 	$withoutLastWord = implode(' ', $words);
 	$withoutLastTwoWord = implode(' ', $lastTwoWrod);
 	return [
-		'withoutLastWord'  => $withoutLastWord,
-		'withoutLastTwoWord'  => $withoutLastTwoWord,
-		'lastTwoWord'         => $last_two_word,
-		'lastWord'         => $lastWord,
+		'withoutLastWord' => $withoutLastWord,
+		'withoutLastTwoWord' => $withoutLastTwoWord,
+		'lastTwoWord' => $last_two_word,
+		'lastWord' => $lastWord,
 	];
 }
 
@@ -516,21 +516,23 @@ function checkPermissionByKey($key)
 	}
 }
 
-function lastUriSegment(){
+function lastUriSegment()
+{
 	$uriSegments = explode("/", parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 	$lastUriSegment = array_pop($uriSegments);
 	return $lastUriSegment;
 }
 
-function in_array_any($needles, $haystack) {
-	return (bool) array_intersect($needles, $haystack);
+function in_array_any($needles, $haystack)
+{
+	return (bool)array_intersect($needles, $haystack);
 }
 
 function adminAccessRoute($search)
 {
 	$user = auth()->guard('admin')->user();
 
-	if ($user->role_id == null){
+	if ($user->role_id == null) {
 		return true;
 	}
 	foreach (optional($user->role)->permission as $permission) {
@@ -539,6 +541,10 @@ function adminAccessRoute($search)
 		}
 	}
 	return false;
+}
+
+function adminAccessRouteForPackageVariant(){
+	return adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit'));
 }
 
 //function adminAccessRoute($search) {
@@ -582,4 +588,5 @@ function adminAccessRoute($search)
 //	}
 //
 //}
+
 

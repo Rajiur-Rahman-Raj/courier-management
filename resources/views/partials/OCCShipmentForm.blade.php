@@ -125,7 +125,7 @@
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="sender_branch"> @lang('Sender Branch') </label>
 				<select name="sender_branch"
-						class="form-control @error('sender_branch') is-invalid @enderror select2 select-branch">
+						class="form-control @error('sender_branch') is-invalid @enderror select2 select-branch sender_branch">
 					<option value="" disabled selected>@lang('Select Branch')</option>
 					@foreach($allBranches as $branch)
 						<option
@@ -140,7 +140,7 @@
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="receiver_branch"> @lang('Receiver Branch')</label>
 				<select name="receiver_branch"
-						class="form-control @error('receiver_branch') is-invalid @enderror select2 select-branch">
+						class="form-control @error('receiver_branch') is-invalid @enderror select2 select-branch receiver_branch">
 					<option value="" disabled selected>@lang('Select Branch')</option>
 					@foreach($allBranches as $branch)
 						<option
@@ -159,12 +159,7 @@
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="sender_id"> @lang('Sender')</label>
 				<select name="sender_id"
-						class="form-control @error('sender_id') is-invalid @enderror select2 select-client getSender">
-					<option value="" disabled selected>@lang('Select Sender')</option>
-
-					@foreach($senders as $sender)
-						<option value="{{ $sender->id }}" {{ old('sender_id') == $sender->id ? 'selected' : ''}}>@lang($sender->name)</option>
-					@endforeach
+						class="form-control @error('sender_id') is-invalid @enderror select2 select-client getSender" data-oldsenderid="{{ old('sender_id') }}">
 				</select>
 
 				<div class="invalid-feedback">
@@ -175,12 +170,7 @@
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="receiver_id"> @lang('Receiver')</label>
 				<select name="receiver_id"
-						class="form-control @error('receiver_id') is-invalid @enderror select2 select-client getReceiver">
-					<option value="" disabled selected>@lang('Select Receiver')</option>
-					@foreach($receivers as $receiver)
-						<option
-							value="{{ $receiver->id }}" {{ old('receiver_id') == $receiver->id ? 'selected' : ''}}>@lang($receiver->name)</option>
-					@endforeach
+						class="form-control @error('receiver_id') is-invalid @enderror select2 select-client getReceiver" data-oldreceiverid="{{ old('receiver_id') }}">
 				</select>
 
 				<div class="invalid-feedback">
@@ -828,7 +818,7 @@
 					</label>
 					<label class="selectgroup-item">
 						<input type="radio" name="status" value="1"
-							   class="selectgroup-input" {{ old('status') == 1 ? 'checked' : ''}}>
+							   class="selectgroup-input" checked {{ old('status') == 1 ? 'checked' : ''}}>
 						<span class="selectgroup-button">@lang('ON')</span>
 					</label>
 				</div>

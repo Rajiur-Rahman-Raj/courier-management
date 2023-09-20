@@ -172,14 +172,14 @@
 												<li class="my-3">
                                             <span class="font-weight-bold text-dark"> <i
 													class="fas fa-location-arrow mr-2 text-primary"></i> @lang("To Area") : <span
-													class="font-weight-medium text-dark">@lang(optional($singleShipment->toArea)->name)</span></span>
+													class="font-weight-medium">@lang(optional($singleShipment->toArea)->name)</span></span>
 												</li>
 											@endif
 
 											<li class="my-3">
                                             <span class="font-weight-bold text-dark">  <i
 													class="fas fa-search-dollar  mr-2 text-orange"></i> @lang("Payment Type") : <span
-													class="font-weight-medium text-dark">@lang($singleShipment->payment_type)</span></span>
+													class="font-weight-medium">@lang($singleShipment->payment_type)</span></span>
 											</li>
 
 											<li class="my-3">

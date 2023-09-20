@@ -1,6 +1,6 @@
 <script>
 	'use strict'
-	var variantEditAccessRoute = "{{ $adminAccessRoute }}"
+	var variantEditAccessRoute =  @json(adminAccessRouteForPackageVariant());
 
 	$(document).on('change', '.selectedPackage', function () {
 		let selectedValue = $(this).val();

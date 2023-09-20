@@ -11,7 +11,7 @@
   'paginate' => 15,
   'sender_email' => 'support@mail.com',
   'sender_email_name' => 'Binary Operation',
-  'email_configuration' => 
+  'email_configuration' =>
   array (
     'name' => 'smtp',
     'smtp_host' => 'smtp.mailtrap.io',

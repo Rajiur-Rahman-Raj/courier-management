@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Branch;
+use App\Models\BranchManager;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
@@ -22,115 +23,41 @@ class ClientController extends Controller
 {
 	use Upload, Notify;
 
-//	public function clientList(Request $request)
-//	{
-//		$authenticateUser = Auth::user();
-////		$branchId = $authenticateUser->role_id != null ? optional($authenticateUser->branch)->branch_id : null;
-//		$branchId = null;
-//		if ($authenticateUser->role_id == null){
-//			$branchId = null;
-//		}
-//		if ($authenticateUser->role_id != null && $authenticateUser->branch != null) {
-//			$branchId = optional($authenticateUser->branch)->branch_id;
-//		}elseif ($authenticateUser->role_id != null && $authenticateUser->branch == null){
-//			$branchId = 0;
-//		}
-//
-//		$search = $request->all();
-//		$data['allClients'] = User::with('profile')->whereIn('user_type', [1, 2])
-//			->when($branchId != null && $authenticateUser->branch != null && $branchId != 0, function ($query) use ($branchId) {
-//				return $query->whereHas('profile', function ($q) use ($branchId) {
-//					$q->where('branch_id', $branchId);
-//				});
-//			})
-//			->when($branchId == 0, function ($query) use($branchId){
-//
-//			})
-//
-//			->when(isset($search['name']), function ($query) use ($search) {
-//				return $query->whereRaw("name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");
-//			})
-//			->when(isset($search['phone']), function ($q) use ($search) {
-//				return $q->where('phone', $search['phone']);
-//			})
-//			->when(isset($search['email']), function ($q2) use ($search) {
-//				return $q2->where('email', $search['email']);
-//			})
-//			->when(isset($search['client_type']) && $search['client_type'] == 1, function ($q3) use ($search) {
-//				return $q3->where('user_type', 1);
-//			})
-//			->when(isset($search['client_type']) && $search['client_type'] == '2', function ($q4) use ($search) {
-//				return $q4->where('user_type', 2);
-//			})
-//			->when(isset($search['status']) && $search['status'] == 'active', function ($q3) use ($search) {
-//				return $q3->where('status', 1);
-//			})
-//			->when(isset($search['status']) && $search['status'] == 'deactive', function ($q4) use ($search) {
-//				return $q4->where('status', 0);
-//			})
-//			->limit(0)->get();
-////			->latest()->paginate(config('basic.paginate'));
-//		dd($data['allClients']);
-//		return view('admin.clients.index', $data);
-//	}
-
-
 	public function clientList(Request $request)
 	{
-		$authenticateUser = Auth::guard('admin')->user();
-		$branchId = null;
-		if ($authenticateUser->role_id == null) {
-			$branchId = null;
-		}
-		if ($authenticateUser->role_id != null && $authenticateUser->branch != null) {
-			$branchId = optional($authenticateUser->branch)->branch_id;
-		} elseif ($authenticateUser->role_id != null && $authenticateUser->branch == null) {
-			$branchId = 'not-assign';
-		}
-
 		$search = $request->all();
+		$authenticateUser = Auth::guard('admin')->user();
 
-		$query = User::with('profile', 'branch')->whereIn('user_type', [1, 2])
-			->when($branchId != null && $authenticateUser->branch != null && $branchId != 0, function ($query) use ($branchId) {
-				return $query->whereHas('profile', function ($q) use ($branchId) {
-					$q->where('branch_id', $branchId);
+		$data['clients'] = User::with('profile.branch.branchManager')->whereIn('user_type', [1, 2])
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('profile.branch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
 				});
-			});
-
-		// Apply other search conditions
-		if (isset($search['name'])) {
-			$query->whereRaw("name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");
-		}
-
-		if (isset($search['phone'])) {
-			$query->where('phone', $search['phone']);
-		}
-
-		if (isset($search['email'])) {
-			$query->where('email', $search['email']);
-		}
-
-		if (isset($search['client_type']) && $search['client_type'] == 1) {
-			$query->where('user_type', 1);
-		} elseif (isset($search['client_type']) && $search['client_type'] == '2') {
-			$query->where('user_type', 2);
-		}
-
-		if (isset($search['status']) && $search['status'] == 'active') {
-			$query->where('status', 1);
-		} elseif (isset($search['status']) && $search['status'] == 'deactive') {
-			$query->where('status', 0);
-		}
-
-		if ($branchId == 'not-assign' && $branchId != null) {
-			$data['allClients'] = [];   // kono branch er under e ei role user/manager ti nei.
-		} elseif ($branchId != null && $authenticateUser->branch != null) {
-			$data['allClients'] = $query->whereHas('profile', function ($q) use ($authenticateUser) {
-				$q->where('branch_id', optional($authenticateUser->branch)->id);
-			})->latest()->paginate(config('basic.paginate')); // for branch manager
-		} else {
-			$data['allClients'] = $query->latest()->paginate(config('basic.paginate')); // for admin
-		}
+			})
+			->when(isset($search['name']), function ($query) use ($search) {
+				return $query->whereRaw("name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");
+			})
+			->when(isset($search['phone']), function ($query) use ($search) {
+				return $query->whereHas('profile', function ($q) use ($search) {
+					$q->where('phone', $search['phone']);
+				});
+			})
+			->when(isset($search['email']), function ($q2) use ($search) {
+				return $q2->where('email', $search['email']);
+			})
+			->when(isset($search['client_type']) && $search['client_type'] == 1, function ($q3) use ($search) {
+				return $q3->where('user_type', 1);
+			})
+			->when(isset($search['client_type']) && $search['client_type'] == '2', function ($q4) use ($search) {
+				return $q4->where('user_type', 2);
+			})
+			->when(isset($search['status']) && $search['status'] == 'active', function ($q3) use ($search) {
+				return $q3->where('status', 1);
+			})
+			->when(isset($search['status']) && $search['status'] == 'deactive', function ($q4) use ($search) {
+				return $q4->where('status', 0);
+			})
+			->paginate(config('basic.paginate'));
 
 		return view('admin.clients.index', $data, compact('authenticateUser'));
 	}
@@ -140,11 +67,6 @@ class ClientController extends Controller
 	{
 		$authenticateUser = Auth::guard('admin')->user();
 		$data['allBranches'] = Branch::with('branchManager')
-			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
-				return $query->whereHas('branchManager', function ($q) use ($authenticateUser) {
-					$q->where('admin_id', $authenticateUser->id);
-				});
-			})
 			->where('status', 1)->get();
 		$data['allCountires'] = Country::where('status', 1)->get();
 		return view('admin.clients.create', $data, compact('authenticateUser'));
@@ -234,10 +156,10 @@ class ClientController extends Controller
 		$data['allStates'] = State::where('status', 1)->get();
 		$data['allCities'] = City::where('status', 1)->get();
 		$data['allAreas'] = Area::where('status', 1)->get();
-		$data['singleClientInfo'] = User::with('profile', 'profile.branch', 'profile.country', 'profile.state', 'profile.city', 'profile.area')
-			->when($authenticateUser->role_id != null, function ($query) use ($authenticateUser){
-				$query->whereHas('profile', function ($q) use ($authenticateUser) {
-					$q->where('branch_id', optional($authenticateUser->branch)->branch_id);
+		$data['singleClientInfo'] = User::with('profile', 'profile.branch.branchManager', 'profile.country', 'profile.state', 'profile.city', 'profile.area')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('profile.branch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
 				});
 			})
 			->findOrFail($id);

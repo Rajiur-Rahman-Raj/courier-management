@@ -25,6 +25,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -46,7 +47,14 @@ class ShipmentController extends Controller
 		abort_if(!in_array($type, $types), 404);
 		$data['title'] = $shipmentManagement[$type]['title'];
 
-		$data['allShipments'] = Shipment::with('senderBranch','receiverBranch','sender','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')
+		$authenticateUser = Auth::guard('admin')->user();
+
+		$data['allShipments'] = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('senderBranch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
+				});
+			})
 			->when(isset($search['shipment_id']), function ($query) use ($search) {
 				return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
 			})
@@ -74,7 +82,7 @@ class ShipmentController extends Controller
 				});
 			})
 			->when(isset($search['shipment_date']), function ($query) use ($search) {
-					$query->whereDate("shipment_date", $search['shipment_date']);
+				$query->whereDate("shipment_date", $search['shipment_date']);
 			})
 			->when(isset($search['delivery_date']), function ($query) use ($search) {
 				$query->whereDate("delivery_date", $search['delivery_date']);
@@ -100,54 +108,54 @@ class ShipmentController extends Controller
 			->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
 				return $query->where('status', 5);
 			})
-			->when($type == 'operator-country' && $status == 'all', function ($query){
+			->when($type == 'operator-country' && $status == 'all', function ($query) {
 				$query->where('shipment_identifier', 1);
 			})
-			->when($type == 'operator-country' && $status == 'in_queue', function ($query){
+			->when($type == 'operator-country' && $status == 'in_queue', function ($query) {
 				$query->where('shipment_identifier', 1)
-						->where('status', 1);
+					->where('status', 1);
 			})
-			->when($type == 'operator-country' && $status == 'dispatch', function ($query){
+			->when($type == 'operator-country' && $status == 'dispatch', function ($query) {
 				$query->where('shipment_identifier', 1)
 					->where('status', 2);
 			})
-			->when($type == 'operator-country' && $status == 'upcoming', function ($query){
+			->when($type == 'operator-country' && $status == 'upcoming', function ($query) {
 				$query->where('shipment_identifier', 1)
 					->where('status', 3);
 			})
-			->when($type == 'operator-country' && $status == 'received', function ($query){
+			->when($type == 'operator-country' && $status == 'received', function ($query) {
 				$query->where('shipment_identifier', 1)
 					->where('status', 4);
 			})
-			->when($type == 'operator-country' && $status == 'delivered', function ($query){
+			->when($type == 'operator-country' && $status == 'delivered', function ($query) {
 				$query->where('shipment_identifier', 1)
 					->where('status', 5);
 			})
-			->when($type == 'internationally' && $status == 'all', function ($query){
+			->when($type == 'internationally' && $status == 'all', function ($query) {
 				$query->where('shipment_identifier', 2);
 			})
-			->when($type == 'internationally' && $status == 'in_queue', function ($query){
+			->when($type == 'internationally' && $status == 'in_queue', function ($query) {
 				$query->where('shipment_identifier', 2)
-						->where('status', 1);
+					->where('status', 1);
 			})
-			->when($type == 'internationally' && $status == 'dispatch', function ($query){
+			->when($type == 'internationally' && $status == 'dispatch', function ($query) {
 				$query->where('shipment_identifier', 2)
 					->where('status', 2);
 			})
-			->when($type == 'internationally' && $status == 'upcoming', function ($query){
+			->when($type == 'internationally' && $status == 'upcoming', function ($query) {
 				$query->where('shipment_identifier', 2)
 					->where('status', 3);
 			})
-			->when($type == 'internationally' && $status == 'received', function ($query){
+			->when($type == 'internationally' && $status == 'received', function ($query) {
 				$query->where('shipment_identifier', 2)
 					->where('status', 4);
 			})
-			->when($type == 'internationally' && $status == 'delivered', function ($query){
+			->when($type == 'internationally' && $status == 'delivered', function ($query) {
 				$query->where('shipment_identifier', 2)
 					->where('status', 5);
 			})
 			->paginate(config('basic.paginate'));
-		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status'));
+		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status', 'authenticateUser'));
 	}
 
 	public function createShipment(Request $request, $type = null)
@@ -166,17 +174,18 @@ class ShipmentController extends Controller
 		$data['packageList'] = Package::where('status', 1)->get();
 		$data['parcelTypes'] = ParcelType::where('status', 1)->get();
 
-		if ($type == 'operator-country'){
+		if ($type == 'operator-country') {
 			$data['basicControl'] = BasicControl::with('operatorCountry')->first();
 			$data['defaultShippingRateOC'] = DefaultShippingRateOperatorCountry::firstOrFail();
 			return view('admin.shipments.operatorCountryShipmentCreate', $data);
-		}elseif ($type == 'internationally'){
+		} elseif ($type == 'internationally') {
 			$data['defaultShippingRateInternationally'] = DefaultShippingRateInternationally::first();
 			return view('admin.shipments.internationallyShipmentCreate', $data);
 		}
 	}
 
-	public function editShipment(Request $request, $id = null, $shipmentIdentifier = null){
+	public function editShipment(Request $request, $id = null, $shipmentIdentifier = null)
+	{
 		$data['status'] = $request->input('segment');
 		$data['shipment_type'] = $request->input('shipment_type');
 
@@ -190,25 +199,26 @@ class ShipmentController extends Controller
 		$data['parcelTypes'] = ParcelType::where('status', 1)->get();
 
 		$data['singleShipment'] = Shipment::findOrFail($id);
-		$data['shipmentAttatchments'] = ShipmentAttatchment::where('shipment_id', $id)->get()->map(function ($image){
+		$data['shipmentAttatchments'] = ShipmentAttatchment::where('shipment_id', $id)->get()->map(function ($image) {
 			$image->src = getFile($image->driver, $image->image);
 			return $image;
 		});
 
-		if ($shipmentIdentifier == 1){
+		if ($shipmentIdentifier == 1) {
 			$data['basicControl'] = BasicControl::with('operatorCountry')->first();
 			$data['defaultShippingRateOC'] = DefaultShippingRateOperatorCountry::first();
 			return view('admin.shipments.operatorCountryShipmentEdit', $data);
-		}else{
+		} else {
 			$data['defaultShippingRateInternationally'] = DefaultShippingRateInternationally::first();
 			return view('admin.shipments.internationallyShipmentEdit', $data);
 		}
 	}
 
-	public function viewShipment(Request $request, $id){
+	public function viewShipment(Request $request, $id)
+	{
 		$data['status'] = $request->input('segment');
 		$data['shipment_type'] = $request->input('shipment_type');
-		$data['singleShipment'] = Shipment::with('shipmentAttachments','senderBranch','receiverBranch','sender.profile','receiver','fromCountry','fromState','fromCity','fromArea','toCountry','toState','toCity','toArea')->findOrFail($id);
+		$data['singleShipment'] = Shipment::with('shipmentAttachments', 'senderBranch', 'receiverBranch', 'sender.profile', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')->findOrFail($id);
 		return view('admin.shipments.viewShipment', $data);
 	}
 
@@ -222,10 +232,10 @@ class ShipmentController extends Controller
 			$shipmentId = strRandom();
 			$fillData['shipment_id'] = $shipmentId;
 
-			if ($type == 'operator-country'){
+			if ($type == 'operator-country') {
 				$fillData['shipment_identifier'] = 1;
 				$fillData['receive_amount'] = $request->receive_amount != null ? $request->receive_amount : null;
-			}elseif($type == 'internationally'){
+			} elseif ($type == 'internationally') {
 				$fillData['shipment_identifier'] = 2;
 			}
 
@@ -234,15 +244,15 @@ class ShipmentController extends Controller
 			$fillData['from_area_id'] = $request->from_area_id ?? null;
 			$fillData['to_area_id'] = $request->to_area_id ?? null;
 
-			if ($request->packing_service == 'yes'){
+			if ($request->packing_service == 'yes') {
 				$this->storePackingService($request, $shipment);
-			}else{
+			} else {
 				$fillData['packing_services'] = null;
 			}
 
-			if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup'){
+			if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup') {
 				$this->storeParcelInformation($request, $shipment);
-			}else{
+			} else {
 				$fillData['parcel_information'] = null;
 			}
 
@@ -256,9 +266,9 @@ class ShipmentController extends Controller
 
 			$shipment->fill($fillData)->save();
 
-			if ($request->hasFile('shipment_image')){
+			if ($request->hasFile('shipment_image')) {
 				$getShipmentAttachments = $this->storeShipmentAttatchments($request, $shipment);
-				if ($getShipmentAttachments['status'] == 'error'){
+				if ($getShipmentAttachments['status'] == 'error') {
 					throw new \Exception($getShipmentAttachments['message']);
 				}
 			}
@@ -316,15 +326,15 @@ class ShipmentController extends Controller
 			$fillData['to_city_id'] = $request->to_city_id ?? null;
 			$fillData['to_area_id'] = $request->to_area_id ?? null;
 
-			if ($request->packing_service == 'yes'){
+			if ($request->packing_service == 'yes') {
 				$this->storePackingService($request, $shipment);
-			}else{
+			} else {
 				$fillData['packing_services'] = null;
 			}
 
-			if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup'){
+			if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup') {
 				$this->storeParcelInformation($request, $shipment);
-			}else{
+			} else {
 				$fillData['parcel_information'] = null;
 			}
 
@@ -332,8 +342,8 @@ class ShipmentController extends Controller
 				$fillData['parcel_details'] = $request->parcel_details;
 			}
 
-			if ($shipment->payment_status == 2){
-				if ($request->payment_status == 1 && $request->payment_type == 'wallet'){
+			if ($shipment->payment_status == 2) {
+				if ($request->payment_status == 1 && $request->payment_type == 'wallet') {
 					$this->walletPaymentCalculation($request, $shipmentId);
 				}
 			}
@@ -348,9 +358,9 @@ class ShipmentController extends Controller
 				$dbImage->delete();
 			}
 
-			if ($request->hasFile('shipment_image')){
+			if ($request->hasFile('shipment_image')) {
 				$getShipmentAttachments = $this->storeShipmentAttatchments($request, $shipment);
-				if ($getShipmentAttachments['status'] == 'error'){
+				if ($getShipmentAttachments['status'] == 'error') {
 					throw new \Exception($getShipmentAttachments['message']);
 				}
 			}
@@ -825,15 +835,20 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate created successfully');
 	}
 
-	public function deleteStateRate($id){
+	public function deleteStateRate($id)
+	{
 		ShippingRateOperatorCountry::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
-	public function deleteCityRate($id){
+
+	public function deleteCityRate($id)
+	{
 		ShippingRateOperatorCountry::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
-	public function deleteAreaRate($id){
+
+	public function deleteAreaRate($id)
+	{
 		ShippingRateOperatorCountry::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
@@ -1134,17 +1149,20 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate Update successfully');
 	}
 
-	public function deleteICountryRate($id){
+	public function deleteICountryRate($id)
+	{
 		ShippingRateInternationally::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
-	public function deleteIStateRate($id){
+	public function deleteIStateRate($id)
+	{
 		ShippingRateInternationally::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
-	public function deleteICityRate($id){
+	public function deleteICityRate($id)
+	{
 		ShippingRateInternationally::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
@@ -1185,7 +1203,7 @@ class ShipmentController extends Controller
 	{
 		$parcelTypeId = $request->parcelTypeId;
 
-		if ($request->fromCountryId == null && $request->toCountryId == null){
+		if ($request->fromCountryId == null && $request->toCountryId == null) {
 			$operatorCountryId = BasicControl::first('operator_country');
 			if ($request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->fromAreaId == null) {
 				$shippingRate = ShippingRateOperatorCountry::where('country_id', $operatorCountryId->operator_country)
@@ -1204,7 +1222,6 @@ class ShipmentController extends Controller
 					->when($parcelTypeId != '', function ($query) use ($parcelTypeId) {
 						$query->where('parcel_type_id', $parcelTypeId);
 					})
-
 					->where([
 						['from_state_id', '=', $request->fromStateId],
 						['to_state_id', '=', $request->toStateId],
@@ -1230,28 +1247,28 @@ class ShipmentController extends Controller
 					->first();
 				return response($shippingRate);
 			}
-		}elseif ($request->fromCountryId != null && $request->toCountryId != null){
+		} elseif ($request->fromCountryId != null && $request->toCountryId != null) {
 			if ($request->fromCountryId != null && $request->toCountryId != null && $request->fromStateId == null && $request->toStateId == null) {
 				$shippingRate = ShippingRateInternationally::where([
 					['from_country_id', '=', $request->fromCountryId],
 					['to_country_id', '=', $request->toCountryId]
 				])
-				->whereNull(['from_state_id', 'to_state_id'])
-				->where('parcel_type_id', $parcelTypeId)
-				->first();
+					->whereNull(['from_state_id', 'to_state_id'])
+					->where('parcel_type_id', $parcelTypeId)
+					->first();
 				return response($shippingRate);
-			}elseif ($request->fromCountryId != null && $request->toCountryId != null && $request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->toCityId == null) {
+			} elseif ($request->fromCountryId != null && $request->toCountryId != null && $request->fromStateId != null && $request->toStateId != null && $request->fromCityId == null && $request->toCityId == null) {
 				$shippingRate = ShippingRateInternationally::where([
 					['from_country_id', '=', $request->fromCountryId],
 					['to_country_id', '=', $request->toCountryId],
 					['from_state_id', '=', $request->fromStateId],
 					['to_state_id', '=', $request->toStateId],
 				])
-				->whereNull(['from_city_id', 'to_city_id'])
-				->where('parcel_type_id', $parcelTypeId)
-				->first();
+					->whereNull(['from_city_id', 'to_city_id'])
+					->where('parcel_type_id', $parcelTypeId)
+					->first();
 				return response($shippingRate);
-			}elseif ($request->fromCountryId != null && $request->toCountryId != null && $request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null) {
+			} elseif ($request->fromCountryId != null && $request->toCountryId != null && $request->fromStateId != null && $request->toStateId != null && $request->fromCityId != null && $request->toCityId != null) {
 				$shippingRate = ShippingRateInternationally::where([
 					['from_country_id', '=', $request->fromCountryId],
 					['to_country_id', '=', $request->toCountryId],
@@ -1260,60 +1277,95 @@ class ShipmentController extends Controller
 					['from_city_id', '=', $request->fromCityId],
 					['to_city_id', '=', $request->toCityId],
 				])
-				->where('parcel_type_id', $parcelTypeId)
-				->first();
+					->where('parcel_type_id', $parcelTypeId)
+					->first();
 				return response($shippingRate);
 			}
 		}
 	}
 
-	public function deleteShipment($id){
+	public function deleteShipment($id)
+	{
 		Shipment::findOrFail($id)->delete();
 		return back()->with('success', 'Shipment deleted successfully');
 	}
 
-	public function trashShipmentList(Request $request){
+	public function trashShipmentList(Request $request)
+	{
 		$search = $request->all();
 		$data['trashShipments'] = Shipment::when(isset($search['shipment_id']), function ($query) use ($search) {
 			return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
 		})
-		->when(isset($search['shipment_date']), function ($query) use ($search) {
-			$query->whereDate("shipment_date", $search['shipment_date']);
-		})
-		->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search) {
-			return $query->where('status', 1);
-		})
-		->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search) {
-			return $query->where('status', 2);
-		})
-		->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search) {
-			return $query->where('status', 3);
-		})
-		->when(isset($search['status']) && $search['status'] == 'received', function ($query) use ($search) {
-			return $query->where('status', 4);
-		})
-		->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
-			return $query->where('status', 5);
-		})
-		->onlyTrashed()->paginate(config('basic.paginate'));
+			->when(isset($search['shipment_date']), function ($query) use ($search) {
+				$query->whereDate("shipment_date", $search['shipment_date']);
+			})
+			->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search) {
+				return $query->where('status', 1);
+			})
+			->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search) {
+				return $query->where('status', 2);
+			})
+			->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search) {
+				return $query->where('status', 3);
+			})
+			->when(isset($search['status']) && $search['status'] == 'received', function ($query) use ($search) {
+				return $query->where('status', 4);
+			})
+			->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
+				return $query->where('status', 5);
+			})
+			->onlyTrashed()->paginate(config('basic.paginate'));
 		return view('admin.shipments.trashShipmentList', $data);
 	}
 
-	public function restoreShipment($id){
+	public function restoreShipment($id)
+	{
 		Shipment::onlyTrashed()->findOrFail($id)->restore();
 		return back()->with('success', 'Shipment restore successfully!');
 	}
 
-	public function forceDeleteShipment($id){
+	public function forceDeleteShipment($id)
+	{
 		Shipment::onlyTrashed()->findOrFail($id)->forceDelete();
 		return back()->with('success', 'shipment is permanent deleted!');
 	}
 
-	public function shipmentStatusUpdate(Request $request, $id){
+	public function shipmentStatusUpdate(Request $request, $id)
+	{
 		$shipment = Shipment::findOrFail($id);
 		$shipment->status = 2;
 		$shipment->save();
 		return back()->with('success', 'shipment status update successfully!');
+	}
+
+	public function getSelectedBranchSender(Request $request)
+	{
+		$branchId = $request->branchId;
+
+		$data = User::with('profile')
+			->whereHas('profile', function ($query) use ($branchId) {
+				$query->where('branch_id', $branchId);
+			})
+			->where('user_type', 1)
+			->latest()
+			->get();
+
+		return response($data);
+	}
+
+	public function getSelectedBranchReceiver(Request $request)
+	{
+		$branchId = $request->branchId;
+
+		$data = User::with('profile')
+			->whereHas('profile', function ($query) use ($branchId) {
+				$query->where('branch_id', $branchId);
+			})
+			->where('user_type', 2)
+			->latest()
+			->get();
+
+		return response($data);
 	}
 
 }
