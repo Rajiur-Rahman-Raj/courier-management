@@ -6,33 +6,27 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href="{{ getFile(config('basic.default_file_driver'),config('basic.favicon_image')) }}" rel="icon">
 	<title> @yield('page_title') | {{ basicControl()->site_title }} </title>
-
+	@stack('css-lib')
 	@include($theme.'partials.user.styles')
 </head>
 
 <body>
 
 <div id="app">
-{{--	<div class="main-wrapper main-wrapper-1">--}}
-{{--		@include($theme.'partials.user.sidebar')--}}
-{{--		@section('content')--}}
-{{--		@show--}}
-{{--		@include($theme.'partials.user.footer')--}}
+	<!-- user_panel_start -->
+	<div class="dashboard-wrapper">
+		@include($theme.'partials.user.sidebar')
 
-		<!-- user_panel_start -->
-		<div class="dashboard-wrapper">
-			@include($theme.'partials.user.sidebar')
-
-			<!-- content -->
-			<div id="content">
-				<div class="overlay">
-					@include($theme.'partials.user.topbar')
-					@yield('content')
-				</div>
+		<!-- content -->
+		<div id="content">
+			<div class="overlay">
+				@include($theme.'partials.user.topbar')
+				@yield('content')
 			</div>
 		</div>
-		<!-- user_panel_end -->
 	</div>
+	<!-- user_panel_end -->
+</div>
 </div>
 
 @include($theme.'partials.user.scripts')

@@ -445,8 +445,14 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('push-notification-readAt/{id}', [SiteNotificationController::class, 'readAt'])->name('push.notification.readAt');
 
 	/* PROFILE SHOW UPDATE BY USER */
-	Route::match(['get', 'post'], 'profile', [UserProfileController::class, 'index'])->name('user.profile');
+	Route::get('profile', [UserProfileController::class, 'index'])->name('user.profile');
+	Route::post('/updateProfile', [UserProfileController::class, 'updateProfile'])->name('user.updateProfile');
+	Route::put('/updateInformation', [UserProfileController::class, 'updateInformation'])->name('user.updateInformation');
 	Route::match(['get', 'post'], 'change-password', [UserProfileController::class, 'changePassword'])->name('user.change.password');
+	Route::post('/updatePassword', [UserProfileController::class, 'updatePassword'])->name('user.updatePassword');
+
+	Route::post('/verificationSubmit', [UserProfileController::class, 'verificationSubmit'])->name('user.verificationSubmit');
+	Route::post('/addressVerification', [UserProfileController::class, 'addressVerification'])->name('user.addressVerification');
 
 	/* PAYMENT REQUEST BY USER */
 	Route::get('payout-list', [PayoutController::class, 'index'])->name('payout.index');
@@ -455,12 +461,15 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::match(['get', 'post'], 'confirm-payout/{utr}', [PayoutController::class, 'confirmPayout'])->name('payout.confirm');
 	Route::get('payout-check-limit', [PayoutController::class, 'checkLimit'])->name('payout.checkLimit');
 
-
 	/* ADD MONEY BY USER */
 	Route::match(['get', 'post'], 'add-fund', [FundController::class, 'initialize'])->name('fund.initialize');
 	Route::get('fund-list', [FundController::class, 'index'])->name('fund.index');
 	Route::get('fund-requested', [FundController::class, 'requested'])->name('fund.request');
 	Route::get('fund-search', [FundController::class, 'search'])->name('fund.search');
+
+	// Add Fund
+	Route::get('add-fund', [FundController::class, 'addFund'])->name('addFund');
+	Route::post('add-fund/request', [FundController::class, 'addFundRequest'])->name('user.addFund.request');
 
 
 	/* USER SUPPORT TICKET */

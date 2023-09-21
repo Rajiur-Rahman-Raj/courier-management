@@ -90,6 +90,68 @@ class FundController extends Controller
 		return view($this->theme . 'user.fund.requested', compact('funds'));
 	}
 
+	public function addFund()
+	{
+		$data['totalPayment'] = null;
+		$data['gateways'] = Gateway::where('status', 1)->orderBy('sort_by', 'ASC')->get();
+
+		return view($this->theme . 'user.addFund', $data);
+	}
+
+	public function addFundRequest(Request $request)
+	{
+		$validator = validator()->make($request->all(), [
+			'gateway' => 'required',
+			'amount' => 'required'
+		]);
+
+		if ($validator->fails()) {
+			return response($validator->messages(), 422);
+		}
+
+		$basic = (object)config('basic');
+		$gate = Gateway::where('code', $request->gateway)->where('status', 1)->first();
+		if (!$gate) {
+			return response()->json(['error' => 'Invalid Gateway'], 422);
+		}
+
+		$reqAmount = $request->amount;
+		if ($gate->min_amount > $reqAmount || $gate->max_amount < $reqAmount) {
+			return response()->json(['error' => 'Please Follow Transaction Limit'], 422);
+		}
+
+
+		$charge = getAmount($gate->fixed_charge + ($reqAmount * $gate->percentage_charge / 100));
+		$payable = getAmount($reqAmount + $charge);
+		$final_amo = getAmount($payable * $gate->convention_rate);
+		$user = auth()->user();
+		$fund = $this->newFund($request, $user, $gate, $charge, $final_amo, $reqAmount);
+
+		session()->put('track', $fund['transaction']);
+
+
+		if( 1000 > $fund->gateway->id ){
+			$method_currency = (checkTo($fund->gateway->currencies, $fund->gateway_currency) == 1) ? 'USD' : $fund->gateway_currency;
+			$isCrypto = (checkTo($fund->gateway->currencies, $fund->gateway_currency) == 1) ? true : false;
+		}else{
+			$method_currency = $fund->gateway_currency;
+			$isCrypto = false;
+		}
+
+		return [
+			'gateway_image' => getFile(config('location.gateway.path') . $gate->image),
+			'amount' => getAmount($fund->amount) . ' ' . $basic->currency_symbol,
+			'charge' => getAmount($fund->charge) . ' ' . $basic->currency_symbol,
+			'gateway_currency' => trans($fund->gateway_currency),
+			'payable' => getAmount($fund->amount + $fund->charge) . ' ' . $basic->currency_symbol,
+			'conversion_rate' => 1 . ' ' . $basic->currency . ' = ' . getAmount($fund->rate) . ' ' . $method_currency,
+			'in' => trans('In') . ' ' . $method_currency . ':' . getAmount($fund->final_amount,2),
+			'isCrypto' => $isCrypto,
+			'conversion_with' => ($isCrypto) ? trans('Conversion with') . $fund->gateway_currency . ' ' . trans('and final value will Show on next step') : null,
+			'payment_url' => route('user.addFund.confirm'),
+		];
+	}
+
 	public function initialize(Request $request)
 	{
 		if ($request->isMethod('get')) {
@@ -194,5 +256,25 @@ class FundController extends Controller
 		$data['convention_rate'] = $gateway->convention_rate;
 
 		return $data;
+	}
+
+
+	public function newFund(Request $request, $user, $gate, $charge, $final_amo, $amount): Fund
+	{
+		$fund = new Fund();
+		$fund->user_id = $user->id;
+		$fund->gateway_id = $gate->id;
+		$fund->gateway_currency = strtoupper($gate->currency);
+		$fund->amount = $amount;
+		$fund->charge = $charge;
+		$fund->rate = $gate->convention_rate;
+		$fund->final_amount = getAmount($final_amo);
+		$fund->btc_amount = 0;
+		$fund->btc_wallet = "";
+		$fund->transaction = strRandom();
+		$fund->try = 0;
+		$fund->status = 0;
+		$fund->save();
+		return $fund;
 	}
 }

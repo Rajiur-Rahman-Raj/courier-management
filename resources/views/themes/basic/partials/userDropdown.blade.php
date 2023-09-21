@@ -7,12 +7,11 @@
 	</span>
 	<ul class="user-dropdown shadow2">
 		<li>
-			<a href="{{route('user.profile')}}"> <i class="fal fa-user"></i> @lang('Profile') </a>
+			<a href="{{route('user.dashboard')}}"> <i class="fal fa-border-all"></i> @lang(' Dashboard') </a>
 		</li>
 		<li>
-			<a href=""> <i class="fal fa-key"></i> @lang('Change Password') </a>
+			<a href="{{route('user.profile')}}"> <i class="fal fa-user"></i> @lang('My Profile') </a>
 		</li>
-
 		<li>
 			<a href="{{ route('logout') }}"
 			   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

@@ -1,17 +1,17 @@
 @extends($theme.'layouts.user')
-@section('page_title',__('New Ticket'))
+@section('page_title',__('Create Ticket'))
 
 @section('content')
 <div class="main-content">
-	<section class="section">
+	<section class="section pt-4 p-5">
 		<div class="section-header">
-			<h1>@lang('New Ticket')</h1>
-			<div class="section-header-breadcrumb">
-				<div class="breadcrumb-item active">
-					<a href="{{ route('user.dashboard') }}">@lang('Dashboard')</a>
-				</div>
-				<div class="breadcrumb-item">@lang('New Ticket')</div>
-			</div>
+			<h3>@lang('Create Ticket')</h3>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{{ route('user.dashboard') }}">@lang('Dashboard')</a></li>
+					<li class="breadcrumb-item active" aria-current="page">@lang('Create Ticket')</li>
+				</ol>
+			</nav>
 		</div>
 
 		<div class="row mb-3">
@@ -20,12 +20,13 @@
 					<div class="col-sm-12">
 						<div class="card mb-4 card-primary shadow">
 							<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-								<h6 class="m-0 font-weight-bold text-primary">@lang('New Ticket')</h6>
+								<h6 class="m-0 font-weight-bold text-primary">@lang('Create Ticket')</h6>
 							</div>
-							<div class="card-body">
+							<div class="card-body profile-setting">
 								<form action="{{route('user.ticket.store')}}" method="post" enctype="multipart/form-data">
 									@csrf
-									<div class="form-group">
+
+									<div class="input-box">
 										<label for="subject">@lang('Subject')</label>
 										<input type="text" name="subject" placeholder="@lang('Subject')"
 											   value="{{ old('subject') }}"
@@ -35,7 +36,8 @@
 										</div>
 										<div class="valid-feedback"></div>
 									</div>
-									<div class="form-group">
+
+									<div class="input-box">
 										<label for="message">@lang('Message')</label>
 										<textarea name="message" rows="5"
 												  class="form-control @error('note') is-invalid @enderror">{{ old('message') }}</textarea>
@@ -43,7 +45,7 @@
 											@error('message') @lang($message) @enderror
 										</div>
 									</div>
-									<div class="form-group">
+									<div class="input-box mt-4">
 										<div class="custom-file">
 											<input type="file" class="custom-file-input" id="upload" name="attachments[]"
 												   multiple>
@@ -55,7 +57,7 @@
 											<div class="error text-danger"> @lang($message) </div>
 										@enderror
 									</div>
-									<button type="submit" class="btn btn-primary btn-sm btn-block">
+									<button type="submit" class="btn btn-primary btn-sm btn-block cmn_btn">
 										@lang('Submit Ticket')
 									</button>
 								</form>

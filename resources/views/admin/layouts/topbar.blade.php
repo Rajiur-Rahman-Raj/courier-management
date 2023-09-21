@@ -31,6 +31,7 @@
 
 			</a>
 		</li>
+
         <!--------------- Notifications -------------->
         <li class="dropdown dropdown-list-toggle" id="pushNotificationArea">
             <a href="javascript:void(0)" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg"

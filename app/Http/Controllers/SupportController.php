@@ -66,18 +66,18 @@ class SupportController extends Controller
 
 		$this->adminPushNotification('SUPPORT_TICKET_CREATE', $msg, $action);
 		$firebaseAction = route('admin.ticket.view', $ticket->id);
-		$this->adminFirebasePushNotification('SUPPORT_TICKET_CREATE', $msg, $firebaseAction);
+//		$this->adminFirebasePushNotification('SUPPORT_TICKET_CREATE', $msg, $firebaseAction);
 
 		return redirect()->route('user.ticket.list')->with('success', 'Your Ticket has been pending');
 	}
 
 	public function view($ticketId)
 	{
+		$page_title = "Ticket: #".$ticketId;
 		$ticket = Ticket::with(['messages', 'user', 'lastReply'])->where('ticket', $ticketId)->latest()->with('messages')->first();
-		$admin = Admin::first();
-
+//		$admin = Admin::first();
 		$user = Auth::user();
-		return view($this->theme . 'user.support.view', compact('ticket', 'user', 'admin'));
+		return view($this->theme . 'user.support.view', compact('ticket', 'page_title', 'user'));
 	}
 
 	public function reply(Request $request, $id)

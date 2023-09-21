@@ -3,15 +3,15 @@
 
 @section('content')
 <div class="main-content">
-	<section class="section">
+	<section class="section pt-4 p-5">
 		<div class="section-header">
-			<h1>@lang('Tickets Log')</h1>
-			<div class="section-header-breadcrumb">
-				<div class="breadcrumb-item active">
-					<a href="{{ route('user.dashboard') }}">@lang('Dashboard')</a>
-				</div>
-				<div class="breadcrumb-item">@lang('Tickets Log')</div>
-			</div>
+			<h3>@lang('Tickets Log')</h3>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{{ route('user.dashboard') }}">@lang('Dashboard')</a></li>
+					<li class="breadcrumb-item active" aria-current="page">@lang('Tickets Log')</li>
+				</ol>
+			</nav>
 		</div>
 
 		<div class="row mb-3">
@@ -20,9 +20,9 @@
 					<div class="col-sm-12">
 						<div class="card mb-4 card-primary shadow">
 							<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-								<h6 class="m-0 font-weight-bold text-primary">@lang('Tickets Log')</h6>
-								<a href="{{ route('user.ticket.create') }}" class="btn btn-sm btn-outline-primary"><i
-											class="fas fa-plus"></i> @lang('Create new ticket')</a>
+								<h6 class="m-0 font-weight-bold text-dark">@lang('Tickets Log')</h6>
+								<a href="{{ route('user.ticket.create') }}" class="btn btn-sm btn-outline-warning text-dark"><i
+											class="fas fa-plus text-warning"></i> @lang('Create new ticket')</a>
 							</div>
 							<div class="card-body">
 								<div class="table-responsive">
@@ -56,7 +56,7 @@
 													{{ __($ticket->last_reply->diffForHumans()) }}
 												</td>
 												<td data-label="@lang('Action')">
-													<a href="{{ route('user.ticket.view', $ticket->ticket) }}" class="btn btn-sm btn-info">
+													<a href="{{ route('user.ticket.view', $ticket->ticket) }}" class="btn btn-sm btn-outline-warning text-dark">
 														@lang('View')
 													</a>
 												</td>

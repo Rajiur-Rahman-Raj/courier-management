@@ -2,58 +2,24 @@
 <div class="notification-panel">
 	<button class="dropdown-toggle">
 		<i class="fal fa-bell"></i>
-		<span class="count">3</span>
+		<span class="count">@{{items.length}}</span>
 	</button>
 	<ul class="notification-dropdown shadow2">
 		<div class="dropdown-box">
-			<li>
-				<a class="dropdown-item" href="#">
+			<li v-for="(item, index) in items" @click.prevent="readAt(item.id, item.description.link)">
+				<a class="dropdown-item" href="javascript:void(0)">
 					<i class="fal fa-bell"></i>
 					<div class="text">
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-						<span class="time">4 Hours ago</span>
-					</div>
-				</a>
-			</li>
-			<li>
-				<a class="dropdown-item" href="#">
-					<i class="fal fa-bell"></i>
-					<div class="text">
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-						<span class="time">6 Hours ago</span>
-					</div>
-				</a>
-			</li>
-			<li>
-				<a class="dropdown-item" href="#">
-					<i class="fal fa-bell"></i>
-					<div class="text">
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-						<span class="time">1 Day ago</span>
-					</div>
-				</a>
-			</li>
-			<li>
-				<a class="dropdown-item" href="#">
-					<i class="fal fa-bell"></i>
-					<div class="text">
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-						<span class="time">3 Days ago</span>
-					</div>
-				</a>
-			</li>
-			<li>
-				<a class="dropdown-item" href="#">
-					<i class="fal fa-bell"></i>
-					<div class="text">
-						<p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-						<span class="time">4 Days ago</span>
+						<p v-cloak v-html="item.description.text"></p>
+						<span class="time" v-cloak>@{{ item.formatted_date }}</span>
 					</div>
 				</a>
 			</li>
 		</div>
+
 		<div class="clear-all fixed-bottom">
-			<a href="">Clear all</a>
+			<a href="javascript:void(0)" v-if="items.length == 0" class="golden-text">@lang('You have no notifications')</a>
+			<a href="javascript:void(0)" role="button" type="button" v-if="items.length > 0" @click.prevent="readAll" class="btn-clear golden-text">@lang('Clear All')</a>
 		</div>
 	</ul>
 </div>

@@ -11,8 +11,10 @@
 		<div class="search_area"></div>
 		<!-- navbar text -->
 
-		<span class="navbar-text">
-			@include($theme.'partials.pushNotify')
+		<span class="navbar-text" id="pushNotificationArea">
+			 @if(config('basic.push_notification') == 1)
+				@include($theme.'partials.pushNotify')
+			@endif
 			@include($theme.'partials.userDropdown')
 		</span>
 	</div>

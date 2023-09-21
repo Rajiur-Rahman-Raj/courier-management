@@ -12,20 +12,17 @@
 		<div class="icon_area">
 			<i class="far fa-search"></i>
 		</div>
-
 	</div>
+
 	<ul class="main">
 		<li>
 			<a class="{{menuActive('user.dashboard')}}" href="{{route('user.dashboard')}}"><i class="fal fa-th-large"></i>@lang('Dashboard')</a>
-		</li>
-		<li>
-			<a href="edit_profile.html"><i class="fal fa-user-edit"></i>Edit Profile</a>
 		</li>
 
 		<li>
 			<a class="dropdown-toggle" data-bs-toggle="collapse" href="#dropdownCollapsible" role="button"
 			   aria-expanded="false" aria-controls="collapseExample">
-				<i class="fal fa-sign-out-alt"></i>Dropdown
+				<i class="fal fa-truck text-info"></i>@lang('Shipments')
 			</a>
 			<div class="collapse" id="dropdownCollapsible">
 				<ul class="">
@@ -41,5 +38,34 @@
 				</ul>
 			</div>
 		</li>
+
+		<li>
+			<a href="{{ route('addFund') }}"><i class="fal fa-funnel-dollar text-primary" aria-hidden="true"></i>@lang('Add Fund')</a>
+		</li>
+
+		<li>
+			<a href="#"><i class="fal fa-file-invoice-dollar text-warning" aria-hidden="true"></i>@lang('Fund History')</a>
+		</li>
+
+		<li>
+			<a href="#"><i class="fal fa-credit-card text-danger" aria-hidden="true"></i>@lang('Payout')</a>
+		</li>
+
+		<li>
+			<a href="#"><i class="fal fa-usd-square text-purple" aria-hidden="true"></i>@lang('Payout History')</a>
+		</li>
+
+		<li>
+			<a href="#"><i class="fal fa-exchange-alt text-orange" aria-hidden="true"></i>@lang('Money Transfer')</a>
+		</li>
+
+		<li>
+			<a href="#"><i class="fal fa-money-check-alt text-indigo" aria-hidden="true"></i>@lang('Transaction')</a>
+		</li>
+
+		<li>
+			<a href="{{route('user.ticket.list')}}"><i class="fal fa-ticket text-success" aria-hidden="true"></i>@lang('Support Ticket')</a>
+		</li>
+
 	</ul>
 </div>
