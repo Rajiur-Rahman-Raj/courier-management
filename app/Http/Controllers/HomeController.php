@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MoneyTransfer;
+use App\Models\User;
+use Carbon\Carbon;
 use DateTime;
 use App\Models\Fund;
 use App\Traits\Upload;
@@ -9,6 +12,8 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -257,6 +262,137 @@ class HomeController extends Controller
 			}
 
 			return back()->with('success', 'Seo has been updated.');
+		}
+	}
+
+	public function moneyTransfer()
+	{
+		$page_title = "Balance Transfer";
+		return view($this->theme . 'user.money-transfer', compact('page_title'));
+	}
+
+	public function moneyTransferConfirm(Request $request)
+	{
+
+		$this->validate($request, [
+			'email' => 'required',
+			'amount' => 'required',
+			'wallet_type' => ['required', Rule::in(['balance'])],
+			'password' => 'required'
+		], [
+			'wallet_type.required' => 'Please Select a wallet'
+		]);
+
+		$basic = (object)config('basic');
+		$email = trim($request->email);
+
+		$receiver = User::where('email', $email)->first();
+
+
+		if (!$receiver) {
+			session()->flash('error', 'This Email could not Found!');
+			return back();
+		}
+		if ($receiver->id == Auth::id()) {
+			session()->flash('error', 'This Email could not Found!');
+			return back()->withInput();
+		}
+
+		if ($receiver->status == 0) {
+			session()->flash('error', 'Invalid User!');
+			return back()->withInput();
+		}
+
+
+		if ($request->amount < $basic->min_transfer) {
+			session()->flash('error', 'Minimum Transfer Amount ' . $basic->min_transfer . ' ' . $basic->base_currency);
+			return back()->withInput();
+		}
+		if ($request->amount > $basic->max_transfer) {
+			session()->flash('error', 'Maximum Transfer Amount ' . $basic->max_transfer . ' ' . $basic->base_currency);
+			return back()->withInput();
+		}
+
+		$transferCharge = ($request->amount * $basic->transfer_charge) / 100;
+//		dd('i am here');
+		$user = Auth::user();
+		$wallet_type = $request->wallet_type;
+		if ($user[$wallet_type] >= ($request->amount + $transferCharge)) {
+
+			if (Hash::check($request->password, $user->password)) {
+
+				$sendMoneyCheck = MoneyTransfer::where('sender_id', $user->id)->where('receiver_id', $receiver->id)->latest()->first();
+
+				if (isset($sendMoneyCheck) && Carbon::parse($sendMoneyCheck->send_at) > Carbon::now()) {
+
+					$time = $sendMoneyCheck->send_at;
+					$delay = $time->diffInSeconds(Carbon::now());
+					$delay = gmdate('i:s', $delay);
+
+					session()->flash('error', 'You can send money to this user after  delay ' . $delay . ' minutes');
+					return back()->withInput();
+				} else {
+
+					$user[$wallet_type] = round(($user[$wallet_type] - ($transferCharge + $request->amount)), 2);
+					$user->save();
+
+					$receiver[$wallet_type] += round($request->amount, 2);
+					$receiver->save();
+
+					$trans = strRandom();
+
+					$sendTaka = new MoneyTransfer();
+					$sendTaka->sender_id = $user->id;
+					$sendTaka->receiver_id = $receiver->id;
+					$sendTaka->amount = round($request->amount, 2);
+					$sendTaka->charge = $transferCharge;
+					$sendTaka->trx = $trans;
+					$sendTaka->send_at = Carbon::parse()->addMinutes(1);
+					$sendTaka->save();
+
+					$transaction = new Transaction();
+//					$transaction->user_id = $user->id;
+					$transaction->amount = round($request->amount, 2);
+					$transaction->charge = $transferCharge;
+//					$transaction->trx_type = '-';
+//					$transaction->balance_type = $wallet_type;
+//					$transaction->remarks = 'Balance Transfer to  ' . $receiver->email;
+//					$transaction->trx_id = $trans;
+//					$transaction->final_balance = $user[$wallet_type];
+					$transaction->transactional_type = MoneyTransfer::class;
+					$sendTaka->transactional()->save($transaction);
+
+
+					$transaction = new Transaction();
+					//					$transaction->user_id = $user->id;
+					$transaction->amount = round($request->amount, 2);
+					$transaction->charge = $transferCharge;
+//					$transaction->trx_type = '-';
+//					$transaction->balance_type = $wallet_type;
+//					$transaction->remarks = 'Balance Transfer to  ' . $receiver->email;
+//					$transaction->trx_id = $trans;
+//					$transaction->final_balance = $user[$wallet_type];
+					$transaction->transactional_type = MoneyTransfer::class;
+//					$transaction->user_id = $receiver->id;
+//					$transaction->amount = round($request->amount, 2);
+//					$transaction->charge = 0;
+//					$transaction->trx_type = '+';
+//					$transaction->balance_type = $wallet_type;
+//					$transaction->remarks = 'Balance Transfer From  ' . $user->email;
+//					$transaction->trx_id = $trans;
+//					$transaction->final_balance = $receiver[$wallet_type];
+					$sendTaka->transactional()->save($transaction);
+
+					session()->flash('success', 'Balance Transfer  has been Successful');
+					return redirect()->route('user.money-transfer');
+				}
+			} else {
+				session()->flash('error', 'Password Do Not Match!');
+				return back()->withInput();
+			}
+		} else {
+			session()->flash('error', 'Insufficient Balance!');
+			return back()->withInput();
 		}
 	}
 

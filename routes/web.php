@@ -471,7 +471,6 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('add-fund', [FundController::class, 'addFund'])->name('addFund');
 	Route::post('add-fund/request', [FundController::class, 'addFundRequest'])->name('user.addFund.request');
 
-
 	/* USER SUPPORT TICKET */
 	Route::get('tickets', [SupportController::class, 'index'])->name('user.ticket.list');
 	Route::get('ticket-create', [SupportController::class, 'create'])->name('user.ticket.create');
@@ -479,6 +478,11 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('ticket-view/{ticket}', [SupportController::class, 'view'])->name('user.ticket.view');
 	Route::put('ticket-reply/{ticket}', [SupportController::class, 'reply'])->name('user.ticket.reply');
 	Route::get('ticket-download/{ticket}', [SupportController::class, 'download'])->name('user.ticket.download');
+
+	// money-transfer
+	Route::get('/money-transfer', [HomeController::class, 'moneyTransfer'])->name('user.money-transfer');
+	Route::post('/send-money', [HomeController::class, 'moneyTransferConfirm'])->name('user.send.money');
+
 });
 
 Route::group(['prefix' => 'user'], function () {

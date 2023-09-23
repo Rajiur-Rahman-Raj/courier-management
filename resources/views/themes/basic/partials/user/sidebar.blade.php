@@ -1,7 +1,9 @@
 <!-- sidebar -->
 <div id="sidebar" class="">
 	<div class="sidebar-top">
-		<a class="navbar-brand" href="{{url('/')}}"> <img src="{{ getFile(config('basic.default_file_driver'),config('basic.logo_image')) }}" alt="@lang('logo image')" /></a>
+		<a class="navbar-brand" href="{{url('/')}}"> <img
+				src="{{ getFile(config('basic.default_file_driver'),config('basic.logo_image')) }}"
+				alt="@lang('logo image')"/></a>
 		<button class="sidebar-toggler d-md-none" onclick="toggleSideMenu()">
 			<i class="fal fa-times"></i>
 		</button>
@@ -16,7 +18,8 @@
 
 	<ul class="main">
 		<li>
-			<a class="{{menuActive('user.dashboard')}}" href="{{route('user.dashboard')}}"><i class="fal fa-th-large"></i>@lang('Dashboard')</a>
+			<a class="{{menuActive('user.dashboard')}}" href="{{route('user.dashboard')}}"><i
+					class="fal fa-th-large"></i>@lang('Dashboard')</a>
 		</li>
 
 		<li>
@@ -40,11 +43,13 @@
 		</li>
 
 		<li>
-			<a href="{{ route('addFund') }}"><i class="fal fa-funnel-dollar text-primary" aria-hidden="true"></i>@lang('Add Fund')</a>
+			<a href="{{ route('addFund') }}"><i class="fal fa-funnel-dollar text-primary"
+												aria-hidden="true"></i>@lang('Add Fund')</a>
 		</li>
 
 		<li>
-			<a href="#"><i class="fal fa-file-invoice-dollar text-warning" aria-hidden="true"></i>@lang('Fund History')</a>
+			<a href="#"><i class="fal fa-file-invoice-dollar text-warning" aria-hidden="true"></i>@lang('Fund History')
+			</a>
 		</li>
 
 		<li>
@@ -56,15 +61,18 @@
 		</li>
 
 		<li>
-			<a href="#"><i class="fal fa-exchange-alt text-orange" aria-hidden="true"></i>@lang('Money Transfer')</a>
+			<a class="{{menuActive(['user.money-transfer'])}}" href="{{route('user.money-transfer')}}"><i
+					class="fal fa-exchange-alt text-orange" aria-hidden="true"></i>@lang('Money Transfer')</a>
 		</li>
 
 		<li>
-			<a href="#"><i class="fal fa-money-check-alt text-indigo" aria-hidden="true"></i>@lang('Transaction')</a>
+			<a class="{{menuActive('user.transaction')}}" href="{{ route('user.transaction') }}"><i
+					class="fal fa-money-check-alt text-indigo" aria-hidden="true"></i>@lang('Transaction')</a>
 		</li>
 
 		<li>
-			<a href="{{route('user.ticket.list')}}"><i class="fal fa-ticket text-success" aria-hidden="true"></i>@lang('Support Ticket')</a>
+			<a class="{{menuActive('user.ticket.list')}}" href="{{route('user.ticket.list')}}"><i
+					class="fal fa-ticket text-success" aria-hidden="true"></i>@lang('Support Ticket')</a>
 		</li>
 
 	</ul>

@@ -75,9 +75,9 @@ class SupportController extends Controller
 	{
 		$page_title = "Ticket: #".$ticketId;
 		$ticket = Ticket::with(['messages', 'user', 'lastReply'])->where('ticket', $ticketId)->latest()->with('messages')->first();
-//		$admin = Admin::first();
+		$admin = Admin::first();
 		$user = Auth::user();
-		return view($this->theme . 'user.support.view', compact('ticket', 'page_title', 'user'));
+		return view($this->theme . 'user.support.view', compact('ticket', 'page_title', 'user', 'admin'));
 	}
 
 	public function reply(Request $request, $id)

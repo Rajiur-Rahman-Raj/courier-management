@@ -25,6 +25,7 @@
 			</div>
 		</div>
 	</div>
+	@stack('load-modal')
 	<!-- user_panel_end -->
 </div>
 </div>
