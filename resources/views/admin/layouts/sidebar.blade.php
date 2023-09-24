@@ -374,7 +374,20 @@
 
 
 			@if(adminAccessRoute(config('permissionList.Payout_Settings.Payout_Methods.permission.view')))
-				<li class="menu-header">@lang('Payout Settings')</li>
+{{--				<li class="menu-header">@lang('Payout Settings')</li>--}}
+{{--				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">--}}
+{{--					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">--}}
+{{--						<i class="fas fa-users-cog text-danger"></i> <span>@lang('Payout Settings')</span>--}}
+{{--					</a>--}}
+{{--					<ul class="dropdown-menu">--}}
+{{--						<li class="{{ activeMenu(['payout.method.list','payout.method.edit']) }}">--}}
+{{--							<a class="nav-link" href="{{ route('payout.method.list') }}">--}}
+{{--								@lang('Payout Methods')--}}
+{{--							</a>--}}
+{{--						</li>--}}
+{{--					</ul>--}}
+{{--				</li>--}}
+
 				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-users-cog text-danger"></i> <span>@lang('Payout Settings')</span>
@@ -382,7 +395,12 @@
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['payout.method.list','payout.method.edit']) }}">
 							<a class="nav-link" href="{{ route('payout.method.list') }}">
-								@lang('Payout Methods')
+								@lang('Available Methods')
+							</a>
+						</li>
+						<li class="{{ activeMenu(['payout.method.add']) }}">
+							<a class="nav-link" href="{{ route('payout.method.add') }}">
+								@lang('Add Method')
 							</a>
 						</li>
 					</ul>

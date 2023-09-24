@@ -247,8 +247,14 @@ class PayoutController extends Controller
 	{
 		$user = Auth::user();
 		$payout = Payout::where('utr', $utr)->first();
-		$payoutMethod = PayoutMethod::find($payout->payout_method_id);
+		$payoutMethod = PayoutMethod::where('is_active', 1)->find($payout->payout_method_id);
+		dd($payoutMethod->supported_currency);
 		if ($request->isMethod('get')) {
+			if ($payoutMethod->code == 'flutterwave') {
+				return view($this->theme . 'user.payout.gateway.' . $payoutMethod->code, compact('payout', 'payoutMethod'));
+			} elseif ($payoutMethod->code == 'paystack') {
+				return view($this->theme . 'user.payout.gateway.' . $payoutMethod->code, compact('payout', 'payoutMethod'));
+			}
 			return view($this->theme . 'user.payout.confirm', compact('payout', 'payoutMethod', 'user'));
 		} elseif ($request->isMethod('post')) {
 			$purifiedData = Purify::clean($request->all());
@@ -315,6 +321,18 @@ class PayoutController extends Controller
 						}
 					}
 				}
+				if ($payoutMethod->is_automatic == 1) {
+					$reqField['amount'] = [
+						'fieldValue' => $payout->amount * convertRate($request->currency_code, $payout),
+						'type' => 'text',
+					];
+				}
+				if ($payoutMethod->code == 'paypal') {
+					$reqField['recipient_type'] = [
+						'fieldValue' => $request->recipient_type,
+						'type' => 'text',
+					];
+				}
 				$payout->withdraw_information = json_encode($reqField);
 			} else {
 				$payout->withdraw_information = null;
@@ -323,37 +341,290 @@ class PayoutController extends Controller
 			/*
 			 * Deduct money from Sender Wallet
 			 * */
-			$sender_wallet = updateWallet($payout->user_id, $payout->transfer_amount, 0);
+			updateWallet($payout->user_id, $payout->transfer_amount, 0);
 			$payout->save();
-
-			$params = [
-				'sender' => $user->name,
-				'amount' => getAmount($payout->amount),
-				'currency' => config('basic.base_currency'),
-				'transaction' => $payout->utr,
-			];
-
-			$action = [
-				"link" => route('admin.payout.index'),
-				"icon" => "fa fa-money-bill-alt text-white"
-			];
-
-			$this->adminMail('PAYOUT_REQUEST_TO_ADMIN', $params);
-			$this->adminPushNotification('PAYOUT_REQUEST_TO_ADMIN', $params, $action);
-
-			$params = [
-				'amount' => getAmount($payout->amount),
-				'currency' => config('basic.base_currency'),
-				'transaction' => $payout->utr,
-			];
-			$action = [
-				"link" => route('payout.index'),
-				"icon" => "fa fa-money-bill-alt text-white"
-			];
-			$this->sendMailSms($user, 'PAYOUT_REQUEST_FROM', $params);
-			$this->userPushNotification($user, 'PAYOUT_REQUEST_FROM', $params, $action);
-
+			$this->userNotify($user, $payout);
 			return redirect(route('payout.index'))->with('success', 'Payout generated successfully');
 		}
+	}
+
+
+	public function flutterwavePayout(Request $request, $utr)
+	{
+		$user = Auth::user();
+		$payout = Payout::where('utr', $utr)->first();
+		$payoutMethod = PayoutMethod::where('is_active', 1)->find($payout->payout_method_id);
+
+		$purifiedData = Purify::clean($request->all());
+		if (empty($purifiedData['transfer_name'])) {
+			return back()->with('alert', 'Transfer field is required');
+		}
+		$validation = config('banks.' . $purifiedData['transfer_name'] . '.validation');
+
+		$rules = [];
+		$inputField = [];
+		if ($validation != null) {
+			foreach ($validation as $key => $cus) {
+				$rules[$key] = 'required';
+				$inputField[] = $key;
+			}
+		}
+
+		if ($request->transfer_name == 'NGN BANK' || $request->transfer_name == 'NGN DOM' || $request->transfer_name == 'GHS BANK'
+			|| $request->transfer_name == 'KES BANK' || $request->transfer_name == 'ZAR BANK' || $request->transfer_name == 'ZAR BANK') {
+			$rules['bank'] = 'required';
+		}
+
+		$rules['currency_code'] = 'required';
+
+		$validate = Validator::make($request->all(), $rules);
+
+		if ($validate->fails()) {
+			return back()->withErrors($validate)->withInput();
+		}
+
+		$checkAmountValidate = $this->checkAmountValidate($payout->amount, $payout->payout_method_id);
+		if (!$checkAmountValidate['status']) {
+			return back()->withInput()->with('alert', $checkAmountValidate['message']);
+		}
+
+		$collection = collect($purifiedData);
+		$reqField = [];
+		$metaField = [];
+
+		if (config('banks.' . $purifiedData['transfer_name'] . '.input_form') != null) {
+			foreach ($collection as $k => $v) {
+				foreach (config('banks.' . $purifiedData['transfer_name'] . '.input_form') as $inKey => $inVal) {
+					if ($k != $inKey) {
+						continue;
+					} else {
+
+						if ($inVal == 'meta') {
+							$metaField[$inKey] = $v;
+							$metaField[$inKey] = [
+								'fieldValue' => $v,
+								'type' => 'text',
+							];
+						} else {
+							$reqField[$inKey] = $v;
+							$reqField[$inKey] = [
+								'fieldValue' => $v,
+								'type' => 'text',
+							];
+						}
+					}
+				}
+			}
+
+			if ($request->transfer_name == 'NGN BANK' || $request->transfer_name == 'NGN DOM' || $request->transfer_name == 'GHS BANK'
+				|| $request->transfer_name == 'KES BANK' || $request->transfer_name == 'ZAR BANK' || $request->transfer_name == 'ZAR BANK') {
+
+				$reqField['account_bank'] = [
+					'fieldValue' => $request->bank,
+					'type' => 'text',
+				];
+			} elseif ($request->transfer_name == 'XAF/XOF MOMO') {
+				$reqField['account_bank'] = [
+					'fieldValue' => 'MTN',
+					'type' => 'text',
+				];
+			} elseif ($request->transfer_name == 'FRANCOPGONE' || $request->transfer_name == 'mPesa' || $request->transfer_name == 'Rwanda Momo'
+				|| $request->transfer_name == 'Uganda Momo' || $request->transfer_name == 'Zambia Momo') {
+				$reqField['account_bank'] = [
+					'fieldValue' => 'MPS',
+					'type' => 'text',
+				];
+			}
+
+			if ($request->transfer_name == 'Barter') {
+				$reqField['account_bank'] = [
+					'fieldValue' => 'barter',
+					'type' => 'text',
+				];
+			} elseif ($request->transfer_name == 'flutterwave') {
+				$reqField['account_bank'] = [
+					'fieldValue' => 'barter',
+					'type' => 'text',
+				];
+			}
+
+
+			$reqField['amount'] = [
+				'fieldValue' => $payout->amount * convertRate($request->currency_code, $payout),
+				'type' => 'text',
+			];
+
+			$payout->withdraw_information = json_encode($reqField);
+			$payout->meta_field = $metaField;
+		} else {
+			$payout->withdraw_information = null;
+			$payout->meta_field = null;
+		}
+
+		$payout->status = 1;
+		$payout->currency_code = $request->currency_code;
+		updateWallet($payout->user_id, $payout->transfer_amount, 0);
+		$payout->save();
+		$this->userNotify($user, $payout);
+		return redirect(route('payout.index'))->with('success', 'Payout generated successfully');
+	}
+
+	public function paystackPayout(Request $request, $utr)
+	{
+		$user = Auth::user();
+		$payout = Payout::where('utr', $utr)->first();
+		$payoutMethod = PayoutMethod::where('is_active', 1)->find($payout->payout_method_id);
+
+		$purifiedData = Purify::clean($request->all());
+
+		if (empty($purifiedData['bank'])) {
+			return back()->with('alert', 'Bank field is required')->withInput();
+		}
+
+		$rules = [];
+		$inputField = [];
+		if ($payoutMethod->inputForm != null) {
+			foreach (json_decode($payoutMethod->inputForm) as $key => $cus) {
+
+				$rules[$key] = [$cus->validation];
+				if ($cus->type == 'file') {
+					array_push($rules[$key], 'image');
+					array_push($rules[$key], 'mimes:jpeg,jpg,png');
+					array_push($rules[$key], 'max:2048');
+				}
+				if ($cus->type == 'text') {
+					array_push($rules[$key], 'max:191');
+				}
+				if ($cus->type == 'textarea') {
+					array_push($rules[$key], 'max:300');
+				}
+				$inputField[] = $key;
+			}
+		}
+
+		$rules['type'] = 'required';
+		$rules['currency'] = 'required';
+
+		$validate = Validator::make($request->all(), $rules);
+
+		if ($validate->fails()) {
+			return back()->withErrors($validate)->withInput();
+		}
+
+		$checkAmountValidate = $this->checkAmountValidate($payout->amount, $payout->payout_method_id);
+		if (!$checkAmountValidate['status']) {
+			return back()->withInput()->with('alert', $checkAmountValidate['message']);
+		}
+		$collection = collect($purifiedData);
+		$reqField = [];
+		if ($payoutMethod->inputForm != null) {
+			foreach ($collection as $k => $v) {
+				foreach (json_decode($payoutMethod->inputForm) as $inKey => $inVal) {
+					if ($k != $inKey) {
+						continue;
+					} else {
+						if ($inVal->type == 'file') {
+							if ($request->file($inKey) && $request->file($inKey)->isValid()) {
+								$extension = $request->$inKey->extension();
+								$fileName = strtolower(strtotime("now") . '.' . $extension);
+								$storedPath = base_path('assets/upload/payoutFile/') . $fileName;
+								$imageMake = Image::make($purifiedData[$inKey]);
+								$imageMake->save($storedPath);
+
+								$reqField[$inKey] = [
+									'fieldValue' => $fileName,
+									'type' => $inVal->type,
+								];
+							}
+						} else {
+							$reqField[$inKey] = $v;
+							$reqField[$inKey] = [
+								'fieldValue' => $v,
+								'type' => $inVal->type,
+							];
+						}
+					}
+				}
+			}
+			$reqField['type'] = [
+				'fieldValue' => $request->type,
+				'type' => 'text',
+			];
+			$reqField['bank_code'] = [
+				'fieldValue' => $request->bank,
+				'type' => 'text',
+			];
+			$reqField['amount'] = [
+				'fieldValue' => $payout->amount * convertRate($request->currency, $payout),
+				'type' => 'text',
+			];
+			$payout->withdraw_information = json_encode($reqField);
+		} else {
+			$payout->withdraw_information = null;
+		}
+		$payout->currency_code = $request->currency_code;
+		$payout->status = 1;
+
+		updateWallet($payout->user_id, $payout->transfer_amount, 0);
+		$payout->save();
+		$this->userNotify($user, $payout);
+		return redirect(route('payout.index'))->with('success', 'Payout generated successfully');
+	}
+
+	public function getBankForm(Request $request)
+	{
+		$bankName = $request->bankName;
+		$bankArr = config('banks.' . $bankName);
+
+		if ($bankArr['api'] != null) {
+
+			$methodObj = 'App\\Services\\Payout\\flutterwave\\Card';
+			$data = $methodObj::getBank($bankArr['api']);
+			$value['bank'] = $data;
+		}
+		$value['input_form'] = $bankArr['input_form'];
+		return $value;
+	}
+
+	public function getBankList(Request $request)
+	{
+		$currencyCode = $request->currencyCode;
+		$methodObj = 'App\\Services\\Payout\\paystack\\Card';
+		$data = $methodObj::getBank($currencyCode);
+		return $data;
+	}
+
+	public function userNotify($user, $payout)
+	{
+		$params = [
+			'sender' => $user->name,
+			'amount' => getAmount($payout->amount),
+			'currency' => config('basic.base_currency'),
+			'transaction' => $payout->utr,
+		];
+
+		$action = [
+			"link" => route('admin.payout.index'),
+			"icon" => "fa fa-money-bill-alt text-white"
+		];
+
+		$this->adminMail('PAYOUT_REQUEST_TO_ADMIN', $params);
+		$this->adminPushNotification('PAYOUT_REQUEST_TO_ADMIN', $params, $action);
+		$firebaseAction = route('admin.payout.index');
+		$this->adminFirebasePushNotification('PAYOUT_REQUEST_TO_ADMIN', $params, $firebaseAction);
+
+		$params = [
+			'amount' => getAmount($payout->amount),
+			'currency' => config('basic.base_currency'),
+			'transaction' => $payout->utr,
+		];
+		$action = [
+			"link" => route('payout.index'),
+			"icon" => "fa fa-money-bill-alt text-white"
+		];
+		$this->sendMailSms($user, 'PAYOUT_REQUEST_FROM', $params);
+		$this->userPushNotification($user, 'PAYOUT_REQUEST_FROM', $params, $action);
+		$firebaseAction = route('payout.index');
+		$this->userFirebasePushNotification($user, 'PAYOUT_REQUEST_FROM', $params, $firebaseAction);
 	}
 }

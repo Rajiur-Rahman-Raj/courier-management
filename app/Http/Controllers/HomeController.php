@@ -163,7 +163,6 @@ class HomeController extends Controller
 	}
 
 
-
 	public function logoUpdate(Request $request)
 	{
 		if ($request->isMethod('get')) {
@@ -275,26 +274,25 @@ class HomeController extends Controller
 	{
 
 		$this->validate($request, [
-			'email' => 'required',
+			'email' => 'required|email',
 			'amount' => 'required',
-			'wallet_type' => ['required', Rule::in(['balance'])],
-			'password' => 'required'
-		], [
-			'wallet_type.required' => 'Please Select a wallet'
+			'password' => 'required',
+			'balance'  => 'required'
 		]);
 
 		$basic = (object)config('basic');
 		$email = trim($request->email);
 
+
 		$receiver = User::where('email', $email)->first();
 
-
 		if (!$receiver) {
-			session()->flash('error', 'This Email could not Found!');
-			return back();
+			session()->flash('error', 'This email could not Found!');
+			return back()->withInput();
 		}
+
 		if ($receiver->id == Auth::id()) {
-			session()->flash('error', 'This Email could not Found!');
+			session()->flash('error', 'Money cannot be sent from own wallet to own wallet!');
 			return back()->withInput();
 		}
 
@@ -303,21 +301,21 @@ class HomeController extends Controller
 			return back()->withInput();
 		}
 
-
 		if ($request->amount < $basic->min_transfer) {
 			session()->flash('error', 'Minimum Transfer Amount ' . $basic->min_transfer . ' ' . $basic->base_currency);
 			return back()->withInput();
 		}
+
 		if ($request->amount > $basic->max_transfer) {
 			session()->flash('error', 'Maximum Transfer Amount ' . $basic->max_transfer . ' ' . $basic->base_currency);
 			return back()->withInput();
 		}
 
 		$transferCharge = ($request->amount * $basic->transfer_charge) / 100;
-//		dd('i am here');
+
 		$user = Auth::user();
-		$wallet_type = $request->wallet_type;
-		if ($user[$wallet_type] >= ($request->amount + $transferCharge)) {
+
+		if ($user->balance >= ($request->amount + $transferCharge)) {
 
 			if (Hash::check($request->password, $user->password)) {
 
@@ -333,10 +331,10 @@ class HomeController extends Controller
 					return back()->withInput();
 				} else {
 
-					$user[$wallet_type] = round(($user[$wallet_type] - ($transferCharge + $request->amount)), 2);
+					$user->balance = round(($user->balance - ($transferCharge + $request->amount)), 2);
 					$user->save();
 
-					$receiver[$wallet_type] += round($request->amount, 2);
+					$receiver->balance += round($request->amount, 2);
 					$receiver->save();
 
 					$trans = strRandom();
@@ -351,40 +349,29 @@ class HomeController extends Controller
 					$sendTaka->save();
 
 					$transaction = new Transaction();
-//					$transaction->user_id = $user->id;
+					$transaction->user_id = $user->id;
+					$transaction->transactional_id = null;
 					$transaction->amount = round($request->amount, 2);
 					$transaction->charge = $transferCharge;
-//					$transaction->trx_type = '-';
-//					$transaction->balance_type = $wallet_type;
-//					$transaction->remarks = 'Balance Transfer to  ' . $receiver->email;
-//					$transaction->trx_id = $trans;
-//					$transaction->final_balance = $user[$wallet_type];
+					$transaction->final_balance = $user->balance;
+					$transaction->trx_type = '-';
+					$transaction->trx_id = $trans;
+					$transaction->remarks = 'Balance Transfer to  ' . $receiver->email;
 					$transaction->transactional_type = MoneyTransfer::class;
 					$sendTaka->transactional()->save($transaction);
-
 
 					$transaction = new Transaction();
-					//					$transaction->user_id = $user->id;
+					$transaction->user_id = $receiver->id;
+					$transaction->transactional_id = null;
 					$transaction->amount = round($request->amount, 2);
-					$transaction->charge = $transferCharge;
-//					$transaction->trx_type = '-';
-//					$transaction->balance_type = $wallet_type;
-//					$transaction->remarks = 'Balance Transfer to  ' . $receiver->email;
-//					$transaction->trx_id = $trans;
-//					$transaction->final_balance = $user[$wallet_type];
-					$transaction->transactional_type = MoneyTransfer::class;
-//					$transaction->user_id = $receiver->id;
-//					$transaction->amount = round($request->amount, 2);
-//					$transaction->charge = 0;
-//					$transaction->trx_type = '+';
-//					$transaction->balance_type = $wallet_type;
-//					$transaction->remarks = 'Balance Transfer From  ' . $user->email;
-//					$transaction->trx_id = $trans;
-//					$transaction->final_balance = $receiver[$wallet_type];
+					$transaction->charge = 0;
+					$transaction->final_balance = $receiver->balance;
+					$transaction->trx_type = '+';
+					$transaction->trx_id = $trans;
+					$transaction->remarks = 'Balance Transfer From  ' . $user->email;
 					$sendTaka->transactional()->save($transaction);
 
-					session()->flash('success', 'Balance Transfer  has been Successful');
-					return redirect()->route('user.money-transfer');
+					return back()->with('success', 'Balance transfer has been successfull');
 				}
 			} else {
 				session()->flash('error', 'Password Do Not Match!');

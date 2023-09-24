@@ -13,7 +13,6 @@
 <script src="{{ asset('assets/dashboard/js/vue.min.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/axios.min.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/notiflix-aio-2.7.0.min.js') }}"></script>
-
 <!-- Template JS File -->
 <script src="{{ asset('assets/dashboard/js/scripts.js') }}"></script>
 

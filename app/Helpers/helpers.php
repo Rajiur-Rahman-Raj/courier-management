@@ -543,6 +543,18 @@ function adminAccessRoute($search)
 	return false;
 }
 
+function convertRate($currencyCode, $payout)
+{
+	$convertRate = 0;
+	$rate = optional($payout->payoutMethod)->convert_rate;
+
+	if ($rate) {
+		$convertRate = $rate->$currencyCode;
+	}
+
+	return (float)$convertRate;
+}
+
 function adminAccessRouteForPackageVariant(){
 	return adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit'));
 }

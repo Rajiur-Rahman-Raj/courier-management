@@ -370,6 +370,9 @@ figure {
     width: 50px;
     height: 50px;
 }
+.base_color{
+	color: var(--theme_color) !important;
+}
 
 .login_btn {
     background: var(--theme_color);
@@ -3753,4 +3756,67 @@ a.text-lighter:focus {
 	margin-bottom: 30px;
 	position: relative;
 	z-index: 1;
+}
+
+.bd-callout {
+	padding: 1.25rem;
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	border-left: 1px solid var(--theme_color);
+	border-left-width: 0.25rem;
+	border-radius: 0.25rem;
+	background: #fff;
+}
+
+.profile-setting .sidebar-wrapper {
+	background: var(--white);
+	box-shadow: var(--shadow2);
+	border-radius: 10px;
+	padding: 20px;
+}
+.form-check-inline {
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+	-ms-flex-align: center;
+	padding-left: 0;
+	margin-right: 0.75rem;
+}
+.form-check-inline .form-check-input {
+	position: static;
+	margin-top: 0;
+	margin-right: 0.3125rem;
+	margin-left: 0;
+}
+.payout .form-check-input {
+	display: none;
+}
+.form-check .form-check-input {
+	border-radius: 5px;
+	background: var(--white);
+	border: 2px solid var(--theme_color);
+	cursor: pointer;
+	margin-top: 5px;
+}
+.payout label.form-check-label {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	opacity: 0.6;
+	border: 2px solid transparent;
+	transition: all .2s ease;
+}
+.payout label.form-check-label img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	overflow: hidden;
+	padding: 2px;
+}
+.form-check label {
+	cursor: pointer;
+	color: #696969;
+}
+.payout input:checked ~ .form-check-label {
+	opacity: 1;
+	border-color: var(--theme_color);
 }

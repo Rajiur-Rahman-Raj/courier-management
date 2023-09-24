@@ -53,7 +53,7 @@
 		</li>
 
 		<li>
-			<a href="#"><i class="fal fa-credit-card text-danger" aria-hidden="true"></i>@lang('Payout')</a>
+			<a class="{{menuActive(['payout.request'])}}" href="{{route('payout.request')}}"><i class="fal fa-credit-card text-danger" aria-hidden="true"></i>@lang('Payout')</a>
 		</li>
 
 		<li>
@@ -66,12 +66,12 @@
 		</li>
 
 		<li>
-			<a class="{{menuActive('user.transaction')}}" href="{{ route('user.transaction') }}"><i
+			<a class="{{menuActive(['user.transaction','user.transaction.search'])}}" href="{{ route('user.transaction') }}"><i
 					class="fal fa-money-check-alt text-indigo" aria-hidden="true"></i>@lang('Transaction')</a>
 		</li>
 
 		<li>
-			<a class="{{menuActive('user.ticket.list')}}" href="{{route('user.ticket.list')}}"><i
+			<a class="{{menuActive(['user.ticket.list', 'user.ticket.view', 'user.ticket.create'])}}" href="{{route('user.ticket.list')}}"><i
 					class="fal fa-ticket text-success" aria-hidden="true"></i>@lang('Support Ticket')</a>
 		</li>
 

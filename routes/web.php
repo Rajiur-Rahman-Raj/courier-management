@@ -436,7 +436,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('user.dashboard');
 	Route::get('get-transaction-chart', [HomeController::class, 'getTransactionChart'])->name('user.get.transaction.chart');
 
-	/* Transaction List*/
+	/* Transaction List */
 	Route::get('transaction-list', [TransactionController::class, 'index'])->name('user.transaction');
 	Route::get('transaction-search', [TransactionController::class, 'search'])->name('user.transaction.search');
 
@@ -458,8 +458,12 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('payout-list', [PayoutController::class, 'index'])->name('payout.index');
 	Route::get('payout-search', [PayoutController::class, 'search'])->name('payout.search');
 	Route::match(['get', 'post'], 'request-payout', [PayoutController::class, 'payoutRequest'])->name('payout.request');
+	Route::post('confirm-payout/flutterwave/{utr}', [PayoutController::class, 'flutterwavePayout'])->name('payout.flutterwave');
+	Route::post('confirm-payout/paystack/{utr}', [PayoutController::class, 'paystackPayout'])->name('payout.paystack');
 	Route::match(['get', 'post'], 'confirm-payout/{utr}', [PayoutController::class, 'confirmPayout'])->name('payout.confirm');
 	Route::get('payout-check-limit', [PayoutController::class, 'checkLimit'])->name('payout.checkLimit');
+	Route::post('payout-bank-form', [PayoutController::class, 'getBankForm'])->name('payout.getBankForm');
+	Route::post('payout-bank-list', [PayoutController::class, 'getBankList'])->name('payout.getBankList');
 
 	/* ADD MONEY BY USER */
 	Route::match(['get', 'post'], 'add-fund', [FundController::class, 'initialize'])->name('fund.initialize');

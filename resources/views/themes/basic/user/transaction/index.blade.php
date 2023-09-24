@@ -1,6 +1,10 @@
 @extends($theme.'layouts.user')
 @section('page_title',__('Transaction List'))
 
+@push('extra_styles')
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
 	<div class="container-fluid">
 		<div class="main row">
@@ -16,8 +20,8 @@
 							</ol>
 						</nav>
 					</div>
-
 				</div>
+
 				<div class="search-bar profile-setting">
 					<form action="{{ route('user.transaction.search') }}" method="get">
 						@include($theme.'user.transaction.searchForm')
@@ -27,53 +31,26 @@
 					<table class="table table-striped">
 						<thead>
 						<tr>
-							<th scope="col">@lang('Sender')</th>
-							<th scope="col">@lang('Receiver')</th>
-							<th scope="col">@lang('Receiver E-Mail')</th>
-							<th scope="col">@lang('Transaction ID')</th>
-							<th scope="col">@lang('Requested Amount')</th>
-							<th scope="col">@lang('Type')</th>
-							<th scope="col">@lang('Status')</th>
-							<th scope="col">@lang('Created time')</th>
+							<th>@lang('SL No.')</th>
+							<th>@lang('Transaction ID')</th>
+							<th>@lang('Amount')</th>
+							<th>@lang('Remarks')</th>
+							<th>@lang('Time')</th>
 						</tr>
 						</thead>
 						<tbody>
-						@forelse($transactions as $key => $value)
+						@forelse($transactions as $key => $transaction)
 							<tr>
-								<td data-label="@lang('Sender')">
-									@if($value->transactional_type == \App\Models\Order::class)
-										@lang('N/A')
-									@else
-										{{ __(optional(optional($value->transactional)->user)->name ?? __('N/A')) }}
-									@endif
+								<td data-label="SL.">{{loopIndex($transactions) + $loop->index}}</td>
+								<td data-label="@lang('Transaction Id')">@lang($transaction->trx_id)</td>
+								<td data-label="@lang('Amount')">
+									<span
+										class="fontBold text-{{($transaction->trx_type == "+") ? 'success': 'danger'}}">{{($transaction->trx_type == "+") ? '+': '-'}}{{getAmount($transaction->amount, config('basic.fraction_number')). ' ' . trans(config('basic.base_currency'))}}</span>
 								</td>
-								<td data-label="@lang('Receiver')">
-									@if($value->transactional_type == \App\Models\Order::class)
-										{{ __(optional(optional($value->transactional)->user)->name ?? __('N/A')) }}
-									@else
-										{{ __(optional(optional($value->transactional)->receiver)->name ?? __('N/A')) }}
-									@endif
-								</td>
-								<td data-label="@lang('Receiver E-Mail')">
-									@if($value->transactional_type == \App\Models\Order::class)
-										{{ __(optional(optional($value->transactional)->user)->email ?? __('N/A')) }}
-									@else
-										{{ __($value->transactional->email)??__('N/A') }}
-									@endif
-								</td>
-								<td data-label="@lang('Transaction ID')">{{ __($value->utr) }}</td>
-								<td data-label="@lang('Requested Amount')">{{ getAmount($value->amount,config('basic.fraction_number')) .' '. config('basic.base_currency') }}</td>
-								<td data-label="@lang('Type')">
-									{{ __(str_replace('App\Models\\', '', $value->transactional_type)) }}
-								</td>
-								<td data-label="@lang('Status')">
-									@if($value->transactional->status)
-										<span class="badge bg-success">@lang('Success')</span>
-									@else
-										<span class="badge bg-warning">@lang('Pending')</span>
-									@endif
-								</td>
-								<td data-label="@lang('Created time')"> {{ dateTime($value->created_at)}} </td>
+
+								<td>@lang($transaction->remarks)</td>
+
+								<td>{{ dateTime($transaction->created_at, 'd M Y h:i A') }}</td>
 							</tr>
 						@empty
 							<tr>
@@ -93,8 +70,33 @@
 	</div>
 @endsection
 
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
 
+@section('scripts')
+	<script>
+		'use strict'
+		$('.from_date').on('change', function () {
+			$('.to_date').removeAttr('disabled');
+		});
 
+		$(document).ready(function () {
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+		})
+
+	</script>
+@endsection
 
 
 

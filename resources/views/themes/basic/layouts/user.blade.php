@@ -32,7 +32,7 @@
 
 @include($theme.'partials.user.scripts')
 @include($theme.'partials.user.flash-message')
-
+@stack('js-lib')
 @yield('scripts')
 
 </body>
