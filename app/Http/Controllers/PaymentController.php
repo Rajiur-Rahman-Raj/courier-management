@@ -246,6 +246,45 @@ class PaymentController extends Controller
 		}
 	}
 
+	public function apiResponseSend($order)
+	{
+		$url = $order->ipn_url;
+		$postParam = [
+			'status' => 'success',
+			'data' => [
+				'id' => $order->utr,
+				'currency' => optional($order->currency)->code,
+				'amount' => $order->amount,
+				'order_id' => $order->order_id,
+				'meta' => [
+					'customer_name' => optional($order->meta)->customer_name ?? null,
+					'customer_email' => optional($order->meta)->customer_email ?? null,
+					'description' => optional($order->meta)->description ?? null,
+				],
+			],
+		];
+		$methodObj = 'App\\Services\\BasicCurl';
+		$response = $methodObj::curlPostRequest($url, $postParam);
+		return 0;
+	}
+
+	public function apiFailResponseSend($order, $msg)
+	{
+		$order->status = 2;
+		$order->save();
+
+		$url = $order->ipn_url;
+		$postParam = [
+			'status' => 'error',
+			'data' => [
+				'message' => $msg
+			],
+		];
+		$methodObj = 'App\\Services\\BasicCurl';
+		$response = $methodObj::curlPostRequest($url, $postParam);
+		return 0;
+	}
+
 	public function success()
 	{
 		return view('success');

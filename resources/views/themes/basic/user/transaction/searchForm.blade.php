@@ -16,7 +16,7 @@
 
 
 	<div class="flatpickr input-box col-lg-3">
-		<div class="input-group">
+		<div class="input-box input-group">
 			<input type="date" placeholder="@lang('Select From Date')"
 				   class="form-control from_date" name="from_date"
 				   value="{{ old('from_date',request()->from_date) }}" data-input/>

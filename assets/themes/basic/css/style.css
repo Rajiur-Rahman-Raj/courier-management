@@ -315,16 +315,16 @@ figure {
     font-weight: 700;
 }
 
-.view_cmn_btn{
+.view_cmn_btn {
 	font-size: 12px;
-	background: #14212a;
+	background: #ffdc39;
 	padding: 5px 15px;
 	text-decoration: none;
 	border-radius: 6px;
 	transition: all 0.3s ease;
 	border: 1px solid transparent;
 	display: inline-block;
-	color: var(--white);
+	color: #000000;
 	text-transform: uppercase;
 	font-weight: 700;
 }
@@ -372,6 +372,10 @@ figure {
 }
 .base_color{
 	color: var(--theme_color) !important;
+}
+
+.base_background{
+	background: var(--theme_color) !important;
 }
 
 .login_btn {
@@ -3566,7 +3570,7 @@ a.text-lighter:focus {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 15px;
+	/*margin-bottom: 15px;*/
 }
 #content .dashboard-heading h2, #content .dashboard-heading h3 {
 	margin-bottom: 0;
@@ -3819,4 +3823,50 @@ a.text-lighter:focus {
 .payout input:checked ~ .form-check-label {
 	opacity: 1;
 	border-color: var(--theme_color);
+}
+.row.payment-method-input {
+	overflow-y: scroll;
+	max-height: 315px;
+}
+.payment-method-input .form-check-inline .form-check-input {
+	display: none;
+}
+.main-content .card-body form label {
+	font-size: 14px;
+	color: gray;
+}
+.payment-method-input img {
+	width: 100%;
+	height: auto;
+	border-radius: 5px;
+	filter: opacity(20%);
+	border: 2px solid white;
+}
+.payment-method-input input:checked ~ .form-check-label > img {
+	filter: opacity(100%);
+	box-shadow: 0 0 0 2px #6777ef;
+}
+
+
+
+/* scrollbar */
+
+/* width */
+.lover_boy_hridoy::-webkit-scrollbar {
+	width: 5px;
+}
+
+/* Track */
+.lover_boy_hridoy::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+.lover_boy_hridoy::-webkit-scrollbar-thumb {
+	background: var(--theme_color);
+}
+
+/* Handle on hover */
+.lover_boy_hridoy::-webkit-scrollbar-thumb:hover {
+	background: #555;
 }

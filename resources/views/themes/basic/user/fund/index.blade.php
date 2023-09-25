@@ -1,17 +1,27 @@
 @extends($theme.'layouts.user')
-@section('page_title',__('Fund Added List'))
+@section('page_title',__('Fund History List'))
+
+@push('extra_styles')
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
+@endpush
+
 
 @section('content')
 	<!-- Main Content -->
-	<div class="main-content">
-		<section class="section">
-			<div class="section-header">
-				<h1>@lang('Fund Added List')</h1>
-				<div class="section-header-breadcrumb">
-					<div class="breadcrumb-item active">
-						<a href="{{ route('user.dashboard') }}">@lang('Dashboard')</a>
+	<div class="container-fluid">
+		<div class="main row">
+			<div class="col-12">
+				<div class="dashboard-heading">
+					<div>
+						<h2 class="mb-0">@lang('Fund List')</h2>
+						<nav aria-label="breadcrumb" class="ms-2">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{{ route('user.dashboard') }}">@lang('Home')</a>
+								</li>
+								<li class="breadcrumb-item"><a href="#">@lang('Fund History')</a></li>
+							</ol>
+						</nav>
 					</div>
-					<div class="breadcrumb-item">@lang('Fund Added List')</div>
 				</div>
 			</div>
 
@@ -19,74 +29,89 @@
 				<div class="container-fluid" id="container-wrapper">
 					<div class="row">
 						<div class="col-lg-12">
-							<div class="card card-primary mb-4 shadow-sm">
-								<div
-									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-									<h6 class="m-0 font-weight-bold text-primary">@lang('Search')</h6>
-								</div>
-								<div class="card-body">
-									<form action="{{ route('fund.search') }}" method="get">
-										@include($theme.'user.fund.searchForm')
-									</form>
-								</div>
+							<div class="search-bar profile-setting">
+								<form action="{{ route('fund.search') }}" method="get">
+									@include($theme.'user.fund.searchForm')
+								</form>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-lg-12">
-							<div class="card card-primary mb-4 shadow">
-								<div
-									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-									<h6 class="m-0 font-weight-bold text-primary">@lang('Fund Added List')</h6>
-								</div>
-								<div class="card-body">
-									<div class="table-responsive">
-										<table
-											class="table table-striped table-hover align-items-center table-borderless">
-											<thead class="thead-light">
-											<tr>
-												<th>@lang('SL')</th>
-												<th>@lang('Method')</th>
-												<th>@lang('Transaction ID')</th>
-												<th>@lang('Requested Amount')</th>
-												<th>@lang('Status')</th>
-												<th>@lang('Created time')</th>
-											</tr>
-											</thead>
-											<tbody>
-											@forelse($funds as $key => $value)
-												<tr>
-													<td data-label="@lang('SL')">{{loopIndex($funds) + $key }}</td>
-													<td data-label="@lang('Method')">{{ __(optional(optional($value->depositable)->gateway)->name) ?? __('N/A') }}</td>
-													<td data-label="@lang('Transaction ID')">{{ __($value->utr) }}</td>
-													<td data-label="@lang('Requested Amount')">{{ (getAmount($value->amount)).' '.config('basic.base_currency') }}</td>
-													<td data-label="@lang('Status')">
-														@if($value->status)
-															<span class="badge badge-success">@lang('Success')</span>
-														@else
-															<span class="badge badge-warning">@lang('Pending')</span>
-														@endif
-													</td>
-													<td data-label="@lang('Created time')"> {{ dateTime($value->created_at)}} </td>
-												</tr>
-											@empty
-												<tr>
-													<th colspan="100%" class="text-center">@lang('No data found')</th>
-												</tr>
-											@endforelse
-											</tbody>
-										</table>
-									</div>
-									<div class="card-footer">
-										{{ $funds->links() }}
-									</div>
-								</div>
+							<div class="table-parent table-responsive">
+								<table
+									class="table table-striped table-hover align-items-center table-borderless">
+									<thead class="thead-light">
+									<tr>
+										<th>@lang('SL')</th>
+										<th>@lang('Method')</th>
+										<th>@lang('Transaction ID')</th>
+										<th>@lang('Requested Amount')</th>
+										<th>@lang('Status')</th>
+										<th>@lang('Created time')</th>
+									</tr>
+									</thead>
+									<tbody>
+									@forelse($funds as $key => $value)
+										<tr>
+											<td data-label="@lang('SL')">{{loopIndex($funds) + $key }}</td>
+											<td data-label="@lang('Method')">{{ __(optional(optional($value->depositable)->gateway)->name) ?? __('N/A') }}</td>
+											<td data-label="@lang('Transaction ID')">{{ __($value->utr) }}</td>
+											<td data-label="@lang('Requested Amount')">{{ (getAmount($value->amount)).' '.config('basic.base_currency') }}</td>
+											<td data-label="@lang('Status')">
+												@if($value->status)
+													<span class="badge text-bg-success">@lang('Success')</span>
+												@else
+													<span class="badge text-bg-warning">@lang('Pending')</span>
+												@endif
+											</td>
+											<td data-label="@lang('Created time')"> {{ customDate($value->created_at)}} </td>
+										</tr>
+									@empty
+										<tr>
+											<th colspan="100%" class="text-center">@lang('No data found')</th>
+										</tr>
+									@endforelse
+									</tbody>
+								</table>
 							</div>
+							<nav aria-label="Page navigation example">
+								<ul class="pagination justify-content-center">
+									{{ $funds->appends($_GET)->links() }}
+								</ul>
+							</nav>
 						</div>
 					</div>
 				</div>
 			</div>
-
-		</section>
+		</div>
 	</div>
+@endsection
+
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
+
+@section('scripts')
+	<script>
+		'use strict'
+		$('.from_date').on('change', function () {
+			$('.to_date').removeAttr('disabled');
+		});
+
+		$(document).ready(function () {
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+		})
+
+	</script>
 @endsection

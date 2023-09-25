@@ -95,7 +95,7 @@
 											@endforeach
 										@endif
 										<button type="submit" id="submit"
-												class="btn-custom mt-3">@lang('Send Request')</button>
+												class="cmn_btn mt-3">@lang('Send Request')</button>
 									</form>
 								</div>
 							</div>
@@ -196,6 +196,11 @@
 		});
 
 		function getBankForm(currencyCode) {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
 			$.ajax({
 				url: "{{route('payout.getBankList')}}",
 				type: "post",

@@ -22,6 +22,10 @@
 				<div class="container-fluid" id="container-wrapper">
 					<div class="row">
 						<div class="col-lg-12">
+							<div class="bd-callout bd-callout-primary mx-2">
+								<i class="base_color fas fa-info-circle text-primary"
+								   aria-hidden="true"></i> @lang('Pull up or down the rows to sort the payment gateways order that how do you want to display the payment gateways in admin and user panel.')
+							</div>
 							<div class="card mb-4 card-primary shadow">
 								<div
 									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -90,12 +94,6 @@
 											@endif
 											</tbody>
 										</table>
-									</div>
-									<div class="card-footer">
-										<h5>
-											<span class="text-primary">@lang('N.B:')</span>
-											@lang('Pull up or down the rows to sort the payment gateways order that how do you want to display the payment gateways in admin and user panel.')
-										</h5>
 									</div>
 								</div>
 							</div>

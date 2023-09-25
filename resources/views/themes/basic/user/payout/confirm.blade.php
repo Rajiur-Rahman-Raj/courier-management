@@ -1,4 +1,3 @@
-
 @extends($theme.'layouts.user')
 @section('page_title',__('Payout'))
 
@@ -7,7 +6,7 @@
 		<div class="main row">
 			<div class="col-12">
 				<div class="dashboard-heading">
-					<h2 class="mb-0">@lang('Payout')</h2>
+					<h2 class="mb-3">@lang('Payout')</h2>
 				</div>
 				<div class="row mb-3">
 					<section class="profile-setting">
@@ -68,7 +67,7 @@
 											@foreach(json_decode($payoutMethod->inputForm) as $key => $value)
 												@if($value->type == 'text')
 													<div class="input-box mb-3">
-														<label for="{{ $value->name }}">@lang($value->label)</label>
+														<label class="font-weight-bold text-dark" for="{{ $value->name }}">@lang($value->label)</label>
 														<input type="text" name="{{ $value->name }}"
 															   placeholder="{{ __($value->label) }}"
 															   autocomplete="off"
@@ -79,7 +78,7 @@
 													</div>
 												@elseif($value->type == 'textarea')
 													<div class="input-box mb-3">
-														<label for="{{ $value->name }}">@lang($value->label)</label>
+														<label class="text-dark font-weight-bold" for="{{ $value->name }}">@lang($value->label)</label>
 														<textarea
 															class="form-control @error($value->name) is-invalid @enderror"
 															name="{{$value->name}}"
@@ -105,7 +104,7 @@
 											@endforeach
 										@endif
 										<button type="submit" id="submit"
-												class="btn-custom mt-4">@lang('Send Request')</button>
+												class="cmn_btn mt-4">@lang('Send Request')</button>
 									</form>
 								</div>
 							</div>

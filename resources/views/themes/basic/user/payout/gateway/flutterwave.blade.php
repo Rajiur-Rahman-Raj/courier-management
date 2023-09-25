@@ -74,7 +74,7 @@
 
 										</div>
 										<button type="submit" id="submit"
-												class="btn-custom mt-4">@lang('Send Request')</button>
+												class="cmn_btn mt-4">@lang('Send Request')</button>
 									</form>
 								</div>
 							</div>
@@ -167,6 +167,11 @@
 		});
 
 		function getBankForm(bankName) {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
 			$.ajax({
 				url: "{{route('payout.getBankForm')}}",
 				type: "post",

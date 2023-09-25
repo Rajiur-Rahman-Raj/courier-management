@@ -20,6 +20,7 @@
 		"laravel/ui": "^3.1",
 		"league/flysystem-aws-s3-v3": "^1.0",
 		"league/flysystem-sftp": "~1.0",
+		"midtrans/midtrans-php": "^2.5",
 		"mollie/laravel-mollie": "^2.13",
 		"pusher/pusher-php-server": "^4.1",
 		"securionpay/securionpay-php": "^2.2",

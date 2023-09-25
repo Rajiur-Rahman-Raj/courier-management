@@ -43,12 +43,12 @@
 		</li>
 
 		<li>
-			<a href="{{ route('addFund') }}"><i class="fal fa-funnel-dollar text-primary"
+			<a class="{{menuActive(['fund.initialize', 'deposit.confirm', 'payment.process'])}}" href="{{ route('fund.initialize') }}"><i class="fal fa-funnel-dollar text-primary"
 												aria-hidden="true"></i>@lang('Add Fund')</a>
 		</li>
 
 		<li>
-			<a href="#"><i class="fal fa-file-invoice-dollar text-warning" aria-hidden="true"></i>@lang('Fund History')
+			<a  class="{{ menuActive(['fund.index', 'fund.search']) }}" href="{{ route('fund.index') }}"><i class="fal fa-file-invoice-dollar text-warning" aria-hidden="true"></i>@lang('Fund History')
 			</a>
 		</li>
 
@@ -57,7 +57,7 @@
 		</li>
 
 		<li>
-			<a href="#"><i class="fal fa-usd-square text-purple" aria-hidden="true"></i>@lang('Payout History')</a>
+			<a class="{{menuActive(['payout.index', 'payout.search'])}}" href="{{ route('payout.index') }}"><i class="fal fa-usd-square text-purple" aria-hidden="true"></i>@lang('Payout History')</a>
 		</li>
 
 		<li>

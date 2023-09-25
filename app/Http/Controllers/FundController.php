@@ -7,6 +7,7 @@ use App\Models\Fund;
 use App\Models\Gateway;
 use App\Models\Template;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -51,7 +52,7 @@ class FundController extends Controller
 	{
 		$userId = Auth::id();
 		$search = $request->all();
-		$created_date = isset($search['created_at']) ? preg_match("/^[0-9]{2,4}-[0-9]{1,2}-[0-9]{1,2}$/", $search['created_at']) : 0;
+		$created_date = Carbon::parse($request->created_at);
 
 		$funds = Fund::with('sender', 'receiver')
 			->when(isset($search['email']), function ($query) use ($search) {
@@ -66,8 +67,8 @@ class FundController extends Controller
 			->when(isset($search['max']), function ($query) use ($search) {
 				return $query->where('amount', '<=', $search['max']);
 			})
-			->when($created_date == 1, function ($query) use ($search) {
-				return $query->whereDate("created_at", $search['created_at']);
+			->when(isset($search['created_at']), function ($q2) use ($created_date) {
+				return $q2->whereDate('created_at', '>=', $created_date);
 			});
 
 		$data = [

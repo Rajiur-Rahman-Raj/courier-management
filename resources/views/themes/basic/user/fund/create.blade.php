@@ -2,95 +2,97 @@
 @section('page_title',__('Add Fund'))
 
 @section('content')
-	<div class="main-content">
-		<section class="section">
-			<div class="section-header">
-				<h1>@lang('Add Fund')</h1>
-				<div class="section-header-breadcrumb">
-					<div class="breadcrumb-item active">
-						<a href="{{ route('user.dashboard') }}">@lang('Dashboard')</a>
-					</div>
-					<div class="breadcrumb-item">@lang('Add Fund')</div>
+	<div class="container-fluid">
+		<section class="main row">
+			<div class="col-12">
+				<div class="dashboard-heading">
+					<h2>@lang('Add Fund')</h2>
 				</div>
 			</div>
 			<!------ alert ------>
-			<div class="row ">
+			<div class="row">
 				<div class="col-md-12">
 					<div class="bd-callout bd-callout-primary mx-2">
-						<i class="fa-3x fas fa-info-circle text-primary"></i> @lang(@$template->description->short_description)
+						<i class="base_color fas fa-info-circle text-primary"></i> @lang("You can deposit money into your own wallet")
 					</div>
 				</div>
 			</div>
 			<!------ main content ------>
-			<div class="row justify-content-md-center">
-				<div class="col-md-6">
-					<div class="card mb-4 shadow card-primary">
-						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-							<h6 class="m-0 font-weight-bold text-primary">@lang('Deposit')</h6>
-						</div>
-						<div class="card-body">
-							<form action="{{ route('fund.initialize') }}" method="post">
-								@csrf
-								<div class="row">
-									<div class="col-md-6 search-currency-dropdown">
-									</div>
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="amount">@lang('Amount')</label>
-											<div class="input-group">
-												<input type="text" id="amount" value="{{ old('amount') }}" name="amount"
-													   placeholder="@lang('0.00')"
-													   class="form-control @error('amount') is-invalid @enderror"
-													   autocomplete="off">
-												<div class="input-group-prepend">
-													<span class="form-control">{{config('basic.base_currency')}}</span>
-												</div>
-											</div>
-											<div class="invalid-feedback">
-												@error('amount') @lang($message) @enderror
-											</div>
-											<div class="valid-feedback"></div>
-										</div>
-									</div>
+			<div class="row main_content">
+				<section class="profile-setting">
+					<div class="row justify-content-md-center">
+						<div class="col-md-6">
+							<div class="card mb-4 shadow card-primary">
+								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+									<h6 class="m-0 text-dark font-weight-bold">@lang('Deposit')</h6>
 								</div>
-
-								<div class="row">
-									<div class="col-md-12">
-										<label for="methodId">@lang('Select Payment Method')</label>
-										<div class="form-group">
-											<div class="row payment-method-input p-1">
-												@foreach($methods as $key => $method)
-													<div class="col-md-2 col-sm-3 col-6">
-														<div class="form-check form-check-inline mr-0 mb-3">
-															<input class="form-check-input methodId" type="radio"
-																   name="methodId" id="{{$key}}"
-																   value="{{ $method->id }}" {{ old('methodId') == $method->id || $key == 0 ? ' checked' : ''}}>
-															<label class="form-check-label" for="{{$key}}">
-																<img
-																	src="{{ getFile($method->driver,$method->image ) }}">
-															</label>
+								<div class="card-body">
+									<form action="{{ route('fund.initialize') }}" method="post">
+										@csrf
+										<div class="row">
+											<div class="col-md-6 search-currency-dropdown">
+											</div>
+											<div class="col-md-12">
+												<div class="form-group input-box">
+													<label for="amount">@lang('Amount')</label>
+													<div class="input-group">
+														<input type="text" id="amount" value="{{ old('amount') }}" name="amount"
+															   placeholder="@lang('0.00')"
+															   class="form-control @error('amount') is-invalid @enderror"
+															   autocomplete="off">
+														<div class="input-group-prepend">
+															<span class="form-control base_background text-white">{{config('basic.base_currency')}}</span>
 														</div>
 													</div>
-												@endforeach
+													<div class="invalid-feedback">
+														@error('amount') @lang($message) @enderror
+													</div>
+													<div class="valid-feedback"></div>
+												</div>
 											</div>
 										</div>
-									</div>
+
+										<div class="row mt-3">
+											<div class="col-md-12">
+												<label for="methodId" class="mb-2">@lang('Select Payment Method')</label>
+												<div class="form-group">
+													<div class="row payment-method-input p-1 lover_boy_hridoy">
+														@foreach($methods as $key => $method)
+															<div class="col-md-2 col-sm-3 col-6">
+																<div class="form-check form-check-inline mr-0 mb-3">
+																	<input class="form-check-input methodId" type="radio"
+																		   name="methodId" id="{{$key}}"
+																		   value="{{ $method->id }}" {{ old('methodId') == $method->id || $key == 0 ? ' checked' : ''}}>
+																	<label class="form-check-label" for="{{$key}}">
+																		<img
+																			src="{{ getFile($method->driver,$method->image ) }}">
+																	</label>
+																</div>
+															</div>
+														@endforeach
+													</div>
+												</div>
+											</div>
+										</div>
+										<button type="submit" id="submit" class="btn cmn_btn btn-sm btn-block w-100"
+												disabled>@lang('Deposit')</button>
+									</form>
 								</div>
-								<button type="submit" id="submit" class="btn btn-primary btn-sm btn-block"
-										disabled>@lang('Deposit')</button>
-							</form>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="card mb-4 shadow card-primary">
+								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+									<h6 class="m-0 font-weight-bold text-dark">@lang('Details')</h6>
+								</div>
+								<div class="card-body showCharge">
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="card mb-4 shadow card-primary">
-						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-							<h6 class="m-0 font-weight-bold text-primary">@lang('Details')</h6>
-						</div>
-						<div class="card-body showCharge">
-						</div>
-					</div>
-				</div>
+
+				</section>
+
 			</div>
 
 		</section>
@@ -141,6 +143,7 @@
 					}
 				})
 					.done(function (response) {
+						console.log(response)
 						let amountField = $('#amount');
 						if (response.status) {
 							clearMessage(amountField);

@@ -1,12 +1,12 @@
 @extends($theme.'layouts.user')
-@section('title')
+@section('page_title')
 	{{ 'Pay with '.optional($deposit->gateway)->name ?? '' }}
 @endsection
 
 @section('content')
-	<section style="padding: 120px 0" id="dashboard">
-		<div class="container add-fund pb-50">
-			<div class="row">
+	<section id="dashboard">
+		<div class="container add-fund pb-50 mt-4">
+			<div class="row profile-setting">
 				<div class="col-md-12">
 					<div class="card secbg br-4">
 						<div class="card-body ">
@@ -15,7 +15,7 @@
 									<h3 class="title text-center">{{trans('Please follow the instruction below')}}</h3>
 									<p class="text-center mt-2 ">{{trans('You have requested to deposit')}} <b
 											class="text--base">{{getAmount($deposit->amount)}}
-											{{$deposit->payment_method_currency}}</b> , {{trans('Please pay')}}
+											{{$basic->base_currency}}</b> , {{trans('Please pay')}}
 										<b class="text--base">{{getAmount($deposit->payable_amount)}} {{$deposit->payment_method_currency}}</b> {{trans('for successful payment')}}
 									</p>
 
@@ -32,7 +32,7 @@
 											@foreach($deposit->gateway->parameters as $k => $v)
 												@if($v->type == "text")
 													<div class="col-md-12 mt-2">
-														<div class="form-group  ">
+														<div class="form-group input-box">
 															<label>{{trans($v->field_level)}} @if($v->validation == 'required')
 																	<span class="text--danger">*</span>
 																@endif </label>
@@ -47,7 +47,7 @@
 													</div>
 												@elseif($v->type == "textarea")
 													<div class="col-md-12 mt-2">
-														<div class="form-group">
+														<div class="form-group input-box">
 															<label>{{trans($v->field_level)}} @if($v->validation == 'required')
 																	<span class="text--danger">*</span>
 																@endif </label>
@@ -66,12 +66,12 @@
 																<span class="text--danger">*</span>
 															@endif </label>
 
-														<div class="form-group">
+														<div class="form-group input-box">
 															<div class="fileinput fileinput-new "
 																 data-provides="fileinput">
 																<div class="fileinput-new thumbnail withdraw-thumbnail"
 																	 data-trigger="fileinput">
-																	<img class="w-25"
+																	<img style="width: 200px !important;"
 																		 src="{{ getFile(config('location.default')) }}"
 																		 alt="...">
 																</div>
@@ -79,7 +79,7 @@
 																	class="fileinput-preview fileinput-exists thumbnail wh-200-150 "></div>
 
 																<div class="img-input-div">
-                                                                <span class="btn btn-success btn-file">
+                                                                <span class="btn cmn_btn btn-file">
                                                                     <span
 																		class="fileinput-new "> @lang('Select') {{$v->field_level}}</span>
                                                                     <span
@@ -104,7 +104,7 @@
 										@endif
 										<div class="col-md-12 ">
 											<div class=" form-group">
-												<button type="submit" class="btn btn-success w-100 mt-3">
+												<button type="submit" class="btn cmn_btn w-100 mt-3">
 													<span>@lang('Confirm Now')</span>
 												</button>
 											</div>
@@ -119,11 +119,11 @@
 		</div>
 	</section>
 
-	@push('css-lib')
+	@push('extra_styles')
 		<link rel="stylesheet" href="{{asset($themeTrue.'css/bootstrap-fileinput.css')}}">
 	@endpush
 
-	@push('extra-js')
+	@push('extra_scripts')
 		<script src="{{asset($themeTrue.'js/bootstrap-fileinput.js')}}"></script>
 	@endpush
 @endsection

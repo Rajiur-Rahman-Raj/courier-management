@@ -11,7 +11,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="bd-callout bd-callout-primary text-dark font-weight-bold">
-							<i class="base_color fas fa-info-circle"></i> @lang(@$template->description->short_description)
+							<i class="base_color fas fa-info-circle"></i> @lang("Withdraw your money from here")
 						</div>
 					</div>
 				</div>

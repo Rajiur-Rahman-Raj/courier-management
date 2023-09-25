@@ -471,10 +471,6 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('fund-requested', [FundController::class, 'requested'])->name('fund.request');
 	Route::get('fund-search', [FundController::class, 'search'])->name('fund.search');
 
-	// Add Fund
-	Route::get('add-fund', [FundController::class, 'addFund'])->name('addFund');
-	Route::post('add-fund/request', [FundController::class, 'addFundRequest'])->name('user.addFund.request');
-
 	/* USER SUPPORT TICKET */
 	Route::get('tickets', [SupportController::class, 'index'])->name('user.ticket.list');
 	Route::get('ticket-create', [SupportController::class, 'create'])->name('user.ticket.create');

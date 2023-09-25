@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Payout;
 use App\Models\PayoutMethod;
 use App\Models\Template;
+use App\Models\Transaction;
 use App\Traits\Notify;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -37,28 +39,11 @@ class PayoutController extends Controller
 
 	public function search(Request $request)
 	{
-		$filterData = $this->_filter($request);
-		$search = $filterData['search'];
-		$userId = $filterData['userId'];
-		$payouts = $filterData['payouts']
-			->where(['user_id' => $userId])
-			->latest()->paginate();
-		$payouts->appends($filterData['search']);
-		return view($this->theme . 'user.payout.index', compact('search', 'payouts'));
-	}
-
-	public function _filter($request)
-	{
 		$userId = Auth::id();
 		$search = $request->all();
-		$sent = isset($search['type']) ? preg_match("/sent/", $search['type']) : 0;
-		$received = isset($search['type']) ? preg_match("/received/", $search['type']) : 0;
-		$created_date = isset($search['created_at']) ? preg_match("/^[0-9]{2,4}-[0-9]{1,2}-[0-9]{1,2}$/", $search['created_at']) : 0;
+		$created_date = Carbon::parse($request->created_at);
 
-		$payouts = Payout::with('user', 'user.profile', 'admin')
-			->when(isset($search['email']), function ($query) use ($search) {
-				return $query->where('email', 'LIKE', "%{$search['email']}%");
-			})
+		$payout = Payout::with('user', 'user.profile', 'admin')
 			->when(isset($search['utr']), function ($query) use ($search) {
 				return $query->where('utr', 'LIKE', "%{$search['utr']}%");
 			})
@@ -68,33 +53,16 @@ class PayoutController extends Controller
 			->when(isset($search['max']), function ($query) use ($search) {
 				return $query->where('amount', '<=', $search['max']);
 			})
-			->when(isset($search['sender']), function ($query) use ($search) {
-				return $query->whereHas('sender', function ($qry) use ($search) {
-					$qry->where('name', 'LIKE', "%{$search['sender']}%");
-				});
+			->when(isset($search['created_at']), function ($q2) use ($created_date) {
+				return $q2->whereDate('created_at', '>=', $created_date);
 			})
-			->when(isset($search['receiver']), function ($query) use ($search) {
-				return $query->whereHas('receiver', function ($qry) use ($search) {
-					$qry->where('name', 'LIKE', "%{$search['receiver']}%");
-				});
-			})
-			->when($sent == 1, function ($query) use ($search, $userId) {
-				return $query->where("user_id", $userId);
-			})
-			->when($received == 1, function ($query) use ($search, $userId) {
-				return $query->where("receiver_id", $userId);
-			})
-			->when($created_date == 1, function ($query) use ($search) {
-				return $query->whereDate("created_at", $search['created_at']);
-			});
+			->where(['user_id' => $userId])
+			->paginate(config('basic.paginate'));
 
-		$data = [
-			'userId' => $userId,
-			'search' => $search,
-			'payouts' => $payouts,
-		];
-		return $data;
+		$payouts = $payout->appends($search);
+		return view($this->theme . 'user.payout.index', compact('search', 'payouts'));
 	}
+
 
 	public function payoutRequest(Request $request)
 	{
@@ -248,7 +216,6 @@ class PayoutController extends Controller
 		$user = Auth::user();
 		$payout = Payout::where('utr', $utr)->first();
 		$payoutMethod = PayoutMethod::where('is_active', 1)->find($payout->payout_method_id);
-		dd($payoutMethod->supported_currency);
 		if ($request->isMethod('get')) {
 			if ($payoutMethod->code == 'flutterwave') {
 				return view($this->theme . 'user.payout.gateway.' . $payoutMethod->code, compact('payout', 'payoutMethod'));
@@ -610,8 +577,6 @@ class PayoutController extends Controller
 
 		$this->adminMail('PAYOUT_REQUEST_TO_ADMIN', $params);
 		$this->adminPushNotification('PAYOUT_REQUEST_TO_ADMIN', $params, $action);
-		$firebaseAction = route('admin.payout.index');
-		$this->adminFirebasePushNotification('PAYOUT_REQUEST_TO_ADMIN', $params, $firebaseAction);
 
 		$params = [
 			'amount' => getAmount($payout->amount),
@@ -624,7 +589,5 @@ class PayoutController extends Controller
 		];
 		$this->sendMailSms($user, 'PAYOUT_REQUEST_FROM', $params);
 		$this->userPushNotification($user, 'PAYOUT_REQUEST_FROM', $params, $action);
-		$firebaseAction = route('payout.index');
-		$this->userFirebasePushNotification($user, 'PAYOUT_REQUEST_FROM', $params, $firebaseAction);
 	}
 }

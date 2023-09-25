@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Deposit;
 use App\Models\Gateway;
+use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DepositController extends Controller
 {
@@ -30,6 +33,7 @@ class DepositController extends Controller
 
 	public function checkAmountValidate($amount, $methodId)
 	{
+		$user = Auth::user();
 		$limit = config('basic.fraction_number');
 		$gateway = Gateway::where('status', 1)->find($methodId);
 		if (!$gateway) {
@@ -37,7 +41,11 @@ class DepositController extends Controller
 			$message = "Gateway currently disable or something went wrong. Please try later";
 		}
 
-		$balance = 0;
+		if (Auth::check()) {
+			$balance = getAmount($user->balance, $limit);
+		} else {
+			$balance = 0;
+		}
 
 		$status = false;
 		$amount = getAmount($amount, $limit);
