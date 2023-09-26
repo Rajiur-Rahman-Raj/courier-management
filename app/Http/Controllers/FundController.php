@@ -31,7 +31,6 @@ class FundController extends Controller
 		$funds = Fund::with(['sender', 'receiver', 'depositable'])
 			->where('user_id', $userId)
 			->latest()->paginate(config('basic.paginate'));
-
 		return view($this->theme . 'user.fund.index', compact('funds'));
 	}
 

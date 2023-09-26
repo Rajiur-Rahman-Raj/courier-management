@@ -38,18 +38,27 @@ class ShipmentController extends Controller
 
 	public function shipmentList(Request $request, $status = null, $type = null)
 	{
-		$search = $request->all();
-		$fromDate = Carbon::parse($request->from_date);
-		$toDate = Carbon::parse($request->to_date)->addDay();
-
 		$shipmentManagement = config('shipmentManagement');
 		$types = array_keys($shipmentManagement);
 		abort_if(!in_array($type, $types), 404);
 		$data['title'] = $shipmentManagement[$type]['title'];
-
 		$authenticateUser = Auth::guard('admin')->user();
 
-		$data['allShipments'] = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
+		$filterData = $this->_filter($request, $status, $type);
+
+		$data['allShipments'] = $filterData['allShipments']
+			->paginate(config('basic.paginate'));
+
+		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status', 'authenticateUser'));
+	}
+
+	public function _filter($request, $status, $type)
+	{
+		$search = $request->all();
+		$fromDate = Carbon::parse($request->from_date);
+		$toDate = Carbon::parse($request->to_date)->addDay();
+		$authenticateUser = Auth::guard('admin')->user();
+		$shipments = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
 			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
 				return $query->whereHas('senderBranch.branchManager', function ($qry) use ($authenticateUser) {
 					$qry->where(['admin_id' => $authenticateUser->id]);
@@ -153,9 +162,13 @@ class ShipmentController extends Controller
 			->when($type == 'internationally' && $status == 'delivered', function ($query) {
 				$query->where('shipment_identifier', 2)
 					->where('status', 5);
-			})
-			->paginate(config('basic.paginate'));
-		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status', 'authenticateUser'));
+			});
+
+		$data = [
+			'allShipments' => $shipments,
+		];
+
+		return $data;
 	}
 
 	public function createShipment(Request $request, $type = null)
@@ -222,9 +235,8 @@ class ShipmentController extends Controller
 		return view('admin.shipments.viewShipment', $data);
 	}
 
-	public function shipmentStore(Request $request, $type = null)
+	public function shipmentStore(ShipmentRequest $request, $type = null)
 	{
-//		ShipmentRequest $request
 		try {
 			DB::beginTransaction();
 			$shipment = new Shipment();

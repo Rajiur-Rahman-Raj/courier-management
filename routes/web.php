@@ -45,6 +45,7 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\UserShipmentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -483,6 +484,10 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('/money-transfer', [HomeController::class, 'moneyTransfer'])->name('user.money-transfer');
 	Route::post('/send-money', [HomeController::class, 'moneyTransferConfirm'])->name('user.send.money');
 
+	// Manage Shipments By User
+	Route::get('shipment-list/{shipment_status}/{shipment_type}', [UserShipmentController::class, 'shipmentList'])->name('user.shipmentList');
+	Route::get('view-shipment/{id}', [UserShipmentController::class, 'viewShipment'])->name('user.viewShipment');
+	Route::get('{shipment_type}/create-shipment', [UserShipmentController::class, 'createShipment'])->name('user.createShipment');
 });
 
 Route::group(['prefix' => 'user'], function () {

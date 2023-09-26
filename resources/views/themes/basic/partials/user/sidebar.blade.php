@@ -27,24 +27,53 @@
 			   aria-expanded="false" aria-controls="collapseExample">
 				<i class="fal fa-truck text-info"></i>@lang('Shipments')
 			</a>
-			<div class="collapse" id="dropdownCollapsible">
+			<div class="collapse {{menuActive(['user.shipmentList', 'user.viewShipment']) == 'active' ? 'show' : ''}}" id="dropdownCollapsible">
 				<ul class="">
 					<li>
-						<a href="#"><i class="fal fa-th-large"></i>Dropdown 1</a>
+						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'all') }}" href="{{ route('user.shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">@lang('All Shipments')</a>
 					</li>
+
 					<li>
-						<a href="#"><i class="fal fa-th-large"></i>Dropdown 2</a>
+						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'in_queue') }}"
+						   href="{{ route('user.shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => 'operator-country']) }}">
+							@lang('In Queue')
+						</a>
 					</li>
+
 					<li>
-						<a href="#"><i class="fal fa-th-large"></i>Dropdown 3</a>
+						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'dispatch') }}"
+						   href="{{ route('user.shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => 'operator-country']) }}">
+							@lang('Dispatch')
+						</a>
 					</li>
+
+					<li>
+						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'upcoming') }}"
+						   href="{{ route('user.shipmentList', ['shipment_status' => 'upcoming', 'shipment_type' => 'operator-country']) }}">
+							@lang('Upcoming')
+						</a>
+					</li>
+
+					<li>
+						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'received') }}"
+						   href="{{ route('user.shipmentList', ['shipment_status' => 'received', 'shipment_type' => 'operator-country']) }}">
+							@lang('Received')
+						</a>
+					</li>
+
+					<li>
+						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'delivered') }}"
+						   href="{{ route('user.shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => 'operator-country']) }}">
+							@lang('Delivered')
+						</a>
+					</li>
+
 				</ul>
 			</div>
 		</li>
 
 		<li>
-			<a class="{{menuActive(['fund.initialize', 'deposit.confirm', 'payment.process'])}}" href="{{ route('fund.initialize') }}"><i class="fal fa-funnel-dollar text-primary"
-												aria-hidden="true"></i>@lang('Add Fund')</a>
+			<a class="{{menuActive(['fund.initialize', 'deposit.confirm', 'payment.process'])}}" href="{{ route('fund.initialize') }}"><i class="fal fa-funnel-dollar text-primary" aria-hidden="true"></i>@lang('Add Fund')</a>
 		</li>
 
 		<li>

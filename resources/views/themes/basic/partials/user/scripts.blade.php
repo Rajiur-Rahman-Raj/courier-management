@@ -16,7 +16,6 @@
 <!-- Template JS File -->
 <script src="{{ asset('assets/dashboard/js/scripts.js') }}"></script>
 
-
 <script>
     $(document).ready(function () {
         $(document).ajaxStart(function () {

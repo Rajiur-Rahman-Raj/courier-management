@@ -287,7 +287,8 @@ class PaymentController extends Controller
 
 	public function success()
 	{
-		return view('success');
+		return redirect()->route('fund.index')->with('success', 'Fund added successfully!');
+//		return view('success');
 	}
 
 	public function failed()
