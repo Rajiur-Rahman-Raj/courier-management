@@ -256,6 +256,7 @@ class ShipmentController extends Controller
 			$fillData['from_area_id'] = $request->from_area_id ?? null;
 			$fillData['to_area_id'] = $request->to_area_id ?? null;
 
+
 			if ($request->packing_service == 'yes') {
 				$this->storePackingService($request, $shipment);
 			} else {

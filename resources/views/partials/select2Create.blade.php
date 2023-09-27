@@ -25,6 +25,14 @@
                     </li>`);
 	});
 
+	$('.create-receiver').select2({
+		width : '100%',
+	}).on('select2:open', () => {
+		$(".select2-results:not(:has(a))").append(`<li style='list-style: none; padding: 10px;'><a style="width: 100%" href="{{ route('user.receiver.create') }}"
+                    class="btn btn-outline-primary" target="_blank">+ Create Receiver </a>
+                    </li>`);
+	});
+
 
 
 	//	2nd part

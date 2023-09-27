@@ -6,6 +6,7 @@
 <script src="{{asset($themeTrue.'js/jquery.counterup.min.js')}}"></script>
 <script src="{{asset($themeTrue.'js/jquery.fancybox.min.js')}}"></script>
 <script src="{{asset($themeTrue.'js/socialSharing.js')}}"></script>
+<script src="{{ asset('assets/global/js/select2.min.js') }}"></script>
 <script src="{{asset($themeTrue.'js/main.js')}}"></script>
 
 <!-- JS Libraies -->

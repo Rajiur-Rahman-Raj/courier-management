@@ -49,6 +49,11 @@
 	}
 
 	function getOldFromState(oldFromCountryId, oldFromStateId) {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSeletedCountryState') }}",
 			method: 'POST',
@@ -68,6 +73,11 @@
 	}
 
 	function getOldFromCity(oldFromStateId, oldFromCityId) {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSeletedStateCity') }}",
 			method: 'POST',
@@ -87,6 +97,11 @@
 	}
 
 	function getOldFromArea(oldFromCityId, oldFromAreaId) {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSeletedCityArea') }}",
 			method: 'POST',
@@ -107,6 +122,11 @@
 
 
 	function getOldToState(oldToCountryId, oldToStateId) {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSeletedCountryState') }}",
 			method: 'POST',
@@ -126,6 +146,11 @@
 	}
 
 	function getOldToCity(oldToStateId, oldToCityId) {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSeletedStateCity') }}",
 			method: 'POST',
@@ -145,6 +170,11 @@
 	}
 
 	function getOldToArea(oldToCityId, oldToAreaId) {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSeletedCityArea') }}",
 			method: 'POST',
@@ -180,7 +210,6 @@
 		}
 
 		function getOldSelectedPackageVariant(value, oldVariantId, i) {
-
 			$.ajaxSetup({
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -234,7 +263,6 @@
 		}
 
 		function getOldSelectedParcelTypeUnit(oldParcelTypeId, oldParcelUnitId, i) {
-
 			$.ajaxSetup({
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -280,7 +308,6 @@
 			$('.OCPickupCost').val(0);
 			$('.OCSupplyCost').val(0);
 			$('.get_receive_amount').addClass('d-none');
-			$('.add_cod_parcel_info').addClass('d-none');
 			$('.addParcelFieldButton').removeClass('d-none');
 			$('.addedParcelField').removeClass('d-none')
 			$('.parcelField').removeClass('d-none')
@@ -300,7 +327,6 @@
 			$('.OCPickupCost').val(dataResouce.pickup_cost);
 			$('.OCSupplyCost').val(dataResouce.supply_cost);
 			$('.get_receive_amount').addClass('d-none');
-			$('.add_cod_parcel_info').addClass('d-none');
 			$('.addParcelFieldButton').removeClass('d-none');
 			$('.addedParcelField').removeClass('d-none')
 			$('.parcelField').removeClass('d-none')
@@ -316,10 +342,11 @@
 
 		} else if ($('input[name="shipment_type"]:checked').val() === "condition") {
 			$('.pickup').addClass('d-none');
+			$('.parcelService').addClass('d-none');
+			$('.parcelInfo').addClass('d-none');
 			$('.OCPickupCost').val(0);
 			$('.OCSupplyCost').val(0);
 			$('.get_receive_amount').removeClass('d-none');
-			$('.add_cod_parcel_info').removeClass('d-none');
 			$('.addParcelFieldButton').addClass('d-none');
 			$('.addedParcelField').addClass('d-none')
 			$('.parcelField').addClass('d-none')
@@ -359,6 +386,36 @@
 			$('select[name="package_id"]').prop('required', false);
 			$('select[name="variant_id"]').prop('required', false);
 			$('input[name="variant_quantity"]').prop('required', false);
+		}
+	}
+
+
+	formHandlingByParcelService();
+
+	$('input[name="parcel_service"]').change(function () {
+		formHandlingByParcelService();
+	});
+
+	function formHandlingByParcelService() {
+		if ($('input[name="parcel_service"]:checked').val() === "yes") {
+			console.log('yes');
+			$('.parcelInfo').removeClass('d-none')
+
+			$('select[name="parcel_name"]').prop('required', true);
+			$('select[name="parcel_quantity"]').prop('required', true);
+			$('select[name="parcel_type_id"]').prop('required', true);
+			$('input[name="parcel_unit_id"]').prop('required', true);
+			$('input[name="total_unit"]').prop('required', true);
+
+		} else {
+			console.log('no');
+			$('.parcelInfo').addClass('d-none')
+
+			$('select[name="parcel_name"]').prop('required', false);
+			$('select[name="parcel_quantity"]').prop('required', false);
+			$('select[name="parcel_type_id"]').prop('required', false);
+			$('input[name="parcel_unit_id"]').prop('required', false);
+			$('input[name="total_unit"]').prop('required', false);
 		}
 	}
 
@@ -411,7 +468,6 @@
 			minDate: "today",
 			altInput: true,
 			dateFormat: "Y-m-d H:i",
-			enableTime: true,
 		});
 
 		$(".flatpickr2").flatpickr({
@@ -433,7 +489,7 @@
 			const id = Date.now();
 			var form = `<div class="row">
 										<div class="col-md-12">
-											<div class="form-group">
+											<div class="form-group input-box mb-3">
 												<div class="input-group">
 													<select name="package_id[]" class="form-control selectedPackage_${id}" onchange="selectedPackageVariantHandel(${id})" required>
 														<option value="" disabled selected>@lang('Select package')</option>
@@ -448,7 +504,7 @@
 
 													<input type="text" name="variant_price[]" class="form-control newVariantPrice variantPrice_${id}" placeholder="@lang('price')" onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" readonly>
 													<div class="input-group-append" readonly="">
-														<div class="form-control">
+														<div class="form-control currency_symbol">
 															{{ config('basic.currency_symbol') }}
 			</div>
 		</div>
@@ -456,7 +512,7 @@
 		<input type="text" name="variant_quantity[]" class="form-control newVariantQuantity" id="variantQuantity_${id}" onkeyup="variantQuantityHandel(${id})" min="0" placeholder="@lang('quantity')" required>
 													<input type="text" name="package_cost[]" class="form-control totalPackingCost_${id} packingCostValue" readonly placeholder="@lang('total cost')">
 													<div class="input-group-append">
-														<div class="form-control">
+														<div class="form-control currency_symbol">
 															{{ config('basic.currency_symbol') }}
 			</div>
 		</div>
@@ -482,29 +538,29 @@
 			formHandlingByPackingService();
 			const id = Date.now();
 			var form = `<div class="row addMoreParcelBox" id="removeParcelField${id}">
-										<div class="col-md-12 d-flex justify-content-end">
+										<div class="col-md-12 d-flex justify-content-end ">
 											<button
 												class="btn btn-danger  delete_parcel_desc custom_delete_desc_padding mt-4"
 												type="button" onclick="deleteParcelField(${id})">
 												<i class="fa fa-times"></i>
 											</button>
 										</div>
-										<div class="col-sm-12 col-md-3 mb-3">
+										<div class="col-sm-12 col-md-3 mb-3 input-box">
 						<label for="parcel_name"> @lang('Parcel Name') </label>
 											<input type="text" name="parcel_name[]"
 												   class="form-control" required>
 
 					</div>
 
-					<div class="col-sm-12 col-md-3 mb-3">
+					<div class="col-sm-12 col-md-3 mb-3 input-box">
 					<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
 					<input type="text" name="parcel_quantity[]"
 						   class="form-control" up="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" required>
 					</div>
 
-											<div class="col-sm-12 col-md-3 mb-3">
+											<div class="col-sm-12 col-md-3 mb-3 input-box">
 												<label for="parcel_type_id"> @lang('Parcel Type') </label>
-											<select name="parcel_type_id[]" class="form-control OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}  select2ParcelType" onchange="selectedParcelTypeHandel(${id})" required>
+											<select name="parcel_type_id[]" class="form-control OCParcelTypeWiseShippingRate select2 selectedParcelType_${id}" onchange="selectedParcelTypeHandel(${id})" required>
 												<option value="" disabled selected>@lang('Select Parcel Type')</option>
 												@foreach($parcelTypes as $parcel_type)
 			<option value="{{ $parcel_type->id }}">@lang($parcel_type->parcel_type)</option>
@@ -512,7 +568,7 @@
 			</select>
 		</div>
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="parcel_unit_id"> @lang('Select Unit') </label>
 											<select name="parcel_unit_id[]"
 													class="form-control selectedParcelUnit_${id}" onchange="selectedParcelServiceHandel(${id})" required>
@@ -524,39 +580,39 @@
 					</div>
 
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3 input-box">
 													<label for="cost_per_unit"> @lang('Cost per unit')</label>
 													<div class="input-group">
 														<input type="text" name="cost_per_unit[]"
 															   class="form-control newCostPerUnit unitPrice_${id}"
 															   readonly>
 														<div class="input-group-append" readonly="">
-															<div class="form-control">
+															<div class="form-control currency_symbol">
 																{{ $basic->currency_symbol }}
 			</div>
 		</div>
 		</div>
 	</div>
 
-	<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
+	<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent input-box">
 			<label for="total_unit"> @lang('Total Unit')</label>
 						<div class="input-group">
 							<input type="text" name="total_unit[]" class="form-control newTotalWeight" required>
 							<div class="input-group-append" up="this.value = this.value.replace (/^\.|[^\d\.]/g, '')" readonly="">
-								<div class="form-control">
+								<div class="form-control currency_symbol">
 									@lang('kg')
 			</div>
 		</div>
 	</div>
 		</div>
 
-		<div class="col-sm-12 col-md-4 mb-3">
+		<div class="col-sm-12 col-md-4 mb-3 input-box">
 			<label for="parcel_total_cost"> @lang('Total Cost')</label>
 													<div class="input-group">
 														<input type="text" name="parcel_total_cost[]"
 															   class="form-control totalParcelCost" readonly>
 														<div class="input-group-append" readonly="">
-															<div class="form-control">
+															<div class="form-control currency_symbol">
 																{{ $basic->currency_symbol }}
 			</div>
 		</div>
@@ -564,21 +620,21 @@
 
 		</div>
 
-<div class="col-sm-12 col-md-12">
+<div class="col-sm-12 col-md-12 input-box">
 <label> @lang('Dimensions') [Length x Width x Height] (cm)
 											<span class="text-dark font-weight-bold">(optional)</span></label>
 										</div>
 
-										<div class="col-sm-12 col-md-4 mb-3">
+										<div class="col-sm-12 col-md-4 mb-3 input-box">
 											<input type="text" name="parcel_length[]" class="form-control">
 					</div>
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3 input-box">
 						<input type="text" name="parcel_width[]" class="form-control">
 
 					</div>
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3 input-box">
 						<input type="text" name="parcel_height[]" class="form-control">
 					</div>
 				</div>`;
@@ -689,7 +745,11 @@
 	$(document).on('change', '.sender_branch', function (){
 
 		let selectedBranchId = $(this).val();
-
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSelectedBranchSender') }}",
 			method: 'POST',
@@ -710,9 +770,12 @@
 	})
 
 	$(document).on('change', '.receiver_branch', function (){
-
 		let selectedBranchId = $(this).val();
-
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSelectedBranchReceiver') }}",
 			method: 'POST',
@@ -721,9 +784,12 @@
 			},
 			success: function (response) {
 				let responseData = response;
+				$('.getReceiver').empty();
 				responseData.forEach(res => {
-					$('.getReceiver').append(`<option value="${res.id}">${res.name}</option>`)
+					$('.getReceiver').append(`<option value="${res.id}">${res.name} (${res.username})</option>`)
 				})
+				jhon
+				(johndoe)
 				$('.getReceiver').prepend(`<option value="" selected disabled>@lang('Select Receiver')</option>`)
 			},
 			error: function (xhr, status, error) {
@@ -748,6 +814,11 @@
 	}
 
 	function getOldSender(oldSenderBranch, oldSenderId) {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSelectedBranchSender') }}",
 			method: 'POST',
@@ -767,6 +838,11 @@
 	}
 
 	function getOldReceiver(oldReceiverBranch, oldReceiverId) {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 		$.ajax({
 			url: "{{ route('getSelectedBranchReceiver') }}",
 			method: 'POST',
@@ -776,7 +852,7 @@
 			success: function (response) {
 				let responseData = response;
 				responseData.forEach(res => {
-					$('.getReceiver').append(`<option value="${res.id}" ${res.id == oldReceiverId ? 'selected' : ''}>${res.name}</option>`)
+					$('.getReceiver').append(`<option value="${res.id}" ${res.id == oldReceiverId ? 'selected' : ''}>${res.name} (${res.username})</option>`)
 				})
 			},
 			error: function (xhr, status, error) {

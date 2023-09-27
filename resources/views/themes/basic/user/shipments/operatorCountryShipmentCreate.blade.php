@@ -18,7 +18,8 @@
 								<li class="breadcrumb-item"><a
 										href="{{ route('user.dashboard') }}">@lang('Dashboard')</a></li>
 								<li class="breadcrumb-item"><a
-										href="{{route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country'])}}">@lang('Shipments List')</a></li>
+										href="{{route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country'])}}">@lang('Shipments List')</a>
+								</li>
 								<li class="breadcrumb-item"><a href="#">@lang('create shipment')</a></li>
 							</ol>
 						</nav>
@@ -29,7 +30,8 @@
 					<div class="row">
 						<div class="col-12 col-md-12 col-lg-12">
 							<div class="card mb-4 card-primary shadow-sm">
-								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+								<div
+									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 									<h6>@lang("Create Shipment")</h6>
 
 									<a href="{{route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country'])}}"
@@ -38,7 +40,7 @@
 									</a>
 								</div>
 
-								<div class="card-body">
+								<div class="card-body profile-setting">
 									@include('errors.error')
 									<div class="">
 										@include($theme.'user.partials.OCCShipmentForm')

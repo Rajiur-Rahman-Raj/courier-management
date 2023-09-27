@@ -1,4 +1,4 @@
-<form method="post" action="{{ route('shipmentStore', 'operator-country') }}"
+<form method="post" action="{{ route('user.shipmentStore', 'operator-country') }}"
 	  class="mt-4" enctype="multipart/form-data">
 	@csrf
 	<div class="row mb-3">
@@ -47,7 +47,7 @@
 	<div class="row get_receive_amount d-none">
 		<div class="col-sm-12 col-md-3 mb-3">
 			<label for="receive_amount"> @lang('Get Amount From Receiver') </label>
-			<div class="input-group">
+			<div class="input-group input-box">
 				<input type="text" class="form-control"
 					   name="receive_amount"
 					   value="{{ old('receive_amount',request()->receive_amount) }}"
@@ -56,7 +56,7 @@
 					   min="0"
 					   autocomplete="off"/>
 				<div class="input-group-append">
-					<div class="form-control">
+					<div class="form-control currency_symbol">
 						{{ $basic->currency_symbol }}
 					</div>
 				</div>
@@ -68,12 +68,11 @@
 	</div>
 
 	<div class="row">
-
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="shipment_date"> @lang('Shipment Date') </label>
 			<div class="flatpickr">
 				<div class="input-group input-box">
-					<input type="date" placeholder="@lang('Select date-time')" class="form-control shipment_date"  name="shipment_date"
+					<input type="date" placeholder="@lang('Select date')" class="form-control shipment_date"  name="shipment_date"
 						   value="{{ old('shipment_date',request()->shipment_date) }}" data-input>
 					<div class="input-group-append" readonly="">
 						<div class="form-control">
@@ -90,7 +89,7 @@
 		</div>
 
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="delivery_date"> @lang('Estimate Delivery Date') </label>
 			<div class="flatpickr2">
 				<div class="input-group input-box">
@@ -111,24 +110,26 @@
 		</div>
 
 		<div class="col-sm-12 col-md-3 mb-3">
-			<label for="sender_branch"> @lang('Sender Branch') </label>
-			<select name="sender_branch"
-					class="form-control @error('sender_branch') is-invalid @enderror select2 select-branch sender_branch">
-				<option value="" disabled selected>@lang('Select Branch')</option>
-				@foreach($allBranches as $branch)
-					<option
-						value="{{ $branch->id }}" {{ old('sender_branch') == $branch->id ? 'selected' : ''}}>@lang($branch->branch_name)</option>
-				@endforeach
-			</select>
-			<div class="invalid-feedback">
-				@error('sender_branch') @lang($message) @enderror
+			<div class="input-box">
+				<label for="sender_branch"> @lang('Sender Branch') </label>
+				<select name="sender_branch"
+						class="form-control @error('sender_branch') is-invalid @enderror select2 sender_branch">
+					<option value="" disabled selected>@lang('Select Branch')</option>
+					@foreach($allBranches as $branch)
+						<option
+							value="{{ $branch->id }}" {{ old('sender_branch') == $branch->id ? 'selected' : ''}}>@lang($branch->branch_name)</option>
+					@endforeach
+				</select>
+				<div class="invalid-feedback">
+					@error('sender_branch') @lang($message) @enderror
+				</div>
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="receiver_branch"> @lang('Receiver Branch')</label>
 			<select name="receiver_branch"
-					class="form-control @error('receiver_branch') is-invalid @enderror select2 select-branch receiver_branch">
+					class="form-control @error('receiver_branch') is-invalid @enderror select2 receiver_branch">
 				<option value="" disabled selected>@lang('Select Branch')</option>
 				@foreach($allBranches as $branch)
 					<option
@@ -144,10 +145,10 @@
 	</div>
 
 	<div class="row">
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="sender_id"> @lang('Sender')</label>
-			<select name="sender_id"
-					class="form-control @error('sender_id') is-invalid @enderror select2 select-client getSender" data-oldsenderid="{{ old('sender_id') }}">
+			<select name="sender_id" class="form-control @error('sender_id') is-invalid @enderror select2" data-oldsenderid="{{ old('sender_id') }}">
+				<option value="{{ $sender->id }}" {{ request()->sender_id ==  $sender->id ? 'selected' : ''}}>{{ $sender->name }}</option>
 			</select>
 
 			<div class="invalid-feedback">
@@ -155,10 +156,10 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="receiver_id"> @lang('Receiver')</label>
 			<select name="receiver_id"
-					class="form-control @error('receiver_id') is-invalid @enderror select2 select-client getReceiver" data-oldreceiverid="{{ old('receiver_id') }}">
+					class="form-control @error('receiver_id') is-invalid @enderror select2 create-receiver getReceiver" data-oldreceiverid="{{ old('receiver_id') }}">
 			</select>
 
 			<div class="invalid-feedback">
@@ -166,10 +167,10 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="from_state_id">@lang('From State') </label>
 			<select name="from_state_id"
-					class="form-control @error('from_state_id') is-invalid @enderror select2 select2State selectedFromState">
+					class="form-control @error('from_state_id') is-invalid @enderror select2 selectedFromState">
 				<option value="" selected disabled>@lang('Select State')</option>
 				@foreach(optional($basicControl->operatorCountry)->state() as $state)
 					<option value="{{ $state->id }}" {{ old('from_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
@@ -180,32 +181,32 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="from_city_id">@lang('Select City') <span
 					class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 			<select name="from_city_id"
-					class="form-control @error('from_city_id') is-invalid @enderror select2 select2City selectedFromCity" data-oldfromcityid="{{ old('from_city_id') }}">
+					class="form-control @error('from_city_id') is-invalid @enderror select2 selectedFromCity" data-oldfromcityid="{{ old('from_city_id') }}">
 			</select>
 			<div class="invalid-feedback">
 				@error('from_city_id') @lang($message) @enderror
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="from_area_id">@lang('Select Area') <span
 					class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 			<select name="from_area_id"
-					class="form-control @error('from_area_id') is-invalid @enderror select2 select2Area selectedFromArea" data-oldfromareaid="{{ old('from_area_id') }}">
+					class="form-control @error('from_area_id') is-invalid @enderror select2 selectedFromArea" data-oldfromareaid="{{ old('from_area_id') }}">
 			</select>
 			<div class="invalid-feedback">
 				@error('from_area_id') @lang($message) @enderror
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="to_state_id">@lang('To State') </label>
 			<select name="to_state_id"
-					class="form-control @error('to_state_id') is-invalid @enderror select2 select2State selectedToState">
+					class="form-control @error('to_state_id') is-invalid @enderror select2 selectedToState">
 				<option value="" selected disabled>@lang('Select State')</option>
 				@foreach(optional($basicControl->operatorCountry)->state() as $state)
 					<option value="{{ $state->id }}" {{ old('to_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
@@ -216,34 +217,33 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="to_city_id">@lang('Select City') <span
 					class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 			<select name="to_city_id"
-					class="form-control @error('to_city_id') is-invalid @enderror select2 select2City selectedToCity" data-oldtocityid="{{ old('to_city_id') }}">
+					class="form-control @error('to_city_id') is-invalid @enderror select2 selectedToCity" data-oldtocityid="{{ old('to_city_id') }}">
 			</select>
 			<div class="invalid-feedback">
 				@error('to_city_id') @lang($message) @enderror
 			</div>
 		</div>
 
-
-		<div class="col-sm-12 col-md-3 mb-3">
+		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="to_area_id">@lang('Select Area') <span
 					class="text-dark font-weight-bold">(@lang('optional'))</span>
 			</label>
 			<select name="to_area_id"
-					class="form-control @error('to_area_id') is-invalid @enderror select2 select2Area selectedToArea" data-oldtoareaid="{{ old('to_area_id') }}">
+					class="form-control @error('to_area_id') is-invalid @enderror select2 selectedToArea" data-oldtoareaid="{{ old('to_area_id') }}">
 			</select>
 			<div class="invalid-feedback">
 				@error('to_area_id') @lang($message) @enderror
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-4 mb-3">
+		<div class="col-sm-12 col-md-4 mb-3 input-box">
 			<label for="payment_by"> @lang('Payment By')</label>
 			<select name="payment_by"
-					class="form-control @error('payment_by') is-invalid @enderror payment_by">
+					class="form-control @error('payment_by') select2 is-invalid @enderror payment_by">
 				<option value="1" {{ old('payment_by') == '1' ? 'selected' : '' }}>@lang('Sender')</option>
 				<option value="2" {{ old('payment_by') == '2' ? 'selected' : '' }}>@lang('Receiver')</option>
 			</select>
@@ -252,7 +252,7 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-4 mb-3">
+		<div class="col-sm-12 col-md-4 mb-3 input-box">
 			<label for="payment_type"> @lang('Payment Type')</label>
 			<select name="payment_type"
 					class="form-control @error('payment_type') is-invalid @enderror select2">
@@ -267,7 +267,7 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-4 mb-3">
+		<div class="col-sm-12 col-md-4 mb-3 input-box">
 			<label for="payment_status"> @lang('Payment Status')</label>
 			<select name="payment_status"
 					class="form-control @error('payment_status') is-invalid @enderror select2">
@@ -286,7 +286,7 @@
 
 	<div class="row mb-3">
 		<div class="col-sm-12 col-md- mt-3">
-			<h6 class="text-dark font-weight-bold"> @lang('Packing Service') </h6>
+			<h6 class="text-dark font-weight-bold"> @lang('Packaging Service') </h6>
 			<div class="custom-control custom-radio">
 				<input type="radio" id="packingServiceOn" name="packing_service"
 					   class="custom-control-input" checked @if(old('packing_service') === 'yes') checked
@@ -306,7 +306,7 @@
 		<div class="col-md-12 addPackingFieldButton d-none">
 			<div class="form-group">
 				<a href="javascript:void(0)"
-				   class="btn btn-success float-right"
+				   class="btn view_cmn_btn2 float-end"
 				   id="packingGenerate"><i
 						class="fa fa-plus-circle"></i> {{ trans('Add More') }}
 				</a>
@@ -318,7 +318,7 @@
 	<div class="packingField d-none">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="form-group">
+				<div class="form-group input-box mb-3">
 					<div class="input-group">
 						<select name="package_id[]"
 								class="form-control @error('package_id.0') is-invalid @enderror selectedPackage">
@@ -344,7 +344,7 @@
 							   class="form-control @error('variant_price.0') is-invalid @enderror variantPrice newVariantPrice"
 							   placeholder="@lang('price')" value="{{ old('variant_price.0') }}" readonly>
 						<div class="input-group-append">
-							<div class="form-control">
+							<div class="form-control currency_symbol">
 								{{ config('basic.currency_symbol') }}
 							</div>
 						</div>
@@ -362,7 +362,7 @@
 							   value="{{ old('package_cost.0') }}" readonly
 							   placeholder="@lang('total cost')">
 						<div class="input-group-append" readonly="">
-							<div class="form-control">
+							<div class="form-control currency_symbol">
 								{{ config('basic.currency_symbol') }}
 							</div>
 						</div>
@@ -389,7 +389,7 @@
 
 				<div class="row">
 					<div class="col-md-12">
-						<div class="form-group">
+						<div class="form-group input-box">
 							<div class="input-group">
 								<select name="package_id[]"
 										class="form-control @error("package_id.$i") is-invalid @enderror selectedPackage_{{$i}}"
@@ -427,7 +427,7 @@
 									   value="{{ old("package_cost.$i") }} " readonly
 									   placeholder="@lang('total cost')">
 								<div class="input-group-append">
-									<div class="form-control">
+									<div class="form-control currency_symbol">
 										{{ config('basic.currency_symbol') }}
 									</div>
 								</div>
@@ -445,7 +445,29 @@
 		@endif
 	</div>
 
-	<div class="row mt-4">
+
+	<div class="row mb-3 parcelService">
+		<div class="col-sm-12 col-md- mt-3">
+			<h6 class="text-dark font-weight-bold"> @lang('Parcel Service') </h6>
+			<div class="custom-control custom-radio">
+				<input type="radio" id="parcelServiceOn" name="parcel_service"
+					   class="custom-control-input" checked @if(old('parcel_service') === 'yes') checked
+					   @endif value="yes">
+				<label class="custom-control-label"
+					   for="parcelServiceOn">@lang('Yes')</label>
+			</div>
+			<div class="custom-control custom-radio">
+				<input type="radio" id="parcelServiceOff" value="no"
+					   name="parcel_service"
+					   class="custom-control-input" @if(old('parcel_service') === 'no') checked @endif>
+				<label class="custom-control-label"
+					   for="parcelServiceOff">@lang('No')</label>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="row mt-4 parcelInfo d-none">
 		<div class="col-md-12 d-flex justify-content-between">
 			<div>
 				<h6 for="branch_id"
@@ -455,7 +477,7 @@
 			<div class="addParcelFieldButton">
 				<div class="form-group">
 					<a href="javascript:void(0)"
-					   class="btn btn-success float-right"
+					   class="btn view_cmn_btn2 float-end"
 					   id="parcelGenerate"><i
 							class="fa fa-plus-circle"></i> {{ trans('Add More') }}
 					</a>
@@ -464,27 +486,10 @@
 		</div>
 	</div>
 
-	<div class="add_cod_parcel_info d-none">
-		<div class="row">
-			<div class="col-sm-12 col-md-12 mb-3">
-				<label
-					for="parcel_details"> @lang('Parcel Details') </label>
-				<textarea type="text" name="parcel_details"
-						  class="form-control @error('parcel_details') is-invalid @enderror"
-						  id="cod_parcel_details"
-						  value="{{ old('parcel_details') }}"
-						  placeholder="@lang('parcel details')" rows="20"
-						  cols="20">{{ old('parcel_details') }}</textarea>
-				<div class="invalid-feedback d-block">
-					@error('parcel_details') @lang($message) @enderror
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<div class="parcelField">
-		<div class="row">
-			<div class="col-sm-12 col-md-3 mb-3">
+		<div class="row parcelInfo d-none">
+			<div class="col-sm-12 col-md-3 mb-3 input-box">
 				<label
 					for="parcel_name"> @lang('Parcel Name') </label>
 				<input type="text" name="parcel_name[]"
@@ -495,7 +500,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-3 mb-3">
+			<div class="col-sm-12 col-md-3 mb-3 input-box">
 				<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
 				<input type="text" name="parcel_quantity[]"
 					   class="form-control @error('parcel_quantity.0') is-invalid @enderror"
@@ -506,10 +511,10 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-3 mb-3">
+			<div class="col-sm-12 col-md-3 mb-3 input-box">
 				<label for="parcel_type_id"> @lang('Parcel Type') </label>
 				<select name="parcel_type_id[]"
-						class="form-control @error('parcel_type_id.0') is-invalid @enderror select2 selectedParcelType select2ParcelType OCParcelTypeWiseShippingRate">
+						class="form-control @error('parcel_type_id.0') is-invalid @enderror select2 selectedParcelType OCParcelTypeWiseShippingRate">
 					<option value="" disabled
 							selected>@lang('Select Parcel Type')</option>
 					@foreach($parcelTypes as $parcel_type)
@@ -522,7 +527,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-3 mb-3">
+			<div class="col-sm-12 col-md-3 mb-3 input-box">
 				<label for="parcel_unit_id"> @lang('Select Unit') </label>
 				<select name="parcel_unit_id[]"
 						class="form-control @error('parcel_unit_id.0') is-invalid @enderror selectedParcelUnit" data-oldparcelunitid='{{ old("parcel_unit_id.0") }}'>
@@ -535,7 +540,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-4 mb-3">
+			<div class="col-sm-12 col-md-4 mb-3 input-box">
 
 				<label for="cost_per_unit"> @lang('Cost per unit')</label>
 				<div class="input-group">
@@ -543,7 +548,7 @@
 						   class="form-control @error('cost_per_unit.0') is-invalid @enderror unitPrice newCostPerUnit"
 						   value="{{ old('cost_per_unit.0') }}" readonly>
 					<div class="input-group-append" readonly="">
-						<div class="form-control">
+						<div class="form-control currency_symbol">
 							{{ $basic->currency_symbol }}
 						</div>
 					</div>
@@ -555,7 +560,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
+			<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent input-box">
 				<label for="total_unit"> @lang('Total Unit')</label>
 				<div class="input-group">
 					<input type="text" name="total_unit[]"
@@ -563,7 +568,7 @@
 						   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
 						   value="{{ old('total_unit.0') }}">
 					<div class="input-group-append" readonly="">
-						<div class="form-control">
+						<div class="form-control currency_symbol">
 							@lang('kg')
 						</div>
 					</div>
@@ -573,14 +578,14 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-4 mb-3">
+			<div class="col-sm-12 col-md-4 mb-3 input-box">
 				<label for="parcel_total_cost"> @lang('Total Cost')</label>
 				<div class="input-group">
 					<input type="text" name="parcel_total_cost[]"
 						   class="form-control @error('parcel_total_cost.0') is-invalid @enderror totalParcelCost"
 						   value="{{ old('parcel_total_cost.0') }}" readonly>
 					<div class="input-group-append" readonly="">
-						<div class="form-control">
+						<div class="form-control currency_symbol">
 							{{ $basic->currency_symbol }}
 						</div>
 					</div>
@@ -591,14 +596,14 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-12 d-flex justify-content-between">
+			<div class="col-sm-12 col-md-12 d-flex justify-content-between input-box">
 				<label for="email"> @lang('Dimensions') [Length x Width x Height]
 					(cm)
 					<span
 						class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 			</div>
 
-			<div class="col-sm-12 col-md-4 mb-3">
+			<div class="col-sm-12 col-md-4 mb-3 input-box">
 				<input type="text" name="parcel_length[]"
 					   class="form-control @error('parcel_length.0') is-invalid @enderror"
 					   value="{{ old('parcel_length.0') }}">
@@ -607,7 +612,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-4 mb-3">
+			<div class="col-sm-12 col-md-4 mb-3 input-box">
 				<input type="text" name="parcel_width[]"
 					   class="form-control @error('parcel_width.0') is-invalid @enderror"
 					   value="{{ old('parcel_width.0') }}">
@@ -616,7 +621,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 col-md-4 mb-3">
+			<div class="col-sm-12 col-md-4 mb-3 input-box">
 				<input type="text" name="parcel_height[]"
 					   class="form-control @error('parcel_height.0') is-invalid @enderror"
 					   value="{{ old('parcel_height.0') }}">
@@ -643,7 +648,7 @@
 							<i class="fa fa-times"></i>
 						</button>
 					</div>
-					<div class="col-sm-12 col-md-3 mb-3">
+					<div class="col-sm-12 col-md-3 mb-3 input-box">
 						<label for="parcel_name"> @lang('Parcel Name') </label>
 						<input type="text" name="parcel_name[]"
 							   class="form-control @error("parcel_name.$i") is-invalid @enderror"
@@ -653,7 +658,7 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-3 mb-3">
+					<div class="col-sm-12 col-md-3 mb-3 input-box">
 						<label for="parcel_quantity"> @lang('Parcel Quantity')</label>
 						<input type="number" name="parcel_quantity[]"
 							   class="form-control @error("parcel_quantity.$i") is-invalid @enderror"
@@ -663,7 +668,7 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-3 mb-3">
+					<div class="col-sm-12 col-md-3 mb-3 input-box">
 						<label for="parcel_type_id"> @lang('Parcel Type') </label>
 						<select name="parcel_type_id[]"
 								class="form-control @error("parcel_type_id.$i") is-invalid @enderror OCParcelTypeWiseShippingRate select2 selectedParcelType_{{$i}} select2ParcelType"
@@ -679,7 +684,7 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-3 mb-3">
+					<div class="col-sm-12 col-md-3 mb-3 input-box">
 						<label for="parcel_unit_id"> @lang('Select Unit') </label>
 						<select name="parcel_unit_id[]"
 								class="form-control @error("parcel_unit_id.$i") is-invalid @enderror selectedParcelUnit_{{$i}}"
@@ -695,7 +700,7 @@
 					</div>
 
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3 input-box">
 						<label for="cost_per_unit"> @lang('Cost per unit')</label>
 						<div class="input-group">
 							<input type="text" name="cost_per_unit[]"
@@ -714,7 +719,7 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent">
+					<div class="col-sm-12 col-md-4 mb-3 new_total_weight_parent input-box">
 						<label for="total_unit"> @lang('Total Unit')</label>
 						<div class="input-group">
 							<input type="text" name="total_unit[]"
@@ -729,14 +734,14 @@
 						<div class="invalid-feedback"> @error("total_unit.$i") @lang($message) @enderror </div>
 					</div>
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3 input-box">
 						<label for="parcel_total_cost"> @lang('Total Cost')</label>
 						<div class="input-group">
 							<input type="text" name="parcel_total_cost[]"
 								   class="form-control @error("parcel_total_cost.$i") is-invalid @enderror totalParcelCost"
 								   value="{{ old("parcel_total_cost.$i") }}" readonly>
 							<div class="input-group-append" readonly="">
-								<div class="form-control">
+								<div class="form-control currency_symbol">
 									{{ $basic->currency_symbol }}
 								</div>
 							</div>
@@ -747,12 +752,12 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-12">
+					<div class="col-sm-12 col-md-12 input-box">
 						<label> @lang('Dimensions') [Length x Width x Height] (cm)
 							<span class="text-dark font-weight-bold">(optional)</span></label>
 					</div>
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3 input-box">
 						<input type="text" name="parcel_length[]"
 							   class="form-control @error("parcel_length.$i") is-invalid @enderror"
 							   value="{{ old("parcel_length.$i") }}">
@@ -761,7 +766,7 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3 input-box">
 						<input type="text" name="parcel_width[]"
 							   class="form-control @error("parcel_width.$i") is-invalid @enderror"
 							   value="{{ old("parcel_width.$i") }}">
@@ -770,7 +775,7 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-md-4 mb-3">
+					<div class="col-sm-12 col-md-4 mb-3 input-box">
 						<input type="text" name="parcel_height[]"
 							   class="form-control @error("parcel_height.$i") is-invalid @enderror"
 							   value="{{ old("parcel_height.$i") }}">
@@ -783,9 +788,27 @@
 		@endif
 	</div>
 
+	<div class="add_cod_parcel_info">
+		<div class="row">
+			<div class="col-sm-12 col-md-12 mb-3 input-box">
+				<label
+					for="parcel_details"> @lang('Shipment Details') </label>
+				<textarea type="text" name="parcel_details"
+						  class="form-control @error('parcel_details') is-invalid @enderror"
+						  id="cod_parcel_details"
+						  value="{{ old('parcel_details') }}"
+						  placeholder="@lang('Wirte shipment/parcel details')" rows="20"
+						  cols="20">{{ old('parcel_details') }}</textarea>
+				<div class="invalid-feedback d-block">
+					@error('parcel_details') @lang($message) @enderror
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<div class="row">
-		<div class="col-sm-12 col-md-7">
+		<div class="col-sm-12 col-md-12 input-box">
 			<div class="form-group mb-4">
 				<label class="col-form-label">@lang("Attatchments")</label>
 				<div class="shipment_image"></div>
@@ -795,22 +818,6 @@
 			</div>
 		</div>
 
-
-		<div class="col-md-5 form-group">
-			<label>@lang('Status')</label>
-			<div class="selectgroup w-100">
-				<label class="selectgroup-item">
-					<input type="radio" name="status" value="0"
-						   class="selectgroup-input" {{ old('status') == 0 ? 'checked' : ''}}>
-					<span class="selectgroup-button">@lang('OFF')</span>
-				</label>
-				<label class="selectgroup-item">
-					<input type="radio" name="status" value="1"
-						   class="selectgroup-input" checked {{ old('status') == 1 ? 'checked' : ''}}>
-					<span class="selectgroup-button">@lang('ON')</span>
-				</label>
-			</div>
-		</div>
 	</div>
 
 

@@ -488,6 +488,12 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('shipment-list/{shipment_status}/{shipment_type}', [UserShipmentController::class, 'shipmentList'])->name('user.shipmentList');
 	Route::get('view-shipment/{id}', [UserShipmentController::class, 'viewShipment'])->name('user.viewShipment');
 	Route::get('{shipment_type}/create-shipment', [UserShipmentController::class, 'createShipment'])->name('user.createShipment');
+	Route::post('shipment-store/{type?}', [UserShipmentController::class, 'shipmentStore'])->name('user.shipmentStore');
+
+	//Manage Receiver By User
+	Route::get('receiverList', [HomeController::class, 'receiverList'])->name('user.receiverList');
+	Route::get('receiver/create', [HomeController::class, 'receiverCreate'])->name('user.receiver.create');
+	Route::post('receiver/store', [HomeController::class, 'receiverStore'])->name('user.receiver.store');
 });
 
 Route::group(['prefix' => 'user'], function () {

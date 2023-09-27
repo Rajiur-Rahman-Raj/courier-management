@@ -2,6 +2,7 @@
 	'use strict'
 	$(document).ready(function () {
 		$('.selectedCountry').on('change', function () {
+			console.log('i am here');
 			let selectedValue = $(this).val();
 			getSelectedCountryState(selectedValue);
 		})

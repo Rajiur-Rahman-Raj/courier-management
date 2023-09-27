@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
+use App\Models\Country;
 use App\Models\MoneyTransfer;
 use App\Models\User;
+use App\Models\UserProfile;
 use Carbon\Carbon;
 use DateTime;
 use App\Models\Fund;
@@ -381,6 +384,74 @@ class HomeController extends Controller
 			session()->flash('error', 'Insufficient Balance!');
 			return back()->withInput();
 		}
+	}
+
+	public function receiverList(){
+		$data['allReceivers'] = User::with('profile.branch')->where('status', 1)->where('created_by', Auth::id())->latest()->paginate(config('basic.paginate'));
+		return view($this->theme . 'user.receiver.list', $data);
+	}
+
+	public function receiverCreate(){
+		$data['allBranches'] = Branch::where('status', 1)->latest()->get();
+		$data['allCountries'] = Country::where('status', 1)->get();
+		return  view($this->theme . 'user.receiver.create', $data);
+	}
+
+	public function receiverStore(Request $request){
+		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
+		$rules = [
+			'name' => ['required', 'string', 'max:255'],
+			'username' => ['required', 'string', 'max:50', 'unique:users,username'],
+			'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+			'phone' => ['required', 'string', 'unique:user_profiles,phone'],
+			'password' => ['required', 'string', 'min:6'],
+			'branch_id' => ['required', 'exists:branches,id'],
+			'country_id' => ['nullable', 'exists:countries,id'],
+			'state_id' => ['nullable', 'exists:states,id'],
+			'city_id' => ['nullable', 'exists:cities,id'],
+			'area_id' => ['nullable', 'exists:areas,id'],
+			'address' => ['required', 'max:1000'],
+		];
+
+		$message = [
+			'name.required' => 'Name field is required',
+			'username.required' => 'User name field is required',
+			'email.required' => 'Email field is required',
+			'phone.required' => 'Phone Number is required',
+			'password.required' => 'Password field is required',
+			'branch_id.required' => 'Please select a branch',
+		];
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$user = new User();
+
+		$user->name = $request->name;
+		$user->username = $request->username;
+		$user->email = $request->email;
+		$user->password = Hash::make($request->password);
+		$user->user_type = 2;
+		$user->status = 1;
+		$user->created_by = Auth::id();
+
+		$user->save();
+
+		$userProfile = UserProfile::firstOrCreate(['user_id' => $user->id]);
+		$userProfile->phone = $request->phone;
+		$userProfile->address = $request->address;
+		$userProfile->branch_id = $request->branch_id;
+		$userProfile->country_id = $request->country_id;
+		$userProfile->state_id = $request->state_id;
+		$userProfile->city_id = $request->city_id;
+		$userProfile->area_id = $request->area_id;
+
+		$userProfile->save();
+
+		return back()->with('success', 'Receiver Created Successfully!');
 	}
 
 }

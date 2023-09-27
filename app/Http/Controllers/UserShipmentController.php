@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ShipmentRequest;
 use App\Models\BasicControl;
 use App\Models\Branch;
 use App\Models\Country;
@@ -116,6 +117,11 @@ class UserShipmentController extends Controller
 		$data['shipmentTypeList'] = config('shipmentTypeList');
 
 		$data['allBranches'] = Branch::where('status', 1)->get();
+		$data['sender'] = Auth::user();
+
+
+
+
 		$data['users'] = User::where('user_type', '!=', '0')->get();
 		$data['senders'] = $data['users']->where('user_type', 1);
 		$data['receivers'] = $data['users']->where('user_type', 2);
@@ -139,5 +145,9 @@ class UserShipmentController extends Controller
 		$data['shipment_type'] = $request->input('shipment_type');
 		$data['singleShipment'] = Shipment::with('shipmentAttachments', 'senderBranch', 'receiverBranch', 'sender.profile', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')->where('sender_id', $user->id)->findOrFail($id);
 		return view($this->theme . 'user.shipments.viewShipment', $data);
+	}
+
+	public function shipmentStore(ShipmentRequest $request, $type = null){
+
 	}
 }

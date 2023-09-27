@@ -73,6 +73,10 @@
 		</li>
 
 		<li>
+			<a class="{{menuActive(['user.receiverList', 'user.receiver.create'])}}" href="{{ route('user.receiverList') }}"><i class="fal fa-users text-success"></i>@lang('Receiver List')</a>
+		</li>
+
+		<li>
 			<a class="{{menuActive(['fund.initialize', 'deposit.confirm', 'payment.process'])}}" href="{{ route('fund.initialize') }}"><i class="fal fa-funnel-dollar text-primary" aria-hidden="true"></i>@lang('Add Fund')</a>
 		</li>
 

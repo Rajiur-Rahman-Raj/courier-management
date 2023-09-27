@@ -143,11 +143,11 @@
 																	class="text-dark font-weight-bold font-14 ml-1">{{ '@'.$client->username}}</span>
 															</div>
 														</div>
-
 													</td>
+
 													<td data-label="@lang('Phone')">{{ optional($client->profile)->phone ?? __('N/A') }}</td>
 													<td data-label="@lang('Email')">{{ $client->email }}</td>
-													<td data-label="@lang('Join date')">{{ __(date('d M,Y - H:i',strtotime($client->created_at))) }}</td>
+													<td data-label="@lang('Join date')">{{ __(date('d M,Y - H:i a',strtotime($client->created_at))) }}</td>
 													<td data-label="@lang('Status')">
 														@if($client->user_type == 1)
 															<span

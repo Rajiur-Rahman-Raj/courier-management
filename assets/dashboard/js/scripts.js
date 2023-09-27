@@ -308,6 +308,10 @@ $(function() {
 	  width:'100%',
   });
 
+	$(".js-example-basic-single").select2({
+		width:'100%',
+	});
+
   // Selectric
   if(jQuery().selectric) {
     $(".selectric").selectric({
