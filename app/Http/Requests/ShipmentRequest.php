@@ -39,19 +39,17 @@ class ShipmentRequest extends FormRequest
 			'to_area_id' => ['nullable'],
 			'payment_by' => ['required', Rule::in(['1', '2'])],
 			'payment_type' => ['required', Rule::in(['wallet', 'cash'])],
-			'payment_status' => ['required', Rule::in(['1', '2'])],
+			'payment_status' => ['nullable', Rule::in(['1', '2'])],
+			'package_id' => ['required_if:packing_service, yes', 'exists:packages,id'],
+			'variant_id' => ['required_if:packing_service, yes'],
 			'variant_quantity' => ['required_if:packing_service, yes'],
+			'shipment_by' => ['nullable']
 		];
-
-		if ($this->packing_service == 'yes'){
-			$rules['package_id'] = ['required', 'exists:packages,id'];
-			$rules['variant_id'] = ['required'];
-			$rules['variant_quantity'] = ['required'];
-		}
 
 		if ($this->type == 'operator-country'){
 			$rules['from_state_id'] = ['required', 'exists:states,id'];
 			$rules['to_state_id'] = ['required', 'exists:states,id'];
+
 		}elseif ($this->type == 'internationally'){
 			$rules['from_country_id'] = ['required', 'exists:countries,id'];
 			$rules['to_country_id'] = ['required', 'exists:countries,id'];
@@ -59,7 +57,7 @@ class ShipmentRequest extends FormRequest
 			$rules['to_state_id'] = ['nullable'];
 		}
 
-		if ($this->parcel_service == 'yes') {
+		if ($this->input('shipment_type') === 'drop_off' || $this->input('shipment_type') === 'pickup') {
 			$rules['parcel_name'] = ['required'];
 			$rules['parcel_quantity'] = ['required', 'min:1'];
 			$rules['parcel_type_id'] = ['required', 'exists:parcel_types,id'];
@@ -70,8 +68,6 @@ class ShipmentRequest extends FormRequest
 		if ($this->input('shipment_type') === 'condition') {
 			$rules['receive_amount'] = ['required', 'numeric', 'min:1'];
 			$rules['parcel_details'] = ['required', 'max:5000'];
-		}else{
-			$rules['parcel_details'] = ['nullable'];
 		}
 
         return $rules;

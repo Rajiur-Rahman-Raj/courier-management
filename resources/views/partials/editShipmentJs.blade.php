@@ -242,6 +242,14 @@
 		mimes: ['image/jpeg', 'image/png'],
 		maxSize: 5242880
 	};
-
 	$('.shipment_image').imageUploader(shipmentImageOptions);
+
+	$(document).ready(function (){
+		$(".flatpickr").flatpickr({
+			wrap: true,
+			minDate: "today",
+			altInput: true,
+			dateFormat: "Y-m-d H:i",
+		});
+	})
 </script>

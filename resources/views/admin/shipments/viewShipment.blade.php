@@ -28,7 +28,8 @@
 									   class="btn btn-sm  btn-primary mr-2">
 										<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 									</a>
-									<button class="btn btn-success btn-sm" id="shipmentDetailsPrint"><i class="far fa-check-circle"></i> @lang('Print')
+									<button class="btn btn-success btn-sm" id="shipmentDetailsPrint"><i
+											class="far fa-check-circle"></i> @lang('Print')
 									</button>
 								</div>
 							</div>
@@ -68,7 +69,8 @@
 
 												<a class="ml-3 text-decoration-none"
 												   href="{{ route('user.edit',optional($singleShipment->sender)->id) }}">
-													 <span class="font-weight-bold">@lang(optional($singleShipment->sender)->name)</span>
+													<span
+														class="font-weight-bold">@lang(optional($singleShipment->sender)->name)</span>
 												</a>
 											</li>
 
@@ -78,7 +80,8 @@
 
 												<a class="ml-3 text-decoration-none"
 												   href="{{ route('user.edit',optional($singleShipment->receiver)->id) }}">
-													<span class="font-weight-bold">@lang(optional($singleShipment->receiver)->name)</span>
+													<span
+														class="font-weight-bold">@lang(optional($singleShipment->receiver)->name)</span>
 												</a>
 											</li>
 
@@ -96,7 +99,8 @@
 
 												<a class="ml-3 text-decoration-none"
 												   href="{{ route('branchEdit', optional($singleShipment->senderBranch)->id) }}">
-													<span class="font-weight-bold">@lang(optional($singleShipment->senderBranch)->branch_name)</span>
+													<span
+														class="font-weight-bold">@lang(optional($singleShipment->senderBranch)->branch_name)</span>
 												</a>
 											</li>
 
@@ -106,7 +110,8 @@
 
 												<a class="ml-3 text-decoration-none"
 												   href="{{ route('branchEdit', optional($singleShipment->receiverBranch)->id) }}">
-													<span class="font-weight-bold">@lang(optional($singleShipment->receiverBranch)->branch_name)</span>
+													<span
+														class="font-weight-bold">@lang(optional($singleShipment->receiverBranch)->branch_name)</span>
 												</a>
 
 											</li>
@@ -196,7 +201,9 @@
 											<li class="my-3">
                                             <span class="font-weight-bold text-dark"><i
 													class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
-												@if($singleShipment->status == 1)
+												@if($singleShipment->status == 0)
+													<p class="badge badge-dark rounded">@lang('Requested')</p>
+												@elseif($singleShipment->status == 1)
 													<p class="badge badge-info rounded">@lang('In Queue')</p>
 												@elseif($singleShipment->status == 2)
 													<p class="badge badge-warning rounded">@lang('Dispatch')</p>
@@ -354,15 +361,16 @@
 												<span class="font-weight-bold text-dark"> <i
 														class="fas fa-credit-card mr-2 text-primary"></i> @lang('Payment Calculation')</span>
 											</li>
-
-											<li class="my-3 ">
+											@if($singleShipment->discount != null)
+												<li class="my-3 ">
                                             <span class="custom-text"><i
 													class="fas fa-dollar-sign mr-2 text-warning"></i>  @lang('Discount') :
 												<span
 													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->discount_amount)</span>
 
                                             </span>
-											</li>
+												</li>
+											@endif
 
 											<li class="my-3">
                                             <span class="custom-text"> <i
@@ -441,7 +449,7 @@
 	<script>
 		'use strict'
 
-		$(document).on('click', '#shipmentDetailsPrint', function (){
+		$(document).on('click', '#shipmentDetailsPrint', function () {
 			let allContents = document.getElementById('body').innerHTML;
 			let printContents = document.getElementById('shipmentDetails').innerHTML;
 			document.getElementById('body').innerHTML = printContents;

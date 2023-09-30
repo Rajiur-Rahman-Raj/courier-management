@@ -13,12 +13,17 @@ use App\Models\Package;
 use App\Models\ParcelType;
 use App\Models\Shipment;
 use App\Models\User;
+use App\Traits\Notify;
+use App\Traits\OCShipmentStoreTrait;
+use App\Traits\Upload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserShipmentController extends Controller
 {
+	use Upload, Notify, OCShipmentStoreTrait;
 	public function __construct()
 	{
 		$this->middleware(['auth']);
@@ -76,6 +81,10 @@ class UserShipmentController extends Controller
 				$query->where('shipment_identifier', 1)
 					->where('status', 5);
 			})
+			->when($type == 'operator-country' && $status == 'requested', function ($query) {
+				$query->where('shipment_identifier', 1)
+					->whereIn('status', [0,6]);
+			})
 			->when($type == 'internationally' && $status == 'all', function ($query) {
 				$query->where('shipment_identifier', 2);
 			})
@@ -98,6 +107,10 @@ class UserShipmentController extends Controller
 			->when($type == 'internationally' && $status == 'delivered', function ($query) {
 				$query->where('shipment_identifier', 2)
 					->where('status', 5);
+			})
+			->when($type == 'internationally' && $status == 'requested', function ($query) {
+				$query->where('shipment_identifier', 2)
+					->where('status', 0);
 			});
 
 		$data = [
@@ -148,6 +161,112 @@ class UserShipmentController extends Controller
 	}
 
 	public function shipmentStore(ShipmentRequest $request, $type = null){
+		try {
+			DB::beginTransaction();
+			$shipment = new Shipment();
+			$fillData = $request->only($shipment->getFillable());
+			$shipmentId = strRandom();
+			$fillData['shipment_id'] = $shipmentId;
 
+			if ($type == 'operator-country') {
+				$fillData['shipment_identifier'] = 1;
+				$fillData['receive_amount'] = $request->receive_amount != null ? $request->receive_amount : null;
+			} elseif ($type == 'internationally') {
+				$fillData['shipment_identifier'] = 2;
+			}
+
+			$fillData['from_city_id'] = $request->from_city_id ?? null;
+			$fillData['to_city_id'] = $request->to_city_id ?? null;
+			$fillData['from_area_id'] = $request->from_area_id ?? null;
+			$fillData['to_area_id'] = $request->to_area_id ?? null;
+			$fillData['shipment_by'] = 1;
+			$fillData['status'] = 0; // shipment request
+
+			if ($request->packing_service == 'yes') {
+				$this->storePackingService($request, $shipment);
+			} else {
+				$fillData['packing_services'] = null;
+			}
+
+			if ($request->shipment_type == 'drop_off' || $request->shipment_type == 'pickup') {
+				$this->storeParcelInformation($request, $shipment);
+			} else {
+				$fillData['parcel_information'] = null;
+			}
+
+			if ($request->shipment_type == 'condition') {
+				$fillData['parcel_details'] = $request->parcel_details;
+			}
+
+			if($request->payment_type == 'cash'){
+				$fillData['payment_status'] = 2;
+			}elseif ($request->payment_type == 'wallet'){
+				$fillData['payment_status'] = 1;
+			}
+
+			if ($request->payment_type == 'wallet') {
+				$this->walletPaymentCalculation($request, $shipmentId);
+			}
+
+			$shipment->fill($fillData)->save();
+
+			if ($request->hasFile('shipment_image')) {
+				$getShipmentAttachments = $this->storeShipmentAttatchments($request, $shipment);
+				if ($getShipmentAttachments['status'] == 'error') {
+					throw new \Exception($getShipmentAttachments['message']);
+				}
+			}
+
+			DB::commit();
+
+			$basic = basicControl();
+			$amount = $request->total_pay;
+			$sender = User::findOrFail($request->sender_id);
+			$date = \Carbon\Carbon::now();
+			$msg = [
+				'currency' => $basic->currency_symbol,
+				'amount' => $amount,
+				'shipment_id' => $shipmentId,
+			];
+
+			$action = [
+				"link" => "#",
+				"icon" => "fa fa-money-bill-alt text-white"
+			];
+
+			$adminAction = [
+				"link" => "#",
+				"icon" => "fa fa-money-bill-alt text-white"
+			];
+
+			$this->userPushNotification($sender, 'USER_NOTIFY_COURIER_SHIPMENT', $msg, $action);
+			$this->adminPushNotification('ADMIN_NOTIFY_COURIER_SHIPMENT', $msg, $adminAction);
+
+			$this->sendMailSms($sender, $type = 'USER_MAIL_COURIER_SHIPMENT', [
+				'amount' => getAmount($amount),
+				'currency' => $basic->currency_symbol,
+				'shipment_id' => $shipmentId,
+				'date' => $date,
+			]);
+
+			return back()->with('success', 'Shipment request successfully completed!');
+
+		} catch (\Exception $exp) {
+			DB::rollBack();
+			return back()->with('error', $exp->getMessage())->withInput();
+		}
+	}
+
+	public function deleteShipmentRequest($id){
+		$shipment = Shipment::findOrFail($id);
+		$shipment->delete();
+		return back()->with('success', 'Shipment deleted successfully!');
+	}
+
+	public function cancelShipmentRequest($id){
+		$shipment = Shipment::findOrFail($id);
+		$shipment->status = 6;
+		$shipment->save();
+		return back()->with('success', 'Shipment request canceled successfully!');
 	}
 }

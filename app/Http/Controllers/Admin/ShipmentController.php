@@ -140,6 +140,10 @@ class ShipmentController extends Controller
 				$query->where('shipment_identifier', 1)
 					->where('status', 5);
 			})
+			->when($type == 'operator-country' && $status == 'requested', function ($query) {
+				$query->where('shipment_identifier', 1)
+					->whereIn('status', [0,6]);
+			})
 			->when($type == 'internationally' && $status == 'all', function ($query) {
 				$query->where('shipment_identifier', 2);
 			})
@@ -162,6 +166,10 @@ class ShipmentController extends Controller
 			->when($type == 'internationally' && $status == 'delivered', function ($query) {
 				$query->where('shipment_identifier', 2)
 					->where('status', 5);
+			})
+			->when($type == 'internationally' && $status == 'requested', function ($query) {
+				$query->where('shipment_identifier', 2)
+					->where('status', 0);
 			});
 
 		$data = [
@@ -419,6 +427,13 @@ class ShipmentController extends Controller
 	}
 
 
+	public function cancelShipmentRequest($id){
+		$shipment = Shipment::findOrFail($id);
+		$shipment->status = 6;
+		$shipment->save();
+		return back()->with('success', 'Shipment request canceled successfully!');
+	}
+
 	public function shipmentTypeList()
 	{
 		$data['allShipmentType'] = config('shipmentTypeList');
@@ -506,7 +521,6 @@ class ShipmentController extends Controller
 
 	public function defaultShippingRateInternationallyUpdate(Request $request, $id)
 	{
-
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
 		$rules = [

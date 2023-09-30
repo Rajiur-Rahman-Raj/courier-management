@@ -130,6 +130,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('view-shipment/{id}', [ShipmentController::class, 'viewShipment'])->name('viewShipment');
 		Route::post('shipment-store/{type?}', [ShipmentController::class, 'shipmentStore'])->name('shipmentStore');
 		Route::post('shipment-update/{id}', [ShipmentController::class, 'shipmentUpdate'])->name('shipmentUpdate');
+
+
+		Route::put('cancel-shipment-request/{id}', [ShipmentController::class, 'cancelShipmentRequest'])->name('cancelShipmentRequest');
+
+
 		Route::delete('shipment-delete/{id}', [ShipmentController::class, 'deleteShipment'])->name('deleteShipment');
 		Route::get('trash-shipment-list', [ShipmentController::class, 'trashShipmentList'])->name('trashShipmentList');
 		Route::get('restore-shipment/{id}', [ShipmentController::class, 'restoreShipment'])->name('restoreShipment');
@@ -409,6 +414,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::match(['get', 'post'], 'send-mail-subscriber/{subscribe?}', [SubscribeController::class, 'sendMailSubscribe'])->name('send.mail.subscribe');
 	});
 
+	/* PROFILE SHOW UPDATE BY USER */
+	Route::match(['get', 'post'], 'profile', [AdminProfileController::class, 'index'])->name('admin.profile');
+	Route::match(['get', 'post'], 'change-password', [AdminController::class, 'changePassword'])->name('admin.change.password');
+
 	// All Ajax Route Here
 	Route::post('get-role-user', [BranchController::class, 'getRoleUser'])->name('getRoleUser');
 	Route::post('get-role-user-info', [BranchController::class, 'getRoleUserInfo'])->name('getRoleUserInfo');
@@ -489,6 +498,9 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], funct
 	Route::get('view-shipment/{id}', [UserShipmentController::class, 'viewShipment'])->name('user.viewShipment');
 	Route::get('{shipment_type}/create-shipment', [UserShipmentController::class, 'createShipment'])->name('user.createShipment');
 	Route::post('shipment-store/{type?}', [UserShipmentController::class, 'shipmentStore'])->name('user.shipmentStore');
+
+	Route::delete('delete-shipment/{id}', [UserShipmentController::class, 'deleteShipmentRequest'])->name('user.deleteShipmentRequest');
+	Route::put('cancel-shipment-request/{id}', [UserShipmentController::class, 'cancelShipmentRequest'])->name('user.cancelShipmentRequest');
 
 	//Manage Receiver By User
 	Route::get('receiverList', [HomeController::class, 'receiverList'])->name('user.receiverList');

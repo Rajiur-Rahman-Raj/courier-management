@@ -34,15 +34,18 @@
 						<div class="main_switcher d-flex justify-content-between">
 							<div class="switcher">
 								<a href="{{ route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country']) }}">
-									<button class="@if(lastUriSegment() == 'operator-country') active @endif">@lang(optional(basicControl()->operatorCountry)->name)</button>
+									<button
+										class="@if(lastUriSegment() == 'operator-country') active @endif">@lang(optional(basicControl()->operatorCountry)->name)</button>
 								</a>
 								<a href="{{ route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'internationally']) }}">
-									<button class="@if(lastUriSegment() == 'internationally') active @endif">@lang('Internationally')</button>
+									<button
+										class="@if(lastUriSegment() == 'internationally') active @endif">@lang('Internationally')</button>
 								</a>
 							</div>
 
 							<div class="mt-3">
-								<a href="{{route('user.createShipment', ['shipment_type' => 'operator-country', 'shipment_status' => $status])}}" class="view_cmn_btn2">
+								<a href="{{route('user.createShipment', ['shipment_type' => 'operator-country', 'shipment_status' => $status])}}"
+								   class="view_cmn_btn2">
 									<i class="fal fa-plus-circle"></i> @lang('Create Shipment')
 								</a>
 							</div>
@@ -91,7 +94,13 @@
 										<td data-label="Shipment Date"> {{ customDate($shipment->shipment_date) }} </td>
 
 										<td data-label="Status">
-											@if($shipment->status == 1)
+											@if($shipment->status == 0)
+												<span
+													class="badge text-bg-dark">@lang('Requested')</span>
+											@elseif($shipment->status == 6)
+												<span
+													class="badge text-bg-danger">@lang('Canceled')</span>
+											@elseif($shipment->status == 1)
 												<span
 													class="badge text-bg-info">@lang('In Queue')</span>
 											@elseif($shipment->status == 2)
@@ -117,13 +126,35 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a class="dropdown-item" href="{{ route('user.viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'operator-country']) }}">@lang('Details')</a>
+														<a class="dropdown-item"
+														   href="{{ route('user.viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'operator-country']) }}">@lang('Details')</a>
 													</li>
-													<li><a class="dropdown-item" href="#">@lang('Edit')</a>
 
-													<li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-														   data-bs-target="#staticBackdrop">@lang('Delete')</a></li>
-													</li>
+													@if($shipment->status == 0)
+														<li>
+															<a class="dropdown-item cancelShipmentRequest"
+															   data-bs-toggle="modal"
+															   data-route="{{route('user.cancelShipmentRequest', $shipment->id)}}"
+															   href="javascript:void(0)"
+															   data-bs-target="#cancelShipmentRequest">@lang('Cancel Request')</a>
+														</li>
+
+														<li>
+															<a class="dropdown-item deleteShipmentRequest"
+															   data-bs-toggle="modal"
+															   data-route="{{route('user.deleteShipmentRequest', $shipment->id)}}"
+															   href="javascript:void(0)"
+															   data-bs-target="#deleteShipmentRequest">@lang('Delete')</a>
+														</li>
+													@elseif($shipment->status == 6)
+														<li>
+															<a class="dropdown-item deleteShipmentRequest"
+															   data-bs-toggle="modal"
+															   data-route="{{route('user.deleteShipmentRequest', $shipment->id)}}"
+															   href="javascript:void(0)"
+															   data-bs-target="#deleteShipmentRequest">@lang('Delete')</a>
+														</li>
+													@endif
 												</ul>
 											</div>
 										</td>
@@ -150,24 +181,56 @@
 	</div>
 
 	<!-- Modal section start -->
-	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+	<div class="modal fade" id="deleteShipmentRequest" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 		 aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title" id="staticBackdropLabel">Modal title</h1>
+					<h1 class="modal-title" id="staticBackdropLabel">@lang('Confirmation')</h1>
 					<button type="button" class="cmn-btn-close" data-bs-dismiss="modal" aria-label="Close">
 						<i class="fa fa-times"></i>
 					</button>
 				</div>
-				<div class="modal-body">
-					Modal body
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="cmn_btn" data-bs-dismiss="modal">Close</button>
-					<button type="button" class="cmn_btn2" data-bs-dismiss="modal">Close</button>
+				<form action="" method="post" id="deleteShipmentRequestForm">
+					@csrf
+					@method('delete')
+					<div class="modal-body">
+						<p>@lang('Are you sure to delete this shipment request?')</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="cmn_btn" data-bs-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="cmn_btn2" data-bs-dismiss="modal">@lang('Yes')</button>
 
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal section end -->
+
+	<!-- Modal section start -->
+	<div class="modal fade" id="cancelShipmentRequest" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+		 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title" id="staticBackdropLabel">@lang('Confirmation')</h1>
+					<button type="button" class="cmn-btn-close" data-bs-dismiss="modal" aria-label="Close">
+						<i class="fa fa-times"></i>
+					</button>
 				</div>
+				<form action="" method="post" id="cancelShipmentRequestForm">
+					@csrf
+					@method('put')
+					<div class="modal-body">
+						<p>@lang('Are you sure to cancel this shipment request?')</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="cmn_btn" data-bs-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="cmn_btn2" data-bs-dismiss="modal">@lang('Yes')</button>
+
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -197,6 +260,17 @@
 				altInput: true,
 				dateFormat: "Y-m-d H:i",
 			});
+
+			$(document).on('click', '.deleteShipmentRequest', function () {
+				let dataRoute = $(this).data('route');
+				$('#deleteShipmentRequestForm').attr('action', dataRoute);
+			});
+
+			$(document).on('click', '.cancelShipmentRequest', function () {
+				let dataRoute = $(this).data('route');
+				$('#cancelShipmentRequestForm').attr('action', dataRoute);
+			});
+
 		})
 
 	</script>

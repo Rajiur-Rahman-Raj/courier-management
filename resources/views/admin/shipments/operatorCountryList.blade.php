@@ -119,7 +119,13 @@
 																			<td data-label="Shipment Date"> {{ customDate($shipment->shipment_date) }} </td>
 
 																			<td data-label="Status">
-																				@if($shipment->status == 1)
+																				@if($shipment->status == 0)
+																					<span
+																						class="badge badge-dark rounded">@lang('Requested')</span>
+																				@elseif($shipment->status == 6)
+																					<span
+																						class="badge badge-danger rounded">@lang('Canceled')</span>
+																				@elseif($shipment->status == 1)
 																					<span
 																						class="badge badge-info rounded">@lang('In Queue')</span>
 																				@elseif($shipment->status == 2)
@@ -159,10 +165,10 @@
 																							@endif
 																						@endif
 
-																						<a class="dropdown-item btn-outline-primary btn-sm"
-																						   href="#"><i
-																								class="fas fa-file-invoice mr-2"></i> @lang('Invoice')
-																						</a>
+																						{{--																						<a class="dropdown-item btn-outline-primary btn-sm"--}}
+																						{{--																						   href="#"><i--}}
+																						{{--																								class="fas fa-file-invoice mr-2"></i> @lang('Invoice')--}}
+																						{{--																						</a>--}}
 
 																						<a class="dropdown-item btn-outline-primary btn-sm"
 																						   href="{{ route('viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
@@ -171,10 +177,30 @@
 																						</a>
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
-																							<a class="dropdown-item btn-outline-primary btn-sm"
-																							   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
-																									class="fa fa-edit mr-2"
-																									aria-hidden="true"></i> @lang('Edit')
+																							@if($shipment->status != 6)
+																								<a class="dropdown-item btn-outline-primary btn-sm"
+																								   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
+																										class="fa fa-edit mr-2"
+																										aria-hidden="true"></i> @lang('Edit')
+																								</a>
+																							@endif
+																						@endif
+
+																						@if($shipment->status == 0)
+																							<a data-target="#deleteShipment"
+																							   data-toggle="modal"
+																							   data-route="{{route('deleteShipment', $shipment->id)}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
+																									class="fas fa-check"></i> @lang('Accept Request')
+																							</a>
+
+																							<a data-target="#cancelShipmentRequest"
+																							   data-toggle="modal"
+																							   data-route="{{route('cancelShipmentRequest', $shipment->id)}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm cancelShipmentRequest"><i
+																									class="fas fa-ban"></i> @lang('Cancel Request')
 																							</a>
 																						@endif
 
@@ -247,6 +273,34 @@
 		</div>
 	</div>
 
+
+	{{-- Cancel Shipment Request Modal --}}
+	<div id="cancelShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
+		 aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-dark font-weight-bold"
+						id="primary-header-modalLabel">@lang('Confirmation')</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				</div>
+				<form action="" method="post" id="cancelShipmentRequestForm">
+					@csrf
+					@method('put')
+					<div class="modal-body">
+						<p>@lang('Are you sure to cancel this shipment?')</p>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 	{{-- Delete Shipment Modal --}}
 	<div id="deleteShipment" class="modal fade" tabindex="-1" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
@@ -283,6 +337,11 @@
 			$(document).on('click', '.editShipmentStatus', function () {
 				let dataRoute = $(this).data('route');
 				$('#editShipmentStatusForm').attr('action', dataRoute);
+			});
+
+			$(document).on('click', '.cancelShipmentRequest', function () {
+				let dataRoute = $(this).data('route');
+				$('#cancelShipmentRequestForm').attr('action', dataRoute);
 			});
 
 			$(document).on('click', '.deleteShipment', function () {

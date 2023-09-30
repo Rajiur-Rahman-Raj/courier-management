@@ -5038,3 +5038,10 @@ body {
 .details_height{
 	height: 200px !important;
 }
+.table-responsive {
+	display: block;
+	width: 100%;
+	overflow-x: unset;
+	-webkit-overflow-scrolling: touch;
+	-ms-overflow-style: -ms-autohiding-scrollbar;
+}

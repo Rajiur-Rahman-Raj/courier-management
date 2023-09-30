@@ -240,7 +240,7 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-4 mb-3 input-box">
+		<div class="col-sm-12 col-md-6 mb-3 input-box">
 			<label for="payment_by"> @lang('Payment By')</label>
 			<select name="payment_by"
 					class="form-control @error('payment_by') select2 is-invalid @enderror payment_by">
@@ -252,7 +252,7 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-4 mb-3 input-box">
+		<div class="col-sm-12 col-md-6 mb-3 input-box">
 			<label for="payment_type"> @lang('Payment Type')</label>
 			<select name="payment_type"
 					class="form-control @error('payment_type') is-invalid @enderror select2">
@@ -267,26 +267,26 @@
 			</div>
 		</div>
 
-		<div class="col-sm-12 col-md-4 mb-3 input-box">
-			<label for="payment_status"> @lang('Payment Status')</label>
-			<select name="payment_status"
-					class="form-control @error('payment_status') is-invalid @enderror select2">
-				<option value="" disabled
-						selected>@lang('Select Payment Status')</option>
-				<option value="1" {{ old('payment_status') == '1' ? 'selected' : '' }}>@lang('Paid')</option>
-				<option value="2" {{ old('payment_status') == '2' ? 'selected' : '' }}>@lang('Unpaid')</option>
-			</select>
+{{--		<div class="col-sm-12 col-md-4 mb-3 input-box">--}}
+{{--			<label for="payment_status"> @lang('Payment Status')</label>--}}
+{{--			<select name="payment_status"--}}
+{{--					class="form-control @error('payment_status') is-invalid @enderror select2">--}}
+{{--				<option value="" disabled--}}
+{{--						selected>@lang('Select Payment Status')</option>--}}
+{{--				<option value="1" {{ old('payment_status') == '1' ? 'selected' : '' }}>@lang('Paid')</option>--}}
+{{--				<option value="2" {{ old('payment_status') == '2' ? 'selected' : '' }}>@lang('Unpaid')</option>--}}
+{{--			</select>--}}
 
-			<div class="invalid-feedback">
-				@error('payment_status') @lang($message) @enderror
-			</div>
-		</div>
+{{--			<div class="invalid-feedback">--}}
+{{--				@error('payment_status') @lang($message) @enderror--}}
+{{--			</div>--}}
+{{--		</div>--}}
 	</div>
 
 
 	<div class="row mb-3">
 		<div class="col-sm-12 col-md- mt-3">
-			<h6 class="text-dark font-weight-bold"> @lang('Packaging Service') </h6>
+			<h6 class="text-dark font-weight-bold"> @lang('Packing Service') </h6>
 			<div class="custom-control custom-radio">
 				<input type="radio" id="packingServiceOn" name="packing_service"
 					   class="custom-control-input" checked @if(old('packing_service') === 'yes') checked
@@ -445,29 +445,7 @@
 		@endif
 	</div>
 
-
-	<div class="row mb-3 parcelService">
-		<div class="col-sm-12 col-md- mt-3">
-			<h6 class="text-dark font-weight-bold"> @lang('Parcel Service') </h6>
-			<div class="custom-control custom-radio">
-				<input type="radio" id="parcelServiceOn" name="parcel_service"
-					   class="custom-control-input" checked @if(old('parcel_service') === 'yes') checked
-					   @endif value="yes">
-				<label class="custom-control-label"
-					   for="parcelServiceOn">@lang('Yes')</label>
-			</div>
-			<div class="custom-control custom-radio">
-				<input type="radio" id="parcelServiceOff" value="no"
-					   name="parcel_service"
-					   class="custom-control-input" @if(old('parcel_service') === 'no') checked @endif>
-				<label class="custom-control-label"
-					   for="parcelServiceOff">@lang('No')</label>
-			</div>
-		</div>
-
-	</div>
-
-	<div class="row mt-4 parcelInfo d-none">
+	<div class="row mt-4">
 		<div class="col-md-12 d-flex justify-content-between">
 			<div>
 				<h6 for="branch_id"
@@ -486,9 +464,26 @@
 		</div>
 	</div>
 
+	<div class="add_cod_parcel_info d-none">
+		<div class="row">
+			<div class="col-sm-12 col-md-12 mb-3 input-box">
+				<label
+					for="parcel_details"> @lang('Parcel Details') </label>
+				<textarea type="text" name="parcel_details"
+						  class="form-control @error('parcel_details') is-invalid @enderror"
+						  id="cod_parcel_details"
+						  value="{{ old('parcel_details') }}"
+						  placeholder="@lang('parcel details')" rows="20"
+						  cols="20">{{ old('parcel_details') }}</textarea>
+				<div class="invalid-feedback d-block">
+					@error('parcel_details') @lang($message) @enderror
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="parcelField">
-		<div class="row parcelInfo d-none">
+		<div class="row">
 			<div class="col-sm-12 col-md-3 mb-3 input-box">
 				<label
 					for="parcel_name"> @lang('Parcel Name') </label>
@@ -514,7 +509,7 @@
 			<div class="col-sm-12 col-md-3 mb-3 input-box">
 				<label for="parcel_type_id"> @lang('Parcel Type') </label>
 				<select name="parcel_type_id[]"
-						class="form-control @error('parcel_type_id.0') is-invalid @enderror select2 selectedParcelType OCParcelTypeWiseShippingRate">
+						class="form-control @error('parcel_type_id.0') is-invalid @enderror select2 selectedParcelType  OCParcelTypeWiseShippingRate">
 					<option value="" disabled
 							selected>@lang('Select Parcel Type')</option>
 					@foreach($parcelTypes as $parcel_type)
@@ -788,24 +783,6 @@
 		@endif
 	</div>
 
-	<div class="add_cod_parcel_info">
-		<div class="row">
-			<div class="col-sm-12 col-md-12 mb-3 input-box">
-				<label
-					for="parcel_details"> @lang('Shipment Details') </label>
-				<textarea type="text" name="parcel_details"
-						  class="form-control @error('parcel_details') is-invalid @enderror"
-						  id="cod_parcel_details"
-						  value="{{ old('parcel_details') }}"
-						  placeholder="@lang('Wirte shipment/parcel details')" rows="20"
-						  cols="20">{{ old('parcel_details') }}</textarea>
-				<div class="invalid-feedback d-block">
-					@error('parcel_details') @lang($message) @enderror
-				</div>
-			</div>
-		</div>
-	</div>
-
 
 	<div class="row">
 		<div class="col-sm-12 col-md-12 input-box">
@@ -825,34 +802,34 @@
 		<h6 class="border-line-title">@lang('Summary')</h6>
 	</div>
 
-	<div class="d-flex justify-content-end shipmentsDiscount">
-		<div class="col-md-3">
-			<div class="input-group">
-				<span class="input-group-text">@lang('Discount')</span>
-				<input type="text" name="discount" value="{{ old('discount') ?? '0' }}"
-					   class="form-control bg-white text-dark OCDiscount"
-					   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"
-					   id="discount" min="0">
-				<span class="input-group-text">%</span>
-			</div>
-		</div>
-	</div>
+{{--	<div class="d-flex justify-content-end shipmentsDiscount">--}}
+{{--		<div class="col-md-3">--}}
+{{--			<div class="input-group">--}}
+{{--				<span class="input-group-text">@lang('Discount')</span>--}}
+{{--				<input type="text" name="discount" value="{{ old('discount') ?? '0' }}"--}}
+{{--					   class="form-control bg-white text-dark OCDiscount"--}}
+{{--					   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"--}}
+{{--					   id="discount" min="0">--}}
+{{--				<span class="input-group-text">%</span>--}}
+{{--			</div>--}}
+{{--		</div>--}}
+{{--	</div>--}}
 
-	<div class=" d-flex justify-content-end mt-2">
-		<div class="col-md-3 d-flex justify-content-between">
-			<span class="fw-bold">@lang('Discount Amount')</span>
-			<div class="input-group w-50">
-				<input type="number" name="discount_amount" value="{{ old('discount_amount') ?? '0' }}"
-					   class="form-control bg-white text-dark OCDiscountAmount" data-discountamount="{{ old('discount_amount') }}"
-					   readonly>
-				<div class="input-group-append" readonly="">
-					<div class="form-control">
-						{{ $basic->currency_symbol }}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+{{--	<div class=" d-flex justify-content-end mt-2">--}}
+{{--		<div class="col-md-3 d-flex justify-content-between">--}}
+{{--			<span class="fw-bold">@lang('Discount Amount')</span>--}}
+{{--			<div class="input-group w-50">--}}
+{{--				<input type="number" name="discount_amount" value="{{ old('discount_amount') ?? '0' }}"--}}
+{{--					   class="form-control bg-white text-dark OCDiscountAmount" data-discountamount="{{ old('discount_amount') }}"--}}
+{{--					   readonly>--}}
+{{--				<div class="input-group-append" readonly="">--}}
+{{--					<div class="form-control">--}}
+{{--						{{ $basic->currency_symbol }}--}}
+{{--					</div>--}}
+{{--				</div>--}}
+{{--			</div>--}}
+{{--		</div>--}}
+{{--	</div>--}}
 
 	<div class=" d-flex justify-content-end mt-2">
 		<div class="col-md-3 d-flex justify-content-between">
@@ -964,6 +941,8 @@
 			</div>
 		</div>
 	</div>
+
+{{--	<input type="hidden" name="shipment_by" value="1">--}}
 
 	<input type="hidden" name="first_fiv" class="firstFiv" value="{{ old('first_fiv') ?? '0' }}">
 	<input type="hidden" name="last_fiv" class="lastFiv" value="{{ old('last_fiv') ?? '0' }}">

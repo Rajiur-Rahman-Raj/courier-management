@@ -30,7 +30,8 @@
 										   class="btn btn-sm  view_cmn_btn mr-2">
 											<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
 										</a>
-										<button class="btn btn-success btn-sm view_cmn_btn3" id="shipmentDetailsPrint"><i
+										<button class="btn btn-success btn-sm view_cmn_btn3" id="shipmentDetailsPrint">
+											<i
 												class="far fa-check-circle "></i> @lang('Print')
 										</button>
 									</div>
@@ -68,13 +69,15 @@
 												<li class="my-3 d-flex align-items-center">
 												<span class="fw-bold text-dark"><i
 														class="fas fa-user-plus mr-2 text-primary"></i> @lang('Sender : ')</span>
-													<span class="fw-normal">@lang(optional($singleShipment->sender)->name)</span></span>
+													<span
+														class="fw-normal">@lang(optional($singleShipment->sender)->name)</span></span>
 												</li>
 
 												<li class="my-3 d-flex align-items-center">
 												<span class="fw-bold text-dark"> <i
 														class="fas fa-user-minus mr-2 text-orange "></i> @lang('Receiver :')</span>
-													<span class="fw-normal">@lang(optional($singleShipment->receiver)->name)</span>
+													<span
+														class="fw-normal">@lang(optional($singleShipment->receiver)->name)</span>
 
 												</li>
 
@@ -89,13 +92,15 @@
 												<li class="my-3 d-flex align-items-center">
 												<span class="fw-bold text-dark"> <i
 														class="fas fa-tree mr-2 text-purple"></i> @lang('Sender Branch') : </span>
-													<span class="fw-normal">@lang(optional($singleShipment->senderBranch)->branch_name)</span>
+													<span
+														class="fw-normal">@lang(optional($singleShipment->senderBranch)->branch_name)</span>
 												</li>
 
 												<li class="my-3 d-flex align-items-center">
 												<span class="fw-bold text-dark"> <i
 														class="fas fa-tree mr-2 text-info"></i> @lang('Receiver Branch') : </span>
-													<span class="fw-normal">@lang(optional($singleShipment->receiverBranch)->branch_name)</span>
+													<span
+														class="fw-normal">@lang(optional($singleShipment->receiverBranch)->branch_name)</span>
 												</li>
 
 
@@ -183,7 +188,11 @@
 												<li class="my-3">
                                             <span class="fw-bold text-dark"><i
 													class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
-												@if($singleShipment->status == 1)
+												@if($singleShipment->status == 0)
+													<p class="badge text-bg-dark">@lang('Requested')</p>
+												@elseif($singleShipment->status == 6)
+													<p class="badge text-bg-danger">@lang('Canceled')</p>
+												@elseif($singleShipment->status == 1)
 													<p class="badge text-bg-info">@lang('In Queue')</p>
 												@elseif($singleShipment->status == 2)
 													<p class="badge text-bg-warning">@lang('Dispatch')</p>
@@ -340,14 +349,16 @@
 														class="fas fa-credit-card mr-2 text-primary"></i> @lang('Payment Calculation')</span>
 												</li>
 
-												<li class="my-3 ">
-                                            <span class="custom-text"><i
-													class="fas fa-dollar-sign mr-2 text-warning"></i>  @lang('Discount') :
-												<span
-													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->discount_amount)</span>
+												@if($singleShipment->discount != null)
+													<li class="my-3 ">
+													<span class="custom-text"><i
+															class="fas fa-dollar-sign mr-2 text-warning"></i>  @lang('Discount') :
+														<span
+															class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->discount_amount)</span>
+													</span>
+													</li>
+												@endif
 
-                                            </span>
-												</li>
 
 												<li class="my-3">
                                             <span class="custom-text"> <i

@@ -68,6 +68,13 @@
 						</a>
 					</li>
 
+					<li>
+						<a class="{{ activeMenu(['user.shipmentList', 'user.shipmentRequest'], null, 'requested') }}"
+						   href="{{ route('user.shipmentList', ['shipment_status' => 'requested', 'shipment_type' => 'operator-country']) }}">
+							@lang('Shipment Request')
+						</a>
+					</li>
+
 				</ul>
 			</div>
 		</li>

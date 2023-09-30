@@ -107,21 +107,24 @@
 																			<td data-label="Shipment Date"> {{ dateTime($shipment->shipment_date) }} </td>
 
 																			<td data-label="Status">
-																				@if($shipment->status == 1)
+																				@if($shipment->status == 0)
 																					<span
-																						class="badge badge-info">@lang('In Queue')</span>
+																						class="badge badge-dark rounded">@lang('Requested')</span>
+																				@elseif($shipment->status == 1)
+																					<span
+																						class="badge badge-info rounded">@lang('In Queue')</span>
 																				@elseif($shipment->status == 2)
 																					<span
-																						class="badge badge-warning">@lang('Dispatch')</span>
+																						class="badge badge-warning rounded">@lang('Dispatch')</span>
 																				@elseif($shipment->status == 3)
 																					<span
-																						class="badge badge-primary">@lang('Upcoming')</span>
+																						class="badge badge-primary rounded">@lang('Upcoming')</span>
 																				@elseif($shipment->status == 4)
 																					<span
-																						class="badge badge-success">@lang('Received')</span>
+																						class="badge badge-success rounded">@lang('Received')</span>
 																				@elseif($shipment->status == 5)
 																					<span
-																						class="badge badge-danger">@lang('Delivered')</span>
+																						class="badge badge-danger rounded">@lang('Delivered')</span>
 																				@endif
 																			</td>
 

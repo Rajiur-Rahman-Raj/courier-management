@@ -51,7 +51,8 @@ class Shipment extends Model
 		'first_fiv',
 		'last_fiv',
 		'total_pay',
-		'status'
+		'status',
+		'shipment_by'
 	];
 
 	protected $casts = [

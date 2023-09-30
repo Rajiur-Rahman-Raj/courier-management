@@ -20,10 +20,12 @@ class AdminAuthorizeMiddleware
 
 		$user = Auth::guard('admin')->user();
 
+//		dd($user);
 
 		if ($user->role_id == null){
 			return $next($request);
 		}
+
 		$userPermission = optional($user->role)->permission;
 		if (in_array($request->route()->getName(), $userPermission)){
 			return $next($request);

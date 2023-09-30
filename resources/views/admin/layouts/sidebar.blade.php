@@ -71,6 +71,13 @@
 							</a>
 						</li>
 
+						<li class="{{ activeMenu(['shipmentList'], null, 'requested') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'requested', 'shipment_type' => 'operator-country']) }}">
+								@lang('Requested Shipment')
+							</a>
+						</li>
+
 						<li class="{{ activeMenu(['trashShipmentList']) }}">
 							<a class="nav-link " href="{{ route('trashShipmentList') }}">
 								@lang('Trash Shipments')

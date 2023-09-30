@@ -34,15 +34,18 @@
 						<div class="main_switcher d-flex justify-content-between">
 							<div class="switcher">
 								<a href="{{ route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'operator-country']) }}">
-									<button class="@if(lastUriSegment() == 'operator-country') active @endif">@lang(optional(basicControl()->operatorCountry)->name)</button>
+									<button
+										class="@if(lastUriSegment() == 'operator-country') active @endif">@lang(optional(basicControl()->operatorCountry)->name)</button>
 								</a>
 								<a href="{{ route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'internationally']) }}">
-									<button class="@if(lastUriSegment() == 'internationally') active @endif">@lang('Internationally')</button>
+									<button
+										class="@if(lastUriSegment() == 'internationally') active @endif">@lang('Internationally')</button>
 								</a>
 							</div>
 
 							<div class="mt-3">
-								<a href="{{ route('user.ticket.create') }}" class="view_cmn_btn2">
+								<a href="{{route('user.createShipment', ['shipment_type' => 'internationally', 'shipment_status' => $status])}}"
+								   class="view_cmn_btn2">
 									<i class="fal fa-plus-circle"></i> @lang('Create Shipment')
 								</a>
 							</div>
@@ -91,7 +94,10 @@
 										<td data-label="Shipment Date"> {{ customDate($shipment->shipment_date) }} </td>
 
 										<td data-label="Status">
-											@if($shipment->status == 1)
+											@if($shipment->status == 0)
+												<span
+													class="badge text-bg-dark">@lang('Requested')</span>
+											@elseif($shipment->status == 1)
 												<span
 													class="badge text-bg-info">@lang('In Queue')</span>
 											@elseif($shipment->status == 2)
@@ -110,46 +116,31 @@
 										</td>
 
 										<td data-label="@lang('Action')">
-											<a class="dropdown-item btn-outline-primary btn-sm"
-											   href="{{ route('viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
-													class="fa fa-eye mr-2"
-													aria-hidden="true"></i> @lang('Details')
-											</a>
-											<div class="btn-group">
-												<button type="button"
-														class="btn btn-primary btn-sm dropdown-toggle"
-														data-toggle="dropdown"
-														aria-haspopup="true"
-														aria-expanded="false">
-													@lang('Options')
+											<div class="dropdown">
+												<button class="action-btn-secondary" type="button"
+														data-bs-toggle="dropdown" aria-expanded="false">
+													<i class="fas fa-ellipsis-v"></i>
 												</button>
-												<div class="dropdown-menu">
+												<ul class="dropdown-menu">
+													<li>
+														<a class="dropdown-item"
+														   href="{{ route('user.viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'internationally']) }}">@lang('Details')</a>
+													</li>
 
-													<a class="dropdown-item btn-outline-primary btn-sm"
-													   href="{{ route('viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
-															class="fa fa-eye mr-2"
-															aria-hidden="true"></i> @lang('Details')
-													</a>
+													@if($shipment->status == 0)
+														<li>
+															<a class="dropdown-item" href="#" data-bs-toggle="modal"
+															   data-bs-target="#staticBackdrop">@lang('Cancel Request')
+															</a>
+														</li>
 
-													@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
-														<a class="dropdown-item btn-outline-primary btn-sm"
-														   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
-																class="fa fa-edit mr-2"
-																aria-hidden="true"></i> @lang('Edit')
-														</a>
+														<li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+															   data-bs-target="#staticBackdrop">@lang('Delete')</a></li>
 													@endif
-
-													<a data-target="#deleteShipment"
-													   data-toggle="modal"
-													   data-route="{{route('deleteShipment', $shipment->id)}}"
-													   href="javascript:void(0)"
-													   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
-															class="fas fa-trash mr-2"></i> @lang('Delete')
-													</a>
-
-												</div>
+												</ul>
 											</div>
 										</td>
+
 									</tr>
 								@empty
 									<tr>

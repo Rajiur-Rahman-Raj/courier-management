@@ -73,18 +73,12 @@
 		<div class="row">
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="shipment_date"> @lang('Shipment Date') </label>
-				<div class="flatpickr2">
+				<div class="flatpickr">
 					<div class="input-group">
 						<input type="date" placeholder="@lang('Select date-time')" class="form-control shipment_date"
 							   name="shipment_date"
 							   value="{{ $singleShipment->shipment_date  }}" data-input>
 						<div class="input-group-append" readonly="">
-							<div class="form-control">
-								<a class="input-button cursor-pointer" title="toggle" data-toggle>
-									<i class="far fa-calendar"></i>
-								</a>
-							</div>
-
 							<div class="form-control">
 								<a class="input-button cursor-pointer" title="clear" data-clear>
 									<i class="fas fa-times"></i>
@@ -101,18 +95,12 @@
 
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="delivery_date"> @lang('Estimate Delivery Date') </label>
-				<div class="flatpickr2">
+				<div class="flatpickr">
 					<div class="input-group">
 						<input type="date" placeholder="@lang('Select Date')" class="form-control delivery_date"
 							   name="delivery_date"
 							   value="{{ old('delivery_date', $singleShipment->delivery_date) }}" data-input>
 						<div class="input-group-append" readonly="">
-							<div class="form-control">
-								<a class="input-button cursor-pointer" title="toggle" data-toggle>
-									<i class="far fa-calendar"></i>
-								</a>
-							</div>
-
 							<div class="form-control">
 								<a class="input-button cursor-pointer" title="clear" data-clear>
 									<i class="fas fa-times"></i>
@@ -184,7 +172,7 @@
 					<option value="" disabled selected>@lang('Select Receiver')</option>
 					@foreach($receivers as $receiver)
 						<option
-							value="{{ $receiver->id }}" {{ old('receiver_id', $singleShipment->receiver_id) == $receiver->id ? 'selected' : ''}}>@lang($receiver->name)</option>
+							value="{{ $receiver->id }}" {{ old('receiver_id', $singleShipment->receiver_id) == $receiver->id ? 'selected' : ''}}>@lang($receiver->name) ({{ $receiver->username }})</option>
 					@endforeach
 				</select>
 

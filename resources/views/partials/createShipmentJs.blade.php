@@ -308,6 +308,7 @@
 			$('.OCPickupCost').val(0);
 			$('.OCSupplyCost').val(0);
 			$('.get_receive_amount').addClass('d-none');
+			$('.add_cod_parcel_info').addClass('d-none');
 			$('.addParcelFieldButton').removeClass('d-none');
 			$('.addedParcelField').removeClass('d-none')
 			$('.parcelField').removeClass('d-none')
@@ -327,6 +328,7 @@
 			$('.OCPickupCost').val(dataResouce.pickup_cost);
 			$('.OCSupplyCost').val(dataResouce.supply_cost);
 			$('.get_receive_amount').addClass('d-none');
+			$('.add_cod_parcel_info').addClass('d-none');
 			$('.addParcelFieldButton').removeClass('d-none');
 			$('.addedParcelField').removeClass('d-none')
 			$('.parcelField').removeClass('d-none')
@@ -342,11 +344,10 @@
 
 		} else if ($('input[name="shipment_type"]:checked').val() === "condition") {
 			$('.pickup').addClass('d-none');
-			$('.parcelService').addClass('d-none');
-			$('.parcelInfo').addClass('d-none');
 			$('.OCPickupCost').val(0);
 			$('.OCSupplyCost').val(0);
 			$('.get_receive_amount').removeClass('d-none');
+			$('.add_cod_parcel_info').removeClass('d-none');
 			$('.addParcelFieldButton').addClass('d-none');
 			$('.addedParcelField').addClass('d-none')
 			$('.parcelField').addClass('d-none')
@@ -386,36 +387,6 @@
 			$('select[name="package_id"]').prop('required', false);
 			$('select[name="variant_id"]').prop('required', false);
 			$('input[name="variant_quantity"]').prop('required', false);
-		}
-	}
-
-
-	formHandlingByParcelService();
-
-	$('input[name="parcel_service"]').change(function () {
-		formHandlingByParcelService();
-	});
-
-	function formHandlingByParcelService() {
-		if ($('input[name="parcel_service"]:checked').val() === "yes") {
-			console.log('yes');
-			$('.parcelInfo').removeClass('d-none')
-
-			$('select[name="parcel_name"]').prop('required', true);
-			$('select[name="parcel_quantity"]').prop('required', true);
-			$('select[name="parcel_type_id"]').prop('required', true);
-			$('input[name="parcel_unit_id"]').prop('required', true);
-			$('input[name="total_unit"]').prop('required', true);
-
-		} else {
-			console.log('no');
-			$('.parcelInfo').addClass('d-none')
-
-			$('select[name="parcel_name"]').prop('required', false);
-			$('select[name="parcel_quantity"]').prop('required', false);
-			$('select[name="parcel_type_id"]').prop('required', false);
-			$('input[name="parcel_unit_id"]').prop('required', false);
-			$('input[name="total_unit"]').prop('required', false);
 		}
 	}
 
@@ -466,12 +437,6 @@
 		$(".flatpickr").flatpickr({
 			wrap: true,
 			minDate: "today",
-			altInput: true,
-			dateFormat: "Y-m-d H:i",
-		});
-
-		$(".flatpickr2").flatpickr({
-			wrap: true,
 			altInput: true,
 			dateFormat: "Y-m-d H:i",
 		});

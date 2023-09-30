@@ -77,12 +77,6 @@
 							   value="{{ old('shipment_date',request()->shipment_date) }}" data-input>
 						<div class="input-group-append" readonly="">
 							<div class="form-control">
-								<a class="input-button cursor-pointer" title="toggle" data-toggle>
-									<i class="far fa-calendar"></i>
-								</a>
-							</div>
-
-							<div class="form-control">
 								<a class="input-button cursor-pointer" title="clear" data-clear>
 									<i class="fas fa-times"></i>
 								</a>
@@ -98,17 +92,11 @@
 
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="delivery_date"> @lang('Estimate Delivery Date') </label>
-				<div class="flatpickr2">
+				<div class="flatpickr">
 					<div class="input-group">
 						<input type="date" placeholder="@lang('Select Date')" class="form-control delivery_date"  name="delivery_date"
 							   value="{{ old('delivery_date',request()->delivery_date) }}" data-input>
 						<div class="input-group-append" readonly="">
-							<div class="form-control">
-								<a class="input-button cursor-pointer" title="toggle" data-toggle>
-									<i class="far fa-calendar"></i>
-								</a>
-							</div>
-
 							<div class="form-control">
 								<a class="input-button cursor-pointer" title="clear" data-clear>
 									<i class="fas fa-times"></i>
@@ -282,7 +270,7 @@
 			<div class="col-sm-12 col-md-4 mb-3">
 				<label for="payment_status"> @lang('Payment Status')</label>
 				<select name="payment_status"
-						class="form-control @error('payment_status') is-invalid @enderror select2">
+						class="form-control @error('payment_status') is-invalid @enderror select2" required>
 					<option value="" disabled
 							selected>@lang('Select Payment Status')</option>
 					<option value="1" {{ old('payment_status') == '1' ? 'selected' : '' }}>@lang('Paid')</option>
