@@ -3802,6 +3802,16 @@ a.text-lighter:focus {
 	background: #fff;
 }
 
+.nb-callout {
+	padding: 1.25rem;
+	margin-top: 1.25rem;
+	margin-bottom: 1.25rem;
+	border-left: 1px solid var(--theme_color);
+	border-left-width: 0.25rem;
+	background: #fff;
+	border-radius: 10px;
+}
+
 .profile-setting .sidebar-wrapper {
 	background: var(--white);
 	box-shadow: var(--shadow2);

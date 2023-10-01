@@ -24,6 +24,7 @@
   'min_transfer' => '10.00',
   'max_transfer' => '900000.00',
   'transfer_charge' => '0',
+  'refund_time' => '30_minute',
   'email_notification' => 1,
   'email_verification' => 0,
   'sms_notification' => 1,

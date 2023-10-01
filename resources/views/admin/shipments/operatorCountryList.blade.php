@@ -205,13 +205,15 @@
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.delete')))
-																							<a data-target="#deleteShipment"
-																							   data-toggle="modal"
-																							   data-route="{{route('deleteShipment', $shipment->id)}}"
-																							   href="javascript:void(0)"
-																							   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
-																									class="fas fa-trash mr-2"></i> @lang('Delete')
-																							</a>
+																							@if($shipment->shipment_cancel_time == null && $shipment->refund_time == null)
+																								<a data-target="#deleteShipment"
+																								   data-toggle="modal"
+																								   data-route="{{route('deleteShipment', $shipment->id)}}"
+																								   href="javascript:void(0)"
+																								   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
+																										class="fas fa-trash mr-2"></i> @lang('Delete')
+																								</a>
+																							@endif
 																						@endif
 
 																					</div>

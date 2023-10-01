@@ -162,6 +162,7 @@ class BasicControlController extends Controller
 			$basicControl->strong_password = $purifiedData->strong_password;
 			$basicControl->registration = $purifiedData->registration;
 			$basicControl->is_active_cron_notification = $purifiedData->is_active_cron_notification;
+			$basicControl->refund_time = $purifiedData->refund_time;
 			$basicControl->save();
 
 			config(['basic.site_title' => $basicControl->site_title]);
@@ -178,6 +179,7 @@ class BasicControlController extends Controller
 			config(['basic.strong_password' => (int)$basicControl->strong_password]);
 			config(['basic.registration' => (int)$basicControl->registration]);
 			config(['basic.is_active_cron_notification' => (int)$basicControl->is_active_cron_notification]);
+			config(['basic.refund_time' => $basicControl->refund_time]);
 
 			$fp = fopen(base_path() . '/config/basic.php', 'w');
 			fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');

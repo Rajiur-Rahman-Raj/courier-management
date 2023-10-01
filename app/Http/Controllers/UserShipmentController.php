@@ -264,8 +264,18 @@ class UserShipmentController extends Controller
 	}
 
 	public function cancelShipmentRequest($id){
+		$basic = basicControl();
+		$explodeData = explode('_', $basic->refund_time);
+		$refund_time = $explodeData[0];
+		$refund_time_type = strtolower($explodeData[1]);
+		$func = $refund_time_type == 'minute' ? 'addMinutes' : ($refund_time_type == 'hour' ? 'addHours' : 'addDays');
+		$moneyRefundTime = Carbon::now()->$func($refund_time);
+
 		$shipment = Shipment::findOrFail($id);
 		$shipment->status = 6;
+		$shipment->shipment_cancel_time = Carbon::now();
+		$shipment->refund_time = $moneyRefundTime;
+
 		$shipment->save();
 		return back()->with('success', 'Shipment request canceled successfully!');
 	}
