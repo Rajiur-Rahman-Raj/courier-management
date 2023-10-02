@@ -72,7 +72,8 @@
 			<label for="shipment_date"> @lang('Shipment Date') </label>
 			<div class="flatpickr">
 				<div class="input-group input-box">
-					<input type="date" placeholder="@lang('Select date')" class="form-control shipment_date"  name="shipment_date"
+					<input type="date" placeholder="@lang('Select date')" class="form-control shipment_date"
+						   name="shipment_date"
 						   value="{{ old('shipment_date',request()->shipment_date) }}" data-input>
 					<div class="input-group-append" readonly="">
 						<div class="form-control">
@@ -91,9 +92,10 @@
 
 		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="delivery_date"> @lang('Estimate Delivery Date') </label>
-			<div class="flatpickr2">
+			<div class="flatpickr">
 				<div class="input-group input-box">
-					<input type="date" placeholder="@lang('Select Date')" class="form-control delivery_date"  name="delivery_date"
+					<input type="date" placeholder="@lang('Select Date')" class="form-control delivery_date"
+						   name="delivery_date"
 						   value="{{ old('delivery_date',request()->delivery_date) }}" data-input>
 					<div class="input-group-append" readonly="">
 						<div class="form-control">
@@ -147,8 +149,10 @@
 	<div class="row">
 		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="sender_id"> @lang('Sender')</label>
-			<select name="sender_id" class="form-control @error('sender_id') is-invalid @enderror select2" data-oldsenderid="{{ old('sender_id') }}">
-				<option value="{{ $sender->id }}" {{ request()->sender_id ==  $sender->id ? 'selected' : ''}}>{{ $sender->name }}</option>
+			<select name="sender_id" class="form-control @error('sender_id') is-invalid @enderror select2"
+					data-oldsenderid="{{ old('sender_id') }}">
+				<option
+					value="{{ $sender->id }}" {{ request()->sender_id ==  $sender->id ? 'selected' : ''}}>{{ $sender->name }}</option>
 			</select>
 
 			<div class="invalid-feedback">
@@ -159,7 +163,8 @@
 		<div class="col-sm-12 col-md-3 mb-3 input-box">
 			<label for="receiver_id"> @lang('Receiver')</label>
 			<select name="receiver_id"
-					class="form-control @error('receiver_id') is-invalid @enderror select2 create-receiver getReceiver" data-oldreceiverid="{{ old('receiver_id') }}">
+					class="form-control @error('receiver_id') is-invalid @enderror select2 create-receiver getReceiver"
+					data-oldreceiverid="{{ old('receiver_id') }}">
 			</select>
 
 			<div class="invalid-feedback">
@@ -173,7 +178,8 @@
 					class="form-control @error('from_state_id') is-invalid @enderror select2 selectedFromState">
 				<option value="" selected disabled>@lang('Select State')</option>
 				@foreach(optional($basicControl->operatorCountry)->state() as $state)
-					<option value="{{ $state->id }}" {{ old('from_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
+					<option
+						value="{{ $state->id }}" {{ old('from_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
 				@endforeach
 			</select>
 			<div class="invalid-feedback">
@@ -185,7 +191,8 @@
 			<label for="from_city_id">@lang('Select City') <span
 					class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 			<select name="from_city_id"
-					class="form-control @error('from_city_id') is-invalid @enderror select2 selectedFromCity" data-oldfromcityid="{{ old('from_city_id') }}">
+					class="form-control @error('from_city_id') is-invalid @enderror select2 selectedFromCity"
+					data-oldfromcityid="{{ old('from_city_id') }}">
 			</select>
 			<div class="invalid-feedback">
 				@error('from_city_id') @lang($message) @enderror
@@ -196,7 +203,8 @@
 			<label for="from_area_id">@lang('Select Area') <span
 					class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 			<select name="from_area_id"
-					class="form-control @error('from_area_id') is-invalid @enderror select2 selectedFromArea" data-oldfromareaid="{{ old('from_area_id') }}">
+					class="form-control @error('from_area_id') is-invalid @enderror select2 selectedFromArea"
+					data-oldfromareaid="{{ old('from_area_id') }}">
 			</select>
 			<div class="invalid-feedback">
 				@error('from_area_id') @lang($message) @enderror
@@ -209,7 +217,8 @@
 					class="form-control @error('to_state_id') is-invalid @enderror select2 selectedToState">
 				<option value="" selected disabled>@lang('Select State')</option>
 				@foreach(optional($basicControl->operatorCountry)->state() as $state)
-					<option value="{{ $state->id }}" {{ old('to_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
+					<option
+						value="{{ $state->id }}" {{ old('to_state_id') == $state->id ? 'selected' : ''}}>@lang($state->name)</option>
 				@endforeach
 			</select>
 			<div class="invalid-feedback">
@@ -221,7 +230,8 @@
 			<label for="to_city_id">@lang('Select City') <span
 					class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 			<select name="to_city_id"
-					class="form-control @error('to_city_id') is-invalid @enderror select2 selectedToCity" data-oldtocityid="{{ old('to_city_id') }}">
+					class="form-control @error('to_city_id') is-invalid @enderror select2 selectedToCity"
+					data-oldtocityid="{{ old('to_city_id') }}">
 			</select>
 			<div class="invalid-feedback">
 				@error('to_city_id') @lang($message) @enderror
@@ -233,7 +243,8 @@
 					class="text-dark font-weight-bold">(@lang('optional'))</span>
 			</label>
 			<select name="to_area_id"
-					class="form-control @error('to_area_id') is-invalid @enderror select2 selectedToArea" data-oldtoareaid="{{ old('to_area_id') }}">
+					class="form-control @error('to_area_id') is-invalid @enderror select2 selectedToArea"
+					data-oldtoareaid="{{ old('to_area_id') }}">
 			</select>
 			<div class="invalid-feedback">
 				@error('to_area_id') @lang($message) @enderror
@@ -258,7 +269,8 @@
 					class="form-control @error('payment_type') is-invalid @enderror select2">
 				<option value="" disabled
 						selected>@lang('Select Payment Type')</option>
-				<option value="wallet" {{ old('payment_type') == 'wallet' ? 'selected' : '' }}>@lang('From Wallet')</option>
+				<option
+					value="wallet" {{ old('payment_type') == 'wallet' ? 'selected' : '' }}>@lang('From Wallet')</option>
 				<option value="cash" {{ old('payment_type') == 'cash' ? 'selected' : '' }}>@lang('Cash')</option>
 			</select>
 
@@ -267,20 +279,20 @@
 			</div>
 		</div>
 
-{{--		<div class="col-sm-12 col-md-4 mb-3 input-box">--}}
-{{--			<label for="payment_status"> @lang('Payment Status')</label>--}}
-{{--			<select name="payment_status"--}}
-{{--					class="form-control @error('payment_status') is-invalid @enderror select2">--}}
-{{--				<option value="" disabled--}}
-{{--						selected>@lang('Select Payment Status')</option>--}}
-{{--				<option value="1" {{ old('payment_status') == '1' ? 'selected' : '' }}>@lang('Paid')</option>--}}
-{{--				<option value="2" {{ old('payment_status') == '2' ? 'selected' : '' }}>@lang('Unpaid')</option>--}}
-{{--			</select>--}}
+		{{--		<div class="col-sm-12 col-md-4 mb-3 input-box">--}}
+		{{--			<label for="payment_status"> @lang('Payment Status')</label>--}}
+		{{--			<select name="payment_status"--}}
+		{{--					class="form-control @error('payment_status') is-invalid @enderror select2">--}}
+		{{--				<option value="" disabled--}}
+		{{--						selected>@lang('Select Payment Status')</option>--}}
+		{{--				<option value="1" {{ old('payment_status') == '1' ? 'selected' : '' }}>@lang('Paid')</option>--}}
+		{{--				<option value="2" {{ old('payment_status') == '2' ? 'selected' : '' }}>@lang('Unpaid')</option>--}}
+		{{--			</select>--}}
 
-{{--			<div class="invalid-feedback">--}}
-{{--				@error('payment_status') @lang($message) @enderror--}}
-{{--			</div>--}}
-{{--		</div>--}}
+		{{--			<div class="invalid-feedback">--}}
+		{{--				@error('payment_status') @lang($message) @enderror--}}
+		{{--			</div>--}}
+		{{--		</div>--}}
 	</div>
 
 
@@ -513,7 +525,8 @@
 					<option value="" disabled
 							selected>@lang('Select Parcel Type')</option>
 					@foreach($parcelTypes as $parcel_type)
-						<option value="{{ $parcel_type->id }}" {{ old('parcel_type_id.0') == $parcel_type->id ? 'selected' : '' }}>@lang($parcel_type->parcel_type)</option>
+						<option
+							value="{{ $parcel_type->id }}" {{ old('parcel_type_id.0') == $parcel_type->id ? 'selected' : '' }}>@lang($parcel_type->parcel_type)</option>
 					@endforeach
 				</select>
 
@@ -525,7 +538,8 @@
 			<div class="col-sm-12 col-md-3 mb-3 input-box">
 				<label for="parcel_unit_id"> @lang('Select Unit') </label>
 				<select name="parcel_unit_id[]"
-						class="form-control @error('parcel_unit_id.0') is-invalid @enderror selectedParcelUnit" data-oldparcelunitid='{{ old("parcel_unit_id.0") }}'>
+						class="form-control @error('parcel_unit_id.0') is-invalid @enderror selectedParcelUnit"
+						data-oldparcelunitid='{{ old("parcel_unit_id.0") }}'>
 					<option value="" disabled
 							selected>@lang('Select Parcel Unit')</option>
 				</select>
@@ -670,7 +684,8 @@
 								onchange="selectedParcelTypeHandel({{$i}})" required>
 							<option value="" disabled selected>@lang('Select Parcel Type')</option>
 							@foreach($parcelTypes as $parcel_type)
-								<option value="{{ $parcel_type->id }}" {{ old("parcel_type_id.$i") == $parcel_type->id ? 'selected' : '' }}>@lang($parcel_type->parcel_type)</option>
+								<option
+									value="{{ $parcel_type->id }}" {{ old("parcel_type_id.$i") == $parcel_type->id ? 'selected' : '' }}>@lang($parcel_type->parcel_type)</option>
 							@endforeach
 						</select>
 
@@ -802,41 +817,42 @@
 		<h6 class="border-line-title">@lang('Summary')</h6>
 	</div>
 
-{{--	<div class="d-flex justify-content-end shipmentsDiscount">--}}
-{{--		<div class="col-md-3">--}}
-{{--			<div class="input-group">--}}
-{{--				<span class="input-group-text">@lang('Discount')</span>--}}
-{{--				<input type="text" name="discount" value="{{ old('discount') ?? '0' }}"--}}
-{{--					   class="form-control bg-white text-dark OCDiscount"--}}
-{{--					   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"--}}
-{{--					   id="discount" min="0">--}}
-{{--				<span class="input-group-text">%</span>--}}
-{{--			</div>--}}
-{{--		</div>--}}
-{{--	</div>--}}
+	{{--	<div class="d-flex justify-content-end shipmentsDiscount">--}}
+	{{--		<div class="col-md-3">--}}
+	{{--			<div class="input-group">--}}
+	{{--				<span class="input-group-text">@lang('Discount')</span>--}}
+	{{--				<input type="text" name="discount" value="{{ old('discount') ?? '0' }}"--}}
+	{{--					   class="form-control bg-white text-dark OCDiscount"--}}
+	{{--					   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"--}}
+	{{--					   id="discount" min="0">--}}
+	{{--				<span class="input-group-text">%</span>--}}
+	{{--			</div>--}}
+	{{--		</div>--}}
+	{{--	</div>--}}
 
-{{--	<div class=" d-flex justify-content-end mt-2">--}}
-{{--		<div class="col-md-3 d-flex justify-content-between">--}}
-{{--			<span class="fw-bold">@lang('Discount Amount')</span>--}}
-{{--			<div class="input-group w-50">--}}
-{{--				<input type="number" name="discount_amount" value="{{ old('discount_amount') ?? '0' }}"--}}
-{{--					   class="form-control bg-white text-dark OCDiscountAmount" data-discountamount="{{ old('discount_amount') }}"--}}
-{{--					   readonly>--}}
-{{--				<div class="input-group-append" readonly="">--}}
-{{--					<div class="form-control">--}}
-{{--						{{ $basic->currency_symbol }}--}}
-{{--					</div>--}}
-{{--				</div>--}}
-{{--			</div>--}}
-{{--		</div>--}}
-{{--	</div>--}}
+	{{--	<div class=" d-flex justify-content-end mt-2">--}}
+	{{--		<div class="col-md-3 d-flex justify-content-between">--}}
+	{{--			<span class="fw-bold">@lang('Discount Amount')</span>--}}
+	{{--			<div class="input-group w-50">--}}
+	{{--				<input type="number" name="discount_amount" value="{{ old('discount_amount') ?? '0' }}"--}}
+	{{--					   class="form-control bg-white text-dark OCDiscountAmount" data-discountamount="{{ old('discount_amount') }}"--}}
+	{{--					   readonly>--}}
+	{{--				<div class="input-group-append" readonly="">--}}
+	{{--					<div class="form-control">--}}
+	{{--						{{ $basic->currency_symbol }}--}}
+	{{--					</div>--}}
+	{{--				</div>--}}
+	{{--			</div>--}}
+	{{--		</div>--}}
+	{{--	</div>--}}
 
 	<div class=" d-flex justify-content-end mt-2">
 		<div class="col-md-3 d-flex justify-content-between">
 			<span class="fw-bold">@lang('Subtotal')</span>
 			<div class="input-group w-50">
 				<input type="number" name="sub_total" value="{{ old('sub_total') ?? '0' }}"
-					   class="form-control bg-white text-dark OCSubTotal" data-subtotal="{{ old('sub_total') }}" readonly>
+					   class="form-control bg-white text-dark OCSubTotal" data-subtotal="{{ old('sub_total') }}"
+					   readonly>
 				<div class="input-group-append" readonly="">
 					<div class="form-control">
 						{{ $basic->currency_symbol }}
@@ -851,7 +867,8 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Pickup Cost')</span>
 				<div class="input-group w-50">
-					<input type="text" name="pickup_cost" value="{{ old('pickup_cost') ?? '0' }}" data-pickupcost="{{ old('pickup_cost') }}"
+					<input type="text" name="pickup_cost" value="{{ old('pickup_cost') ?? '0' }}"
+						   data-pickupcost="{{ old('pickup_cost') }}"
 						   class="form-control bg-white text-dark OCPickupCost"
 						   readonly>
 					<div class="input-group-append" readonly="">
@@ -867,7 +884,8 @@
 			<div class="col-md-3 d-flex justify-content-between">
 				<span class="fw-bold">@lang('Supply Cost')</span>
 				<div class="input-group w-50">
-					<input type="text" name="supply_cost" value="{{ old('supply_cost') ?? '0' }}" data-supplycost="{{ old('supply_cost') }}"
+					<input type="text" name="supply_cost" value="{{ old('supply_cost') ?? '0' }}"
+						   data-supplycost="{{ old('supply_cost') }}"
 						   class="form-control bg-white text-dark OCSupplyCost"
 						   readonly>
 					<div class="input-group-append" readonly="">
@@ -884,9 +902,16 @@
 		<div class="col-md-3 d-flex justify-content-between">
 			<span class="fw-bold">@lang('Shipping Cost')</span>
 			<div class="input-group w-50">
-				<input type="text" name="shipping_cost" value="{{ old('shipping_cost') ?? '0' }}" data-shippingcost="{{ old('shipping_cost') }}"
+				<input type="text" name="shipping_cost" value="{{ old('shipping_cost') ?? '0' }}"
+					   data-shippingcost="{{ old('shipping_cost') }}"
 					   class="form-control bg-white text-dark OCShippingCost"
 					   readonly>
+
+				<input type="hidden" name="return_shipment_cost" value="{{ old('return_shipment_cost') ?? '0' }}"
+					   data-shippingcost="{{ old('return_shipment_cost') }}"
+					   class="form-control bg-white text-dark OCReturnShipmentCost"
+					   readonly>
+
 				<div class="input-group-append">
 					<div class="form-control">
 						{{ $basic->currency_symbol }}
@@ -916,7 +941,8 @@
 		<div class="col-md-3 d-flex justify-content-between">
 			<span class="fw-bold">@lang('Insurance')</span>
 			<div class="input-group w-50">
-				<input type="text" name="insurance" value="{{ old('insurance') ?? '0' }}" data-insurance="{{ old('insurance') }}"
+				<input type="text" name="insurance" value="{{ old('insurance') ?? '0' }}"
+					   data-insurance="{{ old('insurance') }}"
 					   class="form-control bg-white text-dark OCInsurance" readonly>
 				<div class="input-group-append">
 					<div class="form-control">
@@ -931,7 +957,8 @@
 		<div class="col-md-3 d-flex justify-content-between">
 			<span class="fw-bold">@lang('Total Pay')</span>
 			<div class="input-group w-50">
-				<input type="number" name="total_pay" value="{{ old('total_pay') ?? '0' }}" data-totalpay="{{ old('total_pay') }}"
+				<input type="number" name="total_pay" value="{{ old('total_pay') ?? '0' }}"
+					   data-totalpay="{{ old('total_pay') }}"
 					   class="form-control bg-white text-dark OCtotalPay" readonly>
 				<div class="input-group-append">
 					<div class="form-control">
@@ -942,11 +969,12 @@
 		</div>
 	</div>
 
-{{--	<input type="hidden" name="shipment_by" value="1">--}}
+	{{--	<input type="hidden" name="shipment_by" value="1">--}}
 
 	<input type="hidden" name="first_fiv" class="firstFiv" value="{{ old('first_fiv') ?? '0' }}">
 	<input type="hidden" name="last_fiv" class="lastFiv" value="{{ old('last_fiv') ?? '0' }}">
 
 
-	<button type="submit" class="btn cmn_btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3 w-100">@lang('Save')</button>
+	<button type="submit"
+			class="btn cmn_btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3 w-100">@lang('Save')</button>
 </form>

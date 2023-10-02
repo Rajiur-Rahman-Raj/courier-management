@@ -133,6 +133,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 
 		Route::put('cancel-shipment-request/{id}', [ShipmentController::class, 'cancelShipmentRequest'])->name('cancelShipmentRequest');
+		Route::put('accept-shipment-request/{id}', [ShipmentController::class, 'acceptShipmentRequest'])->name('acceptShipmentRequest');
 
 
 		Route::delete('shipment-delete/{id}', [ShipmentController::class, 'deleteShipment'])->name('deleteShipment');

@@ -9,9 +9,11 @@ use App\Models\Country;
 use App\Models\DefaultShippingRateInternationally;
 use App\Models\DefaultShippingRateOperatorCountry;
 use App\Models\Fund;
+use App\Models\MoneyTransfer;
 use App\Models\Package;
 use App\Models\ParcelType;
 use App\Models\Shipment;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Traits\Notify;
 use App\Traits\OCShipmentStoreTrait;
@@ -274,7 +276,9 @@ class UserShipmentController extends Controller
 		$shipment = Shipment::findOrFail($id);
 		$shipment->status = 6;
 		$shipment->shipment_cancel_time = Carbon::now();
-		$shipment->refund_time = $moneyRefundTime;
+		if ($shipment->payment_type == 'wallet' && $shipment->payment_status == 1){
+			$shipment->refund_time = $moneyRefundTime;
+		}
 
 		$shipment->save();
 		return back()->with('success', 'Shipment request canceled successfully!');

@@ -129,13 +129,21 @@
 
 													@if($shipment->status == 0)
 														<li>
-															<a class="dropdown-item" href="#" data-bs-toggle="modal"
-															   data-bs-target="#staticBackdrop">@lang('Cancel Request')
-															</a>
+															<a class="dropdown-item cancelShipmentRequest"
+															   data-bs-toggle="modal"
+															   data-route="{{route('user.cancelShipmentRequest', $shipment->id)}}"
+															   href="javascript:void(0)"
+															   data-property="{{ $shipment }}"
+															   data-bs-target="#cancelShipmentRequest">@lang('Cancel Request')</a>
 														</li>
-
-														<li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-															   data-bs-target="#staticBackdrop">@lang('Delete')</a></li>
+													@elseif($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null)
+														<li>
+															<a class="dropdown-item deleteShipmentRequest"
+															   data-bs-toggle="modal"
+															   data-route="{{route('user.deleteShipmentRequest', $shipment->id)}}"
+															   href="javascript:void(0)"
+															   data-bs-target="#deleteShipmentRequest">@lang('Delete')</a>
+														</li>
 													@endif
 												</ul>
 											</div>
@@ -162,6 +170,38 @@
 			</div>
 		</div>
 	</div>
+	<!-- Modal section start -->
+	<div class="modal fade" id="cancelShipmentRequest" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+		 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title" id="staticBackdropLabel">@lang('Confirmation')</h1>
+					<button type="button" class="cmn-btn-close modal-close" data-bs-dismiss="modal" aria-label="Close">
+						<i class="fa fa-times"></i>
+					</button>
+				</div>
+				<form action="" method="post" id="cancelShipmentRequestForm">
+					@csrf
+					@method('put')
+					<div class="modal-body">
+						<div class="mb-5">
+							<p>@lang('Are you sure to cancel this shipment request?')</p>
+						</div>
+						<div class="shipment-refund-alert">
+
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="cmn_btn modal-close" data-bs-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="cmn_btn2" data-bs-dismiss="modal">@lang('Yes')</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal section end -->
 @endsection
 
 @push('extra_scripts')
@@ -186,6 +226,30 @@
 				wrap: true,
 				altInput: true,
 				dateFormat: "Y-m-d H:i",
+			});
+
+			$(document).on('click', '.cancelShipmentRequest', function () {
+				let dataRoute = $(this).data('route');
+				$('#cancelShipmentRequestForm').attr('action', dataRoute);
+				let basicControl = @json(basicControl());
+				let refundTimeArray = basicControl.refund_time.split("_");
+				let refundTime = refundTimeArray[0];
+				let refundTimeType = refundTimeArray[1];
+				let dataProperty = $(this).data('property');
+				let paymentType = dataProperty.payment_type;
+				let paymentStatus = dataProperty.payment_status;
+
+				if (paymentType == 'wallet' && paymentStatus == 1) {
+					$('.shipment-refund-alert').html(`
+						<div class="nb-callout bd-callout-warning m-0 ">
+							<i class="fas fa-info-circle mr-2 text-warning"></i>
+							N.B: You will get a refund ${refundTime} ${refundTimeType} after canceling your shipment request. Refund charges will be deducted.
+						</div>`);
+				}
+			});
+
+			$(document).on('click', '.modal-close', function () {
+				$('.shipment-refund-alert').html('');
 			});
 		})
 

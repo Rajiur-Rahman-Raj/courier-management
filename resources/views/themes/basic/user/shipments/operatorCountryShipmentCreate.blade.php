@@ -84,6 +84,7 @@
 
 	<script>
 		'use strict'
+
 		let shipingImageOptions = {
 			imagesInputName: 'shipment_image',
 			label: 'Drag & Drop files here or click to browse images',

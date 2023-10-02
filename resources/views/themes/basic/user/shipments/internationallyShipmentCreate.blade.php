@@ -18,7 +18,8 @@
 								<li class="breadcrumb-item"><a
 										href="{{ route('user.dashboard') }}">@lang('Dashboard')</a></li>
 								<li class="breadcrumb-item"><a
-										href="{{route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'internationally'])}}">@lang('Shipments List')</a></li>
+										href="{{route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => 'internationally'])}}">@lang('Shipments List')</a>
+								</li>
 								<li class="breadcrumb-item"><a href="#">@lang('create shipment')</a></li>
 							</ol>
 						</nav>

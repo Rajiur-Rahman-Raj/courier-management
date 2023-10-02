@@ -15,6 +15,7 @@ class Shipment extends Model
 	protected $guarded = ['id'];
 	protected $table = 'shipments';
 	protected $dates = ['deleted_at'];
+
 	protected $fillable = [
 		'shipment_identifier',
 		'shipment_type',
@@ -44,6 +45,7 @@ class Shipment extends Model
 		'discount_amount',
 		'sub_total',
 		'shipping_cost',
+		'return_shipment_cost',
 		'tax',
 		'insurance',
 		'pickup_cost',
@@ -59,6 +61,11 @@ class Shipment extends Model
 		'packing_services' => 'array',
 		'parcel_information' => 'array',
 	];
+
+	public function transactional()
+	{
+		return $this->morphMany(Transaction::class, 'transactional');
+	}
 
 	public function shipmentAttachments(){
 		return $this->hasMany(ShipmentAttatchment::class, 'shipment_id', 'id');

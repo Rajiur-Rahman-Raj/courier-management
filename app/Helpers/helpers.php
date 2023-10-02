@@ -421,6 +421,11 @@ function customDate($date, $format = 'd M, Y')
 	return date($format, strtotime($date));
 }
 
+function customDateTime($date, $format = 'd M, Y H:i a')
+{
+	return date($format, strtotime($date));
+}
+
 function getPercent($total, $current)
 {
 	if ($current > 0 && $total > 0) {
@@ -558,6 +563,17 @@ function convertRate($currencyCode, $payout)
 function adminAccessRouteForPackageVariant(){
 	return adminAccessRoute(config('permissionList.Packing_Service.Service_List.permission.edit'));
 }
+
+
+function formatedShipmentType($type = null){
+	$array = explode('_', $type);
+	$string = implode(' ', $array);
+	$shipmentType = ucwords($string);
+	return $shipmentType;
+
+
+}
+
 
 //function adminAccessRoute($search) {
 //

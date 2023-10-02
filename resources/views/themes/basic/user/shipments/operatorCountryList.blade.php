@@ -84,7 +84,7 @@
 									<tr>
 										<td data-label="SL."> {{ ++$key }} </td>
 										<td data-label="Shipment Id"> {{ $shipment->shipment_id }} </td>
-										<td data-label="Shipment Type"> {{ $shipment->shipment_type }} </td>
+										<td data-label="Shipment Type"> {{ formatedShipmentType($shipment->shipment_type) }} </td>
 										<td data-label="Sender Branch"> @lang(optional($shipment->senderBranch)->branch_name) </td>
 										<td data-label="Receiver Branch"> @lang(optional($shipment->receiverBranch)->branch_name) </td>
 										<td data-label="From State"> @lang(optional($shipment->fromState)->name) </td>
@@ -140,7 +140,7 @@
 															   data-bs-target="#cancelShipmentRequest">@lang('Cancel Request')</a>
 														</li>
 
-													@elseif($shipment->status == 6 && $shipment->shipment_cancel_time == null && $shipment->refund_time == null)
+													@elseif($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null)
 														<li>
 															<a class="dropdown-item deleteShipmentRequest"
 															   data-bs-toggle="modal"
@@ -268,24 +268,27 @@
 			$(document).on('click', '.cancelShipmentRequest', function () {
 				let dataRoute = $(this).data('route');
 				$('#cancelShipmentRequestForm').attr('action', dataRoute);
-				{{--let basicControl = {{ basicControl() }};--}}
+				let basicControl = @json(basicControl());
+				let refundTimeArray = basicControl.refund_time.split("_");
+				let refundTime = refundTimeArray[0];
+				let refundTimeType = refundTimeArray[1];
 				let dataProperty = $(this).data('property');
 				let paymentType = dataProperty.payment_type;
 				let paymentStatus = dataProperty.payment_status;
 
-				if (paymentType == 'wallet' && paymentStatus == 1){
-					$('.shipment-refund-alert').html(`<div class="nb-callout bd-callout-warning m-0 ">
-								<i class="fas fa-info-circle mr-2 text-warning"></i> @lang('N.B: You will get a refund 2 days after canceling your shipment request. Refund charges will be deducted.')
-					</div>`)
+				if (paymentType == 'wallet' && paymentStatus == 1) {
+					$('.shipment-refund-alert').html(`
+						<div class="nb-callout bd-callout-warning m-0 ">
+							<i class="fas fa-info-circle mr-2 text-warning"></i>
+							N.B: You will get a refund ${refundTime} ${refundTimeType} after canceling your shipment request. Refund charges will be deducted.
+						</div>`);
 				}
 			});
 
-			$(document).on('click', '.modal-close', function (){
+			$(document).on('click', '.modal-close', function () {
 				$('.shipment-refund-alert').html('');
 			});
 		})
-
-
 
 
 	</script>

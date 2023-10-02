@@ -244,6 +244,7 @@
 	};
 	$('.shipment_image').imageUploader(shipmentImageOptions);
 
+
 	$(document).ready(function (){
 		$(".flatpickr").flatpickr({
 			wrap: true,

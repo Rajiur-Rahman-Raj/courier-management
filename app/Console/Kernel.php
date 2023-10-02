@@ -5,7 +5,9 @@ namespace App\Console;
 use App\Console\Commands\BlockIoIPN;
 use App\Console\Commands\CryptoCurrencyUpdate;
 use App\Console\Commands\FiatCurrencyUpdate;
+use App\Console\Commands\RefundMoney;
 use App\Models\Gateway;
+use App\Models\Shipment;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -18,6 +20,7 @@ class Kernel extends ConsoleKernel
 	 */
 	protected $commands = [
 		BlockIoIPN::class,
+		RefundMoney::class,
 	];
 
 	/**
@@ -32,6 +35,11 @@ class Kernel extends ConsoleKernel
 		$blockIoGateway = Gateway::where(['code' => 'blockio', 'status' => 1])->count();
 		if ($blockIoGateway == 1) {
 			$schedule->command('blockIo:ipn')->everyThirtyMinutes();
+		}
+
+		$refundShipments = Shipment::where('refund_time', '<=', now())->whereNotNull('refund_time')->where('is_refund_complete', 0)->exists();
+		if ($refundShipments){
+			$schedule->command('refund:cron')->everyFiveMinutes();
 		}
 	}
 

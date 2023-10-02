@@ -144,6 +144,7 @@
 					console.log(response);
 						let responseData = response;
 						let shippingCost = parseFloat(responseData.shipping_cost);
+						let returnShipmentCost = parseFloat(responseData.return_shipment_cost);
 						let shippingTax  = parseFloat(responseData.tax);
 						let shippingInsurance = parseFloat(responseData.insurance);
 
@@ -157,6 +158,7 @@
 						parseFloat($('.OCShippingCost').val(totalShippingCost)).toFixed(2);
 						parseFloat($('.OCTax').val(totalTax)).toFixed(2);
 						parseFloat($('.OCInsurance').val(totalInsurance)).toFixed(2);
+						parseFloat($('.OCReturnShipmentCost').val(returnShipmentCost)).toFixed(2);
 						finalTotalAmountCalculation();
 				},
 				error: function (xhr, status, error) {

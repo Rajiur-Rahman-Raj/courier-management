@@ -212,10 +212,31 @@
 												@elseif($singleShipment->status == 4)
 													<p class="badge badge-success rounded">@lang('Received')</p>
 												@elseif($singleShipment->status == 5)
-													<p class="badge badge-danger rounded">@lang('Delivered')</p>
+													<p class="badge badge-orange rounded">@lang('Delivered')</p>
+												@elseif($singleShipment->status == 6)
+													<p class="badge badge-danger rounded">@lang('Canceled')</p>
 												@endif
                                             </span>
 											</li>
+
+											@if($singleShipment->status == 6 && $singleShipment->shipment_cancel_time != null && $singleShipment->refund_time != null && $singleShipment->is_refund_complete == 0)
+												<li class="my-3">
+														<span class="font-weight-bold text-dark"><i
+																class="fas fa-money-check-alt  mr-2 text-primary"></i> @lang('Shipment Refund Time') :
+															<span
+																class="fw-normal">{{ customDateTime($singleShipment->refund_time) }}</span>
+															<span></span>
+														</span>
+												</li>
+											@elseif($singleShipment->status == 6 && $singleShipment->shipment_cancel_time != null && $singleShipment->refund_time == null && $singleShipment->is_refund_complete == 1)
+												<li class="my-3">
+															<span class="font-weight-bold text-dark"><i
+																	class="fas fa-dollar-sign mr-2 text-primary"></i> @lang('Shipment Refund Time') :
+															<p class="badge badge-primary rounded">@lang('Refund Given')</p>
+															<span></span>
+														</span>
+												</li>
+											@endif
 										</ul>
 									</div>
 

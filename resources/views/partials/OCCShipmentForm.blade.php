@@ -903,6 +903,10 @@
 					<input type="text" name="shipping_cost" value="{{ old('shipping_cost') ?? '0' }}" data-shippingcost="{{ old('shipping_cost') }}"
 						   class="form-control bg-white text-dark OCShippingCost"
 						   readonly>
+					<input type="hidden" name="return_shipment_cost" value="{{ old('return_shipment_cost') ?? '0' }}"
+						   data-shippingcost="{{ old('return_shipment_cost') }}"
+						   class="form-control bg-white text-dark OCReturnShipmentCost"
+						   readonly>
 					<div class="input-group-append">
 						<div class="form-control">
 							{{ $basic->currency_symbol }}

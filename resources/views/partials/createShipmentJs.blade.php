@@ -424,6 +424,7 @@
 				},
 				success: function (response) {
 					$('.OCShippingCost').val(response.cash_on_delivery_cost);
+					$('.OCReturnShipmentCost').val(response.return_shipment_cost);
 				},
 				error: function (xhr, status, error) {
 					console.log(error)

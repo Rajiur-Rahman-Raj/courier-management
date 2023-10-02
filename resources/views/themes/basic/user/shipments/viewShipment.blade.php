@@ -205,6 +205,24 @@
 												@endif
                                             </span>
 												</li>
+												@if($singleShipment->status == 6 && $singleShipment->shipment_cancel_time != null && $singleShipment->refund_time != null && $singleShipment->is_refund_complete == 0)
+													<li class="my-3">
+														<span class="fw-bold text-dark"><i
+																class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Refund Date ') :
+															<span
+																class="fw-normal">{{ customDateTime($singleShipment->refund_time) }}</span>
+															<span></span>
+														</span>
+													</li>
+												@elseif($singleShipment->status == 6 && $singleShipment->shipment_cancel_time != null && $singleShipment->refund_time == null && $singleShipment->is_refund_complete == 1)
+													<li class="my-3">
+														<span class="fw-bold text-dark"><i
+																class="fas fa-dollar-sign mr-2 text-primary"></i> @lang('Shipment Refund Time') :
+															<p class="badge text-bg-primary">@lang('Refund Given')</p>
+															<span></span>
+														</span>
+													</li>
+												@endif
 											</ul>
 										</div>
 

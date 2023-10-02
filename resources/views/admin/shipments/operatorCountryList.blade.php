@@ -109,7 +109,7 @@
 																		<tr>
 																			<td data-label="SL."> {{ ++$key }} </td>
 																			<td data-label="Shipment Id"> {{ $shipment->shipment_id }} </td>
-																			<td data-label="Shipment Type"> {{ $shipment->shipment_type }} </td>
+																			<td data-label="Shipment Type"> {{ formatedShipmentType($shipment->shipment_type) }} </td>
 																			<td data-label="Sender Branch"> @lang(optional($shipment->senderBranch)->branch_name) </td>
 																			<td data-label="Receiver Branch"> @lang(optional($shipment->receiverBranch)->branch_name) </td>
 																			<td data-label="From State"> @lang(optional($shipment->fromState)->name) </td>
@@ -177,7 +177,7 @@
 																						</a>
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
-																							@if($shipment->status != 6)
+																							@if($shipment->status == 0 || $shipment->status == 1)
 																								<a class="dropdown-item btn-outline-primary btn-sm"
 																								   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
 																										class="fa fa-edit mr-2"
@@ -187,25 +187,42 @@
 																						@endif
 
 																						@if($shipment->status == 0)
-																							<a data-target="#deleteShipment"
+																							<a data-target="#acceptShipmentRequest"
 																							   data-toggle="modal"
-																							   data-route="{{route('deleteShipment', $shipment->id)}}"
+																							   data-route="{{route('acceptShipmentRequest', $shipment->id)}}"
 																							   href="javascript:void(0)"
-																							   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
+																							   class="dropdown-item btn-outline-primary btn-sm acceptShipmentRequest"><i
 																									class="fas fa-check"></i> @lang('Accept Request')
 																							</a>
 
 																							<a data-target="#cancelShipmentRequest"
 																							   data-toggle="modal"
 																							   data-route="{{route('cancelShipmentRequest', $shipment->id)}}"
+																							   data-property="{{ $shipment }}"
 																							   href="javascript:void(0)"
 																							   class="dropdown-item btn-outline-primary btn-sm cancelShipmentRequest"><i
 																									class="fas fa-ban"></i> @lang('Cancel Request')
 																							</a>
+
+																							<a data-target="#assignShipmentRequest"
+																							   data-toggle="modal"
+																							   data-route="{{route('acceptShipmentRequest', $shipment->id)}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm assignShipmentRequest"><i
+																									class="fas fa-check"></i> @lang('Assign Shipment')
+																							</a>
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.delete')))
-																							@if($shipment->shipment_cancel_time == null && $shipment->refund_time == null)
+																							@if($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null)
+																								<a data-target="#deleteShipment"
+																								   data-toggle="modal"
+																								   data-route="{{route('deleteShipment', $shipment->id)}}"
+																								   href="javascript:void(0)"
+																								   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
+																										class="fas fa-trash mr-2"></i> @lang('Delete')
+																								</a>
+																							@elseif($shipment->status == 5 && $shipment->shipment_cancel_time == null && $shipment->refund_time == null)
 																								<a data-target="#deleteShipment"
 																								   data-toggle="modal"
 																								   data-route="{{route('deleteShipment', $shipment->id)}}"
@@ -248,7 +265,7 @@
 		</section>
 	</div>
 
-	{{-- Edit Shipment Status Modal --}}
+	{{-- Edit/dispatch Shipment Status Modal --}}
 	<div id="updateShipmentStatus" class="modal fade" tabindex="-1" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
@@ -275,6 +292,60 @@
 		</div>
 	</div>
 
+	{{-- Assign Shipment Request Modal --}}
+	<div id="assignShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
+		 aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-dark font-weight-bold"
+						id="primary-header-modalLabel">@lang('Confirmation')</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				</div>
+				<form action="" method="post" id="assignShipmentRequestForm">
+					@csrf
+					@method('put')
+					<div class="modal-body">
+						<p>@lang('Are you sure to assign this shipment?')</p>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	{{-- Accept Shipment Request Modal --}}
+	<div id="acceptShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
+		 aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-dark font-weight-bold"
+						id="primary-header-modalLabel">@lang('Confirmation')</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				</div>
+				<form action="" method="post" id="acceptShipmentRequestForm">
+					@csrf
+					@method('put')
+					<div class="modal-body">
+						<p>@lang('Are you sure to accept this shipment?')</p>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 
 	{{-- Cancel Shipment Request Modal --}}
 	<div id="cancelShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
@@ -285,7 +356,7 @@
 				<div class="modal-header">
 					<h4 class="modal-title text-dark font-weight-bold"
 						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<button type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">×</button>
 				</div>
 				<form action="" method="post" id="cancelShipmentRequestForm">
 					@csrf
@@ -293,9 +364,11 @@
 					<div class="modal-body">
 						<p>@lang('Are you sure to cancel this shipment?')</p>
 					</div>
+					<div class="shipment-refund-alert">
 
+					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
+						<button type="button" class="btn btn-dark modal-close" data-dismiss="modal">@lang('No')</button>
 						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
 					</div>
 				</form>
@@ -341,9 +414,39 @@
 				$('#editShipmentStatusForm').attr('action', dataRoute);
 			});
 
+			$(document).on('click', '.assignShipmentRequest', function () {
+				let dataRoute = $(this).data('route');
+				$('#assignShipmentRequestForm').attr('action', dataRoute);
+			});
+
+			$(document).on('click', '.acceptShipmentRequest', function () {
+				let dataRoute = $(this).data('route');
+				$('#acceptShipmentRequestForm').attr('action', dataRoute);
+			});
+
 			$(document).on('click', '.cancelShipmentRequest', function () {
 				let dataRoute = $(this).data('route');
 				$('#cancelShipmentRequestForm').attr('action', dataRoute);
+				let basicControl = @json(basicControl());
+				let refundTimeArray = basicControl.refund_time.split("_");
+				let refundTime = refundTimeArray[0];
+				let refundTimeType = refundTimeArray[1];
+				let dataProperty = $(this).data('property');
+				let paymentType = dataProperty.payment_type;
+				let paymentStatus = dataProperty.payment_status;
+
+				if (paymentType == 'wallet' && paymentStatus == 1) {
+					$('.shipment-refund-alert').html(`
+						<div class="bd-callout bd-callout-warning mx-2">
+							<i class="fas fa-info-circle mr-2"></i>
+							N.B: You will get a refund ${refundTime} ${refundTimeType} after canceling your shipment request. Refund charges will be deducted.
+						</div>
+					`);
+				}
+			});
+
+			$(document).on('click', '.modal-close', function () {
+				$('.shipment-refund-alert').html('');
 			});
 
 			$(document).on('click', '.deleteShipment', function () {

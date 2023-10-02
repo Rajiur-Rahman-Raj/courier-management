@@ -13,6 +13,7 @@ use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Stevebauman\Purify\Facades\Purify;
+use App\Console\Commands\RefundMoney;
 
 class FrontendController extends Controller
 {
@@ -23,6 +24,7 @@ class FrontendController extends Controller
 
 	public function home()
 	{
+		RefundMoney::handle();
 		$templateSection = ['hero', 'about-us', 'services', 'why-choose-us', 'testimonial', 'how-it-work', 'faq', 'blog', 'how-we-work', 'know-more-us', 'deposit-withdraw', 'news-letter', 'news-letter-referral', 'request-a-call', 'investor', 'we-accept', 'investment'];
 		$data['templates'] = Template::templateMedia()->whereIn('section_name', $templateSection)->get()->groupBy('section_name');
 
