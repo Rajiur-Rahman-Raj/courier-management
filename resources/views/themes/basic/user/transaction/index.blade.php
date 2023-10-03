@@ -87,12 +87,6 @@
 				altInput: true,
 				dateFormat: "Y-m-d H:i",
 			});
-
-			$(".flatpickr").flatpickr({
-				wrap: true,
-				altInput: true,
-				dateFormat: "Y-m-d H:i",
-			});
 		})
 
 	</script>

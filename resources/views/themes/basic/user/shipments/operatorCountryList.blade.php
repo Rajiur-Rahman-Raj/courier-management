@@ -220,9 +220,7 @@
 						<div class="mb-5">
 							<p>@lang('Are you sure to cancel this shipment request?')</p>
 						</div>
-						<div class="shipment-refund-alert">
-
-						</div>
+						<div class="shipment-refund-alert"></div>
 
 					</div>
 					<div class="modal-footer">

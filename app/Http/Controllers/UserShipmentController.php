@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Traits\Notify;
 use App\Traits\OCShipmentStoreTrait;
 use App\Traits\Upload;
+use Facades\App\Services\NotifyMailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -133,9 +134,6 @@ class UserShipmentController extends Controller
 
 		$data['allBranches'] = Branch::where('status', 1)->get();
 		$data['sender'] = Auth::user();
-
-
-
 
 		$data['users'] = User::where('user_type', '!=', '0')->get();
 		$data['senders'] = $data['users']->where('user_type', 1);
@@ -266,21 +264,29 @@ class UserShipmentController extends Controller
 	}
 
 	public function cancelShipmentRequest($id){
-		$basic = basicControl();
-		$explodeData = explode('_', $basic->refund_time);
-		$refund_time = $explodeData[0];
-		$refund_time_type = strtolower($explodeData[1]);
-		$func = $refund_time_type == 'minute' ? 'addMinutes' : ($refund_time_type == 'hour' ? 'addHours' : 'addDays');
-		$moneyRefundTime = Carbon::now()->$func($refund_time);
+		try {
+			DB::beginTransaction();
+			$basic = basicControl();
+			$explodeData = explode('_', $basic->refund_time);
+			$refund_time = $explodeData[0];
+			$refund_time_type = strtolower($explodeData[1]);
+			$func = $refund_time_type == 'minute' ? 'addMinutes' : ($refund_time_type == 'hour' ? 'addHours' : 'addDays');
+			$moneyRefundTime = Carbon::now()->$func($refund_time);
 
-		$shipment = Shipment::findOrFail($id);
-		$shipment->status = 6;
-		$shipment->shipment_cancel_time = Carbon::now();
-		if ($shipment->payment_type == 'wallet' && $shipment->payment_status == 1){
-			$shipment->refund_time = $moneyRefundTime;
+			$shipment = Shipment::with('sender', 'receiver', 'senderBranch.branchManager.admin')->findOrFail($id);
+			$shipment->status = 6;
+			$shipment->shipment_cancel_time = Carbon::now();
+			if ($shipment->payment_type == 'wallet' && $shipment->payment_status == 1){
+				$shipment->refund_time = $moneyRefundTime;
+			}
+
+			$shipment->save();
+			DB::commit();
+			NotifyMailService::cancelShipmentRequestNotify($shipment, $refund_time, $refund_time_type);
+			return back()->with('success', 'Shipment request canceled successfully!');
+		}catch (\Exception $exp){
+			DB::rollBack();
+			return back()->with('error', $exp->getMessage())->withInput();
 		}
-
-		$shipment->save();
-		return back()->with('success', 'Shipment request canceled successfully!');
 	}
 }

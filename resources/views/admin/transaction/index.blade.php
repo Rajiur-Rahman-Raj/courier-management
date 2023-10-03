@@ -1,6 +1,10 @@
 @extends('admin.layouts.master')
 @section('page_title',__('Transactions'))
 
+@push('extra_styles')
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
 <div class="main-content">
 	<section class="section">
@@ -23,7 +27,7 @@
 								<h6 class="m-0 font-weight-bold text-primary">@lang('Search')</h6>
 							</div>
 							<div class="card-body">
-								<form action="{{ route('admin.transaction.search') }}" method="get">
+								<form action="" method="get">
 									@include('admin.transaction.searchForm')
 								</form>
 							</div>
@@ -42,13 +46,10 @@
 										<thead class="thead-light">
 										<tr>
 											<th>@lang('SL')</th>
-											<th>@lang('Sender')</th>
-											<th>@lang('Receiver')</th>
-											<th>@lang('Receiver E-Mail')</th>
-											<th>@lang('Transaction ID')</th>
+											<th>@lang('Transaction Id')</th>
+											<th>@lang('Name')</th>
 											<th>@lang('Amount')</th>
-											<th>@lang('Type')</th>
-											<th>@lang('Status')</th>
+											<th>@lang('Remarks')</th>
 											<th>@lang('Transaction At')</th>
 										</tr>
 										</thead>
@@ -58,26 +59,16 @@
 												<td data-label="@lang('SL')">
 													{{loopIndex($transactions) + $key}}
 												</td>
-												<td data-label="@lang('Sender')">
-													{{ __(optional(optional($value->transactional)->sender)->name ?? __('N/A')) }}
+												<td data-label="@lang('Transaction Id')">
+													{{ $value->trx_id }}
 												</td>
-												<td data-label="@lang('Receiver')">
-													{{ __(optional(optional($value->transactional)->receiver)->name ?? __('N/A')) }}
-												</td>
-												<td data-label="@lang('Receiver E-Mail')">{{ __($value->transactional->email) }}</td>
-												<td data-label="@lang('Transaction ID')">{{ __($value->transactional->utr) }}</td>
-												<td data-label="@lang('Amount')">{{ (getAmount(optional($value->transactional)->amount)).' '.config('basic.base_currency') }}</td>
-												<td data-label="@lang('Type')">
-													{{ __(str_replace('App\Models\\', '', $value->transactional_type)) }}
-												</td>
-												<td data-label="@lang('Status')">
-													@if($value->transactional->status)
-														<span class="badge badge-success">@lang('Success')</span>
-													@else
-														<span class="badge badge-warning">@lang('Pending')</span>
-													@endif
-												</td>
-												<td data-label="@lang('Transaction At')"> {{ dateTime($value->created_at)}} </td>
+
+												<td data-label="@lang('Name')">@lang(optional($value->user)->name ?? "N/A")</td>
+												<td data-label="@lang('Amount')"><span class="{{ $value->trx_type == '+' ? 'text-success' : 'text-danger' }} font-weight-bold">{{ $value->trx_type }}</span> <span class="{{ $value->trx_type == '+' ? 'text-success' : 'text-danger' }}">{{ (config('basic.currency_symbol').getAmount($value->amount)) }}</span></td>
+
+												<td data-label="@lang('Remarks')">@lang($value->remarks)</td>
+
+												<td data-label="@lang('Transaction At')"> {{ customDateTime($value->created_at)}} </td>
 											</tr>
 										@empty
 											<tr>
@@ -99,4 +90,25 @@
 
 	</section>
 </div>
+@endsection
+
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
+
+@section('scripts')
+	<script>
+		'use strict'
+		$(document).ready(function () {
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+
+			$('.from_date').on('change', function () {
+				$('.to_date').removeAttr('disabled');
+			});
+		})
+	</script>
 @endsection

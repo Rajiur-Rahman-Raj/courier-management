@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShipmentRequest;
+use App\Models\MoneyTransfer;
 use App\Models\Shipment;
 use App\Models\ShipmentAttatchment;
+use App\Models\Transaction;
+use Facades\App\Services\TransactionService;
 use App\Traits\OCShipmentStoreTrait;
 use App\Traits\Notify;
+use Facades\App\Services\NotifyMailService;
 use App\Traits\Upload;
 use App\Models\BasicControl;
 use App\Models\Branch;
@@ -38,6 +42,7 @@ class ShipmentController extends Controller
 
 	public function shipmentList(Request $request, $status = null, $type = null)
 	{
+
 		$shipmentManagement = config('shipmentManagement');
 		$types = array_keys($shipmentManagement);
 		abort_if(!in_array($type, $types), 404);
@@ -142,7 +147,7 @@ class ShipmentController extends Controller
 			})
 			->when($type == 'operator-country' && $status == 'requested', function ($query) {
 				$query->where('shipment_identifier', 1)
-					->whereIn('status', [0,6]);
+					->whereIn('status', [0, 6]);
 			})
 			->when($type == 'internationally' && $status == 'all', function ($query) {
 				$query->where('shipment_identifier', 2);
@@ -426,41 +431,87 @@ class ShipmentController extends Controller
 		}
 	}
 
-	public function acceptShipmentRequest($id){
-		$shipment = Shipment::findOrFail($id);
+	public function acceptShipmentRequest($id)
+	{
+		try {
+			DB::beginTransaction();
+			$shipment = Shipment::with('sender', 'receiver', 'senderBranch.branchManager.admin')->findOrFail($id);
+			$trans = strRandom();
 
-		$shipment->status = 1;
-		$shipment->save();
+			if ($shipment->payment_by == 1) {
+				if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
+					return back()->with('error', 'Please first complete your payment');
+				} else {
+					$shipment->status = 1;
+					$shipment->save();
+					$transaction = new Transaction();
+					TransactionService::requestedShipmentAccept($shipment, $transaction, $trans, optional($shipment->sender)->id);
+					DB::commit();
+					NotifyMailService::acceptShipmentRequestNotify($shipment, $trans);
+					return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
+				}
+			} elseif ($shipment->payment_by == 2) {
+				if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
+					$shipment->status = 1;
+					$shipment->save();
+					DB::commit();
+					NotifyMailService::acceptShipmentRequestNotify($shipment);
+					return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
+				} else {
+					$shipment->status = 1;
+					$shipment->save();
+					$transaction = new Transaction();
+					TransactionService::requestedShipmentAccept($shipment, $transaction, $trans, optional($shipment->receiver)->id);
+					DB::commit();
+					NotifyMailService::acceptShipmentRequestNotify($shipment, $trans);
+					return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
+				}
+			}
 
-		return back()->with('success', 'Shipment request accepted successfully!');
+		} catch (\Exception $exp) {
+			DB::rollBack();
+			return back()->with('error', $exp->getMessage())->withInput();
+		}
 	}
 
-	public function cancelShipmentRequest($id){
-		$basic = basicControl();
-		$explodeData = explode('_', $basic->refund_time);
-		$refund_time = $explodeData[0];
-		$refund_time_type = strtolower($explodeData[1]);
-		$func = $refund_time_type == 'minute' ? 'addMinutes' : ($refund_time_type == 'hour' ? 'addHours' : 'addDays');
-		$moneyRefundTime = Carbon::now()->$func($refund_time);
+	public function cancelShipmentRequest($id)
+	{
+		try {
+			DB::beginTransaction();
+			$basic = basicControl();
+			$explodeData = explode('_', $basic->refund_time);
+			$refund_time = $explodeData[0];
+			$refund_time_type = strtolower($explodeData[1]);
+			$func = $refund_time_type == 'minute' ? 'addMinutes' : ($refund_time_type == 'hour' ? 'addHours' : 'addDays');
+			$moneyRefundTime = Carbon::now()->$func($refund_time);
 
-		$shipment = Shipment::findOrFail($id);
-		$shipment->status = 6;
-		$shipment->shipment_cancel_time = Carbon::now();
-		if ($shipment->payment_type == 'wallet' && $shipment->payment_status == 1){
-			$shipment->refund_time = $moneyRefundTime;
+			$shipment = Shipment::findOrFail($id);
+			$shipment->status = 6;
+			$shipment->shipment_cancel_time = Carbon::now();
+			if ($shipment->payment_type == 'wallet' && $shipment->payment_status == 1) {
+				$shipment->refund_time = $moneyRefundTime;
+			}
+
+			$shipment->save();
+			DB::commit();
+
+			return back()->with('success', 'Shipment request canceled successfully!');
+		} catch (\Exception $exp){
+			DB::rollBack();
+			return back()->with('error', $exp->getMessage())->withInput();
 		}
 
-		$shipment->save();
-		return back()->with('success', 'Shipment request canceled successfully!');
 	}
 
-	public function shipmentTypeList()
+	public
+	function shipmentTypeList()
 	{
 		$data['allShipmentType'] = config('shipmentTypeList');
 		return view('admin.shipmentType.index', $data);
 	}
 
-	public function shipmentTypeUpdate(Request $request, $id)
+	public
+	function shipmentTypeUpdate(Request $request, $id)
 	{
 		$filePath = base_path('config/shipmentTypeList.php');
 
@@ -485,7 +536,8 @@ class ShipmentController extends Controller
 		return back();
 	}
 
-	public function defaultRate()
+	public
+	function defaultRate()
 	{
 		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
 		$data['allShippingDates'] = ShippingDate::where('status', 1)->get();
@@ -495,7 +547,8 @@ class ShipmentController extends Controller
 		return view('admin.shippingRate.defaultRate', $data);
 	}
 
-	public function defaultShippingRateOperatorCountryUpdate(Request $request, $id)
+	public
+	function defaultShippingRateOperatorCountryUpdate(Request $request, $id)
 	{
 
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
@@ -539,7 +592,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Default rate update successfully');
 	}
 
-	public function defaultShippingRateInternationallyUpdate(Request $request, $id)
+	public
+	function defaultShippingRateInternationallyUpdate(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -579,7 +633,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Default rate internationally update successfully');
 	}
 
-	public function operatorCountryRate(Request $request, $type = null)
+	public
+	function operatorCountryRate(Request $request, $type = null)
 	{
 		$operatorCountryShippingRateManagement = config('operatorCountryShippingRateManagement');
 		$types = array_keys($operatorCountryShippingRateManagement);
@@ -601,7 +656,8 @@ class ShipmentController extends Controller
 		return view($operatorCountryShippingRateManagement[$type]['shipping_rate_view'], $data);
 	}
 
-	public function operatorCountryShowRate(Request $request, $type = null, $id = null)
+	public
+	function operatorCountryShowRate(Request $request, $type = null, $id = null)
 	{
 		$search = $request->all();
 		$operatorCountryShowShippingRateManagement = config('operatorCountryShowShippingRateManagement');
@@ -658,7 +714,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function stateRateUpdate(Request $request, $id)
+	public
+	function stateRateUpdate(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -701,7 +758,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate Update successfully');
 	}
 
-	public function cityRateUpdate(Request $request, $id)
+	public
+	function cityRateUpdate(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -750,7 +808,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate Update successfully');
 	}
 
-	public function areaRateUpdate(Request $request, $id)
+	public
+	function areaRateUpdate(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -806,7 +865,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function createShippingRateOperatorCountry()
+	public
+	function createShippingRateOperatorCountry()
 	{
 		$data['allCountries'] = Country::where('status', 1)->get();
 		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
@@ -814,7 +874,8 @@ class ShipmentController extends Controller
 		return view('admin.shippingRate.operatorCountry.create', $data);
 	}
 
-	public function shippingRateOperatorCountryStore(Request $request, $type = null)
+	public
+	function shippingRateOperatorCountryStore(Request $request, $type = null)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -882,26 +943,30 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate created successfully');
 	}
 
-	public function deleteStateRate($id)
+	public
+	function deleteStateRate($id)
 	{
 		ShippingRateOperatorCountry::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
-	public function deleteCityRate($id)
+	public
+	function deleteCityRate($id)
 	{
 		ShippingRateOperatorCountry::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
-	public function deleteAreaRate($id)
+	public
+	function deleteAreaRate($id)
 	{
 		ShippingRateOperatorCountry::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
 
-	public function internationallyRate(Request $request, $type = null)
+	public
+	function internationallyRate(Request $request, $type = null)
 	{
 		$internationallyShippingRateManagement = config('internationallyShippingRateManagement');
 		$types = array_keys($internationallyShippingRateManagement);
@@ -924,14 +989,16 @@ class ShipmentController extends Controller
 	}
 
 
-	public function createShippingRateInternationally()
+	public
+	function createShippingRateInternationally()
 	{
 		$data['allCountries'] = Country::where('status', 1)->get();
 		$data['allParcelTypes'] = ParcelType::where('status', 1)->get();
 		return view('admin.shippingRate.internationally.create', $data);
 	}
 
-	public function shippingRateInternationallyStore(Request $request, $type = null)
+	public
+	function shippingRateInternationallyStore(Request $request, $type = null)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -994,7 +1061,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate added successfully');
 	}
 
-	public function internationallyShowRate(Request $request, $type = null, $id = null)
+	public
+	function internationallyShowRate(Request $request, $type = null, $id = null)
 	{
 		$search = $request->all();
 		$internationallyShowShippingRateManagement = config('internationallyShowShippingRateManagement');
@@ -1052,7 +1120,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function countryRateUpdateInternationally(Request $request, $id)
+	public
+	function countryRateUpdateInternationally(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -1093,7 +1162,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate Update successfully');
 	}
 
-	public function stateRateUpdateInternationally(Request $request, $id)
+	public
+	function stateRateUpdateInternationally(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -1142,7 +1212,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function cityRateUpdateInternationally(Request $request, $id)
+	public
+	function cityRateUpdateInternationally(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -1196,26 +1267,30 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipping rate Update successfully');
 	}
 
-	public function deleteICountryRate($id)
+	public
+	function deleteICountryRate($id)
 	{
 		ShippingRateInternationally::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
-	public function deleteIStateRate($id)
+	public
+	function deleteIStateRate($id)
 	{
 		ShippingRateInternationally::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
-	public function deleteICityRate($id)
+	public
+	function deleteICityRate($id)
 	{
 		ShippingRateInternationally::findOrFail($id)->delete();
 		return back()->with('success', 'Shipping rate deleted successfully!');
 	}
 
 
-	public function shippingDateStore(Request $request)
+	public
+	function shippingDateStore(Request $request)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -1246,7 +1321,8 @@ class ShipmentController extends Controller
 	}
 
 
-	public function OCGetSelectedLocationShipRate(Request $request)
+	public
+	function OCGetSelectedLocationShipRate(Request $request)
 	{
 		$parcelTypeId = $request->parcelTypeId;
 
@@ -1331,13 +1407,15 @@ class ShipmentController extends Controller
 		}
 	}
 
-	public function deleteShipment($id)
+	public
+	function deleteShipment($id)
 	{
 		Shipment::findOrFail($id)->delete();
 		return back()->with('success', 'Shipment deleted successfully');
 	}
 
-	public function trashShipmentList(Request $request)
+	public
+	function trashShipmentList(Request $request)
 	{
 		$search = $request->all();
 		$data['trashShipments'] = Shipment::when(isset($search['shipment_id']), function ($query) use ($search) {
@@ -1365,19 +1443,22 @@ class ShipmentController extends Controller
 		return view('admin.shipments.trashShipmentList', $data);
 	}
 
-	public function restoreShipment($id)
+	public
+	function restoreShipment($id)
 	{
 		Shipment::onlyTrashed()->findOrFail($id)->restore();
 		return back()->with('success', 'Shipment restore successfully!');
 	}
 
-	public function forceDeleteShipment($id)
+	public
+	function forceDeleteShipment($id)
 	{
 		Shipment::onlyTrashed()->findOrFail($id)->forceDelete();
 		return back()->with('success', 'shipment is permanent deleted!');
 	}
 
-	public function shipmentStatusUpdate(Request $request, $id)
+	public
+	function shipmentStatusUpdate(Request $request, $id)
 	{
 		$shipment = Shipment::findOrFail($id);
 		$shipment->status = 2;
@@ -1385,7 +1466,8 @@ class ShipmentController extends Controller
 		return back()->with('success', 'shipment status update successfully!');
 	}
 
-	public function getSelectedBranchSender(Request $request)
+	public
+	function getSelectedBranchSender(Request $request)
 	{
 		$branchId = $request->branchId;
 
@@ -1400,7 +1482,8 @@ class ShipmentController extends Controller
 		return response($data);
 	}
 
-	public function getSelectedBranchReceiver(Request $request)
+	public
+	function getSelectedBranchReceiver(Request $request)
 	{
 		$branchId = $request->branchId;
 

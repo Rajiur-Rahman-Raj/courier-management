@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
-//Relation::enforceMorphMap([
-//	"MoneyTransfer" => "App\Models\MoneyTransfer"
-//]);
 
 class Transaction extends Model
 {
@@ -17,5 +14,13 @@ class Transaction extends Model
 	public function transactional()
 	{
 		return $this->morphTo();
+	}
+
+	public function branch(){
+		return $this->belongsTo(Branch::class, 'branch_id', 'id');
+	}
+
+	public function user(){
+		return $this->belongsTo(User::class, 'user_id', 'id');
 	}
 }

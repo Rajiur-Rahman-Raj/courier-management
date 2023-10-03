@@ -5,26 +5,60 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Fund;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminTransactionController extends Controller
 {
-	public function index()
+	public function index(Request $request)
 	{
-		$transactions = Transaction::with(['transactional' => function (MorphTo $morphTo) {
-			$morphTo->morphWith([
-				Fund::class => ['sender', 'receiver'],
-			]);
-		}])
-			->whereHasMorph('transactional',
-				[
-					Fund::class,
-				])
+
+		$authenticateUser = Auth::guard('admin')->user();
+
+		$filterData = $this->_filter($request);
+
+		$search = $filterData['search'];
+		$transactions = $filterData['transactions']
 			->latest()
-			->paginate();
+			->paginate(config('basic.paginate'));
+
 
 		return view('admin.transaction.index', compact('transactions'));
+	}
+
+	public function _filter($request)
+	{
+		$search = $request->all();
+		$fromDate = Carbon::parse($request->from_date);
+		$toDate = Carbon::parse($request->to_date)->addDay();
+		$authenticateUser = Auth::guard('admin')->user();
+
+		$transactions = Transaction::with('transactional', 'branch.branchManager', 'user')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
+				});
+			})
+			->when(@$search['trx_id'], function ($query) use ($search) {
+				return $query->whereRaw("trx_id REGEXP '[[:<:]]{$search['trx_id']}[[:>:]]'");
+			})
+			->when(@$search['remark'], function ($query) use ($search) {
+				return $query->where('remarks', 'LIKE', "%{$search['remark']}%");
+			})
+			->when(isset($search['from_date']), function ($query) use ($fromDate) {
+				return $query->whereDate('created_at', '>=', $fromDate);
+			})
+			->when(isset($search['to_date']), function ($query) use ($fromDate, $toDate) {
+				return $query->whereBetween('created_at', [$fromDate, $toDate]);
+			});
+
+		$data = [
+			'transactions' => $transactions,
+			'search' => $search,
+		];
+		return $data;
 	}
 
 	public function search(Request $request)
@@ -38,53 +72,4 @@ class AdminTransactionController extends Controller
 		return view('admin.transaction.index', compact('search', 'transactions'));
 	}
 
-	public function _filter($request)
-	{
-		$search = $request->all();
-		$created_date = isset($search['created_at']) ? preg_match("/^[0-9]{2,4}-[0-9]{1,2}-[0-9]{1,2}$/", $search['created_at']) : 0;
-
-		if (isset($search['type'])) {
-			if ($search['type'] == 'Fund') {
-				$morphWith = [Fund::class => ['sender', 'receiver']];
-				$whereHasMorph = [Fund::class];
-			}
-		} else {
-			$morphWith = [
-				Fund::class => ['sender', 'receiver'],
-			];
-			$whereHasMorph = [
-				Fund::class,
-			];
-		}
-
-		$transactions = Transaction::with(['transactional' => function (MorphTo $morphTo) use ($morphWith, $whereHasMorph) {
-			$morphTo->morphWith($morphWith);
-		}])
-			->whereHasMorph('transactional', $whereHasMorph, function ($query, $type) use ($search, $created_date) {
-				$query->when(isset($search['utr']), function ($query) use ($search) {
-					return $query->where('utr', 'LIKE', $search['utr']);
-				})
-					->when(isset($search['email']), function ($query) use ($search, $type) {
-						if ($type !== Exchange::class) {
-							return $query->where('email', 'LIKE', "%{$search['email']}%");
-						}
-					})
-					->when(isset($search['min']), function ($query) use ($search) {
-						return $query->where('amount', '>=', $search['min']);
-					})
-					->when(isset($search['max']), function ($query) use ($search) {
-						return $query->where('amount', '<=', $search['max']);
-					})
-					->when($created_date == 1, function ($query) use ($search) {
-						return $query->whereDate("created_at", $search['created_at']);
-					});
-			}
-			);
-
-		$data = [
-			'transactions' => $transactions,
-			'search' => $search,
-		];
-		return $data;
-	}
 }

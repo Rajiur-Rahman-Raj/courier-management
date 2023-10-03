@@ -254,7 +254,7 @@ trait Notify
         event(new UserNotification($siteNotification, $user->id));
     }
 
-    public function adminPushNotification($templateKey, $params = [], $action = [])
+    public function adminPushNotification($admin, $templateKey, $params = [], $action = [], $superAdmin = null)
     {
         $basic = basicControl();
         if ($basic->push_notification != 1) {
@@ -274,16 +274,27 @@ trait Notify
             $action['text'] = $template;
         }
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $siteNotification = new SiteNotification();
-            $siteNotification->description = $action;
-            $admin->siteNotificational()->save($siteNotification);
-            event(new AdminNotification($siteNotification, $admin->id));
-        }
+		if ($superAdmin){
+			$superAdmin = Admin::where('is_owner', 1)->whereNull('role_id')->first();
+			$siteNotification = new SiteNotification();
+			$siteNotification->description = $action;
+			$superAdmin->siteNotificational()->save($siteNotification);
+			event(new AdminNotification($siteNotification, $superAdmin->id));
+		}
+
+		$siteNotification = new SiteNotification();
+		$siteNotification->description = $action;
+		$admin->siteNotificational()->save($siteNotification);
+		event(new AdminNotification($siteNotification, $admin->id));
+
+//        $admins = Admin::all();
+//        foreach ($admins as $admin) {
+//
+//        }
     }
 
-    public function adminMail($templateKey = null, $params = [], $subject = null, $requestMessage = null)
+
+    public function adminMail($admin, $templateKey = null, $params = [], $subject = null, $requestMessage = null, $superAdmin = null)
     {
         $basic = basicControl();
 
@@ -313,10 +324,19 @@ trait Notify
         $subject = ($subject == null) ? $templateObj->subject : $subject;
         $email_from = ($templateObj) ? $templateObj->email_from : $basic->sender_email;
 
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
-            $message = str_replace("[[name]]", $admin->username, $message);
-            Mail::to($admin)->queue(new SendMail($email_from, $subject, $message));
-        }
+		if ($superAdmin){
+			$superAdmin = Admin::where('is_owner', 1)->whereNull('role_id')->first();
+			$message = str_replace("[[name]]", $superAdmin->username, $message);
+			Mail::to($superAdmin)->queue(new SendMail($email_from, $subject, $message));
+		}
+
+		$message = str_replace("[[name]]", $admin->username, $message);
+		Mail::to($admin)->queue(new SendMail($email_from, $subject, $message));
+
+//		$admins = Admin::all();
+//        foreach ($admins as $admin) {
+//            $message = str_replace("[[name]]", $admin->username, $message);
+//            Mail::to($admin)->queue(new SendMail($email_from, $subject, $message));
+//        }
     }
 }

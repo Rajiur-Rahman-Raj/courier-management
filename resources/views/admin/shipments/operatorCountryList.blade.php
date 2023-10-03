@@ -203,14 +203,15 @@
 																							   class="dropdown-item btn-outline-primary btn-sm cancelShipmentRequest"><i
 																									class="fas fa-ban"></i> @lang('Cancel Request')
 																							</a>
-
-																							<a data-target="#assignShipmentRequest"
-																							   data-toggle="modal"
-																							   data-route="{{route('acceptShipmentRequest', $shipment->id)}}"
-																							   href="javascript:void(0)"
-																							   class="dropdown-item btn-outline-primary btn-sm assignShipmentRequest"><i
-																									class="fas fa-check"></i> @lang('Assign Shipment')
-																							</a>
+																							@if($shipment->shipment_type == 'pickup')
+																								<a data-target="#assignShipmentRequest"
+																								   data-toggle="modal"
+																								   data-route="{{route('acceptShipmentRequest', $shipment->id)}}"
+																								   href="javascript:void(0)"
+																								   class="dropdown-item btn-outline-primary btn-sm assignShipmentRequest"><i
+																										class="fas fa-check"></i> @lang('Assign Shipment')
+																								</a>
+																							@endif
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.delete')))
@@ -362,10 +363,10 @@
 					@csrf
 					@method('put')
 					<div class="modal-body">
-						<p>@lang('Are you sure to cancel this shipment?')</p>
-					</div>
-					<div class="shipment-refund-alert">
-
+						<div class="mb-5">
+							<p>@lang('Are you sure to cancel this shipment request?')</p>
+						</div>
+						<div class="shipment-refund-alert"></div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-dark modal-close" data-dismiss="modal">@lang('No')</button>
@@ -408,6 +409,31 @@
 @section('scripts')
 	<script>
 		'use strict'
+		$(document).on('click', '.cancelShipmentRequest', function () {
+			let dataRoute = $(this).data('route');
+			$('#cancelShipmentRequestForm').attr('action', dataRoute);
+			let basicControl = @json(basicControl());
+			let refundTimeArray = basicControl.refund_time.split("_");
+			let refundTime = refundTimeArray[0];
+			let refundTimeType = refundTimeArray[1];
+			let dataProperty = $(this).data('property');
+			let paymentType = dataProperty.payment_type;
+			let paymentStatus = dataProperty.payment_status;
+
+			if (paymentType == 'wallet' && paymentStatus == 1) {
+				$('.shipment-refund-alert').html(`
+						<div class="bd-callout bd-callout-warning">
+							<i class="fas fa-info-circle mr-2"></i>
+							N.B: You will get a refund ${refundTime} ${refundTimeType} after canceling your shipment request. Refund charges will be deducted.
+						</div>
+					`);
+			}
+		});
+
+		$(document).on('click', '.modal-close', function () {
+			$('.shipment-refund-alert').html('');
+		});
+
 		$(document).ready(function () {
 			$(document).on('click', '.editShipmentStatus', function () {
 				let dataRoute = $(this).data('route');
@@ -424,30 +450,6 @@
 				$('#acceptShipmentRequestForm').attr('action', dataRoute);
 			});
 
-			$(document).on('click', '.cancelShipmentRequest', function () {
-				let dataRoute = $(this).data('route');
-				$('#cancelShipmentRequestForm').attr('action', dataRoute);
-				let basicControl = @json(basicControl());
-				let refundTimeArray = basicControl.refund_time.split("_");
-				let refundTime = refundTimeArray[0];
-				let refundTimeType = refundTimeArray[1];
-				let dataProperty = $(this).data('property');
-				let paymentType = dataProperty.payment_type;
-				let paymentStatus = dataProperty.payment_status;
-
-				if (paymentType == 'wallet' && paymentStatus == 1) {
-					$('.shipment-refund-alert').html(`
-						<div class="bd-callout bd-callout-warning mx-2">
-							<i class="fas fa-info-circle mr-2"></i>
-							N.B: You will get a refund ${refundTime} ${refundTimeType} after canceling your shipment request. Refund charges will be deducted.
-						</div>
-					`);
-				}
-			});
-
-			$(document).on('click', '.modal-close', function () {
-				$('.shipment-refund-alert').html('');
-			});
 
 			$(document).on('click', '.deleteShipment', function () {
 				let dataRoute = $(this).data('route');
