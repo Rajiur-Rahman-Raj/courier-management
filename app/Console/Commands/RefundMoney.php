@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Shipment;
 use App\Models\Transaction;
+use Facades\App\Services\NotifyMailService;
 use Illuminate\Console\Command;
 
 class RefundMoney extends Command
@@ -63,7 +64,6 @@ class RefundMoney extends Command
 					$transaction = new Transaction();
 					$trans = strRandom();
 					$transaction->user_id = $user->id;
-					$transaction->transactional_id = null;
 					$transaction->amount = round($refundAmount, 2);
 					$transaction->charge = 0;
 					$transaction->final_balance = $user->balance;
@@ -73,7 +73,7 @@ class RefundMoney extends Command
 					$transaction->transactional_type = Shipment::class;
 					$shipment->transactional()->save($transaction);
 
-					// here mail & notify admin + branch/branch manager + user.
+					NotifyMailService::cancelShipmentRequestRefundMoney($shipment, $user, $refundAmount);
 				}catch (\Exception $e){
 					continue;
 				}

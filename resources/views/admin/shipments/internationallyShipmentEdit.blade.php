@@ -49,6 +49,9 @@
 			$oldPackingCounts = old('variant_price') ? count(old('variant_price')) : 0;
             $oldParcelCounts = old('parcel_name') ? count(old('parcel_name')) : 0;
 
+            $oldSenderIdPresent = old('sender_id') ? 1 : 0;
+            $oldReceiverIdPresent = old('receiver_id') ? 1 : 0;
+
             $oldFromStateIdPresent = old('from_state_id') ? 1 : 0;
             $oldFromCityIdPresent = old('from_city_id') ? 1 : 0;
             $oldFromAreaIdPresent = old('from_area_id') ? 1 : 0;

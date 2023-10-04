@@ -8,7 +8,7 @@ $arr = [
 				'add' => ['createShipment', 'shipmentStore'],
 				'edit' => ['editShipment', 'shipmentUpdate', 'acceptShipmentRequest', 'cancelShipmentRequest'],
 				'delete' => ['deleteShipment', 'trashShipmentList', 'restoreShipment', 'forceDeleteShipment'],
-				'dispatch' => ['shipmentStatusUpdate'],
+				'dispatch' => ['updateShipmentStatus'],
 			],
 		],
 	],

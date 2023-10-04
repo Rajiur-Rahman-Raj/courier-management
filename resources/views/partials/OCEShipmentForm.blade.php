@@ -75,7 +75,7 @@
 				<label for="shipment_date"> @lang('Shipment Date') </label>
 				<div class="flatpickr">
 					<div class="input-group">
-						<input type="date" placeholder="@lang('Select date-time')" class="form-control shipment_date"
+						<input type="date" placeholder="@lang('Select date')" class="form-control shipment_date"
 							   name="shipment_date"
 							   value="{{ $singleShipment->shipment_date  }}" data-input>
 						<div class="input-group-append" readonly="">

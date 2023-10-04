@@ -28,7 +28,7 @@
 									<div>
 										<a href="{{route('user.shipmentList', ['shipment_status' => $status, 'shipment_type' => $shipment_type])}}"
 										   class="btn btn-sm  view_cmn_btn mr-2">
-											<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
+											<span><i class="far fa-arrow-left"></i> @lang('Back')</span>
 										</a>
 										<button class="btn btn-success btn-sm view_cmn_btn3" id="shipmentDetailsPrint">
 											<i
@@ -43,14 +43,14 @@
 											<ul class="list-style-none shipment-view-ul">
 												<li class="my-2 border-bottom pb-3">
 												<span class="fw-bold text-dark custom-text"> <i
-														class="fas fa-fingerprint mr-2 text-orange"></i> @lang("Shipment Id"): <small
+														class="far fa-fingerprint mr-2 text-orange"></i> @lang("Shipment Id"): <small
 														class="float-end custom-text"> #{{ $singleShipment->shipment_id }} </small></span>
 
 												</li>
 
 												<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-shipping-fast mr-2 text-primary"></i> @lang("Shipment Type") : <span
+													class="far fa-shipping-fast mr-2 text-primary"></i> @lang("Shipment Type") : <span
 													class="fw-normal">@lang($singleShipment->shipmentTypeFormat())</span></span>
 												</li>
 
@@ -68,14 +68,14 @@
 
 												<li class="my-3 d-flex align-items-center">
 												<span class="fw-bold text-dark"><i
-														class="fas fa-user-plus mr-2 text-primary"></i> @lang('Sender : ')</span>
+														class="far fa-user-plus mr-2 text-primary"></i> @lang('Sender : ')</span>
 													<span
 														class="fw-normal">@lang(optional($singleShipment->sender)->name)</span></span>
 												</li>
 
 												<li class="my-3 d-flex align-items-center">
 												<span class="fw-bold text-dark"> <i
-														class="fas fa-user-minus mr-2 text-orange "></i> @lang('Receiver :')</span>
+														class="far fa-user-minus mr-2 text-orange "></i> @lang('Receiver :')</span>
 													<span
 														class="fw-normal">@lang(optional($singleShipment->receiver)->name)</span>
 
@@ -84,21 +84,21 @@
 												@if($singleShipment->shipment_type == 'condition')
 													<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-check-circle mr-2 text-primary"></i> @lang("Receive Amount") : <span
+													class="far fa-check-circle mr-2 text-primary"></i> @lang("Receive Amount") : <span
 													class="font-weight-medium">{{ $basic->currency_symbol }}{{ $singleShipment->receive_amount }}</span></span>
 													</li>
 												@endif
 
 												<li class="my-3 d-flex align-items-center">
 												<span class="fw-bold text-dark"> <i
-														class="fas fa-tree mr-2 text-purple"></i> @lang('Sender Branch') : </span>
+														class="far fa-tree mr-2 text-purple"></i> @lang('Sender Branch') : </span>
 													<span
 														class="fw-normal">@lang(optional($singleShipment->senderBranch)->branch_name)</span>
 												</li>
 
 												<li class="my-3 d-flex align-items-center">
 												<span class="fw-bold text-dark"> <i
-														class="fas fa-tree mr-2 text-info"></i> @lang('Receiver Branch') : </span>
+														class="far fa-tree mr-2 text-info"></i> @lang('Receiver Branch') : </span>
 													<span
 														class="fw-normal">@lang(optional($singleShipment->receiverBranch)->branch_name)</span>
 												</li>
@@ -107,7 +107,7 @@
 												@if($singleShipment->from_country_id != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark"> <i
-													class="fas fa-map-marker-alt mr-2 text-primary"></i> @lang("From Country") : <span
+													class="far fa-map-marker-alt mr-2 text-primary"></i> @lang("From Country") : <span
 													class="fw-normal">@lang(optional($singleShipment->fromCountry)->name)</span></span>
 													</li>
 												@endif
@@ -115,7 +115,7 @@
 												@if($singleShipment->from_state_id != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-map-marker-alt mr-2 text-primary"></i> @lang("From State") : <span
+													class="far fa-map-marker-alt mr-2 text-primary"></i> @lang("From State") : <span
 													class="fw-normal">@lang(optional($singleShipment->fromState)->name)</span></span>
 													</li>
 												@endif
@@ -123,7 +123,7 @@
 												@if($singleShipment->from_city_id != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-map-marker-alt mr-2 text-danger"></i> @lang("From City") : <span
+													class="far fa-map-marker-alt mr-2 text-danger"></i> @lang("From City") : <span
 													class="fw-normal">@lang(optional($singleShipment->fromCity)->name)</span></span>
 													</li>
 												@endif
@@ -131,7 +131,7 @@
 												@if($singleShipment->from_area_id != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-map-marker-alt mr-2 text-success"></i> @lang("From Area") : <span
+													class="far fa-map-marker-alt mr-2 text-success"></i> @lang("From Area") : <span
 													class="fw-normal">@lang(optional($singleShipment->fromArea)->name)</span></span>
 													</li>
 												@endif
@@ -139,7 +139,7 @@
 												@if($singleShipment->to_country_id != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-map-marker-alt mr-2 text-cyan"></i> @lang("To Country") : <span
+													class="far fa-map-marker-alt mr-2 text-cyan"></i> @lang("To Country") : <span
 													class="fw-normal">@lang(optional($singleShipment->toCountry)->name)</span></span>
 													</li>
 												@endif
@@ -147,7 +147,7 @@
 												@if($singleShipment->to_state_id != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-map-marker-alt mr-2 text-success "></i> @lang("To State") : <span
+													class="far fa-map-marker-alt mr-2 text-success "></i> @lang("To State") : <span
 													class="fw-normal">@lang(optional($singleShipment->toState)->name)</span></span>
 													</li>
 												@endif
@@ -155,7 +155,7 @@
 												@if($singleShipment->to_city_id != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-map-marker mr-2 text-purple"></i> @lang("To City") : <span
+													class="far fa-map-marker mr-2 text-purple"></i> @lang("To City") : <span
 													class="fw-normal">@lang(optional($singleShipment->toCity)->name)</span></span>
 													</li>
 												@endif
@@ -163,20 +163,26 @@
 												@if($singleShipment->to_area_id != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark"> <i
-													class="fas fa-location-arrow mr-2 text-primary"></i> @lang("To Area") : <span
+													class="far fa-location-arrow mr-2 text-primary"></i> @lang("To Area") : <span
 													class="fw-normal">@lang(optional($singleShipment->toArea)->name)</span></span>
 													</li>
 												@endif
 
 												<li class="my-3">
                                             <span class="fw-bold text-dark">  <i
-													class="fas fa-search-dollar  mr-2 text-orange"></i> @lang("Payment Type") : <span
+													class="far fa-search-dollar  mr-2 text-orange"></i> @lang("Payment Type") : <span
 													class="fw-normal">@lang($singleShipment->payment_type)</span></span>
 												</li>
 
 												<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-file-invoice-dollar mr-2 text-purple"></i> @lang(" Payment By") : <span
+													class="fw-normal">{{ $singleShipment->payment_by == 1 ? 'Sender' : 'Receiver' }}</span></span>
+												</li>
+
+												<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-money-check-alt  mr-2 text-primary"></i> @lang('Payment Status') :
+													class="far fa-money-check-alt  mr-2 text-primary"></i> @lang('Payment Status') :
                                                 @if($singleShipment->payment_status == 1)
 													<p class="badge text-bg-success">@lang('Paid')</p>
 												@else
@@ -187,7 +193,7 @@
 
 												<li class="my-3">
                                             <span class="fw-bold text-dark"><i
-													class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
+													class="far fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
 												@if($singleShipment->status == 0)
 													<p class="badge text-bg-dark">@lang('Requested')</p>
 												@elseif($singleShipment->status == 6)
@@ -205,10 +211,19 @@
 												@endif
                                             </span>
 												</li>
+
+												@if($singleShipment->dispatch_time != null)
+													<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Dispatched Time") : <span
+													class="fw-normal">{{ customDateTime($singleShipment->dispatch_time) }}</span></span>
+													</li>
+
+												@endif
 												@if($singleShipment->status == 6 && $singleShipment->shipment_cancel_time != null && $singleShipment->refund_time != null && $singleShipment->is_refund_complete == 0)
 													<li class="my-3">
 														<span class="fw-bold text-dark"><i
-																class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Refund Date ') :
+																class="far fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Refund Date ') :
 															<span
 																class="fw-normal">{{ customDateTime($singleShipment->refund_time) }}</span>
 															<span></span>
@@ -217,7 +232,7 @@
 												@elseif($singleShipment->status == 6 && $singleShipment->shipment_cancel_time != null && $singleShipment->refund_time == null && $singleShipment->is_refund_complete == 1)
 													<li class="my-3">
 														<span class="fw-bold text-dark"><i
-																class="fas fa-dollar-sign mr-2 text-primary"></i> @lang('Shipment Refund Time') :
+																class="far fa-dollar-sign mr-2 text-primary"></i> @lang('Shipment Refund Time') :
 															<p class="badge text-bg-primary">@lang('Refund Given')</p>
 															<span></span>
 														</span>
@@ -231,13 +246,13 @@
 											<ul class="list-style-none shipment-view-ul">
 												<li class="my-2 border-bottom pb-3">
 												<span class="fw-bold text-dark"> <i
-														class="fas fa-cart-plus mr-2 text-primary"></i> @lang('Parcel Information')</span>
+														class="far fa-cart-plus mr-2 text-primary"></i> @lang('Parcel Information')</span>
 												</li>
 
 												@if($singleShipment->packing_services != null)
 													<li class="my-3">
                                             <span class="custom-text"><i
-													class="fas fa-check-circle mr-2 text-success"></i>  @lang('Packing Service')
+													class="far fa-check-circle mr-2 text-success"></i>  @lang('Packing Service')
 
                                             </span>
 													</li>
@@ -281,7 +296,7 @@
 												@if($singleShipment->parcel_information != null)
 													<li class="my-3">
 													<span class="custom-text"><i
-															class="fas fa-check-circle mr-2 text-success"></i>  @lang('Parcel Details')</span>
+															class="far fa-check-circle mr-2 text-success"></i>  @lang('Parcel Details')</span>
 													</li>
 
 													<table class="table table-bordered">
@@ -321,7 +336,7 @@
 												@else
 													<li class="my-3">
 													<span class="custom-text"><i
-															class="fas fa-check-circle mr-2 text-success"></i>  @lang('Parcel Details')</span>
+															class="far fa-check-circle mr-2 text-success"></i>  @lang('Parcel Details')</span>
 													</li>
 													<table class="table table-bordered mb-5">
 														<tbody>
@@ -336,7 +351,7 @@
 												@if(sizeof($singleShipment->shipmentAttachments) != 0)
 													<li class="my-3">
 													<span class="custom-text"><i
-															class="fas fa-check-circle mr-2 text-success"></i>  @lang('shipment Attachments')</span>
+															class="far fa-check-circle mr-2 text-success"></i>  @lang('shipment Attachments')</span>
 													</li>
 
 													<div class="row">
@@ -364,13 +379,13 @@
 
 												<li class="mt-4 border-bottom pb-3">
 												<span class="fw-bold text-dark"> <i
-														class="fas fa-credit-card mr-2 text-primary"></i> @lang('Payment Calculation')</span>
+														class="far fa-credit-card mr-2 text-primary"></i> @lang('Payment Calculation')</span>
 												</li>
 
 												@if($singleShipment->discount != null)
 													<li class="my-3 ">
 													<span class="custom-text"><i
-															class="fas fa-dollar-sign mr-2 text-warning"></i>  @lang('Discount') :
+															class="far fa-dollar-sign mr-2 text-warning"></i>  @lang('Discount') :
 														<span
 															class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->discount_amount)</span>
 													</span>
@@ -380,7 +395,7 @@
 
 												<li class="my-3">
                                             <span class="custom-text"> <i
-													class="fas fa-dollar-sign mr-2 text-primary"></i> @lang('Sub Total') :
+													class="far fa-dollar-sign mr-2 text-primary"></i> @lang('Sub Total') :
 												<span
 													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->sub_total)</span>
 
@@ -389,7 +404,7 @@
 												@if($singleShipment->shipment_type == 'pickup')
 													<li class="my-3">
                                             <span class="custom-text"><i
-													class="fas fa-dollar-sign mr-2 text-success"></i>  @lang('Pickup Cost') :
+													class="far fa-dollar-sign mr-2 text-success"></i>  @lang('Pickup Cost') :
 												<span
 													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->pickup_cost)</span>
 
@@ -398,7 +413,7 @@
 
 													<li class="my-3">
                                             <span class="custom-text"><i
-													class="fas fa-dollar-sign mr-2 text-danger"></i>  @lang('Supply Cost') :
+													class="far fa-dollar-sign mr-2 text-danger"></i>  @lang('Supply Cost') :
 												<span
 													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->supply_cost)</span>
 
@@ -408,7 +423,7 @@
 
 												<li class="my-3">
                                             <span class="custom-text"><i
-													class="fas fa-dollar-sign mr-2 text-purple"></i>  @lang('Shipping Cost') :
+													class="far fa-dollar-sign mr-2 text-purple"></i>  @lang('Shipping Cost') :
 												<span
 													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->shipping_cost)</span>
 
@@ -417,7 +432,7 @@
 
 												<li class="my-3">
                                             <span class="custom-text"><i
-													class="fas fa-dollar-sign mr-2 text-orange"></i>  @lang('Tax') :
+													class="far fa-dollar-sign mr-2 text-orange"></i>  @lang('Tax') :
 												<span
 													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->tax)</span>
 
@@ -425,7 +440,7 @@
 												</li>
 
 												<li class="my-3">
-                                            <span class="custom-text"><i class="fas fa-dollar-sign mr-2 text-info"></i>  @lang('Insurance') :
+                                            <span class="custom-text"><i class="far fa-dollar-sign mr-2 text-info"></i>  @lang('Insurance') :
 												<span
 													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->insurance)</span>
 
@@ -434,7 +449,7 @@
 
 												<li class="my-3">
                                             <span class="custom-text"><i
-													class="fas fa-dollar-sign mr-2 text-primary"></i>  @lang('Payable Amount') :
+													class="far fa-dollar-sign mr-2 text-primary"></i>  @lang('Payable Amount') :
 												<span
 													class="custom-text text-warning">{{ $basic->currency_symbol }}@lang($singleShipment->total_pay)</span>
                                             </span>

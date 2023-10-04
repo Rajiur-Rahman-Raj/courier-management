@@ -425,6 +425,7 @@
 				success: function (response) {
 					$('.OCShippingCost').val(response.cash_on_delivery_cost);
 					$('.OCReturnShipmentCost').val(response.return_shipment_cost);
+					finalTotalAmountCalculation(response.cash_on_delivery_cost);
 				},
 				error: function (xhr, status, error) {
 					console.log(error)
@@ -686,14 +687,19 @@
 		finalTotalAmountCalculation();
 	}
 
-	function finalTotalAmountCalculation() {
+	function finalTotalAmountCalculation(conditionShippingCost = null) {
 		let OCSubTotalAfterDiscount = parseFloat($('.OCSubTotal').val());
-		let OCShipingCost = parseFloat($('.OCShippingCost').val());
+		let OCShippingCost = 0;
+		if(conditionShippingCost != null){
+			OCShippingCost = conditionShippingCost;
+		}else{
+			OCShippingCost = parseFloat($('.OCShippingCost').val());
+		}
 		let OCTax = parseFloat($('.OCTax').val());
 		let OCInsurance = parseFloat($('.OCInsurance').val());
 		let OCPickupCost = parseFloat($('.OCPickupCost').val());
 		let OCSupplyCost = parseFloat($('.OCSupplyCost').val());
-		let OCtotalPay = OCSubTotalAfterDiscount + OCShipingCost + OCTax + OCInsurance + OCPickupCost + OCSupplyCost;
+		let OCtotalPay = OCSubTotalAfterDiscount + OCShippingCost + OCTax + OCInsurance + OCPickupCost + OCSupplyCost;
 		$('.OCtotalPay').val(OCtotalPay);
 	}
 

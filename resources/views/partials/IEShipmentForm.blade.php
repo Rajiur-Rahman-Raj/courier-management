@@ -39,11 +39,11 @@
 		<div class="row">
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="shipment_date"> @lang('Shipment Date') </label>
-				<div class="flatpickr2">
+				<div class="flatpickr">
 					<div class="input-group">
-						<input type="date" placeholder="@lang('Select date-time')" class="form-control shipment_date"
+						<input type="date" placeholder="@lang('Select date')" class="form-control shipment_date"
 							   name="shipment_date"
-							   value="{{ $singleShipment->shipment_date  }}" data-input>
+							   value="{{ old('shipment_date', $singleShipment->shipment_date)  }}" data-input>
 						<div class="input-group-append" readonly="">
 							<div class="form-control">
 								<a class="input-button cursor-pointer" title="toggle" data-toggle>
@@ -67,7 +67,7 @@
 
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="delivery_date"> @lang('Estimate Delivery Date') </label>
-				<div class="flatpickr2">
+				<div class="flatpickr">
 					<div class="input-group">
 						<input type="date" placeholder="@lang('Select Date')" class="form-control delivery_date"
 							   name="delivery_date"

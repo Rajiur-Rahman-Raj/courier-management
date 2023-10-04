@@ -174,7 +174,7 @@ class ShipmentController extends Controller
 			})
 			->when($type == 'internationally' && $status == 'requested', function ($query) {
 				$query->where('shipment_identifier', 2)
-					->where('status', 0);
+					->whereIn('status', [0, 6]);
 			});
 
 		$data = [
@@ -245,6 +245,7 @@ class ShipmentController extends Controller
 		$data['status'] = $request->input('segment');
 		$data['shipment_type'] = $request->input('shipment_type');
 		$data['singleShipment'] = Shipment::with('shipmentAttachments', 'senderBranch', 'receiverBranch', 'sender.profile', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')->findOrFail($id);
+
 		return view('admin.shipments.viewShipment', $data);
 	}
 
@@ -494,24 +495,21 @@ class ShipmentController extends Controller
 
 			$shipment->save();
 			DB::commit();
-
+			NotifyMailService::cancelShipmentRequestNotify($shipment, $refund_time, $refund_time_type);
 			return back()->with('success', 'Shipment request canceled successfully!');
-		} catch (\Exception $exp){
+		} catch (\Exception $exp) {
 			DB::rollBack();
 			return back()->with('error', $exp->getMessage())->withInput();
 		}
-
 	}
 
-	public
-	function shipmentTypeList()
+	public function shipmentTypeList()
 	{
 		$data['allShipmentType'] = config('shipmentTypeList');
 		return view('admin.shipmentType.index', $data);
 	}
 
-	public
-	function shipmentTypeUpdate(Request $request, $id)
+	public function shipmentTypeUpdate(Request $request, $id)
 	{
 		$filePath = base_path('config/shipmentTypeList.php');
 
@@ -1457,13 +1455,23 @@ class ShipmentController extends Controller
 		return back()->with('success', 'shipment is permanent deleted!');
 	}
 
-	public
-	function shipmentStatusUpdate(Request $request, $id)
+	public function updateShipmentStatus($id, $type = null)
 	{
-		$shipment = Shipment::findOrFail($id);
-		$shipment->status = 2;
-		$shipment->save();
-		return back()->with('success', 'shipment status update successfully!');
+		try {
+			DB::beginTransaction();
+			if ($type == 'dispatch'){
+				$shipment = Shipment::findOrFail($id);
+				$shipment->status = 2;
+				$shipment->dispatch_time = Carbon::now();
+				$shipment->save();
+				DB::commit();
+				NotifyMailService::dispatchShipmentRequest($shipment);
+				return back()->with('success', 'Shipment Dispatched Successfully!');
+			}
+		}catch (\Exception $e){
+			DB::rollBack();
+			return back()->with('error', $e->getMessage())->withInput();
+		}
 	}
 
 	public

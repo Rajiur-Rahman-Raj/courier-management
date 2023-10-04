@@ -188,6 +188,12 @@
 											</li>
 
 											<li class="my-3">
+                                            <span class="font-weight-bold text-dark">  <i
+													class="fas fa-file-invoice-dollar mr-2 text-purple"></i> @lang("Payment By") : <span
+													class="font-weight-medium">{{ $singleShipment->payment_by == 1 ? 'Sender' : 'Receiver' }}</span></span>
+											</li>
+
+											<li class="my-3">
                                             <span class="font-weight-bold text-dark"><i
 													class="fas fa-money-check-alt  mr-2 text-primary"></i> @lang('Payment Status') :
                                                 @if($singleShipment->payment_status == 1)
@@ -237,6 +243,14 @@
 														</span>
 												</li>
 											@endif
+
+											@if($singleShipment->dispatch_time != null)
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i class="far fa-clock mr-2 text-info"></i> @lang("Dispatched Time") : <span
+													class="font-weight-medium">{{ customDateTime($singleShipment->dispatch_time) }}</span></span>
+												</li>
+											@endif
+
 										</ul>
 									</div>
 

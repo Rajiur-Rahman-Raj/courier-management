@@ -20,8 +20,11 @@ class NotifyMailService
 		return $shipment_type;
 	}
 
-	public function acceptShipmentRequestNotify($shipment, $trans = null){
+	public function getBranchManager($shipment){
+		return optional(optional($shipment->senderBranch)->branchManager)->admin;
+	}
 
+	public function acceptShipmentRequestNotify($shipment, $trans = null){
 
 		$params = [
 			'sender' => optional($shipment->sender)->name,
@@ -36,10 +39,8 @@ class NotifyMailService
 			"icon" => "fas fa-truck text-white"
 		];
 
-		$branchManager = optional(optional($shipment->senderBranch)->branchManager)->admin;
-		$this->adminPushNotification($branchManager,'ADMIN_NOTIFY_SHIPMENT_REQUEST_ACCEPT', $params, $adminAction, $superAdmin = 1);
-		$this->adminMail($branchManager, 'ADMIN_MAIL_SHIPMENT_REQUEST_ACCEPT', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
-
+		$this->adminPushNotification($this->getBranchManager($shipment),'ADMIN_NOTIFY_SHIPMENT_REQUEST_ACCEPT', $params, $adminAction, $superAdmin = 1);
+		$this->adminMail($this->getBranchManager($shipment), 'ADMIN_MAIL_SHIPMENT_REQUEST_ACCEPT', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
 
 		$userAction = [
 			"link" => route('user.shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => $this->getShipmentType($shipment)]),
@@ -62,8 +63,6 @@ class NotifyMailService
 			"icon" => "fas fa-truck text-white"
 		];
 
-		$branchManager = optional(optional($shipment->senderBranch)->branchManager)->admin;
-
 		if ($shipment->payment_type == 'wallet' && $shipment->payment_status == 1){
 			$params = [
 				'sender' => optional($shipment->sender)->name,
@@ -76,8 +75,8 @@ class NotifyMailService
 			$this->userPushNotification($shipment->sender, 'USER_NOTIFY_SHIPMENT_REQUEST_CANCEL_WITH_REFUND', $params, $userAction);
 			$this->sendMailSms($shipment->sender, 'USER_MAIL_SHIPMENT_REQUEST_CANCEL_WITH_REFUND', $params);
 
-			$this->adminPushNotification($branchManager,'ADMIN_NOTIFY_SHIPMENT_REQUEST_CANCEL_WITH_REFUND', $params, $adminAction, $superAdmin = 1);
-			$this->adminMail($branchManager, 'ADMIN_MAIL_SHIPMENT_REQUEST_CANCEL_WITH_REFUND', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
+			$this->adminPushNotification($this->getBranchManager($shipment),'ADMIN_NOTIFY_SHIPMENT_REQUEST_CANCEL_WITH_REFUND', $params, $adminAction, $superAdmin = 1);
+			$this->adminMail($this->getBranchManager($shipment), 'ADMIN_MAIL_SHIPMENT_REQUEST_CANCEL_WITH_REFUND', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
 		}else{
 			$params = [
 				'sender' => optional($shipment->sender)->name,
@@ -86,9 +85,69 @@ class NotifyMailService
 			$this->userPushNotification($shipment->sender, 'USER_NOTIFY_SHIPMENT_REQUEST_CANCEL', $params, $userAction);
 			$this->sendMailSms($shipment->sender, 'USER_MAIL_SHIPMENT_REQUEST_CANCEL', $params);
 
-			$this->adminPushNotification($branchManager,'ADMIN_NOTIFY_SHIPMENT_REQUEST_CANCEL', $params, $adminAction, $superAdmin = 1);
-			$this->adminMail($branchManager, 'ADMIN_MAIL_SHIPMENT_REQUEST_CANCEL', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
+			$this->adminPushNotification($this->getBranchManager($shipment),'ADMIN_NOTIFY_SHIPMENT_REQUEST_CANCEL', $params, $adminAction, $superAdmin = 1);
+			$this->adminMail($this->getBranchManager($shipment), 'ADMIN_MAIL_SHIPMENT_REQUEST_CANCEL', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
 		}
+	}
+
+	public function cancelShipmentRequestRefundMoney($shipment, $user, $refundAmount){
+		$params = [
+			'user' => $user->name,
+			'shipmentId' => $shipment->shipment_id,
+			'refundAmount' => getAmount($refundAmount),
+			'currency' => config('basic.currency_symbol'),
+		];
+
+		$adminAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'requested', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$this->adminPushNotification($this->getBranchManager($shipment),'ADMIN_NOTIFY_SHIPMENT_REQUEST_CANCEL_REFUND_MONEY', $params, $adminAction, $superAdmin = 1);
+		$this->adminMail($this->getBranchManager($shipment), 'ADMIN_MAIL_SHIPMENT_REQUEST_CANCEL_REFUND_MONEY', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
+
+
+		$userAction = [
+			"link" => route('user.shipmentList', ['shipment_status' => 'requested', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fal fa-truck text-white"
+		];
+
+		$this->userPushNotification($shipment->sender, 'USER_NOTIFY_SHIPMENT_REQUEST_CANCEL_REFUND_MONEY', $params, $userAction);
+		$this->sendMailSms($shipment->sender, 'USER_MAIL_SHIPMENT_REQUEST_CANCEL_REFUND_MONEY', $params);
+	}
+
+	public function dispatchShipmentRequest($shipment){
+		$senderParams = [
+			'sender' => optional($shipment->sender)->name,
+			'shipmentId' => $shipment->shipment_id,
+			'dispatchTime' => $shipment->dispatch_time,
+		];
+
+		$receiverParams = [
+			'receiver' => optional($shipment->receiver)->name,
+			'shipmentId' => $shipment->shipment_id,
+			'dispatchTime' => $shipment->dispatch_time,
+		];
+
+		$adminAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$this->adminPushNotification($this->getBranchManager($shipment),'ADMIN_NOTIFY_SHIPMENT_DISPATCH', $senderParams, $adminAction, $superAdmin = 1);
+		$this->adminMail($this->getBranchManager($shipment), 'ADMIN_MAIL_SHIPMENT_DISPATCH', $senderParams, $subject = null, $requestMessage = null, $superAdmin = 1);
+
+
+		$userAction = [
+			"link" => route('user.shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fal fa-truck text-white"
+		];
+
+		$this->userPushNotification($shipment->sender, 'SENDER_NOTIFY_SHIPMENT_DISPATCH', $senderParams, $userAction);
+		$this->sendMailSms($shipment->sender, 'SENDER_MAIL_SHIPMENT_DISPATCH', $senderParams);
+
+		$this->userPushNotification($shipment->receiver, 'RECEIVER_NOTIFY_SHIPMENT_DISPATCH', $receiverParams, $userAction);
+		$this->sendMailSms($shipment->receiver, 'RECEIVER_MAIL_SHIPMENT_DISPATCH', $receiverParams);
 	}
 
 }

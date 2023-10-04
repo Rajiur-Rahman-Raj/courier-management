@@ -245,12 +245,11 @@
 	$('.shipment_image').imageUploader(shipmentImageOptions);
 
 
-	$(document).ready(function (){
-		$(".flatpickr").flatpickr({
-			wrap: true,
-			minDate: "today",
-			altInput: true,
-			dateFormat: "Y-m-d H:i",
-		});
-	})
+	$(".flatpickr2").flatpickr({
+		wrap: true,
+		minDate: "today",
+		altInput: true,
+		dateFormat: "Y-m-d H:i",
+	});
+
 </script>

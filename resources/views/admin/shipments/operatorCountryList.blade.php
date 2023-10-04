@@ -157,7 +157,8 @@
 																							@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.dispatch')))
 																								<a data-target="#updateShipmentStatus"
 																								   data-toggle="modal"
-																								   data-route="{{route('shipmentStatusUpdate', $shipment->id)}}"
+{{--																								   data-route="{{route('updateShipmentStatus', $shipment->id)}}"--}}
+																								   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'dispatch'])}}"
 																								   href="javascript:void(0)"
 																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
 																										class="fas fa-file-invoice mr-2"></i> @lang('Dispatch')

@@ -141,7 +141,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('restore-shipment/{id}', [ShipmentController::class, 'restoreShipment'])->name('restoreShipment');
 		Route::delete('force-shipment-delete/{id}', [ShipmentController::class, 'forceDeleteShipment'])->name('forceDeleteShipment');
 
-		Route::put('shipment-status-update/{id}', [ShipmentController::class, 'shipmentStatusUpdate'])->name('shipmentStatusUpdate');
+//		Route::put('shipment-status-update/{id}', [ShipmentController::class, 'shipmentStatusUpdate'])->name('shipmentStatusUpdate');
+		Route::put('update-shipment-status/{id}/{type?}', [ShipmentController::class, 'updateShipmentStatus'])->name('updateShipmentStatus');
 
 		// Manage Shipment Types
 		Route::get('shipment-type-list', [ShipmentController::class, 'shipmentTypeList'])->name('shipmentTypeList');
