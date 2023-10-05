@@ -128,10 +128,11 @@
 																				@elseif($shipment->status == 1)
 																					<span
 																						class="badge badge-info rounded">@lang('In Queue')</span>
-																				@elseif($shipment->status == 2)
+{{--																					optional(auth()->guard('admin')->user()->branch)->branch_id--}}
+																				@elseif($shipment->status == 2 && $status == 'dispatch')
 																					<span
 																						class="badge badge-warning rounded">@lang('Dispatch')</span>
-																				@elseif($shipment->status == 3)
+																				@elseif($shipment->status == 2 && $status == 'upcoming')
 																					<span
 																						class="badge badge-primary rounded">@lang('Upcoming')</span>
 																				@elseif($shipment->status == 4)
