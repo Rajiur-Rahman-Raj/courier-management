@@ -72,17 +72,13 @@ class UserShipmentController extends Controller
 				$query->where('shipment_identifier', 1)
 					->where('status', 2);
 			})
-			->when($type == 'operator-country' && $status == 'upcoming', function ($query) {
+			->when($type == 'operator-country' && $status == 'received', function ($query) {
 				$query->where('shipment_identifier', 1)
 					->where('status', 3);
 			})
-			->when($type == 'operator-country' && $status == 'received', function ($query) {
-				$query->where('shipment_identifier', 1)
-					->where('status', 4);
-			})
 			->when($type == 'operator-country' && $status == 'delivered', function ($query) {
 				$query->where('shipment_identifier', 1)
-					->where('status', 5);
+					->where('status', 4);
 			})
 			->when($type == 'operator-country' && $status == 'requested', function ($query) {
 				$query->where('shipment_identifier', 1)
@@ -99,17 +95,13 @@ class UserShipmentController extends Controller
 				$query->where('shipment_identifier', 2)
 					->where('status', 2);
 			})
-			->when($type == 'internationally' && $status == 'upcoming', function ($query) {
+			->when($type == 'internationally' && $status == 'received', function ($query) {
 				$query->where('shipment_identifier', 2)
 					->where('status', 3);
 			})
-			->when($type == 'internationally' && $status == 'received', function ($query) {
-				$query->where('shipment_identifier', 2)
-					->where('status', 4);
-			})
 			->when($type == 'internationally' && $status == 'delivered', function ($query) {
 				$query->where('shipment_identifier', 2)
-					->where('status', 5);
+					->where('status', 4);
 			})
 			->when($type == 'internationally' && $status == 'requested', function ($query) {
 				$query->where('shipment_identifier', 2)
@@ -259,6 +251,8 @@ class UserShipmentController extends Controller
 
 	public function deleteShipmentRequest($id){
 		$shipment = Shipment::findOrFail($id);
+		$shipment->deleted_by = [0];
+		$shipment->save();
 		$shipment->delete();
 		return back()->with('success', 'Shipment deleted successfully!');
 	}

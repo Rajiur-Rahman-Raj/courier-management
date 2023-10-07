@@ -218,8 +218,24 @@
 													class="far fa-clock mr-2 text-info"></i> @lang("Dispatched Time") : <span
 													class="fw-normal">{{ customDateTime($singleShipment->dispatch_time) }}</span></span>
 													</li>
-
 												@endif
+
+												@if($singleShipment->dispatch_time != null)
+													<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Received Time") : <span
+													class="fw-normal">{{ customDateTime($singleShipment->receive_time) }}</span></span>
+													</li>
+												@endif
+
+												@if($singleShipment->delivered_time != null)
+													<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Delivered Time") : <span
+													class="fw-normal">{{ customDateTime($singleShipment->delivered_time) }}</span></span>
+													</li>
+												@endif
+
 												@if($singleShipment->status == 6 && $singleShipment->shipment_cancel_time != null && $singleShipment->refund_time != null && $singleShipment->is_refund_complete == 0)
 													<li class="my-3">
 														<span class="fw-bold text-dark"><i

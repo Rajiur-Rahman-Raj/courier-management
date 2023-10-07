@@ -60,6 +60,7 @@ class Shipment extends Model
 	protected $casts = [
 		'packing_services' => 'array',
 		'parcel_information' => 'array',
+		'deleted_by' => 'array',
 	];
 
 	public function transactional()

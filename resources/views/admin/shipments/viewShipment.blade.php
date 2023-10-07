@@ -209,18 +209,23 @@
 													class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
 												@if($singleShipment->status == 0)
 													<p class="badge badge-dark rounded">@lang('Requested')</p>
+												@elseif($singleShipment->status == 6)
+													<p
+														class="badge badge-danger rounded">@lang('Canceled')</p>
 												@elseif($singleShipment->status == 1)
 													<p class="badge badge-info rounded">@lang('In Queue')</p>
-												@elseif($singleShipment->status == 2)
-													<p class="badge badge-warning rounded">@lang('Dispatch')</p>
+												@elseif($singleShipment->status == 2 && $status == 'dispatch')
+													<p
+														class="badge badge-warning rounded">@lang('Dispatch')</p>
+												@elseif($singleShipment->status == 2 && $status == 'upcoming')
+													<p
+														class="badge badge-primary rounded">@lang('Upcoming')</p>
 												@elseif($singleShipment->status == 3)
-													<p class="badge badge-primary rounded">@lang('Upcoming')</p>
+													<p
+														class="badge badge-success rounded">@lang('Received')</p>
 												@elseif($singleShipment->status == 4)
-													<p class="badge badge-success rounded">@lang('Received')</p>
-												@elseif($singleShipment->status == 5)
-													<p class="badge badge-orange rounded">@lang('Delivered')</p>
-												@elseif($singleShipment->status == 6)
-													<p class="badge badge-danger rounded">@lang('Canceled')</p>
+													<p
+														class="badge badge-danger rounded">@lang('Delivered')</p>
 												@endif
                                             </span>
 											</li>
@@ -251,13 +256,24 @@
 												</li>
 											@endif
 
+											@if($singleShipment->receive_time != null)
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i class="far fa-clock mr-2 text-info"></i> @lang("Received Time") : <span
+													class="font-weight-medium">{{ customDateTime($singleShipment->receive_time) }}</span></span>
+												</li>
+											@endif
+											@if($singleShipment->delivered_time != null)
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i class="far fa-clock mr-2 text-info"></i> @lang("Delivered Time") : <span
+													class="font-weight-medium">{{ customDateTime($singleShipment->delivered_time) }}</span></span>
+												</li>
+											@endif
 										</ul>
 									</div>
 
 
 									<div class="col-md-6 ">
 										<ul class="list-style-none shipment-view-ul">
-
 											<li class="my-2 border-bottom-2 pb-3">
 												<span class="font-weight-bold text-dark"> <i
 														class="fas fa-cart-plus mr-2 text-primary"></i> @lang('Parcel Information')</span>

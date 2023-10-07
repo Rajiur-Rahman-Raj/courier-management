@@ -251,7 +251,9 @@ trait Notify
         $siteNotification = new SiteNotification();
         $siteNotification->description = $action;
         $user->siteNotificational()->save($siteNotification);
+
         event(new UserNotification($siteNotification, $user->id));
+
     }
 
     public function adminPushNotification($admin, $templateKey, $params = [], $action = [], $superAdmin = null)

@@ -128,17 +128,17 @@
 																				@elseif($shipment->status == 1)
 																					<span
 																						class="badge badge-info rounded">@lang('In Queue')</span>
-{{--																					optional(auth()->guard('admin')->user()->branch)->branch_id--}}
+																					{{--																					optional(auth()->guard('admin')->user()->branch)->branch_id--}}
 																				@elseif($shipment->status == 2 && $status == 'dispatch')
 																					<span
 																						class="badge badge-warning rounded">@lang('Dispatch')</span>
 																				@elseif($shipment->status == 2 && $status == 'upcoming')
 																					<span
 																						class="badge badge-primary rounded">@lang('Upcoming')</span>
-																				@elseif($shipment->status == 4)
+																				@elseif($shipment->status == 3)
 																					<span
 																						class="badge badge-success rounded">@lang('Received')</span>
-																				@elseif($shipment->status == 5)
+																				@elseif($shipment->status == 4)
 																					<span
 																						class="badge badge-danger rounded">@lang('Delivered')</span>
 																				@endif
@@ -154,17 +154,33 @@
 																						@lang('Options')
 																					</button>
 																					<div class="dropdown-menu">
-																						@if($shipment->status == 1)
+																						@if($shipment->status == 1 && $status == 'in_queue')
 																							@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.dispatch')))
 																								<a data-target="#updateShipmentStatus"
 																								   data-toggle="modal"
-{{--																								   data-route="{{route('updateShipmentStatus', $shipment->id)}}"--}}
+																								   {{--																								   data-route="{{route('updateShipmentStatus', $shipment->id)}}"--}}
 																								   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'dispatch'])}}"
 																								   href="javascript:void(0)"
 																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
 																										class="fas fa-file-invoice mr-2"></i> @lang('Dispatch')
 																								</a>
 																							@endif
+																						@elseif($shipment->status == 2 && $status == 'upcoming')
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="{{ $status }}"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'received'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"> <i class="far fa-handshake mr-2"></i> @lang('Received')
+																							</a>
+																						@elseif($shipment->status == 3 && $status == 'received')
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="{{ $status }}"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'delivered'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"> <i class="fas fa-thumbs-up mr-2"></i> @lang('Delivered')
+																							</a>
 																						@endif
 
 																						{{--																						<a class="dropdown-item btn-outline-primary btn-sm"--}}
@@ -179,7 +195,7 @@
 																						</a>
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
-																							@if($shipment->status == 0 || $shipment->status == 1)
+																							@if($shipment->status == 0 || $shipment->status == 1 || ($shipment->status == 3 && $shipment->payment_status == 2))
 																								<a class="dropdown-item btn-outline-primary btn-sm"
 																								   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
 																										class="fa fa-edit mr-2"
@@ -217,7 +233,7 @@
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.delete')))
-																							@if($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null)
+																							@if(($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null) || $shipment->status == 4)
 																								<a data-target="#deleteShipment"
 																								   data-toggle="modal"
 																								   data-route="{{route('deleteShipment', $shipment->id)}}"
@@ -268,7 +284,7 @@
 		</section>
 	</div>
 
-	{{-- Edit/dispatch Shipment Status Modal --}}
+	{{-- shipment status update modal --}}
 	<div id="updateShipmentStatus" class="modal fade" tabindex="-1" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
@@ -283,7 +299,8 @@
 					@csrf
 					@method('put')
 					<div class="modal-body">
-						<p>@lang('Are you sure to dispatch this shipment?')</p>
+						<p class="shipmentStatusChangeMessage"></p>
+{{--						@lang('Are you sure to dispatch this shipment?')--}}
 					</div>
 
 					<div class="modal-footer">
@@ -439,6 +456,15 @@
 		$(document).ready(function () {
 			$(document).on('click', '.editShipmentStatus', function () {
 				let dataRoute = $(this).data('route');
+				let dataStatus = $(this).data('status');
+				if(dataStatus == 'dispatch'){
+					$('.shipmentStatusChangeMessage').text('Are you sure to dispatch this shipment?')
+				}else if (dataStatus == 'upcoming'){
+					$('.shipmentStatusChangeMessage').text('Are you sure to received this shipment?')
+				}
+				else if (dataStatus == 'received'){
+					$('.shipmentStatusChangeMessage').text('Are you sure to delivered this shipment?')
+				}
 				$('#editShipmentStatusForm').attr('action', dataRoute);
 			});
 

@@ -48,10 +48,11 @@ class ShipmentController extends Controller
 		abort_if(!in_array($type, $types), 404);
 		$data['title'] = $shipmentManagement[$type]['title'];
 		$authenticateUser = Auth::guard('admin')->user();
-
+		// i am here and calculate deleted options
 		$filterData = $this->_filter($request, $status, $type, $authenticateUser);
-//		return $filterData['allShipments']->get();
 		$data['allShipments'] = $filterData['allShipments']
+			->whereNotIn('deleted_by', [$authenticateUser->id])
+			->withTrashed()
 			->paginate(config('basic.paginate'));
 
 		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status', 'authenticateUser'));
@@ -128,10 +129,10 @@ class ShipmentController extends Controller
 				}
 			})
 			->when(isset($search['status']) && $search['status'] == 'received', function ($query) use ($search) {
-				return $query->where('status', 4);
+				return $query->where('status', 3);
 			})
 			->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
-				return $query->where('status', 5);
+				return $query->where('status', 4);
 			})
 			->when($type == 'operator-country' && $status == 'all', function ($query) {
 				return $query->where('shipment_identifier', 1);
@@ -156,11 +157,11 @@ class ShipmentController extends Controller
 			})
 			->when($type == 'operator-country' && $status == 'received', function ($query) {
 				return $query->where('shipment_identifier', 1)
-					->where('status', 4);
+					->where('status', 3);
 			})
 			->when($type == 'operator-country' && $status == 'delivered', function ($query) {
 				return $query->where('shipment_identifier', 1)
-					->where('status', 5);
+					->where('status', 4);
 			})
 			->when($type == 'operator-country' && $status == 'requested', function ($query, $authenticateUser) {
 				if (!isset($authenticateUser->branch->branch_id)){
@@ -196,8 +197,6 @@ class ShipmentController extends Controller
 				return $query->where('shipment_identifier', 2)
 					->whereIn('status', [0, 6]);
 			});
-
-
 
 		$data = [
 			'allShipments' => $shipments,
@@ -1427,11 +1426,16 @@ class ShipmentController extends Controller
 		}
 	}
 
-	public
-	function deleteShipment($id)
+	public function deleteShipment($id)
 	{
-		Shipment::findOrFail($id)->delete();
-		return back()->with('success', 'Shipment deleted successfully');
+		$authenticateAdmin = Auth::guard('admin')->user();
+		$shipment = Shipment::withTrashed()->findOrFail($id);
+		$deletedByArray = $shipment->deleted_by;
+		$deletedByArray[] = $authenticateAdmin->id;
+		$shipment->deleted_by = $deletedByArray;
+		$shipment->save();
+		$shipment->delete();
+		return back()->with('success', 'Shipment deleted successfully!');
 	}
 
 	public
@@ -1489,6 +1493,27 @@ class ShipmentController extends Controller
 				DB::commit();
 				NotifyMailService::dispatchShipmentRequest($shipment);
 				return back()->with('success', 'Shipment Dispatched Successfully!');
+			}elseif ($type == 'received'){
+				$shipment = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver')->findOrFail($id);
+				$shipment->status = 3;
+				$shipment->receive_time = Carbon::now();
+				$shipment->save();
+				DB::commit();
+				NotifyMailService::receiveShipmentRequest($shipment);
+				return back()->with('success', 'Shipment Received Successfully!');
+			}elseif ($type == 'delivered'){
+				$shipment = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver')->findOrFail($id);
+
+				if ($shipment->payment_status == 2){
+					return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
+				}
+
+				$shipment->status = 4;
+				$shipment->delivered_time = Carbon::now();
+				$shipment->save();
+				DB::commit();
+				NotifyMailService::deliveredShipmentRequest($shipment);
+				return back()->with('success', 'Shipment Delivered Successfully!');
 			}
 		}catch (\Exception $e){
 			DB::rollBack();

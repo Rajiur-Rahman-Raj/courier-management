@@ -108,11 +108,8 @@
 													class="badge text-bg-warning">@lang('Dispatch')</span>
 											@elseif($shipment->status == 3)
 												<span
-													class="badge text-bg-primary">@lang('Upcoming')</span>
-											@elseif($shipment->status == 4)
-												<span
 													class="badge text-bg-success">@lang('Received')</span>
-											@elseif($shipment->status == 5)
+											@elseif($shipment->status == 4)
 												<span
 													class="badge text-bg-danger">@lang('Delivered')</span>
 											@endif
@@ -140,7 +137,7 @@
 															   data-bs-target="#cancelShipmentRequest">@lang('Cancel Request')</a>
 														</li>
 
-													@elseif($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null)
+													@elseif(($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null) || $shipment->status == 4)
 														<li>
 															<a class="dropdown-item deleteShipmentRequest"
 															   data-bs-toggle="modal"

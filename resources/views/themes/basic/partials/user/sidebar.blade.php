@@ -47,12 +47,12 @@
 						</a>
 					</li>
 
-					<li>
-						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'upcoming') }}"
-						   href="{{ route('user.shipmentList', ['shipment_status' => 'upcoming', 'shipment_type' => 'operator-country']) }}">
-							@lang('Upcoming')
-						</a>
-					</li>
+{{--					<li>--}}
+{{--						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'upcoming') }}"--}}
+{{--						   href="{{ route('user.shipmentList', ['shipment_status' => 'upcoming', 'shipment_type' => 'operator-country']) }}">--}}
+{{--							@lang('Upcoming')--}}
+{{--						</a>--}}
+{{--					</li>--}}
 
 					<li>
 						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'received') }}"
