@@ -61,6 +61,10 @@ return [
 		'path' => 'branchEmployee',
 		'size' => '300x300',
 	],
+	'branchDriver' => [
+		'path' => 'branchDriver',
+		'size' => '300x300',
+	],
 	'packing' => [
 		'path' => 'packing',
 		'size' => '300x300',

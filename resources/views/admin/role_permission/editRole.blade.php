@@ -329,6 +329,48 @@
 																		</td>
 																	@endif
 
+																	@if($key2 == 'Driver_List')
+																		<td data-label="Profile">
+																			@if(!empty($subMenu['permission']['show_profile']))
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_profile'])}}"
+																					   class="cursor-pointer"
+																					   @if(in_array_any( $subMenu['permission']['show_profile'], $singleRole->permission??[] ))
+																						   checked
+																					   @endif
+																					   name="permissions[]"/>
+																			@else
+																				<span>-</span>
+																			@endif
+																		</td>
+																		<td data-label="Staff List">
+																			@if(!empty($subMenu['permission']['show_staff_list']))
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_staff_list'])}}"
+																					   class="cursor-pointer"
+																					   @if(in_array_any( $subMenu['permission']['show_staff_list'], $singleRole->permission??[] ))
+																						   checked
+																					   @endif
+																					   name="permissions[]"/>
+																			@else
+																				<span>-</span>
+																			@endif
+																		</td>
+																		<td data-label="Login As">
+																			@if(!empty($subMenu['permission']['login_as']))
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['login_as'])}}"
+																					   class="cursor-pointer"
+																					   @if(in_array_any( $subMenu['permission']['login_as'], $singleRole->permission??[] ))
+																						   checked
+																					   @endif
+																					   name="permissions[]"/>
+																			@else
+																				<span>-</span>
+																			@endif
+																		</td>
+																	@endif
+
 																	@if($key2 == 'Client_List')
 																		<td data-label="Profile">
 																			@if(!empty($subMenu['permission']['show_profile']))

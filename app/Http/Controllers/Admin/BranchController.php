@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Branch;
+use App\Models\BranchDriver;
 use App\Models\BranchEmployee;
 use App\Models\BranchManager;
 use App\Models\Department;
@@ -455,7 +456,14 @@ class BranchController extends Controller
 	public function branchEmployeeEdit($id)
 	{
 		$authenticateUser = Auth::guard('admin')->user();
-		$data['allBranches'] = Branch::where('status', 1)->get();
+		$data['allBranches'] = Branch::with('branchManager')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branchManager', function ($q) use ($authenticateUser) {
+					$q->where('admin_id', $authenticateUser->id);
+				});
+			})
+			->where('status', 1)->get();
+
 		$data['allRoles'] = Role::where('status', 1)->get();
 		$data['allDepartments'] = Department::where('status', 1)->get();
 		$data['singleBranchEmployeeInfo'] = BranchEmployee::with('branch', 'admin', 'department')->where('status', 1)
@@ -467,7 +475,7 @@ class BranchController extends Controller
 			->findOrFail($id);
 		$data['allEmployees'] = Admin::where('role_id', $data['singleBranchEmployeeInfo']->role_id)->where('status', 1)->get();
 
-		return view('admin.branchEmployee.edit', $data);
+		return view('admin.branchEmployee.edit', $data, compact('authenticateUser'));
 	}
 
 
@@ -529,6 +537,196 @@ class BranchController extends Controller
 
 		$branchEmployee->save();
 		return back()->with('success', 'Branch Employee Updated Successfully!');
+	}
+
+
+	public function branchDriverList(Request $request)
+	{
+
+		$search = $request->all();
+		$authenticateUser = Auth::guard('admin')->user();
+
+		$data['branchDrivers'] = BranchDriver::with('branch.branchManager', 'admin')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
+				});
+			})
+			->when(isset($search['branch']), function ($query) use ($search) {
+				return $query->whereHas('branch', function ($q) use ($search) {
+					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['branch']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['phone']), function ($q) use ($search) {
+				return $q->where('phone', $search['phone']);
+			})
+			->when(isset($search['email']), function ($q2) use ($search) {
+				return $q2->where('email', $search['email']);
+			})
+			->when(isset($search['status']) && $search['status'] == 'active', function ($q3) use ($search) {
+				return $q3->where('status', 1);
+			})
+			->when(isset($search['status']) && $search['status'] == 'deactive', function ($q4) use ($search) {
+				return $q4->where('status', 0);
+			})
+			->paginate(config('basic.paginate'));
+		return view('admin.branchDriver.index', $data, compact('authenticateUser'));
+	}
+
+
+	public function createDriver()
+	{
+		$authenticateUser = Auth::guard('admin')->user();
+		$data['allBranches'] = Branch::with('branchManager')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branchManager', function ($q) use ($authenticateUser) {
+					$q->where('admin_id', $authenticateUser->id);
+				});
+			})
+			->where('status', 1)->get();
+
+		$data['allRoles'] = Role::where('status', 1)->get();
+		return view('admin.branchDriver.create', $data, compact('authenticateUser'));
+	}
+
+	public function branchDriverStore(Request $request)
+	{
+
+		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
+
+		$rules = [
+			'branch_id' => ['required', 'exists:branches,id'],
+			'role_id' => ['required', 'exists:roles,id'],
+			'branch_driver_id' => ['required', 'exists:admins,id'],
+			'email' => ['required', 'email', 'nullable'],
+			'phone' => ['required', 'numeric', 'nullable'],
+			'address' => ['required', 'max:2000'],
+			'national_id' => ['nullable', 'max:100'],
+			'image' => ['nullable', 'max:3072', 'mimes:jpg,jpeg,png']
+		];
+
+		$message = [
+			'branch_id.required' => 'Please select a branch',
+			'role_id.required' => 'Please select a role',
+			'branch_driver_id.required' => 'Please select a driver',
+			'email.required' => 'Email field is required',
+			'phone.required' => 'Phone Number is required',
+			'address.required' => 'Address field is required',
+		];
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$branchDriver = new BranchDriver();
+
+		$branchDriver->branch_id = $request->branch_id;
+		$branchDriver->role_id = $request->role_id;
+		$branchDriver->admin_id = $request->branch_driver_id;
+		$branchDriver->email = $request->email;
+		$branchDriver->phone = $request->phone;
+		$branchDriver->address = $request->address;
+		$branchDriver->national_id = $request->national_id;
+		$branchDriver->status = $request->status;
+
+		if ($request->hasFile('image')) {
+			try {
+				$image = $this->fileUpload($request->image, config('location.branchDriver.path'));
+				if ($image) {
+					$branchDriver->image = $image['path'] ?? null;
+					$branchDriver->driver = $image['driver'] ?? null;
+				}
+			} catch (\Exception $exp) {
+				return back()->with('error', 'Image could not be uploaded.');
+			}
+		}
+
+		$branchDriver->save();
+		return back()->with('success', 'Branch Driver Created Successfully!');
+	}
+
+	public function branchDriverEdit($id)
+	{
+		$authenticateUser = Auth::guard('admin')->user();
+		$data['allBranches'] = Branch::with('branchManager')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branchManager', function ($q) use ($authenticateUser) {
+					$q->where('admin_id', $authenticateUser->id);
+				});
+			})
+			->where('status', 1)->get();
+
+		$data['allRoles'] = Role::where('status', 1)->get();
+		$data['singleBranchDriverInfo'] = BranchDriver::with('branch', 'admin')->where('status', 1)
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('branch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
+				});
+			})
+			->findOrFail($id);
+
+		$data['allDrivers'] = Admin::where('role_id', $data['singleBranchDriverInfo']->role_id)->where('status', 1)->get();
+
+		return view('admin.branchDriver.edit', $data, compact('authenticateUser'));
+	}
+
+	public function branchDriverUpdate(Request $request, $id)
+	{
+		$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
+
+		$rules = [
+			'branch_id' => ['required', 'exists:branches,id'],
+			'role_id' => ['required', 'exists:roles,id'],
+			'branch_driver_id' => ['required', 'exists:admins,id'],
+			'email' => ['required', 'email', 'nullable'],
+			'phone' => ['required', 'numeric', 'nullable'],
+			'address' => ['required', 'max:2000'],
+			'national_id' => ['nullable', 'max:100'],
+			'image' => ['nullable', 'max:3072', 'mimes:jpg,jpeg,png']
+		];
+
+		$message = [
+			'branch_id.required' => 'Please select a branch',
+			'role_id.required' => 'Please select a role',
+			'branch_driver_id.required' => 'Please select a driver',
+			'email.required' => 'Email field is required',
+			'phone.required' => 'Phone Number is required',
+			'address.required' => 'Address field is required',
+		];
+
+		$validate = Validator::make($purifiedData, $rules, $message);
+
+		if ($validate->fails()) {
+			return back()->withInput()->withErrors($validate);
+		}
+
+		$branchDriver = BranchDriver::findOrFail($id);
+
+		$branchDriver->branch_id = $request->branch_id;
+		$branchDriver->role_id = $request->role_id;
+		$branchDriver->admin_id = $request->branch_driver_id;
+		$branchDriver->email = $request->email;
+		$branchDriver->phone = $request->phone;
+		$branchDriver->address = $request->address;
+		$branchDriver->national_id = $request->national_id;
+		$branchDriver->status = $request->status;
+
+		if ($request->hasFile('image')) {
+			try {
+				$image = $this->fileUpload($request->image, config('location.branchDriver.path'));
+				if ($image) {
+					$branchDriver->image = $image['path'] ?? null;
+					$branchDriver->driver = $image['driver'] ?? null;
+				}
+			} catch (\Exception $exp) {
+				return back()->with('error', 'Image could not be uploaded.');
+			}
+		}
+
+		$branchDriver->save();
+		return back()->with('success', 'Branch Driver Updated Successfully!');
 	}
 
 	public function branchStaffList($id)

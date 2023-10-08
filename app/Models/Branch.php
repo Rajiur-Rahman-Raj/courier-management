@@ -14,4 +14,8 @@ class Branch extends Model
 	public function branchManager(){
 		return $this->hasOne(BranchManager::class, 'branch_id');
 	}
+
+	public function branchDriver(){
+		return $this->hasMany(BranchDriver::class, 'branch_id');
+	}
 }

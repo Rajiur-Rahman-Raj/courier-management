@@ -115,13 +115,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::post('branch-manager-update/{id}', [BranchController::class, 'branchManagerUpdate'])->name('branchManagerUpdate');
 		Route::get('branch-staff-list/{id}', [BranchController::class, 'branchStaffList'])->name('branchStaffList');
 
-		//get role use & role user info ajax route here
-
+		// Manage Branch Employee
 		Route::get('branch-employee-list', [BranchController::class, 'branchEmployeeList'])->name('branchEmployeeList');
 		Route::get('create-employee', [BranchController::class, 'createEmployee'])->name('createEmployee');
 		Route::post('branch-employee-store', [BranchController::class, 'branchEmployeeStore'])->name('branchEmployeeStore');
 		Route::get('branch-employee-edit/{id}', [BranchController::class, 'branchEmployeeEdit'])->name('branchEmployeeEdit');
 		Route::post('branch-employee-update/{id}', [BranchController::class, 'branchEmployeeUpdate'])->name('branchEmployeeUpdate');
+
+		// Manage Branch Driver
+		Route::get('branch-driver-list', [BranchController::class, 'branchDriverList'])->name('branchDriverList');
+		Route::get('create-driver', [BranchController::class, 'createDriver'])->name('createDriver');
+		Route::post('branch-driver-store', [BranchController::class, 'branchDriverStore'])->name('branchDriverStore');
+		Route::get('branch-driver-edit/{id}', [BranchController::class, 'branchDriverEdit'])->name('branchDriverEdit');
+		Route::post('branch-driver-update/{id}', [BranchController::class, 'branchDriverUpdate'])->name('branchDriverUpdate');
 
 		// Manage Shipments
 		Route::get('shipment-list/{shipment_status}/{shipment_type}', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
@@ -134,6 +140,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 		Route::put('cancel-shipment-request/{id}', [ShipmentController::class, 'cancelShipmentRequest'])->name('cancelShipmentRequest');
 		Route::put('accept-shipment-request/{id}', [ShipmentController::class, 'acceptShipmentRequest'])->name('acceptShipmentRequest');
+		Route::put('assign-shipment-request/{id}', [ShipmentController::class, 'assignShipmentRequest'])->name('assignShipmentRequest');
 
 
 		Route::delete('shipment-delete/{id}', [ShipmentController::class, 'deleteShipment'])->name('deleteShipment');
@@ -296,6 +303,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 		Route::post('manage/manager/login/{id}', [RolesPermissionController::class, 'userLogin'])->name('admin.role.managerLogin');
 		Route::post('manage/employee/login/{id}', [RolesPermissionController::class, 'userLogin'])->name('admin.role.employeeLogin');
+		Route::post('manage/driver/login/{id}', [RolesPermissionController::class, 'userLogin'])->name('admin.role.driverLogin');
 		Route::post('manage/staffs/login/{id}', [RolesPermissionController::class, 'userLogin'])->name('admin.role.usersLogin');
 
 		/* ===== DEPOSIT VIEW MANAGE BY ADMIN ===== */

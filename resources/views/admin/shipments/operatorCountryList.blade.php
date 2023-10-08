@@ -224,7 +224,8 @@
 																							@if($shipment->shipment_type == 'pickup')
 																								<a data-target="#assignShipmentRequest"
 																								   data-toggle="modal"
-																								   data-route="{{route('acceptShipmentRequest', $shipment->id)}}"
+																								   data-route="{{route('assignShipmentRequest', $shipment->id)}}"
+																								   data-property="{{ $shipment }}"
 																								   href="javascript:void(0)"
 																								   class="dropdown-item btn-outline-primary btn-sm assignShipmentRequest"><i
 																										class="fas fa-check"></i> @lang('Assign Shipment')
@@ -300,7 +301,6 @@
 					@method('put')
 					<div class="modal-body">
 						<p class="shipmentStatusChangeMessage"></p>
-{{--						@lang('Are you sure to dispatch this shipment?')--}}
 					</div>
 
 					<div class="modal-footer">
@@ -320,19 +320,30 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
+						id="primary-header-modalLabel">@lang('Assign Confirmation')</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 				</div>
 				<form action="" method="post" id="assignShipmentRequestForm">
 					@csrf
 					@method('put')
 					<div class="modal-body">
-						<p>@lang('Are you sure to assign this shipment?')</p>
+						<div class="row mb-3">
+							<div class="col-sm-12 col-md-12 mb-3">
+								<label for="branch_driver_id"> @lang('Select Driver') <span class="text-danger">*</span></label>
+								<select name="branch_driver_id" class="form-control @error('branch_driver_id') is-invalid @enderror select2 branchDriver"  id="branchDriver">
+								</select>
+
+								<div class="invalid-feedback">
+									@error('branch_driver_id') @lang($message) @enderror
+								</div>
+								<div class="valid-feedback"></div>
+							</div>
+						</div>
 					</div>
 
 					<div class="modal-footer">
 						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
+						<button type="submit" class="btn btn-primary">@lang('Assign')</button>
 					</div>
 				</form>
 			</div>
@@ -471,6 +482,14 @@
 			$(document).on('click', '.assignShipmentRequest', function () {
 				let dataRoute = $(this).data('route');
 				$('#assignShipmentRequestForm').attr('action', dataRoute);
+
+				let dataPropertry = $(this).data('property');
+				let branchDriver = dataPropertry.sender_branch.branch_driver;
+
+				branchDriver.forEach(res => {
+						$('.branchDriver').append(`<option value="${res.admin_id}">${res.admin.name}</option>`)
+					})
+
 			});
 
 			$(document).on('click', '.acceptShipmentRequest', function () {

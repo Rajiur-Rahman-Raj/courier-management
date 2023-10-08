@@ -87,6 +87,7 @@
 																@endif
 																<th>@lang('Edit')</th>
 																<th>@lang('Delete')</th>
+
 																@if($key1 == 'Manage_Branch')
 																	<th>@lang('Profile')</th>
 																	<th>@lang('Staff List')</th>
@@ -250,6 +251,39 @@
 																	@endif
 
 																	@if($key2 == 'Employee_List')
+																		<td data-label="Profile">
+																			@if(!empty($subMenu['permission']['show_profile']))
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_profile'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
+																			@else
+																				<span>-</span>
+																			@endif
+																		</td>
+																		<td data-label="Staff List">
+																			@if(!empty($subMenu['permission']['show_staff_list']))
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['show_staff_list'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
+																			@else
+																				<span>-</span>
+																			@endif
+																		</td>
+																		<td data-label="Login As">
+																			@if(!empty($subMenu['permission']['login_as']))
+																				<input type="checkbox"
+																					   value="{{join(",",$subMenu['permission']['login_as'])}}"
+																					   class="cursor-pointer"
+																					   name="permissions[]"/>
+																			@else
+																				<span>-</span>
+																			@endif
+																		</td>
+																	@endif
+
+																	@if($key2 == 'Driver_List')
 																		<td data-label="Profile">
 																			@if(!empty($subMenu['permission']['show_profile']))
 																				<input type="checkbox"

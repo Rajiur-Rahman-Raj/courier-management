@@ -48,11 +48,9 @@ class ShipmentController extends Controller
 		abort_if(!in_array($type, $types), 404);
 		$data['title'] = $shipmentManagement[$type]['title'];
 		$authenticateUser = Auth::guard('admin')->user();
-		// i am here and calculate deleted options
+
 		$filterData = $this->_filter($request, $status, $type, $authenticateUser);
 		$data['allShipments'] = $filterData['allShipments']
-			->whereNotIn('deleted_by', [$authenticateUser->id])
-			->withTrashed()
 			->paginate(config('basic.paginate'));
 
 		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status', 'authenticateUser'));
@@ -63,12 +61,12 @@ class ShipmentController extends Controller
 		$search = $request->all();
 		$fromDate = Carbon::parse($request->from_date);
 		$toDate = Carbon::parse($request->to_date)->addDay();
-		$shipments = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
-//			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
-//				return $query->whereHas('senderBranch.branchManager', function ($qry) use ($authenticateUser) {
-//					$qry->where(['admin_id' => $authenticateUser->id]);
-//				});
-//			})
+		$shipments = Shipment::with('senderBranch.branchManager', 'senderBranch.branchDriver.admin', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
+			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+				return $query->whereHas('senderBranch.branchManager', function ($qry) use ($authenticateUser) {
+					$qry->where(['admin_id' => $authenticateUser->id]);
+				});
+			})
 			->when(isset($search['shipment_id']), function ($query) use ($search) {
 				return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
 			})
@@ -462,7 +460,7 @@ class ShipmentController extends Controller
 
 			if ($shipment->payment_by == 1) {
 				if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
-					return back()->with('error', 'Please first complete your payment');
+					return back()->with('error', 'Please first complete your payment? please go to edit and select payment status paid then update this shipment.');
 				} else {
 					$shipment->status = 1;
 					$shipment->save();
@@ -524,6 +522,14 @@ class ShipmentController extends Controller
 		}
 	}
 
+
+	public function assignShipmentRequest(Request $request, $id){
+		$shipment = Shipment::findOrFail($id);
+		$shipment->assign_to = $request->branch_driver_id;
+		$shipment->save();
+		return back()->with('success', 'Shipment assign successfully!');
+	}
+
 	public function shipmentTypeList()
 	{
 		$data['allShipmentType'] = config('shipmentTypeList');
@@ -555,8 +561,7 @@ class ShipmentController extends Controller
 		return back();
 	}
 
-	public
-	function defaultRate()
+	public function defaultRate()
 	{
 		$data['basicControl'] = BasicControl::with('operatorCountry')->first();
 		$data['allShippingDates'] = ShippingDate::where('status', 1)->get();
@@ -611,8 +616,7 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Default rate update successfully');
 	}
 
-	public
-	function defaultShippingRateInternationallyUpdate(Request $request, $id)
+	public function defaultShippingRateInternationallyUpdate(Request $request, $id)
 	{
 		$purifiedData = Purify::clean($request->except('_token', '_method'));
 
@@ -675,8 +679,7 @@ class ShipmentController extends Controller
 		return view($operatorCountryShippingRateManagement[$type]['shipping_rate_view'], $data);
 	}
 
-	public
-	function operatorCountryShowRate(Request $request, $type = null, $id = null)
+	public function operatorCountryShowRate(Request $request, $type = null, $id = null)
 	{
 		$search = $request->all();
 		$operatorCountryShowShippingRateManagement = config('operatorCountryShowShippingRateManagement');
@@ -1438,30 +1441,43 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Shipment deleted successfully!');
 	}
 
-	public
-	function trashShipmentList(Request $request)
+	public function trashShipmentList(Request $request)
 	{
+		$authenticateUser = Auth::guard('admin')->user();
 		$search = $request->all();
-		$data['trashShipments'] = Shipment::when(isset($search['shipment_id']), function ($query) use ($search) {
+		$data['trashShipments'] = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
+		->when(isset($search['shipment_id']), function ($query) use ($search) {
 			return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
 		})
 			->when(isset($search['shipment_date']), function ($query) use ($search) {
-				$query->whereDate("shipment_date", $search['shipment_date']);
+				return $query->whereDate("shipment_date", $search['shipment_date']);
 			})
-			->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search) {
-				return $query->where('status', 1);
+			->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search, $authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id)){
+					return $query->where('status', 1);
+				}else{
+					return $query->where('status', 1)->where('sender_branch', $authenticateUser->branch->branch_id);
+				}
 			})
-			->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search) {
-				return $query->where('status', 2);
+			->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search, $authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id)){
+					return $query->where('status', 2);
+				}else{
+					return $query->where('status', 2)->where('sender_branch', $authenticateUser->branch->branch_id);
+				}
 			})
-			->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search) {
-				return $query->where('status', 3);
+			->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search, $authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id)){
+					return $query->where('status', 2);
+				}else{
+					return $query->where('status', 2)->where('receiver_branch', $authenticateUser->branch->branch_id);
+				}
 			})
 			->when(isset($search['status']) && $search['status'] == 'received', function ($query) use ($search) {
-				return $query->where('status', 4);
+				return $query->where('status', 3);
 			})
 			->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
-				return $query->where('status', 5);
+				return $query->where('status', 4);
 			})
 			->onlyTrashed()->paginate(config('basic.paginate'));
 		return view('admin.shipments.trashShipmentList', $data);

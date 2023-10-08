@@ -6,7 +6,7 @@ $arr = [
 			'permission' => [
 				'view' => ['shipmentList', 'viewShipment'],
 				'add' => ['createShipment', 'shipmentStore'],
-				'edit' => ['editShipment', 'shipmentUpdate', 'acceptShipmentRequest', 'cancelShipmentRequest'],
+				'edit' => ['editShipment', 'shipmentUpdate', 'acceptShipmentRequest', 'cancelShipmentRequest', 'assignShipmentRequest'],
 				'delete' => ['deleteShipment', 'trashShipmentList', 'restoreShipment', 'forceDeleteShipment'],
 				'dispatch' => ['updateShipmentStatus'],
 			],
@@ -106,6 +106,17 @@ $arr = [
 				'show_profile' => [],
 				'show_staff_list' => [],
 				'login_as' => ['admin.role.employeeLogin'],
+			],
+		],
+		"Driver_List" => [
+			'permission' => [
+				'view' => ['branchDriverList'],
+				'add' => ['createDriver', 'branchDriverStore'],
+				'edit' => ['branchDriverEdit', 'branchDriverUpdate'],
+				'delete' => [],
+				'show_profile' => [],
+				'show_staff_list' => [],
+				'login_as' => ['admin.role.driverLogin'],
 			],
 		],
 	],

@@ -171,7 +171,7 @@
 
 			@if(adminAccessRoute(array_merge(config('permissionList.Manage_Branch.Branch_List.permission.view'), config('permissionList.Manage_Branch.Branch_Manager.permission.view'), config('permissionList.Manage_Branch.Employee_List.permission.view'))))
 				<li class="menu-header">@lang('Manage Branch')</li>
-				<li class="dropdown {{ activeMenu(['branchList', 'branchManagerList', 'branchEmployeeList', 'createEmployee', 'branchEmployeeEdit', 'createBranchManager', 'branchManagerEdit', 'createBranch', 'branchEdit', 'showBranchProfile']) }}">
+				<li class="dropdown {{ activeMenu(['branchList', 'branchManagerList', 'branchEmployeeList', 'createEmployee', 'branchEmployeeEdit', 'createBranchManager', 'branchManagerEdit', 'createBranch', 'branchEdit', 'showBranchProfile', 'branchDriverList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Branch')</span>
 					</a>
@@ -196,6 +196,14 @@
 							<li class="{{ activeMenu(['branchEmployeeList']) }}">
 								<a class="nav-link " href="{{ route('branchEmployeeList') }}">
 									@lang('Employee List')
+								</a>
+							</li>
+						@endif
+
+						@if(adminAccessRoute(config('permissionList.Manage_Branch.Driver_List.permission.view')))
+							<li class="{{ activeMenu(['branchDriverList']) }}">
+								<a class="nav-link " href="{{ route('branchDriverList') }}">
+									@lang('Driver List')
 								</a>
 							</li>
 						@endif
@@ -381,19 +389,19 @@
 
 
 			@if(adminAccessRoute(config('permissionList.Payout_Settings.Payout_Methods.permission.view')))
-{{--				<li class="menu-header">@lang('Payout Settings')</li>--}}
-{{--				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">--}}
-{{--					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">--}}
-{{--						<i class="fas fa-users-cog text-danger"></i> <span>@lang('Payout Settings')</span>--}}
-{{--					</a>--}}
-{{--					<ul class="dropdown-menu">--}}
-{{--						<li class="{{ activeMenu(['payout.method.list','payout.method.edit']) }}">--}}
-{{--							<a class="nav-link" href="{{ route('payout.method.list') }}">--}}
-{{--								@lang('Payout Methods')--}}
-{{--							</a>--}}
-{{--						</li>--}}
-{{--					</ul>--}}
-{{--				</li>--}}
+				{{--				<li class="menu-header">@lang('Payout Settings')</li>--}}
+				{{--				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">--}}
+				{{--					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">--}}
+				{{--						<i class="fas fa-users-cog text-danger"></i> <span>@lang('Payout Settings')</span>--}}
+				{{--					</a>--}}
+				{{--					<ul class="dropdown-menu">--}}
+				{{--						<li class="{{ activeMenu(['payout.method.list','payout.method.edit']) }}">--}}
+				{{--							<a class="nav-link" href="{{ route('payout.method.list') }}">--}}
+				{{--								@lang('Payout Methods')--}}
+				{{--							</a>--}}
+				{{--						</li>--}}
+				{{--					</ul>--}}
+				{{--				</li>--}}
 
 				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">

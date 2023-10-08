@@ -142,24 +142,30 @@
 															<td data-label="Shipment Date"> {{ customDate($shipment->shipment_date) }} </td>
 
 															<td data-label="Status">
-																@if($shipment->status == 1)
+																@if($shipment->status == 0)
 																	<span
-																		class="badge badge-info">@lang('In Queue')</span>
-																@elseif($shipment->status == 2)
+																		class="badge badge-dark rounded">@lang('Requested')</span>
+																@elseif($shipment->status == 6)
 																	<span
-																		class="badge badge-warning">@lang('Dispatch')</span>
+																		class="badge badge-danger rounded">@lang('Canceled')</span>
+																@elseif($shipment->status == 1)
+																	<span
+																		class="badge badge-info rounded">@lang('In Queue')</span>
+																	{{--																					optional(auth()->guard('admin')->user()->branch)->branch_id--}}
+																@elseif($shipment->status == 2 && $status == 'dispatch')
+																	<span
+																		class="badge badge-warning rounded">@lang('Dispatch')</span>
+																@elseif($shipment->status == 2 && $status == 'upcoming')
+																	<span
+																		class="badge badge-primary rounded">@lang('Upcoming')</span>
 																@elseif($shipment->status == 3)
 																	<span
-																		class="badge badge-primary">@lang('Upcoming')</span>
+																		class="badge badge-success rounded">@lang('Received')</span>
 																@elseif($shipment->status == 4)
 																	<span
-																		class="badge badge-success">@lang('Received')</span>
-																@elseif($shipment->status == 5)
-																	<span
-																		class="badge badge-danger">@lang('Delivered')</span>
+																		class="badge badge-danger rounded">@lang('Delivered')</span>
 																@endif
 															</td>
-
 															<td data-label="@lang('Action')">
 																<div class="btn-group">
 																	<button type="button"
