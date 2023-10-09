@@ -144,4 +144,12 @@ class Shipment extends Model
 		return $parcelUnit->unit;
 	}
 
+	public function assignToCollect(){
+		return $this->belongsTo(Admin::class, 'assign_to_collect', 'id');
+	}
+
+	public function assignToDelivery(){
+		return $this->belongsTo(Admin::class, 'assign_to_delivery', 'id');
+	}
+
 }

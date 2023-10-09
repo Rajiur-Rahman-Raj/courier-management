@@ -42,7 +42,6 @@ class ShipmentController extends Controller
 
 	public function shipmentList(Request $request, $status = null, $type = null)
 	{
-
 		$shipmentManagement = config('shipmentManagement');
 		$types = array_keys($shipmentManagement);
 		abort_if(!in_array($type, $types), 404);
@@ -61,111 +60,176 @@ class ShipmentController extends Controller
 		$search = $request->all();
 		$fromDate = Carbon::parse($request->from_date);
 		$toDate = Carbon::parse($request->to_date)->addDay();
-		$shipments = Shipment::with('senderBranch.branchManager', 'senderBranch.branchDriver.admin', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
-			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
-				return $query->whereHas('senderBranch.branchManager', function ($qry) use ($authenticateUser) {
-					$qry->where(['admin_id' => $authenticateUser->id]);
-				});
-			})
-			->when(isset($search['shipment_id']), function ($query) use ($search) {
-				return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
-			})
-			->when(isset($search['shipment_type']), function ($query) use ($search) {
-				return $query->where('shipment_type', $search['shipment_type']);
-			})
-			->when(isset($search['sender_branch']), function ($query) use ($search) {
-				return $query->whereHas('senderBranch', function ($q) use ($search) {
-					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['sender_branch']}[[:>:]]'");
-				});
-			})
-			->when(isset($search['receiver_branch']), function ($query) use ($search) {
-				return $query->whereHas('receiverBranch', function ($q) use ($search) {
-					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['receiver_branch']}[[:>:]]'");
-				});
-			})
-			->when(isset($search['sender']), function ($query) use ($search) {
-				return $query->whereHas('sender', function ($q) use ($search) {
-					$q->whereRaw("name REGEXP '[[:<:]]{$search['sender']}[[:>:]]'");
-				});
-			})
-			->when(isset($search['receiver']), function ($query) use ($search) {
-				return $query->whereHas('receiver', function ($q) use ($search) {
-					$q->whereRaw("name REGEXP '[[:<:]]{$search['receiver']}[[:>:]]'");
-				});
-			})
-			->when(isset($search['shipment_date']), function ($query) use ($search) {
-				$query->whereDate("shipment_date", $search['shipment_date']);
-			})
-			->when(isset($search['delivery_date']), function ($query) use ($search) {
-				$query->whereDate("delivery_date", $search['delivery_date']);
-			})
-			->when(isset($search['from_date']), function ($query) use ($fromDate) {
-				return $query->whereDate('created_at', '>=', $fromDate);
-			})
-			->when(isset($search['to_date']), function ($query) use ($fromDate, $toDate) {
-				return $query->whereBetween('created_at', [$fromDate, $toDate]);
-			})
-			->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search, $authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
-					return $query->where('status', 1);
+		$shipments = Shipment::with('senderBranch.branchManager', 'senderBranch.branchDriver.admin', 'receiverBranch.branchManager', 'receiverBranch.branchDriver.admin', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea', 'assignToCollect', 'assignToDelivery')
+//			->when(isset($authenticateUser->role_id), function ($query) use ($authenticateUser) {
+//				return $query->whereHas('senderBranch.branchManager', function ($qry) use ($authenticateUser) {
+//					$qry->where(['admin_id' => $authenticateUser->id]);
+//				});
+//			})
+//			->when(isset($search['shipment_id']), function ($query) use ($search) {
+//				return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
+//			})
+//			->when(isset($search['shipment_type']), function ($query) use ($search) {
+//				return $query->where('shipment_type', $search['shipment_type']);
+//			})
+//			->when(isset($search['sender_branch']), function ($query) use ($search) {
+//				return $query->whereHas('senderBranch', function ($q) use ($search) {
+//					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['sender_branch']}[[:>:]]'");
+//				});
+//			})
+//			->when(isset($search['receiver_branch']), function ($query) use ($search) {
+//				return $query->whereHas('receiverBranch', function ($q) use ($search) {
+//					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['receiver_branch']}[[:>:]]'");
+//				});
+//			})
+//			->when(isset($search['sender']), function ($query) use ($search) {
+//				return $query->whereHas('sender', function ($q) use ($search) {
+//					$q->whereRaw("name REGEXP '[[:<:]]{$search['sender']}[[:>:]]'");
+//				});
+//			})
+//			->when(isset($search['receiver']), function ($query) use ($search) {
+//				return $query->whereHas('receiver', function ($q) use ($search) {
+//					$q->whereRaw("name REGEXP '[[:<:]]{$search['receiver']}[[:>:]]'");
+//				});
+//			})
+//			->when(isset($search['shipment_date']), function ($query) use ($search) {
+//				$query->whereDate("shipment_date", $search['shipment_date']);
+//			})
+//			->when(isset($search['delivery_date']), function ($query) use ($search) {
+//				$query->whereDate("delivery_date", $search['delivery_date']);
+//			})
+//			->when(isset($search['from_date']), function ($query) use ($fromDate) {
+//				return $query->whereDate('created_at', '>=', $fromDate);
+//			})
+//			->when(isset($search['to_date']), function ($query) use ($fromDate, $toDate) {
+//				return $query->whereBetween('created_at', [$fromDate, $toDate]);
+//			})
+//			->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search, $authenticateUser) {
+//				if (!isset($authenticateUser->branch->branch_id)){
+//					return $query->where('status', 1);
+//				}else{
+//					return $query->where('status', 1)->where('sender_branch', $authenticateUser->branch->branch_id);
+//				}
+//			})
+//			->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search, $authenticateUser) {
+//				if (!isset($authenticateUser->branch->branch_id)){
+//					return $query->where('status', 2);
+//				}else{
+//					return $query->where('status', 2)->where('sender_branch', $authenticateUser->branch->branch_id);
+//				}
+//			})
+//			->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search, $authenticateUser) {
+//				if (!isset($authenticateUser->branch->branch_id)){
+//					return $query->where('status', 2);
+//				}else{
+//					return $query->where('status', 2)->where('receiver_branch', $authenticateUser->branch->branch_id);
+//				}
+//			})
+//			->when(isset($search['status']) && $search['status'] == 'received', function ($query) use ($search) {
+//				if (!isset($authenticateUser->branch->branch_id)){
+//					return $query->where('shipment_identifier', 1)->where('status', 3);
+//				}else{
+//					return $query->where('shipment_identifier', 1)->where('status', 3)->where(function ($query) use ($authenticateUser){
+//						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
+//					});
+//				}
+//			})
+//			->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
+//				if (!isset($authenticateUser->branch->branch_id)){
+//					return $query->where('shipment_identifier', 1)->where('status', 4);
+//				}else{
+//					return $query->where('shipment_identifier', 1)->where('status', 4)->where(function ($query) use ($authenticateUser){
+//						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
+//					});
+//				}
+//			})
+			->when($type == 'operator-country' && $status == 'all', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('assign_to_collect', $authenticateUser->id)->orWhere('assign_to_delivery', $authenticateUser->id);
+				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1);
 				}else{
-					return $query->where('status', 1)->where('sender_branch', $authenticateUser->branch->branch_id);
+					return $query->where('shipment_identifier', 1)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search, $authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
-					return $query->where('status', 2);
+			->when($type == 'operator-country' && $status == 'in_queue', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 1)->where('assign_to_collect', $authenticateUser->id);
+				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 1);
 				}else{
-					return $query->where('status', 2)->where('sender_branch', $authenticateUser->branch->branch_id);
+					return $query->where('shipment_identifier', 1)->where('status', 1)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
-			})
-			->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search, $authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
-					return $query->where('status', 2);
-				}else{
-					return $query->where('status', 2)->where('receiver_branch', $authenticateUser->branch->branch_id);
-				}
-			})
-			->when(isset($search['status']) && $search['status'] == 'received', function ($query) use ($search) {
-				return $query->where('status', 3);
-			})
-			->when(isset($search['status']) && $search['status'] == 'delivered', function ($query) use ($search) {
-				return $query->where('status', 4);
-			})
-			->when($type == 'operator-country' && $status == 'all', function ($query) {
-				return $query->where('shipment_identifier', 1);
-			})
-			->when($type == 'operator-country' && $status == 'in_queue', function ($query) {
-				return $query->where('shipment_identifier', 1)
-					->where('status', 1);
 			})
 			->when($type == 'operator-country' && $status == 'dispatch', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 2)->where('assign_to_collect', $authenticateUser->id);
+				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
 					return $query->where('shipment_identifier', 1)->where('status', 2);
 				}else{
 					return $query->where('shipment_identifier', 1)->where('status', 2)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
 			->when($type == 'operator-country' && $status == 'upcoming', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					$query->where('shipment_identifier', 1)->whereIn('status', [10,16]); // not found upcoming shipment for driver
+				}
+				else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
 					return $query->where('shipment_identifier', 1)->where('status', 2);
 				}else{
 					return $query->where('shipment_identifier', 1)->where('status', 2)->where('receiver_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'received', function ($query) {
-				return $query->where('shipment_identifier', 1)
-					->where('status', 3);
+			->when($type == 'operator-country' && $status == 'received', function ($query) use($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 3)->where('assign_to_collect', $authenticateUser->id);
+				}
+				else if (!isset($authenticateUser->branch->branch_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 3);
+				}else{
+					return $query->where('shipment_identifier', 1)->where('status', 3)->where(function ($query) use ($authenticateUser){
+						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
+					});
+				}
 			})
-			->when($type == 'operator-country' && $status == 'delivered', function ($query) {
-				return $query->where('shipment_identifier', 1)
-					->where('status', 4);
+			->when($type == 'operator-country' && $status == 'delivered', function ($query) use($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 4)->where('assign_to_collect', $authenticateUser->id)->orWhere('assign_to_delivery', $authenticateUser->id);
+				}
+				else if (!isset($authenticateUser->branch->branch_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 4);
+				}else{
+					return $query->where('shipment_identifier', 1)->where('status', 4)->where(function ($query) use ($authenticateUser){
+						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
+					});
+				}
 			})
-			->when($type == 'operator-country' && $status == 'requested', function ($query, $authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
+			->when($type == 'operator-country' && $status == 'requested', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					$query->where('shipment_identifier', 1)->whereIn('status', [10,16]); // not found requested shipment
+				}
+				else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
 					return $query->where('shipment_identifier', 1)->whereIn('status', [0,6]);
 				}else{
 					return $query->where('shipment_identifier', 1)->whereIn('status', [0,6])->where('sender_branch', $authenticateUser->branch->branch_id);
+				}
+			})
+			->when($type == 'operator-country' && $status == 'assign_to_collect', function ($query) use($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 5)->where('assign_to_collect', $authenticateUser->id);
+				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 5);
+				}else{
+					return $query->where('shipment_identifier', 1)->where('status', 5)->where('sender_branch', $authenticateUser->branch->branch_id);
+				}
+			})
+			->when($type == 'operator-country' && $status == 'assign_to_delivery', function ($query) use($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 7)->where('assign_to_delivery', $authenticateUser->id);
+				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 7);
+				}else{
+					return $query->where('shipment_identifier', 1)->where('status', 7)->where('receiver_branch', $authenticateUser->branch->branch_id);
 				}
 			})
 			->when($type == 'internationally' && $status == 'all', function ($query) {
@@ -261,11 +325,12 @@ class ShipmentController extends Controller
 
 	public function viewShipment(Request $request, $id)
 	{
+		$authenticateUser = Auth::guard('admin')->user();
 		$data['status'] = $request->input('segment');
 		$data['shipment_type'] = $request->input('shipment_type');
-		$data['singleShipment'] = Shipment::with('shipmentAttachments', 'senderBranch', 'receiverBranch', 'sender.profile', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')->findOrFail($id);
+		$data['singleShipment'] = Shipment::with('shipmentAttachments', 'senderBranch.branchManager', 'receiverBranch', 'sender.profile', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea', 'assignToCollect')->findOrFail($id);
 
-		return view('admin.shipments.viewShipment', $data);
+		return view('admin.shipments.viewShipment', $data, compact('authenticateUser'));
 	}
 
 	public function shipmentStore(ShipmentRequest $request, $type = null)
@@ -523,11 +588,20 @@ class ShipmentController extends Controller
 	}
 
 
-	public function assignShipmentRequest(Request $request, $id){
+	public function assignToCollectShipmentRequest(Request $request, $id){
 		$shipment = Shipment::findOrFail($id);
-		$shipment->assign_to = $request->branch_driver_id;
+		$shipment->assign_to_collect = $request->branch_driver_id;
+		$shipment->status = 5;
 		$shipment->save();
-		return back()->with('success', 'Shipment assign successfully!');
+		return back()->with('success', 'Shipment request assigned successfully!');
+	}
+
+	public function assignToDeliveredShipmentRequest(Request $request, $id){
+		$shipment = Shipment::findOrFail($id);
+		$shipment->assign_to_delivery = $request->branch_driver_id;
+		$shipment->status = 7;
+		$shipment->save();
+		return back()->with('success', 'Shipment assigned successfully for delivery!');
 	}
 
 	public function shipmentTypeList()

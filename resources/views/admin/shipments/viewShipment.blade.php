@@ -207,11 +207,10 @@
 											<li class="my-3">
                                             <span class="font-weight-bold text-dark"><i
 													class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
-												@if($singleShipment->status == 0)
+												@if(($singleShipment->status == 0) || ($singleShipment->status == 5 && $singleShipment->assign_to_collect != null))
 													<p class="badge badge-dark rounded">@lang('Requested')</p>
 												@elseif($singleShipment->status == 6)
-													<p
-														class="badge badge-danger rounded">@lang('Canceled')</p>
+													<p class="badge badge-danger rounded">@lang('Canceled')</p>
 												@elseif($singleShipment->status == 1)
 													<p class="badge badge-info rounded">@lang('In Queue')</p>
 												@elseif($singleShipment->status == 2 && $status == 'dispatch')
@@ -220,7 +219,7 @@
 												@elseif($singleShipment->status == 2 && $status == 'upcoming')
 													<p
 														class="badge badge-primary rounded">@lang('Upcoming')</p>
-												@elseif($singleShipment->status == 3)
+												@elseif(($singleShipment->status == 3) || ($singleShipment->status == 7 && $singleShipment->assign_to_delivery != null))
 													<p
 														class="badge badge-success rounded">@lang('Received')</p>
 												@elseif($singleShipment->status == 4)
@@ -229,6 +228,16 @@
 												@endif
                                             </span>
 											</li>
+
+											@if($singleShipment->status == 5 && optional(optional($singleShipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id && $singleShipment->assign_to_collect != null)
+												<li class="my-3">
+														<span class="font-weight-bold text-dark"> <i class="fas fa-tasks mr-2 text-primary" aria-hidden="true"></i> @lang('Assign To Driver') :
+															<span
+																class="fw-normal">{{ optional($singleShipment->assignToCollect)->name }}</span>
+															<span></span>
+														</span>
+												</li>
+											@endif
 
 											@if($singleShipment->status == 6 && $singleShipment->shipment_cancel_time != null && $singleShipment->refund_time != null && $singleShipment->is_refund_complete == 0)
 												<li class="my-3">
@@ -262,6 +271,17 @@
 													class="font-weight-medium">{{ customDateTime($singleShipment->receive_time) }}</span></span>
 												</li>
 											@endif
+
+											@if($singleShipment->status == 7 && optional(optional($singleShipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id && $singleShipment->assign_to_delivery != null)
+												<li class="my-3">
+														<span class="font-weight-bold text-dark"> <i class="fas fa-tasks mr-2 text-primary" aria-hidden="true"></i> @lang('Assign To Driver') :
+															<span
+																class="fw-normal">{{ optional($singleShipment->assignToDelivery)->name }}</span>
+															<span></span>
+														</span>
+												</li>
+											@endif
+
 											@if($singleShipment->delivered_time != null)
 												<li class="my-3">
                                             <span class="font-weight-bold text-dark"> <i class="far fa-clock mr-2 text-info"></i> @lang("Delivered Time") : <span

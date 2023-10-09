@@ -78,6 +78,20 @@
 							</a>
 						</li>
 
+						<li class="{{ activeMenu(['shipmentList'], null, 'assign_to_collect') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'assign_to_collect', 'shipment_type' => 'operator-country']) }}">
+								@lang('Assigned To Collect')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'assign_to_delivery') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'assign_to_delivery', 'shipment_type' => 'operator-country']) }}">
+								@lang('Assigned To Delivery')
+							</a>
+						</li>
+
 						<li class="{{ activeMenu(['trashShipmentList']) }}">
 							<a class="nav-link " href="{{ route('trashShipmentList') }}">
 								@lang('Trash Shipments')
