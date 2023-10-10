@@ -110,7 +110,7 @@
 			<div class="form-group search-currency-dropdown">
 				<label for="status" class="custom-text">@lang('Status')</label>
 				<select name="status" class="form-control form-control-sm">
-					<option value="">@lang('All Status')</option>
+{{--					<option value="">@lang('All Status')</option>--}}
 					<option
 						value="queue" {{  request()->status == 'queue' ? 'selected' : '' }}>@lang('In Queue')</option>
 					<option

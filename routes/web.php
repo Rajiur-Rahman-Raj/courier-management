@@ -429,28 +429,28 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 	Route::match(['get', 'post'], 'profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 	Route::match(['get', 'post'], 'change-password', [AdminController::class, 'changePassword'])->name('admin.change.password');
 
-	// All Ajax Route Here
-	Route::post('get-role-user', [BranchController::class, 'getRoleUser'])->name('getRoleUser');
-	Route::post('get-role-user-info', [BranchController::class, 'getRoleUserInfo'])->name('getRoleUserInfo');
-	Route::post('oc-get-selected-location-ship-rate', [ShipmentController::class, 'OCGetSelectedLocationShipRate'])->name('OCGetSelectedLocationShipRate');
-
-	Route::post('get-package-variant', [PackingController::class, 'getSelectedPackageVariant'])->name('getSelectedPackageVariant');
-	Route::post('get-variant-service', [PackingController::class, 'getSelectedVariantService'])->name('getSelectedVariantService');
-
-	Route::post('get-parcel-type-unit', [ParcelController::class, 'getSelectedParcelTypeUnit'])->name('getSelectedParcelTypeUnit');
-	Route::post('get-parcel-unit-service', [PackingController::class, 'getSelectedParcelUnitService'])->name('getSelectedParcelUnitService');
-
-	Route::post('get-country-state', [LocationController::class, 'getSeletedCountryState'])->name('getSeletedCountryState');
-	Route::post('get-state-city', [LocationController::class, 'getSeletedStateCity'])->name('getSeletedStateCity');
-	Route::post('get-city-area', [LocationController::class, 'getSeletedCityArea'])->name('getSeletedCityArea');
-
-	Route::post('selected-branch-sender', [ShipmentController::class, 'getSelectedBranchSender'])->name('getSelectedBranchSender');
-	Route::post('selected-branch-receiver', [ShipmentController::class, 'getSelectedBranchReceiver'])->name('getSelectedBranchReceiver');
-
 
 	Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.home');
 	Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
 });
+
+// All Ajax Route Here
+Route::post('get-role-user', [BranchController::class, 'getRoleUser'])->name('getRoleUser');
+Route::post('get-role-user-info', [BranchController::class, 'getRoleUserInfo'])->name('getRoleUserInfo');
+Route::post('oc-get-selected-location-ship-rate', [ShipmentController::class, 'OCGetSelectedLocationShipRate'])->name('OCGetSelectedLocationShipRate');
+
+Route::post('get-package-variant', [PackingController::class, 'getSelectedPackageVariant'])->name('getSelectedPackageVariant');
+Route::post('get-variant-service', [PackingController::class, 'getSelectedVariantService'])->name('getSelectedVariantService');
+
+Route::post('get-parcel-type-unit', [ParcelController::class, 'getSelectedParcelTypeUnit'])->name('getSelectedParcelTypeUnit');
+Route::post('get-parcel-unit-service', [PackingController::class, 'getSelectedParcelUnitService'])->name('getSelectedParcelUnitService');
+
+Route::post('get-country-state', [LocationController::class, 'getSeletedCountryState'])->name('getSeletedCountryState');
+Route::post('get-state-city', [LocationController::class, 'getSeletedStateCity'])->name('getSeletedStateCity');
+Route::post('get-city-area', [LocationController::class, 'getSeletedCityArea'])->name('getSeletedCityArea');
+
+Route::post('selected-branch-sender', [ShipmentController::class, 'getSelectedBranchSender'])->name('getSelectedBranchSender');
+Route::post('selected-branch-receiver', [ShipmentController::class, 'getSelectedBranchReceiver'])->name('getSelectedBranchReceiver');
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth', 'verifyUser']], function () {
 

@@ -109,6 +109,9 @@
 											@elseif($shipment->status == 3)
 												<span
 													class="badge text-bg-success">@lang('Received')</span>
+											@elseif($shipment->status == 7 && $shipment->assign_to_delivery != null)
+												<span
+													class="badge text-bg-primary">@lang('Delivery In Queue')</span>
 											@elseif($shipment->status == 4)
 												<span
 													class="badge text-bg-danger">@lang('Delivered')</span>

@@ -229,9 +229,11 @@
                                             </span>
 											</li>
 
-											@if($singleShipment->status == 5 && optional(optional($singleShipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id && $singleShipment->assign_to_collect != null)
+											@if((optional(optional($singleShipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null) && $singleShipment->assign_to_collect != null)
 												<li class="my-3">
-														<span class="font-weight-bold text-dark"> <i class="fas fa-tasks mr-2 text-primary" aria-hidden="true"></i> @lang('Assign To Driver') :
+														<span class="font-weight-bold text-dark"> <i
+																class="fas fa-tasks mr-2 text-primary"
+																aria-hidden="true"></i> @lang('Assign To Driver') :
 															<span
 																class="fw-normal">{{ optional($singleShipment->assignToCollect)->name }}</span>
 															<span></span>
@@ -260,21 +262,25 @@
 
 											@if($singleShipment->dispatch_time != null)
 												<li class="my-3">
-                                            <span class="font-weight-bold text-dark"> <i class="far fa-clock mr-2 text-info"></i> @lang("Dispatched Time") : <span
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Dispatched Time") : <span
 													class="font-weight-medium">{{ customDateTime($singleShipment->dispatch_time) }}</span></span>
 												</li>
 											@endif
 
 											@if($singleShipment->receive_time != null)
 												<li class="my-3">
-                                            <span class="font-weight-bold text-dark"> <i class="far fa-clock mr-2 text-info"></i> @lang("Received Time") : <span
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Received Time") : <span
 													class="font-weight-medium">{{ customDateTime($singleShipment->receive_time) }}</span></span>
 												</li>
 											@endif
 
 											@if($singleShipment->status == 7 && optional(optional($singleShipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id && $singleShipment->assign_to_delivery != null)
 												<li class="my-3">
-														<span class="font-weight-bold text-dark"> <i class="fas fa-tasks mr-2 text-primary" aria-hidden="true"></i> @lang('Assign To Driver') :
+														<span class="font-weight-bold text-dark"> <i
+																class="fas fa-tasks mr-2 text-primary"
+																aria-hidden="true"></i> @lang('Assign To Driver') :
 															<span
 																class="fw-normal">{{ optional($singleShipment->assignToDelivery)->name }}</span>
 															<span></span>
@@ -284,8 +290,18 @@
 
 											@if($singleShipment->delivered_time != null)
 												<li class="my-3">
-                                            <span class="font-weight-bold text-dark"> <i class="far fa-clock mr-2 text-info"></i> @lang("Delivered Time") : <span
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Delivered Time") : <span
 													class="font-weight-medium">{{ customDateTime($singleShipment->delivered_time) }}</span></span>
+												</li>
+											@endif
+
+											@if(($singleShipment->shipment_type == 'condition' && $singleShipment->status == 4) && (optional(optional($singleShipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Payment to Sender") : <p
+													class="badge badge-{{ $singleShipment->condition_amount_payment_confirm_to_sender == 0 ? 'warning' : 'success' }} rounded"> {{ $singleShipment->condition_amount_payment_confirm_to_sender == 0 ? 'Due' : 'Complete' }}</p>
+											</span>
 												</li>
 											@endif
 										</ul>

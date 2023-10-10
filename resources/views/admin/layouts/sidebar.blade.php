@@ -29,12 +29,12 @@
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Shipments')</span>
 					</a>
 					<ul class="dropdown-menu">
-						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment'], null, 'all') }}">
-							<a class="nav-link "
-							   href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">
-								@lang('All Shipments')
-							</a>
-						</li>
+{{--						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment'], null, 'all') }}">--}}
+{{--							<a class="nav-link "--}}
+{{--							   href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">--}}
+{{--								@lang('All Shipments')--}}
+{{--							</a>--}}
+{{--						</li>--}}
 
 						<li class="{{ activeMenu(['shipmentList'], null, 'in_queue') }}">
 							<a class="nav-link "

@@ -4091,3 +4091,17 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	margin-top: 4px;
 	border-radius: 0px;
 }
+/*colors*/
+.badge-indigo {
+	color: #5603ad !important;
+}
+.badge-cyan {
+	color: #2bffc6 !important;
+}
+.badge-orange {
+	color: #fb6340 !important;
+}
+
+.badge-blue {
+	color: #5e72e4 !important;
+}

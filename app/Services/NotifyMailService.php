@@ -187,7 +187,7 @@ class NotifyMailService
 
 		$this->userPushNotification($shipment->sender, 'SENDER_NOTIFY_SHIPMENT_RECEIVED', $senderParams, $userAction);
 		$this->sendMailSms($shipment->sender, 'SENDER_MAIL_SHIPMENT_RECEIVED', $senderParams);
-//
+
 		$this->userPushNotification($shipment->receiver, 'RECEIVER_NOTIFY_SHIPMENT_RECEIVED', $receiverParams);
 		$this->sendMailSms($shipment->receiver, 'RECEIVER_MAIL_SHIPMENT_RECEIVED', $receiverParams);
 	}
@@ -230,6 +230,49 @@ class NotifyMailService
 //
 		$this->userPushNotification($shipment->receiver, 'RECEIVER_NOTIFY_SHIPMENT_DELIVERED', $receiverParams);
 		$this->sendMailSms($shipment->receiver, 'RECEIVER_MAIL_SHIPMENT_DELIVERED', $receiverParams);
+	}
+
+
+	public function deliveredConditionalShipment($shipment){
+
+		$senderParams = [
+			'sender' => optional($shipment->sender)->name,
+			'receiver' => optional($shipment->receiver)->name,
+			'senderBranch' => optional($shipment->senderBranch)->branch_name,
+			'receiverBranch' => optional($shipment->receiverBranch)->branch_name,
+			'shipmentId' => $shipment->shipment_id,
+			'deliveredTime' => $shipment->receive_time,
+		];
+
+		$adminParams = [
+			'sender' => optional($shipment->sender)->name,
+			'receiver' => optional($shipment->receiver)->name,
+			'senderBranch' => optional($shipment->senderBranch)->branch_name,
+			'receiverBranch' => optional($shipment->receiverBranch)->branch_name,
+			'shipmentId' => $shipment->shipment_id,
+			'deliveredTime' => $shipment->receive_time,
+			'currency' => config('basic.currency_symbol'),
+			'receiveAmount' => $shipment->receive_amount,
+		];
+
+		$adminAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$this->adminPushNotification($this->getSenderBranchManager($shipment),'ADMIN_NOTIFY_CONDITION_SHIPMENT_DELIVERED', $adminParams, $adminAction, $superAdmin = 1);
+		$this->adminMail($this->getSenderBranchManager($shipment), 'ADMIN_MAIL_CONDITION_SHIPMENT_DELIVERED', $adminParams, $subject = null, $requestMessage = null, $superAdmin = 1);
+
+		$userAction = [
+			"link" => route('user.shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fal fa-truck text-white"
+		];
+
+		$this->userPushNotification($shipment->sender, 'SENDER_NOTIFY_CONDITION_SHIPMENT_DELIVERED', $senderParams, $userAction);
+		$this->sendMailSms($shipment->sender, 'SENDER_MAIL_CONDITION_SHIPMENT_DELIVERED', $senderParams);
+
+		$this->userPushNotification($shipment->receiver, 'RECEIVER_NOTIFY_CONDITION_SHIPMENT_DELIVERED', $senderParams);
+		$this->sendMailSms($shipment->receiver, 'RECEIVER_MAIL_CONDITION_SHIPMENT_DELIVERED', $senderParams);
 	}
 
 }

@@ -537,14 +537,17 @@ function adminAccessRoute($search)
 {
 	$user = auth()->guard('admin')->user();
 
-	if ($user->role_id == null) {
+	if (isset($user) && $user->role_id == null) {
 		return true;
 	}
-	foreach (optional($user->role)->permission as $permission) {
-		if (in_array($permission, $search)) {
-			return true;
+	if (isset($user)){
+		foreach (optional($user->role)->permission as $permission) {
+			if (in_array($permission, $search)) {
+				return true;
+			}
 		}
 	}
+
 	return false;
 }
 

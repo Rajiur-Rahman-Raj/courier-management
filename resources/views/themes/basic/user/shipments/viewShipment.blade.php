@@ -203,12 +203,13 @@
 												@elseif($singleShipment->status == 2)
 													<p class="badge text-bg-warning">@lang('Dispatch')</p>
 												@elseif($singleShipment->status == 3)
-													<p class="badge text-bg-primary">@lang('Upcoming')</p>
-												@elseif($singleShipment->status == 4)
 													<p class="badge text-bg-success">@lang('Received')</p>
-												@elseif($singleShipment->status == 5)
+												@elseif($singleShipment->status == 7 && $singleShipment->assign_to_delivery != null)
+													<p class="badge text-bg-primary">@lang('Delivery In Queue')</p>
+												@elseif($singleShipment->status == 4)
 													<p class="badge text-bg-danger">@lang('Delivered')</p>
 												@endif
+
                                             </span>
 												</li>
 
@@ -233,6 +234,15 @@
                                             <span class="fw-bold text-dark">  <i
 													class="far fa-clock mr-2 text-info"></i> @lang("Delivered Time") : <span
 													class="fw-normal">{{ customDateTime($singleShipment->delivered_time) }}</span></span>
+													</li>
+												@endif
+
+												@if(($singleShipment->shipment_type == 'condition' && $singleShipment->status == 4))
+													<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Payment To Sender") : <p
+													class="badge text-bg-{{ $singleShipment->condition_amount_payment_confirm_to_sender == 0 ? 'warning' : 'success' }} mr-2">{{ $singleShipment->condition_amount_payment_confirm_to_sender == 0 ? 'Due' : 'Complete' }}</p>
+											</span>
 													</li>
 												@endif
 

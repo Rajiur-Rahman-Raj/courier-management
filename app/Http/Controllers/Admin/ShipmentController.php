@@ -143,15 +143,17 @@ class ShipmentController extends Controller
 //					});
 //				}
 //			})
-			->when($type == 'operator-country' && $status == 'all', function ($query) use ($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
-					return $query->where('shipment_identifier', 1)->where('assign_to_collect', $authenticateUser->id)->orWhere('assign_to_delivery', $authenticateUser->id);
-				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
-					return $query->where('shipment_identifier', 1);
-				}else{
-					return $query->where('shipment_identifier', 1)->where('sender_branch', $authenticateUser->branch->branch_id);
-				}
-			})
+//			->when($type == 'operator-country' && $status == 'all', function ($query) use ($authenticateUser) {
+//				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+//					return $query->where('shipment_identifier', 1)->where('assign_to_collect', $authenticateUser->id)->orWhere('assign_to_delivery', $authenticateUser->id);
+//				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+//					return $query->where('shipment_identifier', 1);
+//				}else{
+//					return $query->where('shipment_identifier', 1)->where(function ($query) use ($authenticateUser){
+//						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
+//					});
+//				}
+//			})
 			->when($type == 'operator-country' && $status == 'in_queue', function ($query) use ($authenticateUser) {
 				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
 					return $query->where('shipment_identifier', 1)->where('status', 1)->where('assign_to_collect', $authenticateUser->id);
@@ -1575,8 +1577,9 @@ class ShipmentController extends Controller
 	{
 		try {
 			DB::beginTransaction();
+			$shipment = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver')->findOrFail($id);
+			$trans = strRandom();
 			if ($type == 'dispatch'){
-				$shipment = Shipment::findOrFail($id);
 				$shipment->status = 2;
 				$shipment->dispatch_time = Carbon::now();
 				$shipment->save();
@@ -1584,7 +1587,6 @@ class ShipmentController extends Controller
 				NotifyMailService::dispatchShipmentRequest($shipment);
 				return back()->with('success', 'Shipment Dispatched Successfully!');
 			}elseif ($type == 'received'){
-				$shipment = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver')->findOrFail($id);
 				$shipment->status = 3;
 				$shipment->receive_time = Carbon::now();
 				$shipment->save();
@@ -1592,18 +1594,46 @@ class ShipmentController extends Controller
 				NotifyMailService::receiveShipmentRequest($shipment);
 				return back()->with('success', 'Shipment Received Successfully!');
 			}elseif ($type == 'delivered'){
-				$shipment = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver')->findOrFail($id);
+				if ($shipment->shipment_type == 'condition'){
+					if ($shipment->payment_by == 2){
+						if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2){
+							return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
+						}elseif (($shipment->payment_type == 'cash' || $shipment->payment_type == 'wallet') && $shipment->payment_status == 1){
+							$shipment->status = 4;
+							$shipment->delivered_time = Carbon::now();
+							$shipment->save();
+							$transaction = new Transaction();
+							TransactionService::conditionShipmentDeliveredTransactionToReceiverBranch($shipment, $transaction, $trans, optional($shipment->receiver)->id);
+							DB::commit();
+							NotifyMailService::deliveredConditionalShipment($shipment);
+							return back()->with('success', 'Shipment Delivered Successfully!');
+						}
+					}
+				}else{
+					if ($shipment->payment_by == 2){
+						if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2){
+							return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
+						}elseif (($shipment->payment_type == 'cash' || $shipment->payment_type == 'wallet') && $shipment->payment_status == 1){
+							$shipment->status = 4;
+							$shipment->delivered_time = Carbon::now();
+							$shipment->save();
+							$transaction = new Transaction();
+							TransactionService::requestedShipmentDelivered($shipment, $transaction, $trans, optional($shipment->receiver)->id);
+							DB::commit();
+							NotifyMailService::deliveredShipmentRequest($shipment);
+							return back()->with('success', 'Shipment Delivered Successfully!');
+						}
+					}
 
-				if ($shipment->payment_status == 2){
-					return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
+					$shipment->status = 4;
+					$shipment->delivered_time = Carbon::now();
+					$shipment->save();
+					DB::commit();
+					NotifyMailService::deliveredShipmentRequest($shipment);
+					return back()->with('success', 'Shipment Delivered Successfully!');
+
 				}
 
-				$shipment->status = 4;
-				$shipment->delivered_time = Carbon::now();
-				$shipment->save();
-				DB::commit();
-				NotifyMailService::deliveredShipmentRequest($shipment);
-				return back()->with('success', 'Shipment Delivered Successfully!');
 			}
 		}catch (\Exception $e){
 			DB::rollBack();

@@ -5045,3 +5045,22 @@ body {
 	-webkit-overflow-scrolling: touch;
 	-ms-overflow-style: -ms-autohiding-scrollbar;
 }
+
+/*colors*/
+.badge-indigo {
+	background-color: #5603ad !important;
+	color: #FFFFFF;
+}
+.badge-cyan {
+	background-color: #2bffc6 !important;
+	color: #FFFFFF;
+}
+.badge-orange {
+	background-color: #fb6340 !important;
+	color: #FFFFFF;
+}
+
+.badge-blue {
+	background-color: #5e72e4 !important;
+	color: #FFFFFF;
+}
