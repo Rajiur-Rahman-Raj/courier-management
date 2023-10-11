@@ -56,18 +56,19 @@ class TransactionService
 		$shipment->transactional()->save($transaction);
 	}
 
-	public function conditionShipmentDeliveredTransactionToSenderBranch($shipment, $transaction, $trans = null, $payment_by = null){
+	public function conditionShipmentPaymentConfirmToSenderBranch($shipment, $transaction, $trans = null, $payment_receive = null){
 		$transaction->shipment_id = $shipment->id;
 		$transaction->branch_id = $shipment->sender_branch;
-		$transaction->user_id = $payment_by;
-		$transaction->amount = round($shipment->total_pay, 2);
+		$transaction->user_id = $payment_receive;
 		$transaction->condition_receive_amount = round($shipment->receive_amount, 2);
-		$transaction->condition_receive_payment = 1;
+		$transaction->condition_receive_payment_by_receiver_branch = 1;
+		$transaction->condition_receive_payment_by_sender_branch = 1;
 		$transaction->charge = 0;
 		$transaction->trx_type = '-';
 		$transaction->trx_id = $trans;
-		$transaction->remarks = 'Payment complete for this shipment. ' . 'Shipment Id: '. '('.$shipment->shipment_id.')'. " This is Condition Shipment";
+		$transaction->remarks = 'Payment complete for this Condition shipment. ' . 'Shipment Id: '. '('.$shipment->shipment_id.')';
 		$transaction->transactional_type = Shipment::class;
 		$shipment->transactional()->save($transaction);
 	}
+
 }

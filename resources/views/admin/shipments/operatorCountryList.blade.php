@@ -248,7 +248,7 @@
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.delete')))
-																							@if(($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null) || $shipment->status == 4)
+																							@if(($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null) || ($shipment->shipment_type != 'condition' && $shipment->status == 4))
 																								<a data-target="#deleteShipment"
 																								   data-toggle="modal"
 																								   data-route="{{route('deleteShipment', $shipment->id)}}"
@@ -256,22 +256,24 @@
 																								   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
 																										class="fas fa-trash mr-2"></i> @lang('Delete')
 																								</a>
-																								@if(($shipment->shipment_type == 'condition' && $shipment->condition_amount_payment_confirm_to_sender == 0) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
-																									<a data-target="#deleteShipment"
-																									   data-toggle="modal"
-																									   data-route="{{route('deleteShipment', $shipment->id)}}"
-																									   href="javascript:void(0)"
-																									   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i class="fab fa-cc-amazon-pay mr-2"></i> @lang('Payment Now')
-																									</a>
-																								@endif
-																								{{--																							@elseif($shipment->status == 5 && $shipment->shipment_cancel_time == null && $shipment->refund_time == null)--}}
-																								{{--																								<a data-target="#deleteShipment"--}}
-																								{{--																								   data-toggle="modal"--}}
-																								{{--																								   data-route="{{route('deleteShipment', $shipment->id)}}"--}}
-																								{{--																								   href="javascript:void(0)"--}}
-																								{{--																								   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i--}}
-																								{{--																										class="fas fa-trash mr-2"></i> @lang('Delete')--}}
-																								{{--																								</a>--}}
+																							@elseif(($shipment->shipment_type == 'condition' && $shipment->condition_amount_payment_confirm_to_sender == 0) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
+																								<a data-target="#payConditionShipmentToSender"
+																								   data-toggle="modal"
+																								   data-property="{{ $shipment }}"
+																								   data-basic="{{ $basic }}"
+																								   data-route="{{route('payConditionShipmentToSender', $shipment->id)}}"
+																								   href="javascript:void(0)"
+																								   class="dropdown-item btn-outline-primary btn-sm payConditionShipmentToSender"><i
+																										class="fab fa-cc-amazon-pay mr-2"></i> @lang('Payment Now')
+																								</a>
+																							@elseif(($shipment->shipment_type == 'condition' && $shipment->status == 4 && $shipment->condition_amount_payment_confirm_to_sender == 1))
+																								<a data-target="#deleteShipment"
+																								   data-toggle="modal"
+																								   data-route="{{route('deleteShipment', $shipment->id)}}"
+																								   href="javascript:void(0)"
+																								   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
+																										class="fas fa-trash mr-2"></i> @lang('Delete')
+																								</a>
 																							@endif
 																						@endif
 
@@ -305,6 +307,34 @@
 				</div>
 			</div>
 		</section>
+	</div>
+
+	{{-- Pay condition shipment to sender modal --}}
+	<div id="payConditionShipmentToSender" class="modal fade" tabindex="-1" role="dialog"
+		 aria-labelledby="primary-header-modalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-dark font-weight-bold"
+						id="primary-header-modalLabel">@lang('Confirmation')</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				</div>
+				<form action="" method="post" id="payConditionShipmentToSenderForm">
+					@csrf
+					@method('put')
+					<div class="modal-body">
+						<p class="dueConditionPaymentAlert"></p>
+						<h6 class="conditionPayableAmount"> </h6>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
+						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 
 	{{-- shipment status update modal --}}
@@ -532,7 +562,6 @@
 		$(document).ready(function () {
 			$(document).on('click', '.editShipmentStatus', function () {
 				let dataRoute = $(this).data('route');
-				console.log(dataRoute);
 				let dataStatus = $(this).data('status');
 				if (dataStatus == 'in_queue') {
 					$('.shipmentStatusChangeMessage').text('Are you sure to dispatch this shipment?')
@@ -544,6 +573,17 @@
 					$('.shipmentStatusChangeMessage').text('Are you sure to delivered this shipment?')
 				}
 				$('#editShipmentStatusForm').attr('action', dataRoute);
+			});
+
+			$(document).on('click', '.payConditionShipmentToSender', function () {
+				let dataRoute = $(this).data('route');
+				let dataProperty = $(this).data('property');
+				let dataBasic = $(this).data('basic');
+				$('#payConditionShipmentToSenderForm').attr('action', dataRoute);
+				$('.dueConditionPaymentAlert').text(`Do you want to confirm the due payment of condition shipment to ${dataProperty.sender.name}`);
+				$('.conditionPayableAmount').text(`Payable Amount: ${dataBasic.currency_symbol}${dataProperty.receive_amount}`);
+
+
 			});
 
 			$(document).on('click', '.assignToCollectShipmentRequest', function () {

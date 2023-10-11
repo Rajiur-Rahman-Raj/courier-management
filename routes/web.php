@@ -137,7 +137,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::post('shipment-store/{type?}', [ShipmentController::class, 'shipmentStore'])->name('shipmentStore');
 		Route::post('shipment-update/{id}', [ShipmentController::class, 'shipmentUpdate'])->name('shipmentUpdate');
 
-
 		Route::put('cancel-shipment-request/{id}', [ShipmentController::class, 'cancelShipmentRequest'])->name('cancelShipmentRequest');
 		Route::put('accept-shipment-request/{id}', [ShipmentController::class, 'acceptShipmentRequest'])->name('acceptShipmentRequest');
 		Route::put('assign-to-collect-shipment-request/{id}', [ShipmentController::class, 'assignToCollectShipmentRequest'])->name('assignToCollectShipmentRequest');
@@ -151,6 +150,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 //		Route::put('shipment-status-update/{id}', [ShipmentController::class, 'shipmentStatusUpdate'])->name('shipmentStatusUpdate');
 		Route::put('update-shipment-status/{id}/{type?}', [ShipmentController::class, 'updateShipmentStatus'])->name('updateShipmentStatus');
+		Route::put('pay-condition-shipment-to-sender/{id}', [ShipmentController::class, 'payConditionShipmentToSender'])->name('payConditionShipmentToSender');
 
 		// Manage Shipment Types
 		Route::get('shipment-type-list', [ShipmentController::class, 'shipmentTypeList'])->name('shipmentTypeList');

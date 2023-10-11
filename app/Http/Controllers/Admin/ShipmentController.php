@@ -1641,8 +1641,19 @@ class ShipmentController extends Controller
 		}
 	}
 
-	public
-	function getSelectedBranchSender(Request $request)
+	public function payConditionShipmentToSender($id){
+		$shipment = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver')->findOrFail($id);
+		$shipment->condition_amount_payment_confirm_to_sender = 1;
+		$shipment->condition_payment_time = Carbon::now();
+		$shipment->save();
+		$transaction = new Transaction();
+		$trans = strRandom();
+		TransactionService::conditionShipmentPaymentConfirmToSenderBranch($shipment, $transaction, $trans, optional($shipment->sender)->id);
+		NotifyMailService::conditionShipmentPaymentConfirmToSender($shipment);
+		return back()->with('success', 'Condition shipment payment confirm successfully!');
+	}
+
+	public function getSelectedBranchSender(Request $request)
 	{
 		$branchId = $request->branchId;
 

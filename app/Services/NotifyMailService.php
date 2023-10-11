@@ -275,4 +275,31 @@ class NotifyMailService
 		$this->sendMailSms($shipment->receiver, 'RECEIVER_MAIL_CONDITION_SHIPMENT_DELIVERED', $senderParams);
 	}
 
+	public function conditionShipmentPaymentConfirmToSender($shipment){
+		$params = [
+			'sender' => optional($shipment->sender)->name,
+			'senderBranch' => optional($shipment->senderBranch)->branch_name,
+			'currency' => config('basic.currency_symbol'),
+			'amount' => $shipment->receive_amount,
+			'shipmentId' => $shipment->shipment_id,
+			'paymentGivenTime' => $shipment->condition_payment_time,
+		];
+
+		$adminAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$this->adminPushNotification($this->getSenderBranchManager($shipment),'ADMIN_NOTIFY_CONDITION_SHIPMENT_PAYMENT_GIVEN', $params, $adminAction, $superAdmin = 1);
+		$this->adminMail($this->getSenderBranchManager($shipment), 'ADMIN_MAIL_CONDITION_SHIPMENT_PAYMENT_GIVEN', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
+
+		$userAction = [
+			"link" => route('user.shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fal fa-truck text-white"
+		];
+
+		$this->userPushNotification($shipment->sender, 'SENDER_NOTIFY_CONDITION_SHIPMENT_PAYMENT_GIVEN', $params, $userAction);
+		$this->sendMailSms($shipment->sender, 'SENDER_MAIL_CONDITION_SHIPMENT_PAYMENT_GIVEN', $params);
+	}
+
 }

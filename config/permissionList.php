@@ -6,7 +6,7 @@ $arr = [
 			'permission' => [
 				'view' => ['shipmentList', 'viewShipment'],
 				'add' => ['createShipment', 'shipmentStore'],
-				'edit' => ['editShipment', 'shipmentUpdate', 'acceptShipmentRequest', 'cancelShipmentRequest', 'assignToCollectShipmentRequest', 'assignToDeliveredShipmentRequest'],
+				'edit' => ['editShipment', 'shipmentUpdate', 'acceptShipmentRequest', 'cancelShipmentRequest', 'assignToCollectShipmentRequest', 'assignToDeliveredShipmentRequest', 'payConditionShipmentToSender'],
 				'delete' => ['deleteShipment', 'trashShipmentList', 'restoreShipment', 'forceDeleteShipment'],
 				'dispatch' => ['updateShipmentStatus'],
 			],
