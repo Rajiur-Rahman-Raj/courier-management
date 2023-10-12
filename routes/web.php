@@ -142,7 +142,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::put('assign-to-collect-shipment-request/{id}', [ShipmentController::class, 'assignToCollectShipmentRequest'])->name('assignToCollectShipmentRequest');
 		Route::put('assign-to-delivered-shipment-request/{id}', [ShipmentController::class, 'assignToDeliveredShipmentRequest'])->name('assignToDeliveredShipmentRequest');
 
-
 		Route::delete('shipment-delete/{id}', [ShipmentController::class, 'deleteShipment'])->name('deleteShipment');
 		Route::get('trash-shipment-list', [ShipmentController::class, 'trashShipmentList'])->name('trashShipmentList');
 		Route::get('restore-shipment/{id}', [ShipmentController::class, 'restoreShipment'])->name('restoreShipment');

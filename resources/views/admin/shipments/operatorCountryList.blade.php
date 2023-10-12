@@ -129,7 +129,7 @@
 																					<span
 																						class="badge badge-info rounded">@lang('In Queue')</span>
 																					{{--																					optional(auth()->guard('admin')->user()->branch)->branch_id--}}
-																				@elseif(($shipment->status == 2) && ($status == 'dispatch' || $status == 'all'))
+																				@elseif(($shipment->status == 2) && ($status == 'dispatch'))
 																					<span
 																						class="badge badge-warning rounded">@lang('Dispatch')</span>
 																				@elseif($shipment->status == 2 && $status == 'upcoming')
@@ -141,6 +141,18 @@
 																				@elseif($shipment->status == 4)
 																					<span
 																						class="badge badge-danger rounded">@lang('Delivered')</span>
+																				@elseif($shipment->status == 8)
+																					<span
+																						class="badge badge-info rounded">@lang('Return In Queue')</span>
+																				@elseif(($shipment->status == 9) && ($status == 'return_in_dispatch'))
+																					<span
+																						class="badge badge-warning rounded">@lang('Return In Dispatch')</span>
+																				@elseif($shipment->status == 9 && $status == 'return_in_upcoming')
+																					<span
+																						class="badge badge-indigo rounded">@lang('Return In Upcoming')</span>
+																				@elseif($shipment->status == 10 && $status == 'return_in_received')
+																					<span
+																						class="badge badge-success rounded">@lang('Return Received')</span>
 																				@endif
 																			</td>
 
@@ -174,7 +186,15 @@
 																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
 																								<i class="far fa-handshake mr-2"></i> @lang('Received')
 																							</a>
-
+																						@elseif($shipment->status == 9 && $status == 'return_in_upcoming')
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="{{ $status }}"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_received'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
+																								<i class="far fa-handshake mr-2"></i> @lang('Return Received')
+																							</a>
 																						@elseif(($shipment->status == 3 || $shipment->status == 7) && ($status == 'received' || $status == 'assign_to_delivery') && (optional(optional($shipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id || optional($shipment->assignToDelivery)->id == $authenticateUser->id || $authenticateUser->role_id == null))
 																							<a data-target="#updateShipmentStatus"
 																							   data-toggle="modal"
@@ -183,6 +203,15 @@
 																							   href="javascript:void(0)"
 																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
 																								<i class="fas fa-thumbs-up mr-2"></i> @lang('Delivered')
+																							</a>
+
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="return_in_queue"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_queue'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
+																								<i class="fas fa-exchange-alt mr-2"></i> @lang('Return Back')
 																							</a>
 																							@if($shipment->shipment_type == 'pickup')
 																								<a data-target="#assignToDeliveredShipmentRequest"
@@ -217,6 +246,17 @@
 																								class="fa fa-eye mr-2"
 																								aria-hidden="true"></i> @lang('Details')
 																						</a>
+
+																						@if($shipment->status == 8 && $status == 'return_in_queue')
+																								<a data-target="#updateShipmentStatus"
+																								   data-toggle="modal"
+																								   data-status="return_in_dispatch"
+																								   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_dispatch'])}}"
+																								   href="javascript:void(0)"
+																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
+																										class="fas fa-file-invoice mr-2"></i> @lang('Dispatch Return')
+																								</a>
+																						@endif
 
 																						@if($shipment->status == 0 || $shipment->status == 5)
 																							<a data-target="#acceptShipmentRequest"
@@ -256,7 +296,7 @@
 																								   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
 																										class="fas fa-trash mr-2"></i> @lang('Delete')
 																								</a>
-																							@elseif(($shipment->shipment_type == 'condition' && $shipment->condition_amount_payment_confirm_to_sender == 0) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
+																							@elseif(($shipment->shipment_type == 'condition' && $shipment->condition_amount_payment_confirm_to_sender == 0 && $shipment->status == 4) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
 																								<a data-target="#payConditionShipmentToSender"
 																								   data-toggle="modal"
 																								   data-property="{{ $shipment }}"
@@ -325,7 +365,7 @@
 					@method('put')
 					<div class="modal-body">
 						<p class="dueConditionPaymentAlert"></p>
-						<h6 class="conditionPayableAmount"> </h6>
+						<h6 class="conditionPayableAmount"></h6>
 					</div>
 
 					<div class="modal-footer">
@@ -563,6 +603,7 @@
 			$(document).on('click', '.editShipmentStatus', function () {
 				let dataRoute = $(this).data('route');
 				let dataStatus = $(this).data('status');
+				console.log(dataStatus);
 				if (dataStatus == 'in_queue') {
 					$('.shipmentStatusChangeMessage').text('Are you sure to dispatch this shipment?')
 				} else if (dataStatus == 'upcoming') {
@@ -571,6 +612,10 @@
 					$('.shipmentStatusChangeMessage').text('Are you sure to delivered this shipment?')
 				} else if (dataStatus == 'assign_to_delivery') {
 					$('.shipmentStatusChangeMessage').text('Are you sure to delivered this shipment?')
+				} else if (dataStatus == 'return_in_queue') {
+					$('.shipmentStatusChangeMessage').text('Are you sure to return back this shipment?')
+				}else if (dataStatus == 'return_in_upcoming') {
+					$('.shipmentStatusChangeMessage').text('Are you sure to received return shipment?')
 				}
 				$('#editShipmentStatusForm').attr('action', dataRoute);
 			});

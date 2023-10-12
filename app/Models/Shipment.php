@@ -46,6 +46,7 @@ class Shipment extends Model
 		'sub_total',
 		'shipping_cost',
 		'return_shipment_cost',
+		'cod_return_shipment_cost',
 		'tax',
 		'insurance',
 		'pickup_cost',

@@ -115,6 +115,15 @@
 											@elseif($shipment->status == 4)
 												<span
 													class="badge text-bg-danger">@lang('Delivered')</span>
+											@elseif($shipment->status == 8)
+												<span
+													class="badge text-bg-info">@lang('Return In Queue')</span>
+											@elseif($shipment->status == 9)
+												<span
+													class="badge text-bg-warning">@lang('Return In Dispatch')</span>
+											@elseif($shipment->status == 10)
+												<span
+													class="badge text-bg-success">@lang('Return In Received')</span>
 											@endif
 										</td>
 

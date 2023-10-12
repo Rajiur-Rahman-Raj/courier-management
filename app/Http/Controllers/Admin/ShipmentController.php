@@ -174,7 +174,7 @@ class ShipmentController extends Controller
 			})
 			->when($type == 'operator-country' && $status == 'upcoming', function ($query) use($authenticateUser) {
 				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
-					$query->where('shipment_identifier', 1)->whereIn('status', [10,16]); // not found upcoming shipment for driver
+					$query->where('shipment_identifier', 1)->whereIn('status', [100,200]); // not found upcoming shipment for driver
 				}
 				else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
 					return $query->where('shipment_identifier', 1)->where('status', 2);
@@ -208,7 +208,7 @@ class ShipmentController extends Controller
 			})
 			->when($type == 'operator-country' && $status == 'requested', function ($query) use ($authenticateUser) {
 				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
-					$query->where('shipment_identifier', 1)->whereIn('status', [10,16]); // not found requested shipment
+					$query->where('shipment_identifier', 1)->whereIn('status', [100,200]); // not found requested shipment
 				}
 				else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
 					return $query->where('shipment_identifier', 1)->whereIn('status', [0,6]);
@@ -232,6 +232,46 @@ class ShipmentController extends Controller
 					return $query->where('shipment_identifier', 1)->where('status', 7);
 				}else{
 					return $query->where('shipment_identifier', 1)->where('status', 7)->where('receiver_branch', $authenticateUser->branch->branch_id);
+				}
+			})
+			->when($type == 'operator-country' && $status == 'return_in_queue', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 8)->where('assign_to_collect', $authenticateUser->id);
+				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 8);
+				}else{
+					return $query->where('shipment_identifier', 1)->where('status', 8)->where('receiver_branch', $authenticateUser->branch->branch_id);
+				}
+			})
+			->when($type == 'operator-country' && $status == 'return_in_dispatch', function ($query) use($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 9)->where('assign_to_collect', $authenticateUser->id);
+				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 9);
+				}else{
+					return $query->where('shipment_identifier', 1)->where('status', 9)->where('receiver_branch', $authenticateUser->branch->branch_id);
+				}
+			})
+			->when($type == 'operator-country' && $status == 'return_in_upcoming', function ($query) use($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					$query->where('shipment_identifier', 1)->whereIn('status', [100,200]); // not found upcoming shipment for driver
+				}
+				else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 9);
+				}else{
+					return $query->where('shipment_identifier', 1)->where('status', 9)->where('sender_branch', $authenticateUser->branch->branch_id);
+				}
+			})
+			->when($type == 'operator-country' && $status == 'return_in_received', function ($query) use($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 10)->where('assign_to_collect', $authenticateUser->id);
+				}
+				else if (!isset($authenticateUser->branch->branch_id)){
+					return $query->where('shipment_identifier', 1)->where('status', 10);
+				}else{
+					return $query->where('shipment_identifier', 1)->where('status', 10)->where(function ($query) use ($authenticateUser){
+						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
+					});
 				}
 			})
 			->when($type == 'internationally' && $status == 'all', function ($query) {
@@ -1634,6 +1674,17 @@ class ShipmentController extends Controller
 
 				}
 
+			}elseif ($type == 'return_in_queue'){
+				$shipment->status = 8;
+				$shipment->save();
+				DB::commit();
+				return back()->with('success', 'Shipment return back successfully! Now this shipment is in return in queue.');
+			}elseif ($type == 'return_in_received'){
+				$shipment->status = 10;
+				$shipment->return_receive_time = Carbon::now();
+				$shipment->save();
+				DB::commit();
+				return back()->with('success', 'Return Shipment Received Successfully!');
 			}
 		}catch (\Exception $e){
 			DB::rollBack();

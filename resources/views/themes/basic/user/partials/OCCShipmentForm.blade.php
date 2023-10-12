@@ -912,6 +912,11 @@
 					   class="form-control bg-white text-dark OCReturnShipmentCost"
 					   readonly>
 
+				<input type="hidden" name="cod_return_shipment_cost" value="{{ old('cod_return_shipment_cost') ?? '0' }}"
+					   data-shippingcost="{{ old('cod_return_shipment_cost') }}"
+					   class="form-control bg-white text-dark OC_CodReturnShipmentCost"
+					   readonly>
+
 				<div class="input-group-append">
 					<div class="form-control">
 						{{ $basic->currency_symbol }}

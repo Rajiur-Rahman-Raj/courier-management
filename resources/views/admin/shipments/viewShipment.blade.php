@@ -36,7 +36,7 @@
 							<hr>
 							<div class="p-4 card-body shadow" id="shipmentDetails">
 								<div class="row">
-									<div class="col-md-6 border-right">
+									<div class="col-md-4 border-right">
 										<ul class="list-style-none shipment-view-ul">
 											<li class="my-2 border-bottom-2 pb-3">
 												<span class="font-weight-medium text-dark custom-text"> <i
@@ -225,6 +225,18 @@
 												@elseif($singleShipment->status == 4)
 													<p
 														class="badge badge-danger rounded">@lang('Delivered')</p>
+												@elseif($singleShipment->status == 8)
+													<p
+														class="badge badge-info rounded">@lang('Return In Queue')</p>
+												@elseif($singleShipment->status == 9 && $status == 'return_in_dispatch')
+													<p
+														class="badge badge-warning rounded">@lang('Return In Dispatch')</p>
+												@elseif($singleShipment->status == 9 && $status == 'return_in_upcoming')
+													<p
+														class="badge badge-primary rounded">@lang('Return In Dispatch')</p>
+												@elseif($singleShipment->status == 10 && $status == 'return_in_received')
+													<p
+														class="badge badge-success rounded">@lang('Return Received')</p>
 												@endif
                                             </span>
 											</li>
@@ -276,6 +288,22 @@
 												</li>
 											@endif
 
+											@if($singleShipment->delivered_time == null && $singleShipment->return_dispatch_time != null)
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Return Dispatched Time") : <span
+													class="font-weight-medium">{{ customDateTime($singleShipment->return_dispatch_time) }}</span></span>
+												</li>
+											@endif
+
+											@if($singleShipment->delivered_time == null && $singleShipment->return_receive_time != null)
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Return Received Time") : <span
+													class="font-weight-medium">{{ customDateTime($singleShipment->return_receive_time) }}</span></span>
+												</li>
+											@endif
+
 											@if($singleShipment->status == 7 && optional(optional($singleShipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id && $singleShipment->assign_to_delivery != null)
 												<li class="my-3">
 														<span class="font-weight-bold text-dark"> <i
@@ -304,11 +332,19 @@
 											</span>
 												</li>
 											@endif
+
+											@if(($singleShipment->shipment_type == 'condition' && $singleShipment->status == 4) && (optional(optional($singleShipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null) && ($singleShipment->condition_payment_time != null))
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Payment Given Time") : <span
+													class="font-weight-medium">{{ customDateTime($singleShipment->condition_payment_time) }}</span></span>
+												</li>
+											@endif
 										</ul>
 									</div>
 
 
-									<div class="col-md-6 ">
+									<div class="col-md-8">
 										<ul class="list-style-none shipment-view-ul">
 											<li class="my-2 border-bottom-2 pb-3">
 												<span class="font-weight-bold text-dark"> <i

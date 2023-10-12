@@ -208,6 +208,12 @@
 													<p class="badge text-bg-primary">@lang('Delivery In Queue')</p>
 												@elseif($singleShipment->status == 4)
 													<p class="badge text-bg-danger">@lang('Delivered')</p>
+												@elseif($singleShipment->status == 8)
+													<p class="badge text-bg-info">@lang('Return In Queue')</p>
+												@elseif($singleShipment->status == 9)
+													<p class="badge text-bg-warning">@lang('Return In Dispatch')</p>
+												@elseif($singleShipment->status == 10)
+													<p class="badge text-bg-success">@lang('Return In Received')</p>
 												@endif
 
                                             </span>
@@ -229,6 +235,22 @@
 													</li>
 												@endif
 
+												@if($singleShipment->return_dispatch_time != null)
+													<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Return Dispatched Time") : <span
+													class="fw-normal">{{ customDateTime($singleShipment->return_dispatch_time) }}</span></span>
+													</li>
+												@endif
+
+												@if($singleShipment->return_receive_time != null)
+													<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Return Received Time") : <span
+													class="fw-normal">{{ customDateTime($singleShipment->return_receive_time) }}</span></span>
+													</li>
+												@endif
+
 												@if($singleShipment->delivered_time != null)
 													<li class="my-3">
                                             <span class="fw-bold text-dark">  <i
@@ -243,6 +265,14 @@
 													class="far fa-clock mr-2 text-info"></i> @lang("Payment To Sender") : <p
 													class="badge text-bg-{{ $singleShipment->condition_amount_payment_confirm_to_sender == 0 ? 'warning' : 'success' }} mr-2">{{ $singleShipment->condition_amount_payment_confirm_to_sender == 0 ? 'Due' : 'Complete' }}</p>
 											</span>
+													</li>
+												@endif
+
+												@if(($singleShipment->shipment_type == 'condition' && $singleShipment->status == 4) && $singleShipment->condition_payment_time != null)
+													<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Payment Receive Time") : <span
+													class="fw-normal">{{ customDateTime($singleShipment->condition_payment_time) }}</span></span>
 													</li>
 												@endif
 

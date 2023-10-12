@@ -36,6 +36,13 @@
 {{--							</a>--}}
 {{--						</li>--}}
 
+						<li class="{{ activeMenu(['shipmentList'], null, 'requested') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'requested', 'shipment_type' => 'operator-country']) }}">
+								@lang('Requested Shipment')
+							</a>
+						</li>
+
 						<li class="{{ activeMenu(['shipmentList'], null, 'in_queue') }}">
 							<a class="nav-link "
 							   href="{{ route('shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => 'operator-country']) }}">
@@ -71,12 +78,6 @@
 							</a>
 						</li>
 
-						<li class="{{ activeMenu(['shipmentList'], null, 'requested') }}">
-							<a class="nav-link "
-							   href="{{ route('shipmentList', ['shipment_status' => 'requested', 'shipment_type' => 'operator-country']) }}">
-								@lang('Requested Shipment')
-							</a>
-						</li>
 
 						<li class="{{ activeMenu(['shipmentList'], null, 'assign_to_collect') }}">
 							<a class="nav-link "
@@ -89,6 +90,34 @@
 							<a class="nav-link "
 							   href="{{ route('shipmentList', ['shipment_status' => 'assign_to_delivery', 'shipment_type' => 'operator-country']) }}">
 								@lang('Assigned To Delivery')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'return_in_queue') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'return_in_queue', 'shipment_type' => 'operator-country']) }}">
+								@lang('Return In Queue')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'return_in_dispatch') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'return_in_dispatch', 'shipment_type' => 'operator-country']) }}">
+								@lang('Return In Dispatch')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'return_in_upcoming') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'return_in_upcoming', 'shipment_type' => 'operator-country']) }}">
+								@lang('Return In Upcoming')
+							</a>
+						</li>
+
+						<li class="{{ activeMenu(['shipmentList'], null, 'return_in_received') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'return_in_received', 'shipment_type' => 'operator-country']) }}">
+								@lang('Return In Received')
 							</a>
 						</li>
 

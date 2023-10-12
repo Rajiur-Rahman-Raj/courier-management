@@ -424,7 +424,7 @@
 				},
 				success: function (response) {
 					$('.OCShippingCost').val(response.cash_on_delivery_cost);
-					$('.OCReturnShipmentCost').val(response.return_shipment_cost);
+					$('.OC_CodReturnShipmentCost').val(response.cash_on_delivery_return_cost);
 					finalTotalAmountCalculation(response.cash_on_delivery_cost);
 				},
 				error: function (xhr, status, error) {
