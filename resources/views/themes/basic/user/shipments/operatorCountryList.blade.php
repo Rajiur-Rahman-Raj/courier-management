@@ -124,6 +124,9 @@
 											@elseif($shipment->status == 10)
 												<span
 													class="badge text-bg-success">@lang('Return In Received')</span>
+											@elseif($shipment->status == 11)
+												<span
+													class="badge text-bg-danger">@lang('Return Delivered')</span>
 											@endif
 										</td>
 

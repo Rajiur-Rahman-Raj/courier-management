@@ -153,6 +153,9 @@
 																				@elseif($shipment->status == 10 && $status == 'return_in_received')
 																					<span
 																						class="badge badge-success rounded">@lang('Return Received')</span>
+																				@elseif($shipment->status == 11 && $status == 'return_in_delivered')
+																					<span
+																						class="badge badge-danger rounded">@lang('Return Delivered')</span>
 																				@endif
 																			</td>
 
@@ -224,6 +227,15 @@
 																								</a>
 																							@endif
 
+																						@elseif(($shipment->status == 10 && $status == 'return_in_received') && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="{{ $status }}"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_delivered'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
+																								<i class="fas fa-thumbs-up mr-2"></i> @lang('Return Delivered')
+																							</a>
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
@@ -248,14 +260,14 @@
 																						</a>
 
 																						@if($shipment->status == 8 && $status == 'return_in_queue')
-																								<a data-target="#updateShipmentStatus"
-																								   data-toggle="modal"
-																								   data-status="return_in_dispatch"
-																								   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_dispatch'])}}"
-																								   href="javascript:void(0)"
-																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
-																										class="fas fa-file-invoice mr-2"></i> @lang('Dispatch Return')
-																								</a>
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="return_in_dispatch"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_dispatch'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
+																									class="fas fa-file-invoice mr-2"></i> @lang('Dispatch Return')
+																							</a>
 																						@endif
 
 																						@if($shipment->status == 0 || $shipment->status == 5)
@@ -264,31 +276,32 @@
 																							   data-route="{{route('acceptShipmentRequest', $shipment->id)}}"
 																							   href="javascript:void(0)"
 																							   class="dropdown-item btn-outline-primary btn-sm acceptShipmentRequest"><i
-																									class="fas fa-check"></i> @lang('Accept Request')
+																									class="fas fa-check"></i> @lang('Accept Shipment')
 																							</a>
-
+																						@endif
+																						@if($shipment->status == 0 || $shipment->status == 5 || $shipment->status == 1)
 																							<a data-target="#cancelShipmentRequest"
 																							   data-toggle="modal"
 																							   data-route="{{route('cancelShipmentRequest', $shipment->id)}}"
 																							   data-property="{{ $shipment }}"
 																							   href="javascript:void(0)"
 																							   class="dropdown-item btn-outline-primary btn-sm cancelShipmentRequest"><i
-																									class="fas fa-ban"></i> @lang('Cancel Request')
+																									class="fas fa-ban"></i> @lang('Cancel Shipment')
 																							</a>
-																							@if($shipment->shipment_type == 'pickup' && $shipment->status == 0)
-																								<a data-target="#assignToCollectShipmentRequest"
-																								   data-toggle="modal"
-																								   data-route="{{route('assignToCollectShipmentRequest', $shipment->id)}}"
-																								   data-property="{{ $shipment }}"
-																								   href="javascript:void(0)"
-																								   class="dropdown-item btn-outline-primary btn-sm assignToCollectShipmentRequest"><i
-																										class="fas fa-check"></i> @lang('Assign To Collect')
-																								</a>
-																							@endif
+																						@endif
+																						@if(($shipment->shipment_type == 'pickup') && ($shipment->status == 0 || $shipment->status == 1))
+																							<a data-target="#assignToCollectShipmentRequest"
+																							   data-toggle="modal"
+																							   data-route="{{route('assignToCollectShipmentRequest', $shipment->id)}}"
+																							   data-property="{{ $shipment }}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm assignToCollectShipmentRequest"><i
+																									class="fas fa-check"></i> @lang('Assign To Collect')
+																							</a>
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.delete')))
-																							@if(($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null) || ($shipment->shipment_type != 'condition' && $shipment->status == 4))
+																							@if(($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null) || (($shipment->shipment_type != 'condition') && ($shipment->status == 4 || $shipment->status == 11) ))
 																								<a data-target="#deleteShipment"
 																								   data-toggle="modal"
 																								   data-route="{{route('deleteShipment', $shipment->id)}}"
@@ -306,7 +319,7 @@
 																								   class="dropdown-item btn-outline-primary btn-sm payConditionShipmentToSender"><i
 																										class="fab fa-cc-amazon-pay mr-2"></i> @lang('Payment Now')
 																								</a>
-																							@elseif(($shipment->shipment_type == 'condition' && $shipment->status == 4 && $shipment->condition_amount_payment_confirm_to_sender == 1))
+																							@elseif(($shipment->shipment_type == 'condition' && $shipment->status == 4 && $shipment->condition_amount_payment_confirm_to_sender == 1) || ($shipment->shipment_type == 'condition' && $shipment->status == 11))
 																								<a data-target="#deleteShipment"
 																								   data-toggle="modal"
 																								   data-route="{{route('deleteShipment', $shipment->id)}}"
@@ -316,7 +329,6 @@
 																								</a>
 																							@endif
 																						@endif
-
 																					</div>
 																				</div>
 																			</td>
@@ -603,7 +615,7 @@
 			$(document).on('click', '.editShipmentStatus', function () {
 				let dataRoute = $(this).data('route');
 				let dataStatus = $(this).data('status');
-				console.log(dataStatus);
+
 				if (dataStatus == 'in_queue') {
 					$('.shipmentStatusChangeMessage').text('Are you sure to dispatch this shipment?')
 				} else if (dataStatus == 'upcoming') {
@@ -614,8 +626,10 @@
 					$('.shipmentStatusChangeMessage').text('Are you sure to delivered this shipment?')
 				} else if (dataStatus == 'return_in_queue') {
 					$('.shipmentStatusChangeMessage').text('Are you sure to return back this shipment?')
-				}else if (dataStatus == 'return_in_upcoming') {
+				} else if (dataStatus == 'return_in_upcoming') {
 					$('.shipmentStatusChangeMessage').text('Are you sure to received return shipment?')
+				} else if (dataStatus == 'return_in_received') {
+					$('.shipmentStatusChangeMessage').text('Are you sure to Delivered return shipment?')
 				}
 				$('#editShipmentStatusForm').attr('action', dataRoute);
 			});

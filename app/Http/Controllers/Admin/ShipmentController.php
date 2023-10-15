@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShipmentRequest;
+use App\Models\Admin;
 use App\Models\MoneyTransfer;
 use App\Models\Shipment;
 use App\Models\ShipmentAttatchment;
 use App\Models\Transaction;
 use Facades\App\Services\TransactionService;
 use App\Traits\OCShipmentStoreTrait;
+use App\Traits\ShipmentUpdateTrait;
 use App\Traits\Notify;
 use Facades\App\Services\NotifyMailService;
 use App\Traits\Upload;
@@ -38,7 +40,7 @@ use Illuminate\Validation\Rule;
 
 class ShipmentController extends Controller
 {
-	use Upload, Notify, OCShipmentStoreTrait;
+	use Upload, Notify, OCShipmentStoreTrait, ShipmentUpdateTrait;
 
 	public function shipmentList(Request $request, $status = null, $type = null)
 	{
@@ -155,121 +157,126 @@ class ShipmentController extends Controller
 //				}
 //			})
 			->when($type == 'operator-country' && $status == 'in_queue', function ($query) use ($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 1)->where('assign_to_collect', $authenticateUser->id);
-				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 1);
-				}else{
+				} else {
 					return $query->where('shipment_identifier', 1)->where('status', 1)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'dispatch', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'dispatch', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 2)->where('assign_to_collect', $authenticateUser->id);
-				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 2);
-				}else{
+				} else {
 					return $query->where('shipment_identifier', 1)->where('status', 2)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'upcoming', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
-					$query->where('shipment_identifier', 1)->whereIn('status', [100,200]); // not found upcoming shipment for driver
-				}
-				else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'upcoming', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
+					$query->where('shipment_identifier', 1)->whereIn('status', [100, 200]); // not found upcoming shipment for driver
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 2);
-				}else{
+				} else {
 					return $query->where('shipment_identifier', 1)->where('status', 2)->where('receiver_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'received', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'received', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 3)->where('assign_to_collect', $authenticateUser->id);
-				}
-				else if (!isset($authenticateUser->branch->branch_id)){
+				} else if (!isset($authenticateUser->branch->branch_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 3);
-				}else{
-					return $query->where('shipment_identifier', 1)->where('status', 3)->where(function ($query) use ($authenticateUser){
+				} else {
+					return $query->where('shipment_identifier', 1)->where('status', 3)->where(function ($query) use ($authenticateUser) {
 						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
 					});
 				}
 			})
-			->when($type == 'operator-country' && $status == 'delivered', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'delivered', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 4)->where('assign_to_collect', $authenticateUser->id)->orWhere('assign_to_delivery', $authenticateUser->id);
-				}
-				else if (!isset($authenticateUser->branch->branch_id)){
+				} else if (!isset($authenticateUser->branch->branch_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 4);
-				}else{
-					return $query->where('shipment_identifier', 1)->where('status', 4)->where(function ($query) use ($authenticateUser){
+				} else {
+					return $query->where('shipment_identifier', 1)->where('status', 4)->where(function ($query) use ($authenticateUser) {
 						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
 					});
 				}
 			})
 			->when($type == 'operator-country' && $status == 'requested', function ($query) use ($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
-					$query->where('shipment_identifier', 1)->whereIn('status', [100,200]); // not found requested shipment
-				}
-				else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
-					return $query->where('shipment_identifier', 1)->whereIn('status', [0,6]);
-				}else{
-					return $query->where('shipment_identifier', 1)->whereIn('status', [0,6])->where('sender_branch', $authenticateUser->branch->branch_id);
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
+					$query->where('shipment_identifier', 1)->whereIn('status', [100, 200]); // not found requested shipment
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
+					return $query->where('shipment_identifier', 1)->whereIn('status', [0, 6]);
+				} else {
+					return $query->where('shipment_identifier', 1)->whereIn('status', [0, 6])->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'assign_to_collect', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'assign_to_collect', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 5)->where('assign_to_collect', $authenticateUser->id);
-				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 5);
-				}else{
+				} else {
 					return $query->where('shipment_identifier', 1)->where('status', 5)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'assign_to_delivery', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'assign_to_delivery', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 7)->where('assign_to_delivery', $authenticateUser->id);
-				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 7);
-				}else{
+				} else {
 					return $query->where('shipment_identifier', 1)->where('status', 7)->where('receiver_branch', $authenticateUser->branch->branch_id);
 				}
 			})
 			->when($type == 'operator-country' && $status == 'return_in_queue', function ($query) use ($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 8)->where('assign_to_collect', $authenticateUser->id);
-				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 8);
-				}else{
+				} else {
 					return $query->where('shipment_identifier', 1)->where('status', 8)->where('receiver_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'return_in_dispatch', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'return_in_dispatch', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 9)->where('assign_to_collect', $authenticateUser->id);
-				}else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 9);
-				}else{
+				} else {
 					return $query->where('shipment_identifier', 1)->where('status', 9)->where('receiver_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'return_in_upcoming', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
-					$query->where('shipment_identifier', 1)->whereIn('status', [100,200]); // not found upcoming shipment for driver
-				}
-				else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'return_in_upcoming', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
+					$query->where('shipment_identifier', 1)->whereIn('status', [100, 200]); // not found upcoming shipment for driver
+				} else if (!isset($authenticateUser->branch->branch_id, $authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 9);
-				}else{
+				} else {
 					return $query->where('shipment_identifier', 1)->where('status', 9)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
-			->when($type == 'operator-country' && $status == 'return_in_received', function ($query) use($authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)){
+			->when($type == 'operator-country' && $status == 'return_in_received', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 10)->where('assign_to_collect', $authenticateUser->id);
-				}
-				else if (!isset($authenticateUser->branch->branch_id)){
+				} else if (!isset($authenticateUser->branch->branch_id)) {
 					return $query->where('shipment_identifier', 1)->where('status', 10);
-				}else{
-					return $query->where('shipment_identifier', 1)->where('status', 10)->where(function ($query) use ($authenticateUser){
+				} else {
+					return $query->where('shipment_identifier', 1)->where('status', 10)->where(function ($query) use ($authenticateUser) {
+						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
+					});
+				}
+			})
+			->when($type == 'operator-country' && $status == 'return_in_delivered', function ($query) use ($authenticateUser) {
+				if (!isset($authenticateUser->branch->branch_id) && isset($authenticateUser->role_id)) {
+					return $query->where('shipment_identifier', 1)->where('status', 11)->where('assign_to_collect', $authenticateUser->id)->orWhere('assign_to_delivery', $authenticateUser->id);
+				} else if (!isset($authenticateUser->branch->branch_id)) {
+					return $query->where('shipment_identifier', 1)->where('status', 11);
+				} else {
+					return $query->where('shipment_identifier', 1)->where('status', 11)->where(function ($query) use ($authenticateUser) {
 						$query->where('sender_branch', $authenticateUser->branch->branch_id)->orWhere('receiver_branch', $authenticateUser->branch->branch_id);
 					});
 				}
@@ -622,7 +629,7 @@ class ShipmentController extends Controller
 			$shipment->save();
 			DB::commit();
 			NotifyMailService::cancelShipmentRequestNotify($shipment, $refund_time, $refund_time_type);
-			return back()->with('success', 'Shipment request canceled successfully!');
+			return back()->with('success', 'Shipment canceled successfully!');
 		} catch (\Exception $exp) {
 			DB::rollBack();
 			return back()->with('error', $exp->getMessage())->withInput();
@@ -630,15 +637,26 @@ class ShipmentController extends Controller
 	}
 
 
-	public function assignToCollectShipmentRequest(Request $request, $id){
+	public function assignToCollectShipmentRequest(Request $request, $id)
+	{
+		$branchDriver = Admin::where('status', 1)->find($request->branch_driver_id);
+
+		if (!$branchDriver){
+			return back()->with('error', 'Please select valid branch driver');
+		}
+
 		$shipment = Shipment::findOrFail($id);
+
 		$shipment->assign_to_collect = $request->branch_driver_id;
 		$shipment->status = 5;
 		$shipment->save();
-		return back()->with('success', 'Shipment request assigned successfully!');
+
+		NotifyMailService::assignToCollectPickupShipment($shipment, $branchDriver);
+		return back()->with('success', 'Shipment assigned to collect successfully!');
 	}
 
-	public function assignToDeliveredShipmentRequest(Request $request, $id){
+	public function assignToDeliveredShipmentRequest(Request $request, $id)
+	{
 		$shipment = Shipment::findOrFail($id);
 		$shipment->assign_to_delivery = $request->branch_driver_id;
 		$shipment->status = 7;
@@ -1562,30 +1580,30 @@ class ShipmentController extends Controller
 		$authenticateUser = Auth::guard('admin')->user();
 		$search = $request->all();
 		$data['trashShipments'] = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
-		->when(isset($search['shipment_id']), function ($query) use ($search) {
-			return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
-		})
+			->when(isset($search['shipment_id']), function ($query) use ($search) {
+				return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
+			})
 			->when(isset($search['shipment_date']), function ($query) use ($search) {
 				return $query->whereDate("shipment_date", $search['shipment_date']);
 			})
 			->when(isset($search['status']) && $search['status'] == 'queue', function ($query) use ($search, $authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
+				if (!isset($authenticateUser->branch->branch_id)) {
 					return $query->where('status', 1);
-				}else{
+				} else {
 					return $query->where('status', 1)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
 			->when(isset($search['status']) && $search['status'] == 'dispatch', function ($query) use ($search, $authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
+				if (!isset($authenticateUser->branch->branch_id)) {
 					return $query->where('status', 2);
-				}else{
+				} else {
 					return $query->where('status', 2)->where('sender_branch', $authenticateUser->branch->branch_id);
 				}
 			})
 			->when(isset($search['status']) && $search['status'] == 'upcoming', function ($query) use ($search, $authenticateUser) {
-				if (!isset($authenticateUser->branch->branch_id)){
+				if (!isset($authenticateUser->branch->branch_id)) {
 					return $query->where('status', 2);
-				}else{
+				} else {
 					return $query->where('status', 2)->where('receiver_branch', $authenticateUser->branch->branch_id);
 				}
 			})
@@ -1619,87 +1637,121 @@ class ShipmentController extends Controller
 			DB::beginTransaction();
 			$shipment = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver')->findOrFail($id);
 			$trans = strRandom();
-			if ($type == 'dispatch'){
-				$shipment->status = 2;
-				$shipment->dispatch_time = Carbon::now();
-				$shipment->save();
-				DB::commit();
-				NotifyMailService::dispatchShipmentRequest($shipment);
-				return back()->with('success', 'Shipment Dispatched Successfully!');
-			}elseif ($type == 'received'){
-				$shipment->status = 3;
-				$shipment->receive_time = Carbon::now();
-				$shipment->save();
+			$time = Carbon::now();
+			if ($type == 'dispatch') {
+				if ($shipment->payment_by == 1) {
+					if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
+						return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
+					} elseif (($shipment->payment_type == 'wallet' || $shipment->payment_type == 'cash') && $shipment->payment_status == 1) {
+						$this->shipmentStatusUpdate($shipment, 2, 'dispatch', $time);
+						DB::commit();
+						$transaction = new Transaction();
+						$remarks = "The sender completes the payment for the dispatched shipment";
+						TransactionService::shipmentTransaction($shipment, $transaction, $trans, $shipment->sender_branch, optional($shipment->sender)->id, $remarks);
+						NotifyMailService::dispatchShipmentRequest($shipment);
+						return back()->with('success', 'Shipment Dispatched Successfully!');
+					}
+				} elseif ($shipment->payment_by == 2) {
+					if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
+						$this->shipmentStatusUpdate($shipment, 2, 'dispatch', $time);
+						DB::commit();
+						NotifyMailService::dispatchShipmentRequest($shipment);
+						return back()->with('success', 'Shipment Dispatched Successfully!');
+					} elseif (($shipment->payment_type == 'wallet' || $shipment->payment_type == 'cash') && $shipment->payment_status == 1) {
+						$this->shipmentStatusUpdate($shipment, 2, 'dispatch', $time);
+						DB::commit();
+						$transaction = new Transaction();
+						$remarks = "The receiver completes the payment for the dispatched shipment";
+						TransactionService::shipmentTransaction($shipment, $transaction, $trans, $shipment->sender_branch, optional($shipment->receiver)->id, $remarks);
+						NotifyMailService::dispatchShipmentRequest($shipment);
+						return back()->with('success', 'Shipment Dispatched Successfully!');
+					}
+				}
+			} elseif ($type == 'received') {
+				$this->shipmentStatusUpdate($shipment, 3, 'received', $time);
 				DB::commit();
 				NotifyMailService::receiveShipmentRequest($shipment);
 				return back()->with('success', 'Shipment Received Successfully!');
-			}elseif ($type == 'delivered'){
-				if ($shipment->shipment_type == 'condition'){
-					if ($shipment->payment_by == 2){
-						if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2){
-							return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
-						}elseif (($shipment->payment_type == 'cash' || $shipment->payment_type == 'wallet') && $shipment->payment_status == 1){
-							$shipment->status = 4;
-							$shipment->delivered_time = Carbon::now();
-							$shipment->save();
-							$transaction = new Transaction();
-							TransactionService::conditionShipmentDeliveredTransactionToReceiverBranch($shipment, $transaction, $trans, optional($shipment->receiver)->id);
+			} elseif ($type == 'delivered') {
+				if ($shipment->payment_by == 2) {
+					if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
+						return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
+					} elseif (($shipment->payment_type == 'cash' || $shipment->payment_type == 'wallet') && $shipment->payment_status == 1) {
+						$this->shipmentStatusUpdate($shipment, 4, 'delivered', $time);
+						$transaction = new Transaction();
+						$remarks = "The receiver completes the payment for the delivered shipment";
+						if ($shipment->shipment_type == 'condition') {
+							TransactionService::shipmentTransaction($shipment, $transaction, $trans, $shipment->receiver_branch, optional($shipment->receiver)->id, $remarks, $shipment_type = 'conditional_amount_receive');
 							DB::commit();
 							NotifyMailService::deliveredConditionalShipment($shipment);
 							return back()->with('success', 'Shipment Delivered Successfully!');
-						}
-					}
-				}else{
-					if ($shipment->payment_by == 2){
-						if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2){
-							return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
-						}elseif (($shipment->payment_type == 'cash' || $shipment->payment_type == 'wallet') && $shipment->payment_status == 1){
-							$shipment->status = 4;
-							$shipment->delivered_time = Carbon::now();
-							$shipment->save();
-							$transaction = new Transaction();
-							TransactionService::requestedShipmentDelivered($shipment, $transaction, $trans, optional($shipment->receiver)->id);
+						} else {
+							TransactionService::shipmentTransaction($shipment, $transaction, $trans, $shipment->receiver_branch, optional($shipment->receiver)->id, $remarks);
 							DB::commit();
 							NotifyMailService::deliveredShipmentRequest($shipment);
 							return back()->with('success', 'Shipment Delivered Successfully!');
 						}
 					}
-
-					$shipment->status = 4;
-					$shipment->delivered_time = Carbon::now();
-					$shipment->save();
-					DB::commit();
-					NotifyMailService::deliveredShipmentRequest($shipment);
-					return back()->with('success', 'Shipment Delivered Successfully!');
-
 				}
 
-			}elseif ($type == 'return_in_queue'){
+				$this->shipmentStatusUpdate($shipment, 4, 'delivered', $time);
+				DB::commit();
+				if ($shipment->shipment_type == 'condition') {
+					$transaction = new Transaction();
+					$remarks = "The receiver completes the payment for condition courier amount";
+					TransactionService::shipmentTransaction($shipment, $transaction, $trans, $shipment->receiver_branch, optional($shipment->receiver)->id, $remarks, $shipment_type = 'conditional_amount_receive');
+					NotifyMailService::deliveredConditionalShipment($shipment);
+					return back()->with('success', 'Shipment Delivered Successfully!');
+				} else {
+					NotifyMailService::deliveredShipmentRequest($shipment);
+					return back()->with('success', 'Shipment Delivered Successfully!');
+				}
+
+			} elseif ($type == 'return_in_queue') {
 				$shipment->status = 8;
 				$shipment->save();
 				DB::commit();
 				return back()->with('success', 'Shipment return back successfully! Now this shipment is in return in queue.');
-			}elseif ($type == 'return_in_received'){
+			} elseif ($type == 'return_in_received') {
+				if ($shipment->return_shipment_cost != null || $shipment->return_shipment_cost != 0) {
+					$shipment->payment_status = 2;
+					$shipment->payment_type = 'cash';
+					$shipment->payment_by = 1;
+				}
 				$shipment->status = 10;
 				$shipment->return_receive_time = Carbon::now();
 				$shipment->save();
 				DB::commit();
 				return back()->with('success', 'Return Shipment Received Successfully!');
+			} elseif ($type == 'return_in_delivered') {
+				if (($shipment->payment_status == 2) && ($shipment->return_shipment_cost != 0 || $shipment->return_shipment_cost != null)) {
+					$shipment->payment_status = 1;
+					$transaction = new Transaction();
+					TransactionService::returnShipmentDelivered($shipment, $transaction, $trans, optional($shipment->sender)->id);
+				}
+
+				$shipment->status = 11;
+				$shipment->return_delivered_time = Carbon::now();
+				$shipment->save();
+				DB::commit();
+				return back()->with('success', 'Return Shipment Delivered Successfully!');
 			}
-		}catch (\Exception $e){
+		} catch (\Exception $e) {
 			DB::rollBack();
 			return back()->with('error', $e->getMessage())->withInput();
 		}
 	}
 
-	public function payConditionShipmentToSender($id){
+	public function payConditionShipmentToSender($id)
+	{
 		$shipment = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver')->findOrFail($id);
 		$shipment->condition_amount_payment_confirm_to_sender = 1;
 		$shipment->condition_payment_time = Carbon::now();
 		$shipment->save();
 		$transaction = new Transaction();
 		$trans = strRandom();
-		TransactionService::conditionShipmentPaymentConfirmToSenderBranch($shipment, $transaction, $trans, optional($shipment->sender)->id);
+		$remarks = 'Payment complete to sender for this Condition shipment';
+		TransactionService::shipmentTransaction($shipment, $transaction, $trans, $shipment->sender_branch, optional($shipment->sender)->id, $remarks, $shipment_type = 'conditional_amount_pay');
 		NotifyMailService::conditionShipmentPaymentConfirmToSender($shipment);
 		return back()->with('success', 'Condition shipment payment confirm successfully!');
 	}

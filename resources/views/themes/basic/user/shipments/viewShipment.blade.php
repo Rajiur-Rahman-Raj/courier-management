@@ -214,6 +214,8 @@
 													<p class="badge text-bg-warning">@lang('Return In Dispatch')</p>
 												@elseif($singleShipment->status == 10)
 													<p class="badge text-bg-success">@lang('Return In Received')</p>
+												@elseif($singleShipment->status == 11)
+													<p class="badge text-bg-danger">@lang('Return In Delivered')</p>
 												@endif
 
                                             </span>
@@ -248,6 +250,14 @@
                                             <span class="fw-bold text-dark">  <i
 													class="far fa-clock mr-2 text-info"></i> @lang("Return Received Time") : <span
 													class="fw-normal">{{ customDateTime($singleShipment->return_receive_time) }}</span></span>
+													</li>
+												@endif
+
+												@if($singleShipment->return_delivered_time != null)
+													<li class="my-3">
+                                            <span class="fw-bold text-dark">  <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Return Delivered Time") : <span
+													class="fw-normal">{{ customDateTime($singleShipment->return_delivered_time) }}</span></span>
 													</li>
 												@endif
 

@@ -121,6 +121,13 @@
 							</a>
 						</li>
 
+						<li class="{{ activeMenu(['shipmentList'], null, 'return_in_delivered') }}">
+							<a class="nav-link "
+							   href="{{ route('shipmentList', ['shipment_status' => 'return_in_delivered', 'shipment_type' => 'operator-country']) }}">
+								@lang('Return In Delivered')
+							</a>
+						</li>
+
 						<li class="{{ activeMenu(['trashShipmentList']) }}">
 							<a class="nav-link " href="{{ route('trashShipmentList') }}">
 								@lang('Trash Shipments')

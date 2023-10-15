@@ -785,7 +785,7 @@
 
 
 		<div class="row">
-			<div class="col-sm-12 col-md-7">
+			<div class="col-sm-12 col-md-12">
 				<div class="form-group mb-4">
 					<label class="col-form-label">@lang("Attatchments")</label>
 					<div class="shipment_image"></div>
@@ -796,7 +796,7 @@
 			</div>
 
 
-			<div class="col-md-5 form-group">
+			<div class="col-md-5 form-group d-none">
 				<label>@lang('Status')</label>
 				<div class="selectgroup w-100">
 					<label class="selectgroup-item">

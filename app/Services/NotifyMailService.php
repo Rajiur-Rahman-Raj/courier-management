@@ -133,14 +133,28 @@ class NotifyMailService
 			'dispatchTime' => $shipment->dispatch_time,
 		];
 
+		$receiverBranchParams = [
+			'senderBranch' => optional($shipment->senderBranch)->branch_name,
+			'receiverBranch' => optional($shipment->receiverBranch)->branch_name,
+			'shipmentId' => $shipment->shipment_id,
+			'dispatchTime' => $shipment->dispatch_time,
+		];
+
 		$adminAction = [
 			"link" => route('shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$receiverBranchAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'upcoming', 'shipment_type' => $this->getShipmentType($shipment)]),
 			"icon" => "fas fa-truck text-white"
 		];
 
 		$this->adminPushNotification($this->getSenderBranchManager($shipment),'ADMIN_NOTIFY_SHIPMENT_DISPATCH', $senderParams, $adminAction, $superAdmin = 1);
 		$this->adminMail($this->getSenderBranchManager($shipment), 'ADMIN_MAIL_SHIPMENT_DISPATCH', $senderParams, $subject = null, $requestMessage = null, $superAdmin = 1);
 
+		$this->adminPushNotification($this->getReceiverBranchManager($shipment),'RECEIVER_BRANCH_NOTIFY_SHIPMENT_UPCOMING', $receiverBranchParams, $receiverBranchAction);
+		$this->adminMail($this->getReceiverBranchManager($shipment), 'RECEIVER_BRANCH_MAIL_SHIPMENT_UPCOMING', $receiverBranchParams);
 
 		$userAction = [
 			"link" => route('user.shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => $this->getShipmentType($shipment)]),
@@ -227,11 +241,10 @@ class NotifyMailService
 
 		$this->userPushNotification($shipment->sender, 'SENDER_NOTIFY_SHIPMENT_DELIVERED', $senderParams, $userAction);
 		$this->sendMailSms($shipment->sender, 'SENDER_MAIL_SHIPMENT_DELIVERED', $senderParams);
-//
+
 		$this->userPushNotification($shipment->receiver, 'RECEIVER_NOTIFY_SHIPMENT_DELIVERED', $receiverParams);
 		$this->sendMailSms($shipment->receiver, 'RECEIVER_MAIL_SHIPMENT_DELIVERED', $receiverParams);
 	}
-
 
 	public function deliveredConditionalShipment($shipment){
 
@@ -300,6 +313,22 @@ class NotifyMailService
 
 		$this->userPushNotification($shipment->sender, 'SENDER_NOTIFY_CONDITION_SHIPMENT_PAYMENT_GIVEN', $params, $userAction);
 		$this->sendMailSms($shipment->sender, 'SENDER_MAIL_CONDITION_SHIPMENT_PAYMENT_GIVEN', $params);
+	}
+
+	public function assignToCollectPickupShipment($shipment, $branchDriver){
+		$params = [
+			'branchDriver' => $branchDriver->name,
+			'senderBranch' => optional($shipment->senderBranch)->branch_name,
+			'shipmentId' => $shipment->shipment_id,
+		];
+
+		$driverAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'assign_to_collect', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$this->adminPushNotification($branchDriver,'BRANCH_DRIVER_NOTIFY_COLLECT_PICKUP_SHIPMENT', $params, $driverAction);
+		$this->adminMail($this->getSenderBranchManager($shipment), 'BRANCH_DRIVER_MAIL_COLLECT_PICKUP_SHIPMENT', $params);
 	}
 
 }

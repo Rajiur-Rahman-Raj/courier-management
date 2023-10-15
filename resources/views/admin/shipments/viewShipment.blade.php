@@ -204,6 +204,7 @@
                                             </span>
 											</li>
 
+
 											<li class="my-3">
                                             <span class="font-weight-bold text-dark"><i
 													class="fas fa-shipping-fast mr-2 text-warning"></i> @lang('Shipment Status') :
@@ -237,6 +238,9 @@
 												@elseif($singleShipment->status == 10 && $status == 'return_in_received')
 													<p
 														class="badge badge-success rounded">@lang('Return Received')</p>
+												@elseif($singleShipment->status == 11 && $status == 'return_in_delivered')
+													<p
+														class="badge badge-danger rounded">@lang('Return Delivered')</p>
 												@endif
                                             </span>
 											</li>
@@ -301,6 +305,22 @@
                                             <span class="font-weight-bold text-dark"> <i
 													class="far fa-clock mr-2 text-info"></i> @lang("Return Received Time") : <span
 													class="font-weight-medium">{{ customDateTime($singleShipment->return_receive_time) }}</span></span>
+												</li>
+											@endif
+
+											@if(($singleShipment->return_receive_time != null && $singleShipment->payment_status == 2) && ($singleShipment->return_shipment_cost != 0 || $singleShipment->return_shipment_cost != null))
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Return Shipment Cost") : <span
+													class="font-weight-medium">{{ $basic->currency_symbol }}{{ $singleShipment->return_shipment_cost }}</span> (@lang('Due'))</span>
+												</li>
+											@endif
+
+											@if($singleShipment->return_delivered_time != null && $singleShipment->status == 11)
+												<li class="my-3">
+                                            <span class="font-weight-bold text-dark"> <i
+													class="far fa-clock mr-2 text-info"></i> @lang("Return Delivered Time") : <span
+													class="font-weight-medium">{{ customDateTime($singleShipment->return_delivered_time) }}</span></span>
 												</li>
 											@endif
 

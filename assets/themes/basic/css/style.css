@@ -1844,6 +1844,7 @@ li.page-item.active .page-link {
 /* LOGIN_SIGNUP_PAGE_START */
 .login_signup_logo {
     max-width: 250px;
+	padding: 100px 0 !important;
 }
 
 .login_signup_page .form-control {
