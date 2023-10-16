@@ -8,6 +8,7 @@ use App\Models\BlogCategoryDetails;
 use App\Models\Content;
 use App\Models\ContentDetails;
 use App\Models\Language;
+use App\Models\Shipment;
 use App\Models\Subscribe;
 use App\Models\Template;
 use Illuminate\Http\Request;
@@ -79,8 +80,9 @@ class FrontendController extends Controller
 		return view($this->theme . 'service', $data);
 	}
 
-	public function tracking()
+	public function tracking(Request $request)
 	{
+		$search = $request->all();
 		$templateSection = ['about-us', 'investor', 'faq', 'we-accept', 'how-it-work', 'how-we-work', 'know-more-us'];
 		$data['templates'] = Template::templateMedia()->whereIn('section_name', $templateSection)->get()->groupBy('section_name');
 
@@ -94,8 +96,18 @@ class FrontendController extends Controller
 					$q->select(['content_id', 'description']);
 				}])
 			->get()->groupBy('content.name');
+
+		if (sizeof($search) > 0){
+			$data['shipment'] = Shipment::where('shipment_id', $search['shipment_id'])->first();
+			$data['initial'] = false;
+		}else{
+			$data['shipment'] = null;
+			$data['initial'] = true;
+		}
+
 		return view($this->theme . 'tracking', $data);
 	}
+
 
 	public function booking(){
 		return view($this->theme . 'booking');

@@ -68,7 +68,6 @@
 		</div>
 
 		<div class="row">
-
 			<div class="col-sm-12 col-md-3 mb-3">
 				<label for="shipment_date"> @lang('Shipment Date') </label>
 				<div class="flatpickr">
@@ -782,7 +781,6 @@
 				@endfor
 			@endif
 		</div>
-
 
 		<div class="row">
 			<div class="col-sm-12 col-md-12">

@@ -131,6 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 		// Manage Shipments
 		Route::get('shipment-list/{shipment_status}/{shipment_type}', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
+
 		Route::get('{shipment_type}/create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
 		Route::get('shipment/{id}/edit/{shipment_identifier}', [ShipmentController::class, 'editShipment'])->name('editShipment');
 		Route::get('view-shipment/{id}', [ShipmentController::class, 'viewShipment'])->name('viewShipment');
@@ -538,7 +539,10 @@ Route::group(['prefix' => 'user'], function () {
 Route::get('/', [FrontendController::class, 'home'])->name('home');
 Route::get('/about', [FrontendController::class, 'about'])->name('about');
 Route::get('/service', [FrontendController::class, 'service'])->name('service');
+
 Route::get('/tracking', [FrontendController::class, 'tracking'])->name('tracking');
+//Route::post('/tracking-shipment', [FrontendController::class, 'trackingShipment'])->name('tracking.shipment');
+
 Route::get('/booking', [FrontendController::class, 'booking'])->name('booking');
 Route::get('/booking/sender-details', [FrontendController::class, 'senderDetails'])->name('senderDetails');
 Route::get('/booking/shipping-details', [FrontendController::class, 'shippingDetails'])->name('shippingDetails');

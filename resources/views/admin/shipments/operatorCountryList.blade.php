@@ -2,6 +2,7 @@
 @section('page_title', __('All Shipment List'))
 @push('extra_styles')
 	<link rel="stylesheet" href="{{ asset('assets/dashboard/css/dataTables.bootstrap4.min.css') }}">
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -216,7 +217,7 @@
 																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
 																								<i class="fas fa-exchange-alt mr-2"></i> @lang('Return Back')
 																							</a>
-																							@if($shipment->shipment_type == 'pickup')
+																							@if($shipment->shipment_type == 'pickup' && (optional(optional($shipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
 																								<a data-target="#assignToDeliveredShipmentRequest"
 																								   data-toggle="modal"
 																								   data-route="{{route('assignToDeliveredShipmentRequest', $shipment->id)}}"
@@ -247,11 +248,6 @@
 																								</a>
 																							@endif
 																						@endif
-
-																						{{--																						<a class="dropdown-item btn-outline-primary btn-sm"--}}
-																						{{--																						   href="#"><i--}}
-																						{{--																								class="fas fa-file-invoice mr-2"></i> @lang('Invoice')--}}
-																						{{--																						</a>--}}
 
 																						<a class="dropdown-item btn-outline-primary btn-sm"
 																						   href="{{ route('viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
@@ -289,7 +285,7 @@
 																									class="fas fa-ban"></i> @lang('Cancel Shipment')
 																							</a>
 																						@endif
-																						@if(($shipment->shipment_type == 'pickup') && ($shipment->status == 0 || $shipment->status == 1))
+																						@if(($shipment->shipment_type == 'pickup') && ($shipment->status == 0 || $shipment->status == 1) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
 																							<a data-target="#assignToCollectShipmentRequest"
 																							   data-toggle="modal"
 																							   data-route="{{route('assignToCollectShipmentRequest', $shipment->id)}}"
@@ -389,297 +385,35 @@
 		</div>
 	</div>
 
-	{{-- shipment status update modal --}}
-	<div id="updateShipmentStatus" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="editShipmentStatusForm">
-					@csrf
-					@method('put')
-					<div class="modal-body">
-						<p class="shipmentStatusChangeMessage"></p>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	{{-- Assign To Collect Shipment Request Modal --}}
-	<div id="assignToCollectShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Assign Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="assignToCollectShipmentRequestForm">
-					@csrf
-					@method('put')
-					<div class="modal-body">
-						<div class="row mb-3">
-							<div class="col-sm-12 col-md-12 mb-3">
-								<label for="branch_driver_id"> @lang('Select Driver') <span class="text-danger">*</span></label>
-								<select name="branch_driver_id"
-										class="form-control @error('branch_driver_id') is-invalid @enderror select2 senderBranchDriver"
-										id="branchDriver">
-								</select>
-
-								<div class="invalid-feedback">
-									@error('branch_driver_id') @lang($message) @enderror
-								</div>
-								<div class="valid-feedback"></div>
-							</div>
-						</div>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Assign')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-
-	{{-- Assign To Delivered Shipment Request Modal --}}
-	<div id="assignToDeliveredShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Assign Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="assignToDeliveredShipmentRequestForm">
-					@csrf
-					@method('put')
-					<div class="modal-body">
-						<div class="row mb-3">
-							<div class="col-sm-12 col-md-12 mb-3">
-								<label for="branch_driver_id"> @lang('Select Driver') <span class="text-danger">*</span></label>
-								<select name="branch_driver_id"
-										class="form-control @error('branch_driver_id') is-invalid @enderror select2 receiverBranchDriver"
-										id="branchDriver">
-								</select>
-
-								<div class="invalid-feedback">
-									@error('branch_driver_id') @lang($message) @enderror
-								</div>
-								<div class="valid-feedback"></div>
-							</div>
-						</div>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Assign')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	{{-- Accept Shipment Request Modal --}}
-	<div id="acceptShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="acceptShipmentRequestForm">
-					@csrf
-					@method('put')
-					<div class="modal-body">
-						<p>@lang('Are you sure to accept this shipment?')</p>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-
-	{{-- Cancel Shipment Request Modal --}}
-	<div id="cancelShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="cancelShipmentRequestForm">
-					@csrf
-					@method('put')
-					<div class="modal-body">
-						<div class="mb-5">
-							<p>@lang('Are you sure to cancel this shipment request?')</p>
-						</div>
-						<div class="shipment-refund-alert"></div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark modal-close" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	{{-- Delete Shipment Modal --}}
-	<div id="deleteShipment" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="deleteShipmentForm">
-					@csrf
-					@method('delete')
-					<div class="modal-body">
-						<p>@lang('Are you sure to delete this shipment?')</p>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+	@include('admin.partials.manageShipmentModal')
 
 @endsection
 
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
+
 @section('scripts')
+	@include('admin.partials.manageShipmentJs')
 	<script>
 		'use strict'
-		$(document).on('click', '.cancelShipmentRequest', function () {
+		$(".flatpickr").flatpickr({
+			wrap: true,
+			altInput: true,
+			dateFormat: "Y-m-d H:i",
+		});
+
+		$(document).on('click', '.payConditionShipmentToSender', function () {
 			let dataRoute = $(this).data('route');
-			$('#cancelShipmentRequestForm').attr('action', dataRoute);
-			let basicControl = @json(basicControl());
-			let refundTimeArray = basicControl.refund_time.split("_");
-			let refundTime = refundTimeArray[0];
-			let refundTimeType = refundTimeArray[1];
 			let dataProperty = $(this).data('property');
-			let paymentType = dataProperty.payment_type;
-			let paymentStatus = dataProperty.payment_status;
+			let dataBasic = $(this).data('basic');
+			$('#payConditionShipmentToSenderForm').attr('action', dataRoute);
+			$('.dueConditionPaymentAlert').text(`Do you want to confirm the due payment of condition shipment to ${dataProperty.sender.name}`);
+			$('.conditionPayableAmount').text(`Payable Amount: ${dataBasic.currency_symbol}${dataProperty.receive_amount}`);
 
-			if (paymentType == 'wallet' && paymentStatus == 1) {
-				$('.shipment-refund-alert').html(`
-						<div class="bd-callout bd-callout-warning">
-							<i class="fas fa-info-circle mr-2"></i>
-							N.B: You will get a refund ${refundTime} ${refundTimeType} after canceling your shipment request. Refund charges will be deducted.
-						</div>
-					`);
-			}
+
 		});
 
-		$(document).on('click', '.modal-close', function () {
-			$('.shipment-refund-alert').html('');
-		});
-
-		$(document).ready(function () {
-			$(document).on('click', '.editShipmentStatus', function () {
-				let dataRoute = $(this).data('route');
-				let dataStatus = $(this).data('status');
-
-				if (dataStatus == 'in_queue') {
-					$('.shipmentStatusChangeMessage').text('Are you sure to dispatch this shipment?')
-				} else if (dataStatus == 'upcoming') {
-					$('.shipmentStatusChangeMessage').text('Are you sure to received this shipment?')
-				} else if (dataStatus == 'received') {
-					$('.shipmentStatusChangeMessage').text('Are you sure to delivered this shipment?')
-				} else if (dataStatus == 'assign_to_delivery') {
-					$('.shipmentStatusChangeMessage').text('Are you sure to delivered this shipment?')
-				} else if (dataStatus == 'return_in_queue') {
-					$('.shipmentStatusChangeMessage').text('Are you sure to return back this shipment?')
-				} else if (dataStatus == 'return_in_upcoming') {
-					$('.shipmentStatusChangeMessage').text('Are you sure to received return shipment?')
-				} else if (dataStatus == 'return_in_received') {
-					$('.shipmentStatusChangeMessage').text('Are you sure to Delivered return shipment?')
-				}
-				$('#editShipmentStatusForm').attr('action', dataRoute);
-			});
-
-			$(document).on('click', '.payConditionShipmentToSender', function () {
-				let dataRoute = $(this).data('route');
-				let dataProperty = $(this).data('property');
-				let dataBasic = $(this).data('basic');
-				$('#payConditionShipmentToSenderForm').attr('action', dataRoute);
-				$('.dueConditionPaymentAlert').text(`Do you want to confirm the due payment of condition shipment to ${dataProperty.sender.name}`);
-				$('.conditionPayableAmount').text(`Payable Amount: ${dataBasic.currency_symbol}${dataProperty.receive_amount}`);
-
-
-			});
-
-			$(document).on('click', '.assignToCollectShipmentRequest', function () {
-				let dataRoute = $(this).data('route');
-				$('#assignToCollectShipmentRequestForm').attr('action', dataRoute);
-
-				let dataPropertry = $(this).data('property');
-				let branchDriver = dataPropertry.sender_branch.branch_driver;
-
-				branchDriver.forEach(res => {
-					$('.senderBranchDriver').append(`<option value="${res.admin_id}">${res.admin.name}</option>`)
-				})
-			});
-
-			$(document).on('click', '.assignToDeliveredShipmentRequest', function () {
-				let dataRoute = $(this).data('route');
-				$('#assignToDeliveredShipmentRequestForm').attr('action', dataRoute);
-
-				let dataPropertry = $(this).data('property');
-				let branchDriver = dataPropertry.receiver_branch.branch_driver;
-
-				branchDriver.forEach(res => {
-					$('.receiverBranchDriver').append(`<option value="${res.admin_id}">${res.admin.name}</option>`)
-				})
-			});
-
-			$(document).on('click', '.acceptShipmentRequest', function () {
-				let dataRoute = $(this).data('route');
-				$('#acceptShipmentRequestForm').attr('action', dataRoute);
-			});
-
-
-			$(document).on('click', '.deleteShipment', function () {
-				let dataRoute = $(this).data('route');
-				$('#deleteShipmentForm').attr('action', dataRoute);
-			});
-		})
 	</script>
 
 	@if ($errors->any())

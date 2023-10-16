@@ -23,7 +23,7 @@
 				</div>
 
 				<div class="search-bar profile-setting">
-					<form action="{{ route('user.transaction.search') }}" method="get">
+					<form action="" method="get">
 						@include($theme.'user.shipments.searchForm')
 					</form>
 				</div>
@@ -66,9 +66,9 @@
 									<th scope="col"
 										class="custom-text">@lang('Receiver Branch')</th>
 									<th scope="col"
-										class="custom-text">@lang('From State')</th>
+										class="custom-text">@lang('From Country')</th>
 									<th scope="col"
-										class="custom-text">@lang('To State')</th>
+										class="custom-text">@lang('To Country')</th>
 									<th scope="col"
 										class="custom-text">@lang('Total Cost')</th>
 									<th scope="col"
@@ -84,11 +84,11 @@
 									<tr>
 										<td data-label="SL."> {{ ++$key }} </td>
 										<td data-label="Shipment Id"> {{ $shipment->shipment_id }} </td>
-										<td data-label="Shipment Type"> {{ $shipment->shipment_type }} </td>
+										<td data-label="Shipment Type"> {{ formatedShipmentType($shipment->shipment_type) }} </td>
 										<td data-label="Sender Branch"> @lang(optional($shipment->senderBranch)->branch_name) </td>
 										<td data-label="Receiver Branch"> @lang(optional($shipment->receiverBranch)->branch_name) </td>
-										<td data-label="From State"> @lang(optional($shipment->fromState)->name) </td>
-										<td data-label="To State"> @lang(optional($shipment->toState)->name) </td>
+										<td data-label="From State"> @lang(optional($shipment->fromCountry)->name) </td>
+										<td data-label="To State"> @lang(optional($shipment->toCountry)->name) </td>
 										<td data-label="Total Cost"> {{ $basic->currency_symbol }}{{ $shipment->total_pay }} </td>
 
 										<td data-label="Shipment Date"> {{ customDate($shipment->shipment_date) }} </td>

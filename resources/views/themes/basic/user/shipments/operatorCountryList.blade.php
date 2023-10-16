@@ -23,7 +23,7 @@
 				</div>
 
 				<div class="search-bar profile-setting">
-					<form action="{{ route('user.transaction.search') }}" method="get">
+					<form action="" method="get">
 						@include($theme.'user.shipments.searchForm')
 					</form>
 				</div>

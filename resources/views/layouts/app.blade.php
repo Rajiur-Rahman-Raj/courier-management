@@ -13,8 +13,6 @@
 
     @stack('css')
 
-
-
 </head>
 <body>
 <header class="topbar header-user" data-navbarbg="skin6">

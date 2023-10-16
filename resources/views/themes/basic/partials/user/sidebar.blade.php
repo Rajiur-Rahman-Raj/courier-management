@@ -9,13 +9,6 @@
 		</button>
 	</div>
 
-	<div class="search_area">
-		<input type="text" class="form-control" placeholder="Tracking number">
-		<div class="icon_area">
-			<i class="far fa-search"></i>
-		</div>
-	</div>
-
 	<ul class="main">
 		<li>
 			<a class="{{menuActive('user.dashboard')}}" href="{{route('user.dashboard')}}"><i
@@ -27,7 +20,7 @@
 			   aria-expanded="false" aria-controls="collapseExample">
 				<i class="fal fa-truck text-info"></i>@lang('Shipments')
 			</a>
-			<div class="collapse {{menuActive(['user.shipmentList', 'user.viewShipment']) == 'active' ? 'show' : ''}}" id="dropdownCollapsible">
+			<div class="collapse {{menuActive(['user.shipmentList', 'user.viewShipment', 'user.createShipment']) == 'active' ? 'show' : ''}}" id="dropdownCollapsible">
 				<ul class="">
 					<li>
 						<a class="{{ activeMenu(['user.shipmentList', 'user.viewShipment'], null, 'all') }}" href="{{ route('user.shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">@lang('All Shipments')</a>

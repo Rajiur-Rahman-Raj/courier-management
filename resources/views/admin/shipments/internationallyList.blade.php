@@ -2,6 +2,7 @@
 @section('page_title', __('All Shipment List'))
 @push('extra_styles')
 	<link rel="stylesheet" href="{{ asset('assets/dashboard/css/dataTables.bootstrap4.min.css') }}">
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -107,7 +108,7 @@
 																			<td data-label="Shipment Date"> {{ customDate($shipment->shipment_date) }} </td>
 
 																			<td data-label="Status">
-																				@if($shipment->status == 0)
+																				@if(($shipment->status == 0) || ($shipment->status == 5 && $shipment->assign_to_collect != null))
 																					<span
 																						class="badge badge-dark rounded">@lang('Requested')</span>
 																				@elseif($shipment->status == 6)
@@ -116,18 +117,34 @@
 																				@elseif($shipment->status == 1)
 																					<span
 																						class="badge badge-info rounded">@lang('In Queue')</span>
-																				@elseif($shipment->status == 2)
+																					{{--																					optional(auth()->guard('admin')->user()->branch)->branch_id--}}
+																				@elseif(($shipment->status == 2) && ($status == 'dispatch'))
 																					<span
 																						class="badge badge-warning rounded">@lang('Dispatch')</span>
-																				@elseif($shipment->status == 3)
+																				@elseif($shipment->status == 2 && $status == 'upcoming')
 																					<span
-																						class="badge badge-primary rounded">@lang('Upcoming')</span>
-																				@elseif($shipment->status == 4)
+																						class="badge badge-indigo rounded">@lang('Upcoming')</span>
+																				@elseif(($shipment->status == 3) || ($shipment->status == 7 && $shipment->assign_to_delivery != null))
 																					<span
 																						class="badge badge-success rounded">@lang('Received')</span>
-																				@elseif($shipment->status == 5)
+																				@elseif($shipment->status == 4)
 																					<span
 																						class="badge badge-danger rounded">@lang('Delivered')</span>
+																				@elseif($shipment->status == 8)
+																					<span
+																						class="badge badge-info rounded">@lang('Return In Queue')</span>
+																				@elseif(($shipment->status == 9) && ($status == 'return_in_dispatch'))
+																					<span
+																						class="badge badge-warning rounded">@lang('Return In Dispatch')</span>
+																				@elseif($shipment->status == 9 && $status == 'return_in_upcoming')
+																					<span
+																						class="badge badge-indigo rounded">@lang('Return In Upcoming')</span>
+																				@elseif($shipment->status == 10 && $status == 'return_in_received')
+																					<span
+																						class="badge badge-success rounded">@lang('Return Received')</span>
+																				@elseif($shipment->status == 11 && $status == 'return_in_delivered')
+																					<span
+																						class="badge badge-danger rounded">@lang('Return Delivered')</span>
 																				@endif
 																			</td>
 
@@ -141,22 +158,85 @@
 																						@lang('Options')
 																					</button>
 																					<div class="dropdown-menu">
-																						@if($shipment->status == 1)
+																						@if(($shipment->status == 1) && ($status == 'in_queue' || $status == 'all') && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
 																							@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.dispatch')))
 																								<a data-target="#updateShipmentStatus"
 																								   data-toggle="modal"
-																								   data-route="{{route('shipmentStatusUpdate', $shipment->id)}}"
+																								   data-status="{{ $status }}"
+																								   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'dispatch'])}}"
 																								   href="javascript:void(0)"
 																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
 																										class="fas fa-file-invoice mr-2"></i> @lang('Dispatch')
 																								</a>
 																							@endif
+																						@elseif($shipment->status == 2 && $status == 'upcoming')
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="{{ $status }}"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'received'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
+																								<i class="far fa-handshake mr-2"></i> @lang('Received')
+																							</a>
+																						@elseif($shipment->status == 9 && $status == 'return_in_upcoming')
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="{{ $status }}"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_received'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
+																								<i class="far fa-handshake mr-2"></i> @lang('Return Received')
+																							</a>
+																						@elseif(($shipment->status == 3 || $shipment->status == 7) && ($status == 'received' || $status == 'assign_to_delivery') && (optional(optional($shipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id || optional($shipment->assignToDelivery)->id == $authenticateUser->id || $authenticateUser->role_id == null))
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="{{ $status }}"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'delivered'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
+																								<i class="fas fa-thumbs-up mr-2"></i> @lang('Delivered')
+																							</a>
+
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="return_in_queue"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_queue'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
+																								<i class="fas fa-exchange-alt mr-2"></i> @lang('Return Back')
+																							</a>
+																							@if($shipment->shipment_type == 'pickup' && (optional(optional($shipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
+																								<a data-target="#assignToDeliveredShipmentRequest"
+																								   data-toggle="modal"
+																								   data-route="{{route('assignToDeliveredShipmentRequest', $shipment->id)}}"
+																								   data-property="{{ $shipment }}"
+																								   href="javascript:void(0)"
+																								   class="dropdown-item btn-outline-primary btn-sm assignToDeliveredShipmentRequest"><i
+																										class="fas fa-check"></i> @lang('Assign To Delivery')
+																								</a>
+																							@endif
+
+																						@elseif(($shipment->status == 10 && $status == 'return_in_received') && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="{{ $status }}"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_delivered'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus">
+																								<i class="fas fa-thumbs-up mr-2"></i> @lang('Return Delivered')
+																							</a>
 																						@endif
 
-																						{{--																						<a class="dropdown-item btn-outline-primary btn-sm"--}}
-																						{{--																						   href="#"><i--}}
-																						{{--																								class="fas fa-file-invoice mr-2"></i> @lang('Invoice')--}}
-																						{{--																						</a>--}}
+																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
+																							@if(($shipment->status == 0 || $shipment->status == 1 || $shipment->status == 5) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || optional(optional($shipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id || optional($shipment->assignToCollect)->id == $authenticateUser->id || $authenticateUser->role_id == null) || ($shipment->status == 3 && $shipment->payment_status == 2))
+																								<a class="dropdown-item btn-outline-primary btn-sm"
+																								   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
+																										class="fa fa-edit mr-2"
+																										aria-hidden="true"></i> @lang('Edit')
+																								</a>
+																							@endif
+																						@endif
+
 
 																						<a class="dropdown-item btn-outline-primary btn-sm"
 																						   href="{{ route('viewShipment', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'internationally']) }}"><i
@@ -164,55 +244,51 @@
 																								aria-hidden="true"></i> @lang('Details')
 																						</a>
 
-																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
-																							@if($shipment->status == 0 || $shipment->status == 1)
-																								<a class="dropdown-item btn-outline-primary btn-sm"
-																								   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'internationally']) }}"><i
-																										class="fa fa-edit mr-2"
-																										aria-hidden="true"></i> @lang('Edit')
-																								</a>
-																							@endif
+																						@if($shipment->status == 8 && $status == 'return_in_queue')
+																							<a data-target="#updateShipmentStatus"
+																							   data-toggle="modal"
+																							   data-status="return_in_dispatch"
+																							   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'return_in_dispatch'])}}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
+																									class="fas fa-file-invoice mr-2"></i> @lang('Dispatch Return')
+																							</a>
 																						@endif
 
-																						@if($shipment->status == 0)
+																						@if($shipment->status == 0 || $shipment->status == 5)
 																							<a data-target="#acceptShipmentRequest"
 																							   data-toggle="modal"
 																							   data-route="{{route('acceptShipmentRequest', $shipment->id)}}"
 																							   href="javascript:void(0)"
 																							   class="dropdown-item btn-outline-primary btn-sm acceptShipmentRequest"><i
-																									class="fas fa-check"></i> @lang('Accept Request')
+																									class="fas fa-check"></i> @lang('Accept Shipment')
 																							</a>
-
+																						@endif
+																						@if($shipment->status == 0 || $shipment->status == 5 || $shipment->status == 1)
 																							<a data-target="#cancelShipmentRequest"
 																							   data-toggle="modal"
 																							   data-route="{{route('cancelShipmentRequest', $shipment->id)}}"
 																							   data-property="{{ $shipment }}"
 																							   href="javascript:void(0)"
 																							   class="dropdown-item btn-outline-primary btn-sm cancelShipmentRequest"><i
-																									class="fas fa-ban"></i> @lang('Cancel Request')
+																									class="fas fa-ban"></i> @lang('Cancel Shipment')
 																							</a>
+																						@endif
 
-																							@if($shipment->shipment_type == 'pickup')
-																								<a data-target="#assignShipmentRequest"
-																								   data-toggle="modal"
-																								   data-route="{{route('acceptShipmentRequest', $shipment->id)}}"
-																								   href="javascript:void(0)"
-																								   class="dropdown-item btn-outline-primary btn-sm assignShipmentRequest"><i
-																										class="fas fa-check"></i> @lang('Assign Shipment')
-																								</a>
-																							@endif
+																						@if(($shipment->shipment_type == 'pickup') && ($shipment->status == 0 || $shipment->status == 1) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
+																							<a data-target="#assignToCollectShipmentRequest"
+																							   data-toggle="modal"
+																							   data-route="{{route('assignToCollectShipmentRequest', $shipment->id)}}"
+																							   data-property="{{ $shipment }}"
+																							   href="javascript:void(0)"
+																							   class="dropdown-item btn-outline-primary btn-sm assignToCollectShipmentRequest"><i
+																									class="fas fa-check"></i> @lang('Assign To Collect')
+																							</a>
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.delete')))
-																							@if($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null)
-																								<a data-target="#deleteShipment"
-																								   data-toggle="modal"
-																								   data-route="{{route('deleteShipment', $shipment->id)}}"
-																								   href="javascript:void(0)"
-																								   class="dropdown-item btn-outline-primary btn-sm deleteShipment"><i
-																										class="fas fa-trash mr-2"></i> @lang('Delete')
-																								</a>
-																							@elseif($shipment->status == 5 && $shipment->shipment_cancel_time == null && $shipment->refund_time == null)
+																							@if(($shipment->status == 6 && $shipment->shipment_cancel_time != null && $shipment->refund_time == null) && ($shipment->status == 4 || $shipment->status == 11) )
+																								)
 																								<a data-target="#deleteShipment"
 																								   data-toggle="modal"
 																								   data-route="{{route('deleteShipment', $shipment->id)}}"
@@ -222,7 +298,6 @@
 																								</a>
 																							@endif
 																						@endif
-
 																					</div>
 																				</div>
 																			</td>
@@ -255,171 +330,25 @@
 		</section>
 	</div>
 
-
-	{{-- Assign Shipment Request Modal --}}
-	<div id="assignShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="assignShipmentRequestForm">
-					@csrf
-					@method('put')
-					<div class="modal-body">
-						<p>@lang('Are you sure to assign this shipment?')</p>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	{{-- Accept Shipment Request Modal --}}
-	<div id="acceptShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="acceptShipmentRequestForm">
-					@csrf
-					@method('put')
-					<div class="modal-body">
-						<p>@lang('Are you sure to accept this shipment?')</p>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-
-	{{-- Cancel Shipment Request Modal --}}
-	<div id="cancelShipmentRequest" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="cancelShipmentRequestForm">
-					@csrf
-					@method('put')
-					<div class="modal-body">
-						<div class="mb-5">
-							<p>@lang('Are you sure to cancel this shipment request?')</p>
-						</div>
-						<div class="shipment-refund-alert"></div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark modal-close" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	{{-- Delete Shipment Modal --}}
-	<div id="deleteShipment" class="modal fade" tabindex="-1" role="dialog"
-		 aria-labelledby="primary-header-modalLabel"
-		 aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-dark font-weight-bold"
-						id="primary-header-modalLabel">@lang('Confirmation')</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				</div>
-				<form action="" method="post" id="deleteShipmentForm">
-					@csrf
-					@method('delete')
-					<div class="modal-body">
-						<p>@lang('Are you sure to delete this shipment?')</p>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-dark" data-dismiss="modal">@lang('No')</button>
-						<button type="submit" class="btn btn-primary">@lang('Yes')</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+	@include('admin.partials.manageShipmentModal')
 
 @endsection
 
-@section('scripts')
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
 
+@section('scripts')
+	@include('admin.partials.manageShipmentJs')
 	<script>
 		'use strict'
-		$(document).on('click', '.cancelShipmentRequest', function () {
-			let dataRoute = $(this).data('route');
-			$('#cancelShipmentRequestForm').attr('action', dataRoute);
-			let basicControl = @json(basicControl());
-			let refundTimeArray = basicControl.refund_time.split("_");
-			let refundTime = refundTimeArray[0];
-			let refundTimeType = refundTimeArray[1];
-			let dataProperty = $(this).data('property');
-			let paymentType = dataProperty.payment_type;
-			let paymentStatus = dataProperty.payment_status;
 
-			if (paymentType == 'wallet' && paymentStatus == 1) {
-				$('.shipment-refund-alert').html(`
-						<div class="bd-callout bd-callout-warning">
-							<i class="fas fa-info-circle mr-2"></i>
-							N.B: You will get a refund ${refundTime} ${refundTimeType} after canceling your shipment request. Refund charges will be deducted.
-						</div>
-					`);
-			}
+		$(".flatpickr").flatpickr({
+			wrap: true,
+			altInput: true,
+			dateFormat: "Y-m-d H:i",
 		});
 
-		$(document).on('click', '.modal-close', function () {
-			$('.shipment-refund-alert').html('');
-		});
-
-		$(document).ready(function () {
-			$(document).on('click', '.editShipmentStatus', function () {
-				let dataRoute = $(this).data('route');
-				$('#editShipmentStatusForm').attr('action', dataRoute);
-			});
-
-			$(document).on('click', '.assignShipmentRequest', function () {
-				let dataRoute = $(this).data('route');
-				$('#assignShipmentRequestForm').attr('action', dataRoute);
-			});
-
-			$(document).on('click', '.acceptShipmentRequest', function () {
-				let dataRoute = $(this).data('route');
-				$('#acceptShipmentRequestForm').attr('action', dataRoute);
-			});
-
-
-			$(document).on('click', '.deleteShipment', function () {
-				let dataRoute = $(this).data('route');
-				$('#deleteShipmentForm').attr('action', dataRoute);
-			});
-		})
 	</script>
 
 	@if ($errors->any())

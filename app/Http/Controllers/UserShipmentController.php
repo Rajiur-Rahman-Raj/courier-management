@@ -50,7 +50,7 @@ class UserShipmentController extends Controller
 			->where('sender_id', $userId)
 			->paginate(config('basic.paginate'));
 
-		return view($this->theme . $userShipmentManagement[$type]['shipment_view'], $data, compact('type', 'status'));
+		return view($this->theme . $userShipmentManagement[$type]['shipment_view'], $data, compact('type', 'search', 'status'));
 	}
 
 
@@ -58,9 +58,30 @@ class UserShipmentController extends Controller
 	{
 		$userId = Auth::id();
 		$search = $request->all();
-		$created_date = Carbon::parse($request->created_at);
 
 		$allShipments = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
+			->when(isset($search['shipment_id']), function ($query) use ($search) {
+				return $query->whereRaw("shipment_id REGEXP '[[:<:]]{$search['shipment_id']}[[:>:]]'");
+			})
+			->when(isset($search['shipment_type']), function ($query) use ($search) {
+				return $query->where('shipment_type', $search['shipment_type']);
+			})
+			->when(isset($search['sender_branch']), function ($query) use ($search) {
+				return $query->whereHas('senderBranch', function ($q) use ($search) {
+					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['sender_branch']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['receiver_branch']), function ($query) use ($search) {
+				return $query->whereHas('receiverBranch', function ($q) use ($search) {
+					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['receiver_branch']}[[:>:]]'");
+				});
+			})
+			->when(isset($search['shipment_date']), function ($query) use ($search) {
+				$query->whereDate("shipment_date", $search['shipment_date']);
+			})
+			->when(isset($search['delivery_date']), function ($query) use ($search) {
+				$query->whereDate("delivery_date", $search['delivery_date']);
+			})
 			->when($type == 'operator-country' && $status == 'all', function ($query) {
 				$query->where('shipment_identifier', 1);
 			})
@@ -105,7 +126,7 @@ class UserShipmentController extends Controller
 			})
 			->when($type == 'internationally' && $status == 'requested', function ($query) {
 				$query->where('shipment_identifier', 2)
-					->where('status', 0);
+					->whereIn('status', [0,6]);
 			});
 
 		$data = [
@@ -211,37 +232,10 @@ class UserShipmentController extends Controller
 
 			DB::commit();
 
-			$basic = basicControl();
-			$amount = $request->total_pay;
 			$sender = User::findOrFail($request->sender_id);
-			$date = \Carbon\Carbon::now();
-			$msg = [
-				'currency' => $basic->currency_symbol,
-				'amount' => $amount,
-				'shipment_id' => $shipmentId,
-			];
+			NotifyMailService::customerSendShipmentRequest($shipment, $sender);
 
-			$action = [
-				"link" => "#",
-				"icon" => "fa fa-money-bill-alt text-white"
-			];
-
-			$adminAction = [
-				"link" => "#",
-				"icon" => "fa fa-money-bill-alt text-white"
-			];
-
-			$this->userPushNotification($sender, 'USER_NOTIFY_COURIER_SHIPMENT', $msg, $action);
-			$this->adminPushNotification('ADMIN_NOTIFY_COURIER_SHIPMENT', $msg, $adminAction);
-
-			$this->sendMailSms($sender, $type = 'USER_MAIL_COURIER_SHIPMENT', [
-				'amount' => getAmount($amount),
-				'currency' => $basic->currency_symbol,
-				'shipment_id' => $shipmentId,
-				'date' => $date,
-			]);
-
-			return back()->with('success', 'Shipment request successfully completed!');
+			return back()->with('success', 'Shipment request sent successfully!');
 
 		} catch (\Exception $exp) {
 			DB::rollBack();

@@ -33,8 +33,8 @@
 <body onload="preloder_function()" @if(session()->get('rtl') == 1) class="rtl" @endif>
 
 <!-- preloader_area_start -->
-{{--<div id="preloader">--}}
-{{--</div>--}}
+<div id="preloader">
+</div>
 <!-- preloader_area_end -->
 
 @include($theme.'partials.navbar')

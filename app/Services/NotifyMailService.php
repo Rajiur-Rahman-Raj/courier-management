@@ -234,6 +234,10 @@ class NotifyMailService
 		$this->adminPushNotification($this->getSenderBranchManager($shipment),'ADMIN_NOTIFY_SHIPMENT_DELIVERED', $senderParams, $adminAction, $superAdmin = 1);
 		$this->adminMail($this->getSenderBranchManager($shipment), 'ADMIN_MAIL_SHIPMENT_DELIVERED', $senderParams, $subject = null, $requestMessage = null, $superAdmin = 1);
 
+
+		$this->adminPushNotification($this->getReceiverBranchManager($shipment),'RECEIVER_BRANCH_NOTIFY_SHIPMENT_DELIVERED', $senderParams, $adminAction);
+		$this->adminMail($this->getReceiverBranchManager($shipment), 'RECEIVER_BRANCH_MAIL_SHIPMENT_DELIVERED', $senderParams);
+
 		$userAction = [
 			"link" => route('user.shipmentList', ['shipment_status' => 'delivered', 'shipment_type' => $this->getShipmentType($shipment)]),
 			"icon" => "fal fa-truck text-white"
@@ -328,7 +332,74 @@ class NotifyMailService
 		];
 
 		$this->adminPushNotification($branchDriver,'BRANCH_DRIVER_NOTIFY_COLLECT_PICKUP_SHIPMENT', $params, $driverAction);
-		$this->adminMail($this->getSenderBranchManager($shipment), 'BRANCH_DRIVER_MAIL_COLLECT_PICKUP_SHIPMENT', $params);
+		$this->adminMail($branchDriver, 'BRANCH_DRIVER_MAIL_COLLECT_PICKUP_SHIPMENT', $params);
+	}
+
+	public function assignToDeliveryPickupShipment($shipment, $branchDriver){
+		$params = [
+			'branchDriver' => $branchDriver->name,
+			'receiverBranch' => optional($shipment->receiverBranch)->branch_name,
+			'shipmentId' => $shipment->shipment_id,
+		];
+
+		$driverAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'assign_to_delivery', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$this->adminPushNotification($branchDriver,'BRANCH_DRIVER_NOTIFY_DELIVERY_PICKUP_SHIPMENT', $params, $driverAction);
+		$this->adminMail($branchDriver, 'BRANCH_DRIVER_MAIL_DELIVERY_PICKUP_SHIPMENT', $params);
+	}
+
+
+	public function customerSendShipmentRequest($shipment, $sender){
+		$params = [
+			'sender' => $sender->name,
+			'senderBranch' => optional($shipment->senderBranch)->branch_name,
+			'shipmentId' => $shipment->shipment_id,
+		];
+
+		$adminAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'requested', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$userAction = [
+			"link" => route('user.shipmentList', ['shipment_status' => 'requested', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$this->adminPushNotification($this->getSenderBranchManager($shipment),'ADMIN_NOTIFY_CUSTOMER_SENT_SHIPMENT_REQUEST', $params, $adminAction, $superAdmin = 1);
+		$this->adminMail($this->getSenderBranchManager($shipment), 'ADMIN_MAIL_CUSTOMER_SENT_SHIPMENT_REQUEST', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
+
+		$this->userPushNotification($sender, 'SENDER_NOTIFY_SEND_SHIPMENT_REQUEST', $params, $userAction);
+		$this->sendMailSms($sender, 'SENDER_MAIL_SEND_SHIPMENT_REQUEST', $params);
+	}
+
+	public function customerSendShipmentFromBranch($shipment, $sender){
+		$params = [
+			'sender' => $sender->name,
+			'senderBranch' => optional($shipment->senderBranch)->branch_name,
+			'amount' => $shipment->total_pay,
+			'currency' => config('basic.currency_symbol'),
+			'shipmentId' => $shipment->shipment_id,
+		];
+
+		$adminAction = [
+			"link" => route('shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$userAction = [
+			"link" => route('user.shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => $this->getShipmentType($shipment)]),
+			"icon" => "fas fa-truck text-white"
+		];
+
+		$this->adminPushNotification($this->getSenderBranchManager($shipment),'ADMIN_NOTIFY_CUSTOMER_SENT_SHIPMENT_FROM_BRANCH', $params, $adminAction, $superAdmin = 1);
+		$this->adminMail($this->getSenderBranchManager($shipment), 'ADMIN_MAIL_CUSTOMER_SENT_SHIPMENT_FROM_BRANCH', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
+
+		$this->userPushNotification($sender, 'SENDER_NOTIFY_CUSTOMER_SENT_SHIPMENT_FROM_BRANCH', $params, $userAction);
+		$this->sendMailSms($sender, 'SENDER_MAIL_CUSTOMER_SENT_SHIPMENT_FROM_BRANCH', $params);
 	}
 
 }

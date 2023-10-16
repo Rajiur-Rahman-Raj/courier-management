@@ -14,11 +14,12 @@
 				<select name="shipment_type" class="form-control form-control-sm">
 					<option value="">@lang('All Shipments')</option>
 					<option
-						value="drop_off" {{  request()->shipment_type == 'drop_off' ? 'selected' : '' }}>@lang('Drop Off')</option>
+						value="drop_off" {{ isset($search['shipment_type']) && $search['shipment_type'] == 'drop_off' ? 'selected' : '' }}>@lang('Drop Off')</option>
 					<option
-						value="pickup" {{  request()->status == 'pickup' ? 'selected' : '' }}>@lang('Pickup')</option>
+						value="pickup" {{ isset($search['shipment_type']) && $search['shipment_type'] == 'pickup' ? 'selected' : '' }}>@lang('Pickup')</option>
 					@if($type ?? '' == 'operator-country')
-						<option value="condition" {{  request()->status == 'condition' ? 'selected' : '' }}>@lang('Condition')</option>
+						<option
+							value="condition" {{ isset($search['shipment_type']) && $search['shipment_type'] == 'condition' ? 'selected' : '' }}>@lang('Condition')</option>
 					@endif
 
 				</select>
@@ -43,85 +44,44 @@
 		</div>
 
 		<div class="col-md-2">
-			<div class="form-group">
-				<label for="receiver_branch" class="custom-text">@lang('Sender')</label>
-				<input placeholder="@lang('sender')" name="sender"
-					   value="{{ old('sender',request()->sender) }}"
-					   type="text" class="form-control form-control-sm">
+			<label for="shipment_date" class="custom-text"> @lang('Shipment Date') </label>
+			<div class="flatpickr">
+				<div class="input-group">
+					<input type="date" placeholder="@lang('Select date')" class="form-control shipment_date"
+						   name="shipment_date"
+						   value="{{ old('shipment_date',request()->shipment_date) }}" data-input>
+					<div class="input-group-append" readonly="">
+						<div class="form-control">
+							<a class="input-button cursor-pointer" title="clear" data-clear>
+								<i class="fas fa-times"></i>
+							</a>
+						</div>
+					</div>
+					<div class="invalid-feedback d-block">
+						@error('shipment_date') @lang($message) @enderror
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<div class="col-md-2">
-			<div class="form-group">
-				<label for="receiver_branch" class="custom-text">@lang('Receiver')</label>
-				<input placeholder="@lang('receiver')" name="receiver"
-					   value="{{ old('receiver',request()->receiver) }}"
-					   type="text" class="form-control form-control-sm">
-			</div>
-		</div>
-
-		<div class="col-md-2">
-			<div class="form-group">
-				<label for="address" class="custom-text">@lang('Location')</label>
-				<input placeholder="@lang('search address')" name="address"
-					   value="{{ old('address',request()->address) }}"
-					   type="text" class="form-control form-control-sm">
-			</div>
-		</div>
-
-		<div class="col-md-2">
-			<div class="form-group">
-				<label for="shipment_date" class="custom-text">@lang('Shipment Date')</label>
-				<input placeholder="@lang('shipment date')" name="shipment_date"
-					   value="{{ old('shipment_date', request()->shipment_date) }}" type="date"
-					   class="form-control form-control-sm" autocomplete="off">
-			</div>
-		</div>
-
-		<div class="col-md-2">
-			<div class="form-group">
-				<label for="delivery_date" class="custom-text">@lang('Delivery Date')</label>
-				<input placeholder="@lang('delivery date')" name="delivery_date"
-					   value="{{ old('delivery_date', request()->delivery_date) }}" type="date"
-					   class="form-control form-control-sm" autocomplete="off">
-			</div>
-		</div>
-
-		<div class="col-md-2">
-			<div class="form-group">
-				<label for="shipment_type" class="custom-text">@lang('From Date')</label>
-				<input placeholder="@lang('from date')" name="from_date"
-					   value="{{ old('from_date', request()->from_date) }}" type="date"
-					   class="form-control form-control-sm" autocomplete="off">
-			</div>
-		</div>
-
-		<div class="col-md-2">
-			<div class="form-group">
-				<label for="shipment_type" class="custom-text">@lang('To Date')</label>
-				<input placeholder="@lang('to date')" name="to_date"
-					   value="{{ old('to_date',request()->to_date) }}"
-					   type="date" class="form-control form-control-sm">
-			</div>
-		</div>
-
-
-		<div class="col-md-2">
-			<div class="form-group search-currency-dropdown">
-				<label for="status" class="custom-text">@lang('Status')</label>
-				<select name="status" class="form-control form-control-sm">
-{{--					<option value="">@lang('All Status')</option>--}}
-					<option
-						value="queue" {{  request()->status == 'queue' ? 'selected' : '' }}>@lang('In Queue')</option>
-					<option
-						value="dispatch" {{  request()->status == 'dispatch' ? 'selected' : '' }}>@lang('Dispatch')</option>
-					<option
-						value="upcoming" {{  request()->status == 'upcoming' ? 'selected' : '' }}>@lang('Upcoming')</option>
-					<option
-						value="received" {{  request()->status == 'received' ? 'selected' : '' }}>@lang('Received')</option>
-					<option
-						value="delivered" {{  request()->status == 'delivered' ? 'selected' : '' }}>@lang('Delivered')</option>
-				</select>
+			<label for="shipment_date" class="custom-text"> @lang('Delivery Date') </label>
+			<div class="flatpickr">
+				<div class="input-group">
+					<input type="date" placeholder="@lang('Select date')" class="form-control delivery_date"
+						   name="delivery_date"
+						   value="{{ old('delivery_date',request()->delivery_date) }}" data-input>
+					<div class="input-group-append" readonly="">
+						<div class="form-control">
+							<a class="input-button cursor-pointer" title="clear" data-clear>
+								<i class="fas fa-times"></i>
+							</a>
+						</div>
+					</div>
+					<div class="invalid-feedback d-block">
+						@error('delivery_date') @lang($message) @enderror
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -135,3 +95,4 @@
 	</div>
 
 </form>
+
