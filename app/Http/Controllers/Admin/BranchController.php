@@ -10,8 +10,10 @@ use App\Models\BranchEmployee;
 use App\Models\BranchManager;
 use App\Models\Department;
 use App\Models\Role;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Validation\Rule;
@@ -168,7 +170,28 @@ class BranchController extends Controller
 
 	public function showBranchProfile($id)
 	{
-		$data['branchInfo'] = Branch::findOrFail($id);
+		$data['branchInfo'] = Branch::with('transaction')
+			->withCount('transaction')
+			->withCount([
+				'transaction as total_transactions' => function ($query) use ($id) {
+					$query->where('branch_id', $id)
+						->where('trx_type', '+')
+						->select(DB::raw('SUM(CASE WHEN condition_receive_payment_by_receiver_branch = 1 THEN amount + condition_receive_amount ELSE amount END) as total_amount'));
+				},
+				'transaction as total_condition_receive_amount' => function ($query) use ($id) {
+					$query->where('branch_id', $id)
+						->where('trx_type', '+')
+						->select(DB::raw('SUM(CASE WHEN condition_receive_payment_by_receiver_branch = 1 AND condition_receive_payment_by_sender_branch = 0 THEN condition_receive_amount ELSE 0 END) as total_condition_receive_amount'));
+				},
+				'transaction as total_condition_pay_amount' => function ($query) use ($id) {
+					$query->where('branch_id', $id)
+						->where('trx_type', '-')
+						->select(DB::raw('SUM(CASE WHEN condition_receive_payment_by_receiver_branch = 1 AND condition_receive_payment_by_sender_branch = 1 THEN condition_receive_amount ELSE 0 END) as total_condition_pay_amount'));
+				},
+			])
+			->where('status', 1)
+			->findOrFail($id);
+
 		return view('admin.branch.profile', $data);
 	}
 

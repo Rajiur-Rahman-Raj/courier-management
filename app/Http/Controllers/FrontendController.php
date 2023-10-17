@@ -98,7 +98,7 @@ class FrontendController extends Controller
 			->get()->groupBy('content.name');
 
 		if (sizeof($search) > 0){
-			$data['shipment'] = Shipment::where('shipment_id', $search['shipment_id'])->first();
+			$data['shipment'] = Shipment::with('senderBranch', 'receiverBranch')->where('shipment_id', $search['shipment_id'])->first();
 			$data['initial'] = false;
 		}else{
 			$data['shipment'] = null;

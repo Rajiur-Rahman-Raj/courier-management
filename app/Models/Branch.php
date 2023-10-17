@@ -18,4 +18,8 @@ class Branch extends Model
 	public function branchDriver(){
 		return $this->hasMany(BranchDriver::class, 'branch_id');
 	}
+
+	public function transaction(){
+		return $this->hasMany(Transaction::class, 'branch_id', 'id');
+	}
 }

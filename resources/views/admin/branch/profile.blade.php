@@ -41,22 +41,7 @@
 												</div>
 											</div>
 											<div class="row">
-												<div class="col-md-6">
-													<div class="card card-statistic-1 shadow-sm branch-box">
-														<div class="card-icon bg-primary">
-															<i class="fas fa-dollar-sign"></i>
-														</div>
-														<div class="card-wrap">
-															<div class="card-header">
-																<h4>@lang('Transactions')</h4>
-															</div>
-															<div class="card-body">
-																$2000
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 mb-3">
 													<div class="card card-statistic-1 shadow-sm branch-box">
 														<div class="card-icon bg-primary">
 															<i class="fas fa-boxes"></i>
@@ -66,11 +51,58 @@
 																<h4>@lang('Total Shipments')</h4>
 															</div>
 															<div class="card-body">
-																10
+																{{ $branchInfo->transaction_count }}
 															</div>
 														</div>
 													</div>
 												</div>
+												<div class="col-md-6">
+													<div class="card card-statistic-1 shadow-sm branch-box">
+														<div class="card-icon bg-primary">
+															<i class="fas fa-dollar-sign"></i>
+														</div>
+														<div class="card-wrap">
+															<div class="card-header">
+																<h4>@lang('Total Transactions')</h4>
+															</div>
+															<div class="card-body">
+																{{trans($basic->currency_symbol)}}{{getAmount($branchInfo->total_transactions, config('basic.fraction_number'))}}
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="card card-statistic-1 shadow-sm branch-box">
+														<div class="card-icon bg-primary">
+															<i class="fas fa-dollar-sign"></i>
+														</div>
+														<div class="card-wrap">
+															<div class="card-header">
+																<h4>@lang('Condition Receive Trx')</h4>
+															</div>
+															<div class="card-body">
+																{{trans($basic->currency_symbol)}}{{getAmount($branchInfo->total_condition_receive_amount, config('basic.fraction_number'))}}
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-6">
+													<div class="card card-statistic-1 shadow-sm branch-box">
+														<div class="card-icon bg-primary">
+															<i class="fas fa-dollar-sign"></i>
+														</div>
+														<div class="card-wrap">
+															<div class="card-header">
+																<h4>@lang('Condition Pay Trx')</h4>
+															</div>
+															<div class="card-body">
+																{{trans($basic->currency_symbol)}}{{getAmount($branchInfo->total_condition_pay_amount, config('basic.fraction_number'))}}
+															</div>
+														</div>
+													</div>
+												</div>
+
 											</div>
 										</div>
 									</div>
@@ -84,26 +116,7 @@
 										  class="mt-4" enctype="multipart/form-data">
 										@csrf
 										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-													<label for="name">@lang('Branch Type') <span
-															class="text-danger">*</span></label>
-													<select name="branch_type"
-															class="form-control @error('branch_type') is-invalid @enderror">
-														<option value="" disabled
-																selected>@lang('Select Branch type')</option>
-														<option
-															value="head_office" {{ $branchInfo->branch_type == 'head_office' ? 'selected' : '' }}>@lang('Head Office')</option>
-														<option
-															value="main_branch" {{ $branchInfo->branch_type == 'main_branch' ? 'selected' : '' }}>@lang('Main Branch')</option>
-														<option
-															value="sub_branch" {{ $branchInfo->branch_type == 'sub_branch' ? 'selected' : '' }}>@lang('Sub Branch')</option>
-													</select>
-													<div
-														class="invalid-feedback">@error('branch_type') @lang($message) @enderror</div>
-												</div>
-											</div>
-											<div class="col-md-6">
+											<div class="col-md-12">
 												<div class="form-group">
 													<label for="name">@lang('Branch Name') <span
 															class="text-danger">*</span></label>

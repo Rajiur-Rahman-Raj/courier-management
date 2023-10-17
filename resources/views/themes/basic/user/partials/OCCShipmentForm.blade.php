@@ -1,5 +1,5 @@
 <form method="post" action="{{ route('user.shipmentStore', 'operator-country') }}"
-	  class="mt-4" enctype="multipart/form-data">
+	  class="" enctype="multipart/form-data">
 	@csrf
 	<div class="row mb-3">
 		<div class="col-sm-12 col-md-12 mb-3">

@@ -23,7 +23,7 @@ class Admin extends Authenticatable
 
 	public function role()
 	{
-		return $this->belongsTo(Role::class, 'role_id', 'id');
+		return $this->belongsTo(Role::class, 'role_id', 'id')->where('status', 1);
 	}
 
 	public function branch(){

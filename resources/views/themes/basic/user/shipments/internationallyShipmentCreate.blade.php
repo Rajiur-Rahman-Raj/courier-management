@@ -41,7 +41,7 @@
 									</a>
 								</div>
 
-								<div class="card-body profile-setting">
+								<div class="card-body profile-setting mt-0">
 									@include('errors.error')
 									<div class="">
 										@include($theme.'user.partials.ICShipmentForm')
