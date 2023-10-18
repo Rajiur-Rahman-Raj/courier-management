@@ -100,6 +100,9 @@
 											@elseif($shipment->status == 6)
 												<span
 													class="badge text-bg-danger">@lang('Canceled')</span>
+											@elseif($shipment->status == 5 && $shipment->assign_to_collect != null)
+												<span
+													class="badge text-bg-primary">@lang('Assigned Driver For Pickup')</span>
 											@elseif($shipment->status == 1)
 												<span
 													class="badge text-bg-info">@lang('In Queue')</span>

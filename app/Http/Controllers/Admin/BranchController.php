@@ -175,7 +175,7 @@ class BranchController extends Controller
 			->withCount([
 				'transaction as total_transactions' => function ($query) use ($id) {
 					$query->where('branch_id', $id)
-						->where('trx_type', '+')
+						->where('trx_type', '+')->orWhere('trx_type', '-')
 						->select(DB::raw('SUM(CASE WHEN condition_receive_payment_by_receiver_branch = 1 THEN amount + condition_receive_amount ELSE amount END) as total_amount'));
 				},
 				'transaction as total_condition_receive_amount' => function ($query) use ($id) {
@@ -191,6 +191,14 @@ class BranchController extends Controller
 			])
 			->where('status', 1)
 			->findOrFail($id);
+
+		$data['totalShipments'] = $data['branchInfo']->transaction_count;
+		$data['totalTransactions'] = $data['branchInfo']->total_transactions;
+		$data['conditionReceiveAmount'] = $data['branchInfo']->total_condition_receive_amount;
+		$data['conditionPayAmount'] = $data['branchInfo']->total_condition_pay_amount;
+		$data['branchInTransaction'] = $data['totalTransactions'] - $data['conditionPayAmount'];
+		$data['branchOutTransaction'] = $data['branchInfo']->total_condition_pay_amount;
+		$data['branchCurrentAssets'] = $data['branchInTransaction'] - $data['branchOutTransaction'];
 
 		return view('admin.branch.profile', $data);
 	}

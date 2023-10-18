@@ -49,7 +49,6 @@
 		@if($shipment_status == 0 || $shipment_status == 6 || $shipment_status == 1 || $shipment_status == 2 || $shipment_status == 3 || $shipment_status == 4 || $shipment_status == 5)
 
 			<section class="tracking_area">
-
 				<div class="container-fluid">
 					<div class="row justify-content-center">
 						@if($shipment_by == 1)
@@ -144,135 +143,149 @@
 				</div>
 			</section>
 
-			<!-- shipment_info_area_start -->
-			<section class="shipment_info_area">
+
+			<section class="package section-2">
 				<div class="container">
-					<div class="row gy-5">
-{{--																		<div class="col-md-5">--}}
-{{--																			<div class="estmated_delivery shadow3 text-center">--}}
-{{--																				<div class="icon_area">--}}
-{{--																					<i class="fal fa-check-circle"></i>--}}
-{{--																				</div>--}}
-{{--																				<h5>Estmate Delivery</h5>--}}
-{{--																				<h5>August 15, 2023</h5>--}}
-{{--																				<div class="btn_area mt-25">--}}
-{{--																					<a href="" class="cmn_btn">Ready For Pickup</a>--}}
-{{--																				</div>--}}
-{{--																			</div>--}}
-{{--																		</div>--}}
-						<div class="col-md-12">
-							<div class="shipment_details_area shadow3 text-center">
-								<div class="section_subtitle mb-50">
-									<h4>@lang('Shipment Details')</h4>
+					<div class="package-box">
+						<div class="package-head">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="package-title">
+										<h1>@lang('Shipment information')</h1>
+									</div>
 								</div>
-								<div class="table_area d-flex text-start">
-									<ul>
-										<li><h5>@lang('Shipment Tracking Number')</h5></li>
-										<li><h5>@lang('Shipment Type')</h5></li>
-										<li><h5>@lang('Shipment Date')</h5></li>
-										<li><h5>@lang('Sender Branch')</h5></li>
-										<li><h5>@lang('Receiver Branch')</h5></li>
-										<li><h5>@lang('Shipment Status')</h5></li>
-										@if($shipment->dispatch_time != null)
-											<li><h5>@lang('Dispatch Time')</h5></li>
-										@endif
-										@if($shipment->receive_time != null)
-											<li><h5>@lang('Received Time')</h5></li>
-										@endif
-										@if($shipment->status == 5 && $shipment->assign_to_collect != null)
-											<li><h5>@lang('Assign To Driver')</h5></li>
-										@endif
-									</ul>
-									<ul>
-										<li><h5>: {{ $shipment->shipment_id }}</h5></li>
-										<li><h5>: {{ $shipment->shipment_type }}</h5></li>
-										<li><h5>: {{ customDate($shipment->shipment_date) }}</h5></li>
-										<li><h5>: @lang(optional($shipment->senderBranch)->branch_name)</h5></li>
-										<li><h5>: @lang(optional($shipment->receiverBranch)->branch_name) </h5></li>
-
-										<li>
-											<h5>:
-												@if($shipment->status == 0 || $shipment->status == 5)
-													<p class="badge f_text-bg-dark">@lang('Requested')</p>
-												@elseif($shipment->status == 6)
-													<p class="badge f_text-bg-danger">@lang('Canceled')</p>
-												@elseif($shipment->status == 1)
-													<p class="badge f_text-bg-info">@lang('In Queue')</p>
-												@elseif($shipment->status == 2)
-													<p class="badge f_text-bg-warning">@lang('Dispatch')</p>
-												@elseif($shipment->status == 3)
-													<p class="badge f_text-bg-success">@lang('Received')</p>
-												@elseif($shipment->status == 7 && $shipment->assign_to_delivery != null)
-													<p class="badge f_text-bg-primary">@lang('Delivery In Queue')</p>
-												@elseif($shipment->status == 4)
-													<p class="badge f_text-bg-danger">@lang('Delivered')</p>
-												@endif
-											</h5>
-										</li>
-
-										@if($shipment->dispatch_time != null)
-											<li><h5>: {{ customDateTime($shipment->dispatch_time) }} </h5></li>
-										@endif
-										@if($shipment->receive_time != null)
-											<li><h5>: {{ customDateTime($shipment->receive_time) }} </h5></li>
-										@endif
-										@if($shipment->status == 5 && $shipment->assign_to_collect != null)
-											<li><h5>: {{ optional($shipment->assignToCollect)->name }} </h5></li>
-										@endif
-									</ul>
+								<div class="col-sm-6">
+									<div class="track-number">
+										<h3>@lang('Tracking Number')</h3>
+										<span>{{ $shipment->shipment_id }}</span>
+									</div>
 								</div>
 							</div>
 						</div>
+						<div class="delivery">
+							<div class="row">
+								<div class="col-sm-4 ">
+									<div class="delivery-date">
+										<h4>@lang('Shipment Date')</h4>
+										<h4>{{ customDate($shipment->shipment_date) }}</h4>
+									</div>
+								</div>
+								<div class="col-sm-4 ">
+									<div class="delivery-time">
+										<h4>@lang('Elapsed After Shipment')</h4>
+{{--										$duration .= $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ';--}}
+										<h3>{{ $shipment->shipmentElapsedTime()['difference']->d.' Day'. ($shipment->shipmentElapsedTime()['difference']->d > 1 ? 's' : ''). $shipment->shipmentElapsedTime()['difference']->h . ' ' .' Hour'. ($shipment->shipmentElapsedTime()['difference']->h > 1 ? 's' : '') . $shipment->shipmentElapsedTime()['difference']->i.' Minute' . ($shipment->shipmentElapsedTime()['difference']->i > 1 ? 's' : '') }}</h3>
+{{--										<h3>1 hour, 5 minutes </h3>--}}
+									</div>
+								</div>
+								<div class="col-sm-4 ">
+									<div class="delivery-type">
+										<h4>@lang('Delivery Type')</h4>
+										<h4>{{ formatedShipmentType($shipment->shipment_type) }}</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						@if($shipment_status == 0)
+							<div class="processing">
+								<div class="processing-title">
+									<h2>@lang('Shipment Status')</h2>
+								</div>
+
+								<div class="process d-flex justify-content-center text-center">
+									<div class="spinner-grow text-warning" role="status">
+										<span class="visually-hidden"></span>
+									</div>
+									@lang('Requesting')...
+								</div>
+							</div>
+						@elseif($shipment_status == 1)
+							<div class="processing">
+								<div class="processing-title">
+									<h2>@lang('Shipment Status')</h2>
+								</div>
+								<div class="process d-flex justify-content-center text-center">
+									<div class="spinner-border text-warning" role="status">
+										<span class="visually-hidden"></span>
+
+									</div>
+									@lang('Processing')...
+								</div>
+							</div>
+						@elseif($shipment_status == 2)
+							<div class="payment-details">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="down-icon">
+											<i class="fas fa-solid fa-arrow-down "></i>
+										</div>
+										<div class="location dot-1">
+											<h4>@lang(optional($shipment->senderBranch)->branch_name)</h4>
+											<h5>@lang(optional($shipment->senderBranch)->address)</h5>
+										</div>
+										<div class="location dot-2">
+											<h4><span>@lang(optional($shipment->receiverBranch)->branch_name)</span></h4>
+											<h5><span>@lang(optional($shipment->receiverBranch)->address)</h5>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+{{--							<div class="payment-details-2">--}}
+{{--								<div class="row">--}}
+{{--									<div class="col-md-12">--}}
+{{--										<div class="location dot-3">--}}
+{{--											<h4>bkash LTD.</h4>--}}
+{{--											<h5>bkash limited SKS tower</h5>--}}
+{{--										</div>--}}
+{{--										<div class="location dot-4">--}}
+{{--											<h4><span>Anik kumar</span></h4>--}}
+{{--											<h5><span>House-11, Road-11</h5>--}}
+{{--										</div>--}}
+{{--										<div class="down-icon-2">--}}
+{{--											<i class="fas fa-solid fa-arrow-up"></i>--}}
+{{--										</div>--}}
+{{--									</div>--}}
+{{--								</div>--}}
+{{--							</div>--}}
+
+						@elseif($shipment->status == 3)
+							<div class="processing shipment_info_area">
+								<div class="process d-flex justify-content-center text-center">
+									<div class="estmated_received text-center">
+										<div class="icon_area">
+											<i class="fal fa-check-circle"></i>
+										</div>
+										<h5>@lang('Shipment Received Date')</h5>
+										<h5>August 15, 2023</h5>
+										<div class="btn_area mt-25">
+											<button disabled type="button" class="cmn_btn">@lang('Ready For Delivery')</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						@elseif($shipment->status == 4)
+							<div class="processing shipment_info_area">
+								<div class="process d-flex justify-content-center text-center">
+									<div class="estmated_delivery text-center">
+										<div class="icon_area">
+											<i class="fal fa-check-circle"></i>
+{{--											<i class="fas fa-check-double"></i>--}}
+										</div>
+										<h5>@lang('Shipment Delivery Date')</h5>
+										<h5>August 15, 2023</h5>
+										<div class="btn_area mt-25">
+											<button disabled type="button" class="cmn_btn">@lang('Delivery Successfully Completed')</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						@endif
 					</div>
 				</div>
 			</section>
-			<!-- shipment_info_area_end -->
-
-			<!-- shipment_full_details_area_start -->
-			{{--			<section class="shipment_full_details_area">--}}
-			{{--				<div class="container">--}}
-			{{--					<div class="row">--}}
-			{{--						<div class="col mx-auto">--}}
-			{{--							<div class="section_header text-center">--}}
-			{{--								<h4>Summary</h4>--}}
-			{{--							</div>--}}
-			{{--						</div>--}}
-			{{--					</div>--}}
-			{{--					<div class="row">--}}
-			{{--						<div class="col-12">--}}
-			{{--							<div class="table-responsive">--}}
-			{{--								<table class="table table-striped">--}}
-			{{--									<thead>--}}
-			{{--									<tr>--}}
-			{{--										<th scope="col">Date & Time</th>--}}
-			{{--										<th scope="col">Location</th>--}}
-			{{--										<th scope="col">Status</th>--}}
-			{{--									</tr>--}}
-			{{--									</thead>--}}
-			{{--									<tbody>--}}
-			{{--									<tr>--}}
-			{{--										<td data-label="id" scope="row">19th Feb, 2023 - 22:30 PM</td>--}}
-			{{--										<td data-label="name">Dhaka, Bangladesh</td>--}}
-			{{--										<td data-label="rate">Ready for Pick Up</td>--}}
-			{{--									</tr>--}}
-			{{--									<tr>--}}
-			{{--										<td data-label="id" scope="row">18th Feb, 2023 - 10:30 PM</td>--}}
-			{{--										<td data-label="name">-</td>--}}
-			{{--										<td data-label="rate">In Transit</td>--}}
-			{{--									</tr>--}}
-			{{--									<tr>--}}
-			{{--										<td data-label="id" scope="row">5th Feb, 2023 - 15:30 PM</td>--}}
-			{{--										<td data-label="name">Dubai, UAE</td>--}}
-			{{--										<td data-label="rate">Shipment Received</td>--}}
-			{{--									</tr>--}}
-			{{--									</tbody>--}}
-			{{--								</table>--}}
-			{{--							</div>--}}
-			{{--						</div>--}}
-			{{--					</div>--}}
-			{{--				</div>--}}
-			{{--			</section>--}}
-			<!-- shipment_full_details_area_end -->
 		@else
 			<!--return shipment tracking_area_start -->
 			<section class="tracking_area">
@@ -334,18 +347,18 @@
 			<section class="shipment_info_area">
 				<div class="container">
 					<div class="row gy-5">
-						{{--												<div class="col-md-5">--}}
-						{{--													<div class="estmated_delivery shadow3 text-center">--}}
-						{{--														<div class="icon_area">--}}
-						{{--															<i class="fal fa-check-circle"></i>--}}
-						{{--														</div>--}}
-						{{--														<h5>Estmate Delivery</h5>--}}
-						{{--														<h5>August 15, 2023</h5>--}}
-						{{--														<div class="btn_area mt-25">--}}
-						{{--															<a href="" class="cmn_btn">Ready For Pickup</a>--}}
-						{{--														</div>--}}
-						{{--													</div>--}}
-						{{--												</div>--}}
+						<div class="col-md-5">
+							<div class="estmated_delivery shadow3 text-center">
+								<div class="icon_area">
+									<i class="fal fa-check-circle"></i>
+								</div>
+								<h5>Estmate Delivery</h5>
+								<h5>August 15, 2023</h5>
+								<div class="btn_area mt-25">
+									<a href="" class="cmn_btn">Ready For Pickup</a>
+								</div>
+							</div>
+						</div>
 						<div class="col-md-12">
 							<div class="shipment_details_area shadow3 text-center">
 								<div class="section_subtitle mb-50">
@@ -402,4 +415,5 @@
 			</div>
 		</div>
 	@endif
+
 @endsection

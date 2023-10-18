@@ -18,28 +18,27 @@
 			<div class="row mb-3">
 				<div class="container-fluid" id="container-wrapper">
 					<div class="row justify-content-md-center">
-						<div class="col-lg-8">
+						<div class="col-lg-12">
 							<div class="card mb-4 card-primary shadow">
 								<div class="card-header d-inline">
 									<div class="row">
 										<div class="col-xl-5">
+											<div class="w-100"><h5
+													class="mt-0 font-weight-bold text-primary text-center mt-3 mb-4 ">{{ __($branchInfo->branch_name) }}</h5>
+											</div>
+										</div>
+									</div>
+									<div class="row ">
+										<div class="col-xl-5">
+
 											<div class="branch-img">
 												<img class="h-100 align-self-start img-profile-view img-thumbnail"
 													 src="{{ getFile($branchInfo->driver,$branchInfo->image) }}"
 													 alt="@lang('Branch Image')">
 											</div>
+
 										</div>
-										<div class="col-xl-7">
-											<div class="media mt-4 mt-xl-0">
-												<div class="media-body">
-													<h5 class="mt-0 font-weight-bold text-primary">{{ __($branchInfo->branch_name) }}</h5>
-													<p>
-														<i class="fas fa-map-marker"></i> {{ __($branchInfo->address) }} <br>
-														<i class="fas fa-mobile-alt"></i> {{ __($branchInfo->phone) }} <br>
-														<i class="fas fa-envelope"></i> {{ __($branchInfo->email) }} <br>
-													</p>
-												</div>
-											</div>
+										<div class="col-xl-7 mt-4 mt-xl-0">
 											<div class="row">
 												<div class="col-md-6 mb-3">
 													<div class="card card-statistic-1 shadow-sm branch-box">
@@ -51,53 +50,102 @@
 																<h4>@lang('Total Shipments')</h4>
 															</div>
 															<div class="card-body">
-																{{ $branchInfo->transaction_count }}
+																{{ $totalShipments }}
 															</div>
 														</div>
 													</div>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6 mb-3">
 													<div class="card card-statistic-1 shadow-sm branch-box">
 														<div class="card-icon bg-primary">
 															<i class="fas fa-dollar-sign"></i>
 														</div>
 														<div class="card-wrap">
 															<div class="card-header">
-																<h4>@lang('Total Transactions')</h4>
+																<h4>@lang('Total Transaction Amount')</h4>
 															</div>
 															<div class="card-body">
-																{{trans($basic->currency_symbol)}}{{getAmount($branchInfo->total_transactions, config('basic.fraction_number'))}}
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="card card-statistic-1 shadow-sm branch-box">
-														<div class="card-icon bg-primary">
-															<i class="fas fa-dollar-sign"></i>
-														</div>
-														<div class="card-wrap">
-															<div class="card-header">
-																<h4>@lang('Condition Receive Trx')</h4>
-															</div>
-															<div class="card-body">
-																{{trans($basic->currency_symbol)}}{{getAmount($branchInfo->total_condition_receive_amount, config('basic.fraction_number'))}}
+																{{trans($basic->currency_symbol)}}{{getAmount($totalTransactions, config('basic.fraction_number'))}}
 															</div>
 														</div>
 													</div>
 												</div>
 
-												<div class="col-md-6">
+												<div class="col-md-6 mb-3">
 													<div class="card card-statistic-1 shadow-sm branch-box">
 														<div class="card-icon bg-primary">
 															<i class="fas fa-dollar-sign"></i>
 														</div>
 														<div class="card-wrap">
 															<div class="card-header">
-																<h4>@lang('Condition Pay Trx')</h4>
+																<h4>@lang('Condition Receive Amount')</h4>
 															</div>
 															<div class="card-body">
-																{{trans($basic->currency_symbol)}}{{getAmount($branchInfo->total_condition_pay_amount, config('basic.fraction_number'))}}
+																{{trans($basic->currency_symbol)}}{{getAmount($conditionReceiveAmount, config('basic.fraction_number'))}}
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-6 mb-3">
+													<div class="card card-statistic-1 shadow-sm branch-box">
+														<div class="card-icon bg-primary">
+															<i class="fas fa-dollar-sign"></i>
+														</div>
+														<div class="card-wrap">
+															<div class="card-header">
+																<h4>@lang('Condition Pay Amount')</h4>
+															</div>
+															<div class="card-body">
+																{{trans($basic->currency_symbol)}}{{getAmount($conditionPayAmount, config('basic.fraction_number'))}}
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-6 mb-3">
+													<div class="card card-statistic-1 shadow-sm branch-box">
+														<div class="card-icon bg-primary">
+															<i class="fas fa-dollar-sign"></i>
+														</div>
+														<div class="card-wrap">
+															<div class="card-header">
+																<h4>@lang('Branch In Transactions')</h4>
+															</div>
+															<div class="card-body">
+																{{trans($basic->currency_symbol)}}{{getAmount($branchInTransaction, config('basic.fraction_number'))}}
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-6 mb-3">
+													<div class="card card-statistic-1 shadow-sm branch-box">
+														<div class="card-icon bg-primary">
+															<i class="fas fa-dollar-sign"></i>
+														</div>
+														<div class="card-wrap">
+															<div class="card-header">
+																<h4>@lang('Branch Out Transactions')</h4>
+															</div>
+															<div class="card-body">
+																{{trans($basic->currency_symbol)}}{{getAmount($branchOutTransaction, config('basic.fraction_number'))}}
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-12 mb-3">
+													<div class="card card-statistic-1 shadow-sm branch-box">
+														<div class="card-icon bg-primary">
+															<i class="fas fa-dollar-sign"></i>
+														</div>
+														<div class="card-wrap">
+															<div class="card-header">
+																<h4>@lang('Branch Current Assets')</h4>
+															</div>
+															<div class="card-body">
+																{{getAmount($branchCurrentAssets, config('basic.fraction_number'))}} <span class="font-weight-normal">{{trans($basic->base_currency)}}</span>
 															</div>
 														</div>
 													</div>
@@ -106,9 +154,64 @@
 											</div>
 										</div>
 									</div>
+									<div class="row mt-4">
+										<div class="col-xl-3 col-md-4 col-sm-6 ">
+											<div class="address-item m-2">
+												<div class="icon-area">
+													<i class="fas fa-map-marker-alt"></i>
+												</div>
+												<div class="content-area">
+													<span
+														class="font-weight-bold text-dark"></span> {{ __($branchInfo->address) }}
+												</div>
 
+											</div>
+
+										</div>
+										<div class="col-xl-3 col-md-4 col-sm-6 ">
+											<div class="address-item m-2">
+												<div class="icon-area">
+													<i class="fas fa-phone fa-rotate-90"></i>
+												</div>
+												<div class="content-area">
+													<span
+														class="font-weight-bold text-dark"> </span> {{ __($branchInfo->phone) }}
+												</div>
+
+											</div>
+
+										</div>
+										<div class="col-xl-3 col-md-4 col-sm-6 ">
+											<div class="address-item m-2">
+												<div class="icon-area">
+													<i class="fas fa-envelope"></i>
+												</div>
+												<div class="content-area">
+													<span
+														class="font-weight-bold text-dark"></span> {{ __($branchInfo->email) }}
+												</div>
+
+											</div>
+
+
+										</div>
+										<div class="col-xl-3 col-md-4 col-sm-6 ">
+											<div class="address-item m-2">
+												<div class="icon-area">
+													<i class="fas fa-envelope"></i>
+												</div>
+												<div class="content-area">
+													<span
+														class="font-weight-bold text-dark"> </span> {{ __($branchInfo->email) }}
+												</div>
+
+											</div>
+
+
+										</div>
+
+									</div>
 								</div>
-
 
 
 								<div class="card-body">
@@ -211,7 +314,8 @@
 											</div>
 										</div>
 
-										<button type="submit" class="btn btn-primary btn-sm btn-block">@lang('Update Profile')</button>
+										<button type="submit"
+												class="btn btn-primary btn-sm btn-block">@lang('Update Profile')</button>
 									</form>
 								</div>
 							</div>

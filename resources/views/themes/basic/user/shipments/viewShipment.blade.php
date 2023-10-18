@@ -198,6 +198,8 @@
 													<p class="badge text-bg-dark">@lang('Requested')</p>
 												@elseif($singleShipment->status == 6)
 													<p class="badge text-bg-danger">@lang('Canceled')</p>
+												@elseif($singleShipment->status == 5 && $singleShipment->assign_to_collect != null)
+													<p class="badge text-bg-primary">@lang('Assigned Driver For Pickup')</p>
 												@elseif($singleShipment->status == 1)
 													<p class="badge text-bg-info">@lang('In Queue')</p>
 												@elseif($singleShipment->status == 2)

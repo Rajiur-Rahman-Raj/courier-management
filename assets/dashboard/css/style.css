@@ -5064,3 +5064,23 @@ body {
 	background-color: #5e72e4 !important;
 	color: #FFFFFF;
 }
+
+.card.card-custom {
+	border-bottom: 2px solid #6777ef !important;
+	padding-bottom: 8px !important;
+}
+.address-item{
+	display: flex;
+	gap: 10px;
+}
+.address-item .icon-area{
+	width: 35px;
+	height: 35px;
+	min-width: 35px;
+	border-radius: 5px;
+	background-color: #6777ef ;
+	color: var(--white);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

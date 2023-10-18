@@ -1344,7 +1344,9 @@ section {
 	height: 80%;
 	width: 160px;
 }
-
+.tracking_area{
+	padding: 0px;
+}
 .tracking_area .icon_area {
 	width: 75px;
 	height: 75px;
@@ -1383,7 +1385,7 @@ section {
 }
 
 .tracking_area .box:last-child .icon_area::before {
-	background: var(--body_color);
+	/*background: var(--body_color);*/
 }
 
 .tracking_area .active-tracking{
@@ -1393,6 +1395,41 @@ section {
 .tracking_area .inactive-tracking{
 	background-color: #5a5a5a !important;
 }
+.tracking_area .inactive-tracking:before{
+	background-color: var(--body_color); !important;
+}
+
+.tracking_area .active-tracking:before{
+	background-color: var(--theme_color); !important;
+}
+/*.cmn_box3 .icon_area::before {*/
+/*	width: 2px;*/
+/*	height: 40px;*/
+/*	bottom: 100%;*/
+/*	left: 50%;*/
+/*	transform: translateX(-50%);*/
+/*	top: initial;*/
+/*}*/
+
+
+.estmated_received {
+	padding: 40px;
+	border-radius: 5px;
+	height: 100%;
+}
+
+.estmated_received .icon_area i {
+	font-size: 60px;
+	color: var(--theme_color);
+	margin-bottom: 30px;
+}
+
+.estmated_received .cmn_btn {
+	background: var(--theme_color);
+	font-size: 16px;
+	color: #000000;
+}
+
 
 .estmated_delivery {
 	padding: 40px;
@@ -1409,17 +1446,17 @@ section {
 .estmated_delivery .cmn_btn {
 	background: var(--lime_green);
 	font-size: 16px;
+	color: white !important;
 }
 
-.estmated_delivery .cmn_btn:hover {
-	background: var(--theme_color);
-}
 
 .shipment_info_area h5 {
 	font-size: 18px;
 	color: var(--body_color);
 }
-
+.shipment_info_area {
+	padding: 50px 0px;
+}
 .shipment_details_area {
 	padding: 40px 90px;
 	border-radius: 5px;
@@ -4060,5 +4097,481 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	padding-bottom: 0;
 }
 
-/* new css */
+/* package css */
+.package{
+	padding: 100px 0px 0px 0px;
+}
+.package .package-box {
+	border-radius: 5px;
+	background-color: #f2f3f5;
+	padding: 40px;
+}
+.package .package-box .package-head .package-title h1 {
+	font-size: 35px;
+	font-weight: 800;
+	text-transform: capitalize;
+	font-family: "Urbanist", sans-serif;
+}
+.package .package-box .package-head .track-number {
+	text-align: end;
+}
+.package .package-box .package-head .track-number h3 {
+	font-size: 22px;
+	font-family: "Urbanist", sans-serif;
+	font-weight: 400;
+	text-transform: capitalize;
+	margin: 0;
+	color: #666a6b;
+}
+.package .package-box .package-head .track-number span {
+	font-size: 25px;
+	text-transform: uppercase;
+	font-weight: 600;
+}
+.package .package-box .delivery {
+	background-color: #ffffff;
+	margin: 30px 0;
+	padding: 30px;
+	border-radius: 5px;
+}
+.package .package-box .delivery .delivery-date h4 {
+	font-size: 20px;
+	font-family: "Urbanist", sans-serif;
+	text-transform: capitalize;
+	color: #666a6b;
+}
+.package .package-box .delivery .delivery-type {
+	text-align: end;
+}
+.package .package-box .delivery .delivery-type h4 {
+	font-size: 20px;
+	font-family: "Urbanist", sans-serif;
+	text-transform: capitalize;
+	color: #666a6b;
+}
+.package .package-box .delivery .delivery-time {
+	text-align: center;
+}
+.package .package-box .delivery .delivery-time h4 {
+	font-size: 20px;
+	font-family: "Urbanist", sans-serif;
+	text-transform: capitalize;
+	color: #666a6b;
+}
+.package .package-box .delivery .delivery-time h3 {
+	font-size: 30px;
+	font-family: "Urbanist", sans-serif;
+}
+.package .package-box .payment-details {
+	background-color: #ffffff;
+	padding: 30px;
+	position: relative;
+	border-radius: 5px;
+}
+.package .package-box .payment-details::before {
+	content: "";
+	position: absolute;
+	width: 3px;
+	height: 165px;
+	top: 53px;
+	left: 50px;
+	background-color: #693299;
+}
+.package .package-box .payment-details .dot-1 {
+	position: relative;
+}
+.package .package-box .payment-details .dot-1::before {
+	content: "";
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background-color: #693299;
+	left: -36px;
+	top: 0px;
+}
+.package .package-box .payment-details .dot-2 {
+	position: relative;
+}
+.package .package-box .payment-details .dot-2::before {
+	content: "";
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background-color: #40d19d;
+	top: 80px;
+	left: -36px;
+}
+.package .package-box .payment-details .location {
+	position: relative;
+	margin-left: 50px;
+	padding: 15px 0;
+}
+.package .package-box .payment-details .location h4 {
+	font-weight: 600;
+	font-size: 20px;
+	padding: 8px 0;
+	font-family: "Urbanist", sans-serif;
+}
+.package .package-box .payment-details .location h4 span {
+	text-transform: uppercase;
+}
+.package .package-box .payment-details .location h5 {
+	color: #666a6b;
+}
+.package .package-box .payment-details .location h5 span {
+	text-transform: uppercase;
+}
+.package .package-box .payment-details .down-icon {
+	position: relative;
+}
+.package .package-box .payment-details .down-icon i {
+	font-size: 20px;
+	position: absolute;
+	left: 13px;
+	top: 120px;
+	color: #693299;
+	animation: arrow-down 1s infinite;
+}
+@keyframes arrow-down {
+	0% {
+		top: 0%;
+	}
+	50% {
+		top: 100%;
+	}
+}
+.package .package-box .payment-details-2 {
+	background-color: #ffffff;
+	padding: 30px;
+	position: relative;
+	border-radius: 5px;
+}
+.package .package-box .payment-details-2::before {
+	content: "";
+	position: absolute;
+	width: 3px;
+	height: 165px;
+	bottom: 55px;
+	left: 50px;
+	background-color: #693299;
+}
+.package .package-box .payment-details-2 .dot-3 {
+	position: relative;
+}
+.package .package-box .payment-details-2 .dot-3::before {
+	content: "";
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background-color: #40d19d;
+	left: -36px;
+	bottom: 85px;
+}
+.package .package-box .payment-details-2 .dot-4 {
+	position: relative;
+}
+.package .package-box .payment-details-2 .dot-4::before {
+	content: "";
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background-color: #693299;
+	bottom: 0;
+	left: -36px;
+}
+.package .package-box .payment-details-2 .location {
+	position: relative;
+	margin-left: 50px;
+	padding: 15px 0;
+}
+.package .package-box .payment-details-2 .location h4 {
+	font-weight: 600;
+	font-size: 20px;
+	padding: 8px 0;
+	font-family: "Urbanist", sans-serif;
+}
+.package .package-box .payment-details-2 .location h4 span {
+	text-transform: uppercase;
+}
+.package .package-box .payment-details-2 .location h5 {
+	color: #666a6b;
+}
+.package .package-box .payment-details-2 .location h5 span {
+	text-transform: uppercase;
+}
+.package .package-box .payment-details-2 .down-icon-2 {
+	position: relative;
+}
+.package .package-box .payment-details-2 .down-icon-2 i {
+	font-size: 20px;
+	position: absolute;
+	left: 13px;
+	bottom: 120px;
+	color: #693299;
+	animation: arrow-up 1s infinite;
+}
+@keyframes arrow-up {
+	0% {
+		bottom: 0%;
+	}
+	50% {
+		bottom: 100%;
+	}
+}
+.package .package-box .processing {
+	margin: 20px 0;
+	background-color: #ffffff;
+	padding: 20px;
+	border-radius: 5px;
+}
+.package .package-box .processing .processing-title {
+	text-align: center;
+}
+.package .package-box .processing .processing-title h2 {
+	font-size: 40px;
+	padding: 10px 0;
+	font-family: "Urbanist", sans-serif;
+}
+.package .package-box .processing .processing-title p {
+	margin: auto;
+	color: #666a6b;
+	font-size: 16px;
+	max-width: 500px;
+}
+.package .package-box .processing .spinner-border {
+	margin: 20px 0;
+}
+.package .package-box .processing .spinner-border,
+.package .package-box .processing .spinner-grow {
+	width: 100px !important;
+	height: 100px !important;
+}
+@media screen and (max-width: 991px) {
+	.package .package-box .package-head .package-title h1 {
+		font-size: 25px;
+	}
+	.package .package-box .package-head .track-number h3 {
+		font-size: 18px;
+	}
+	.package .package-box .package-head .track-number span {
+		font-size: 20px;
+	}
+	.package .package-box .delivery .delivery-date h4 {
+		font-size: 17px;
+	}
+	.package .package-box .delivery .delivery-type h4 {
+		font-size: 17px;
+	}
+	.package .package-box .delivery .delivery-time h4 {
+		font-size: 17px;
+	}
+	.package .package-box .delivery .delivery-time h3 {
+		font-size: 20px;
+	}
+	.package .package-box .payment-details .location {
+		padding: 5px 0;
+	}
+	.package .package-box .payment-details .location h4 {
+		font-size: 20px;
+	}
+	.package .package-box .payment-details .location h5 {
+		font-size: 17px;
+	}
+	.package .package-box .payment-details-2 .location {
+		padding: 5px 0;
+	}
+	.package .package-box .payment-details-2 .location h4 {
+		font-size: 20px;
+	}
+	.package .package-box .payment-details-2 .location h5 {
+		font-size: 17px;
+	}
+	.package .package-box .payment-details-2 .dot-3 {
+		position: relative;
+	}
+	.package .package-box .payment-details-2 .dot-3::before {
+		bottom: 80px;
+	}
+
+	.package .package-box .payment-details::before {
+		top: 44px;
+	}
+	.package .package-box .payment-details-2::before {
+		bottom:45px;
+	}
+}
+@media screen and (max-width: 767px) {
+	.package .package-box .package-head .package-title h1 {
+		font-size: 22px;
+	}
+	.package .package-box .package-head .track-number h3 {
+		font-size: 17px;
+	}
+	.package .package-box .package-head .track-number span {
+		font-size: 18px;
+	}
+	.package .package-box .delivery .delivery-date h4 {
+		font-size: 16px;
+	}
+	.package .package-box .delivery .delivery-type h4 {
+		font-size: 16px;
+	}
+	.package .package-box .delivery .delivery-time h4 {
+		font-size: 16px;
+	}
+	.package .package-box .delivery .delivery-time h3 {
+		font-size: 18px;
+	}
+	.package .package-box .payment-details .location {
+		padding: 5px 0;
+	}
+	.package .package-box .payment-details .location h4 {
+		font-size: 18px;
+	}
+	.package .package-box .payment-details .location h5 {
+		font-size: 16px;
+	}
+	.package .package-box .payment-details .dot-2::before {
+		top: 90px;
+	}
+	.package .package-box .payment-details-2 .location {
+		padding: 5px 0;
+	}
+	.package .package-box .payment-details-2 .location h4 {
+		font-size: 18px;
+	}
+	.package .package-box .payment-details-2 .location h5 {
+		font-size: 16px;
+	}
+	.package .package-box .payment-details-2 .dot-3 {
+		position: relative;
+	}
+	.package .package-box .payment-details-2 .dot-3::before {
+		bottom: 70px;
+	}
+	.package .package-box .payment-details-2::before {
+		bottom: 37px;
+	}
+	.package .package-box .processing .processing-title h2 {
+		font-size: 25px;
+	}
+	.package .package-box .processing .processing-title p {
+		font-size: 16px;
+	}
+}
+@media screen and (max-width: 575px) {
+	.package .package-box .package-head .track-number {
+		text-align: start;
+		margin-top: 10px;
+	}
+	.package .package-box .delivery .delivery-date {
+		margin-bottom: 10px;
+	}
+	.package .package-box .delivery .delivery-type {
+		text-align: start;
+	}
+	.package .package-box .delivery .delivery-time {
+		text-align: start;
+		margin-bottom: 10px;
+	}
+	.package .package-box .payment-details::before {
+		left: 30px;
+	}
+	.package .package-box .payment-details .location {
+		margin-left: 30px;
+		padding: 5px 0;
+	}
+	.package .package-box .payment-details .location h4 {
+		font-size: 18px;
+	}
+	.package .package-box .payment-details .location h5 {
+		font-size: 16px;
+	}
+	.package .package-box .payment-details .dot-1::before {
+		left: -36px;
+	}
+	.package .package-box .payment-details .dot-2::before {
+		left: -36px;
+	}
+	.package .package-box .payment-details .down-icon i {
+		left: -8px;
+		animation: arrow-down 1s infinite;
+	}
+	.package .package-box .payment-details-2::before {
+		left: 30px;
+	}
+	.package .package-box .payment-details-2 .location {
+		margin-left: 30px;
+		padding: 5px 0;
+	}
+	.package .package-box .payment-details-2 .location h4 {
+		font-size: 18px;
+	}
+	.package .package-box .payment-details-2 .location h5 {
+		font-size: 16px;
+	}
+	.package .package-box .payment-details-2 .dot-3::before {
+		left: -36px;
+		top: -8px;
+	}
+	.package .package-box .payment-details-2 .dot-4::before {
+		left: -36px;
+	}
+	.package .package-box .payment-details-2 .down-icon-2 i {
+		left: -8px;
+		animation: arrow-up 1s infinite;
+	}
+	.package .package-box .processing .processing-title h2 {
+		font-size: 25px;
+	}
+	.package .package-box .processing .processing-title p {
+		font-size: 16px;
+	}
+}
+@media screen and (max-width: 320px) {
+
+	.package .package-box .payment-details::before {
+		left: 30px;
+	}
+	.package .package-box .payment-details .location {
+		margin-left: 30px;
+		padding: 5px 0;
+	}
+	.package .package-box .payment-details .location h4 {
+		font-size: 16px;
+	}
+	.package .package-box .payment-details .location h5 {
+		font-size: 14px;
+	}
+	.package .package-box .payment-details .dot-3::before {
+		left: -36px;
+		top: 40px;
+	}
+
+	.package .package-box .payment-details-2::before {
+		bottom: 47px;
+	}
+
+	.package .package-box .payment-details-2::before {
+		left: 30px;
+	}
+	.package .package-box .payment-details-2 .location {
+		margin-left: 30px;
+		padding: 5px 0;
+	}
+	.package .package-box .payment-details-2 .location h4 {
+		font-size: 16px;
+	}
+	.package .package-box .payment-details-2 .location h5 {
+		font-size: 14px;
+	}
+	.package .package-box .payment-details-2 .dot-3::before {
+		left: -36px;
+		top: 0px;
+	}
+} /*# sourceMappingURL=style.css.map */
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nette\Utils\DateTime;
 
 class Shipment extends Model
 {
@@ -151,6 +152,19 @@ class Shipment extends Model
 
 	public function assignToDelivery(){
 		return $this->belongsTo(Admin::class, 'assign_to_delivery', 'id');
+	}
+
+	public function shipmentElapsedTime(){
+		$todayDate = now();
+		$shipmentDate = $this->shipment_date;
+		$datetime1 = new DateTime($todayDate);
+		$datetime2 = new DateTime($shipmentDate);
+
+		$difference = $datetime1->diff($datetime2);
+
+		return [
+			'difference'  => $difference
+		];
 	}
 
 }

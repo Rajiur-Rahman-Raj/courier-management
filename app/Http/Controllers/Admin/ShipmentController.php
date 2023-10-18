@@ -614,28 +614,28 @@ class ShipmentController extends Controller
 				} else {
 					$shipment->status = 1;
 					$shipment->save();
-					$transaction = new Transaction();
-					TransactionService::requestedShipmentAccept($shipment, $transaction, $trans, optional($shipment->sender)->id);
+//					$transaction = new Transaction();
+//					TransactionService::requestedShipmentAccept($shipment, $transaction, $trans, optional($shipment->sender)->id);
 					DB::commit();
 					NotifyMailService::acceptShipmentRequestNotify($shipment, $trans);
 					return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
 				}
 			} elseif ($shipment->payment_by == 2) {
-				if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
+//				if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
 					$shipment->status = 1;
 					$shipment->save();
 					DB::commit();
 					NotifyMailService::acceptShipmentRequestNotify($shipment);
 					return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
-				} else {
-					$shipment->status = 1;
-					$shipment->save();
-					$transaction = new Transaction();
-					TransactionService::requestedShipmentAccept($shipment, $transaction, $trans, optional($shipment->receiver)->id);
-					DB::commit();
-					NotifyMailService::acceptShipmentRequestNotify($shipment, $trans);
-					return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
-				}
+//				} else {
+//					$shipment->status = 1;
+//					$shipment->save();
+//					$transaction = new Transaction();
+//					TransactionService::requestedShipmentAccept($shipment, $transaction, $trans, optional($shipment->receiver)->id);
+//					DB::commit();
+//					NotifyMailService::acceptShipmentRequestNotify($shipment, $trans);
+//					return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
+//				}
 			}
 
 		} catch (\Exception $exp) {
@@ -1688,6 +1688,7 @@ class ShipmentController extends Controller
 					if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
 						return back()->with('error', 'Please first complete your payment? go to edit and select payment status paid then update this shipment');
 					} elseif (($shipment->payment_type == 'wallet' || $shipment->payment_type == 'cash') && $shipment->payment_status == 1) {
+
 						$this->shipmentStatusUpdate($shipment, 2, 'dispatch', $time);
 						DB::commit();
 						$transaction = new Transaction();

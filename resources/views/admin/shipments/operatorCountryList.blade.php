@@ -240,7 +240,7 @@
 																						@endif
 
 																						@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.edit')))
-																							@if(($shipment->status == 0 || $shipment->status == 1 || $shipment->status == 5) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || optional(optional($shipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id || optional($shipment->assignToCollect)->id == $authenticateUser->id || $authenticateUser->role_id == null) || ($shipment->status == 3 && $shipment->payment_status == 2))
+																							@if(($shipment->status == 0 || $shipment->status == 1 || $shipment->status == 5 || $shipment->status == 7) && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || optional(optional($shipment->receiverBranch)->branchManager)->admin_id == $authenticateUser->id || optional($shipment->assignToCollect)->id == $authenticateUser->id || optional($shipment->assignToDelivery)->id == $authenticateUser->id || $authenticateUser->role_id == null) || ($shipment->status == 3 && $shipment->payment_status == 2))
 																								<a class="dropdown-item btn-outline-primary btn-sm"
 																								   href="{{ route('editShipment', ['id' => $shipment->id, 'shipment_identifier' => $shipment->shipment_identifier, 'segment' => $status, 'shipment_type' => 'operator-country']) }}"><i
 																										class="fa fa-edit mr-2"
