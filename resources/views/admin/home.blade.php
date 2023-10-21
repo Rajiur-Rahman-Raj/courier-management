@@ -485,12 +485,21 @@
 
 			</div>
 
+<<<<<<< HEAD
 			<!---------- Shipments Summary Current Month-------------->
+=======
+			<!---------- Transaction Summary -------------->
+
+>>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 			<div class="row mb-3">
 				<div class="col-md-12">
 					<div class="card mb-4 shadow-sm">
 						<div class="card-body">
+<<<<<<< HEAD
 							<h5 class="card-title">@lang('Current month Shipments summary')</h5>
+=======
+							<h5 class="card-title">@lang('This month Shipments summary')</h5>
+>>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 							<div>
 								<canvas id="shipments-line-chart" height="80"></canvas>
 							</div>
@@ -499,6 +508,7 @@
 				</div>
 			</div>
 
+<<<<<<< HEAD
 			<!---------- Shipments Summary Current Year-------------->
 			<div class="row mb-3">
 				<div class="col-md-12">
@@ -523,6 +533,8 @@
 				</div>
 			</div>
 
+=======
+>>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 			<div class="row mb-3">
 				<div class="col-md-12">
 					<div class="card mb-4 shadow-sm">
@@ -720,6 +732,7 @@
 			new Chart(document.getElementById("shipments-line-chart"), {
 				type: 'line',
 				data: {
+<<<<<<< HEAD
 					labels: {!! json_encode($shipmentDayLabels) !!},
 					datasets: [
 						{
@@ -732,11 +745,19 @@
 						{
 							data: @json($dataInQueueShipment),
 							label: "In Queue",
+=======
+					labels: {!! json_encode($labels) !!},
+					datasets: [
+						{
+							data: @json($dataDeposit),
+							label: "Total",
+>>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 							borderColor: "#33d9b2",
 							fill: false
 						},
 
 						{
+<<<<<<< HEAD
 							data: @json($dataDispatchShipment),
 							label: "Dispatch",
 							borderColor: "#e28743",
@@ -844,6 +865,40 @@
 							label: "Return Shipments",
 							borderColor: "#C70039",
 							backgroundColor: "#C70039",
+=======
+							data: @json($dataFund),
+							label: "Requested",
+							borderColor: "#007bff",
+							fill: false
+						},
+
+						{
+							data: {!! json_encode($dataPayout) !!},
+							label: "In Queue",
+							borderColor: "#05c46b",
+							fill: false
+						},
+
+						{
+							data: @json($dataDeposit),
+							label: "Dispatch",
+							borderColor: "#33d9b2",
+							fill: false
+						},
+
+						{
+							data: @json($dataFund),
+							label: "Received",
+							borderColor: "#007bff",
+							fill: false
+						},
+
+						{
+							data: {!! json_encode($dataPayout) !!},
+							label: "Delivered",
+							borderColor: "#05c46b",
+							fill: false
+>>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 						},
 					]
 				}

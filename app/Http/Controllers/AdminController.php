@@ -79,6 +79,7 @@ class AdminController extends Controller
 			->toArray();
 
 		$data['transactionRecord'] = collect($shipmentTransactions)->collapse();
+<<<<<<< HEAD
 
 		$dailyShipments = Shipment::select('created_at')
 			->whereMonth('created_at', $today)
@@ -238,10 +239,28 @@ class AdminController extends Controller
 		$data['yearDeliveredShipments'] = $yearDeliveredShipments;
 		$data['yearReturnShipments'] = $yearReturnShipments;
 
+=======
+>>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 
 		$data['users'] = User::with('profile')->latest()->limit(5)->get();
 
 
+<<<<<<< HEAD
+=======
+		$dailyShipments = Shipment::select('created_at')
+			->whereMonth('created_at', $today)
+			->selectRaw('COUNT(shipments.id) AS totalShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
+			->get()
+			->groupBy([function ($query){
+				return $query->created_at->format('j');
+			}]);
+
+		dd($dailyShipments);
+
+>>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 		$transactions = Transaction::select('created_at')
 			->whereMonth('created_at', $today)
 			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
