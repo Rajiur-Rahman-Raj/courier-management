@@ -16,11 +16,13 @@
 		</div>
 
 		<ul class="sidebar-menu">
-			<li class="menu-header">@lang('Dashboard')</li>
-			<li class="dropdown {{ activeMenu(['admin.home']) }}">
-				<a href="{{ route('admin.home') }}" class="nav-link"><i
-						class="fas fa-tachometer-alt text-primary"></i><span>@lang('Dashboard')</span></a>
-			</li>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Dashboard.permission.view'))))
+				<li class="menu-header">@lang('Dashboard')</li>
+				<li class="dropdown {{ activeMenu(['admin.home']) }}">
+					<a href="{{ route('admin.home') }}" class="nav-link"><i
+							class="fas fa-tachometer-alt text-primary"></i><span>@lang('Dashboard')</span></a>
+				</li>
+			@endif
 
 			@if(adminAccessRoute(array_merge(config('permissionList.Manage_Shipments.Shipment_List.permission.view'))))
 				<li class="menu-header">@lang('Manage Shipments')</li>
@@ -29,12 +31,12 @@
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Shipments')</span>
 					</a>
 					<ul class="dropdown-menu">
-{{--						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment'], null, 'all') }}">--}}
-{{--							<a class="nav-link "--}}
-{{--							   href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">--}}
-{{--								@lang('All Shipments')--}}
-{{--							</a>--}}
-{{--						</li>--}}
+						{{--						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment'], null, 'all') }}">--}}
+						{{--							<a class="nav-link "--}}
+						{{--							   href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">--}}
+						{{--								@lang('All Shipments')--}}
+						{{--							</a>--}}
+						{{--						</li>--}}
 
 						<li class="{{ activeMenu(['shipmentList'], null, 'requested') }}">
 							<a class="nav-link "

@@ -1,333 +1,711 @@
 @extends('admin.layouts.master')
 @section('page_title',__('Dashboard'))
 @section('content')
-<div class="main-content">
-	<section class="section">
-		<div class="section-header">
-			<h1>@lang('Admin Dashboard')</h1>
-			<div class="section-header-breadcrumb">
-				<div class="breadcrumb-item active">
-					<a href="{{ route('admin.home') }}">@lang('Dashboard')</a>
+	<div class="main-content">
+		<section class="section">
+			<div class="section-header">
+				<h1>@lang('Admin Dashboard')</h1>
+				<div class="section-header-breadcrumb">
+					<div class="breadcrumb-item active">
+						<a href="{{ route('admin.home') }}">@lang('Dashboard')</a>
+					</div>
+					<div class="breadcrumb-item">@lang('Admin Dashboard')</div>
 				</div>
-				<div class="breadcrumb-item">@lang('Admin Dashboard')</div>
 			</div>
-		</div>
 
-		<!---------- User Statistics -------------->
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<h6 class="mb-3 text-darku">@lang('User Statistics')</h6>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-				<div class="card card-statistic-1 shadow-sm">
-					<div class="card-icon bg-primary">
-						<i class="fas fa-users"></i>
-					</div>
-					<div class="card-wrap">
-						<div class="card-header">
-							<h4>@lang('Total User')</h4>
+			<!---------- User Statistics -------------->
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<h6 class="mb-3 text-darku">@lang('User Statistics')</h6>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-users"></i>
 						</div>
-						<div class="card-body">
-							{{ (getAmount($userRecord['totalUser']))  }}
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total User')</h4>
+							</div>
+							<div class="card-body">
+								{{ $userRecord['totalUser']  }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-user-tie"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Active User')</h4>
+							</div>
+							<div class="card-body">
+								{{ $userRecord['activeUser'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-user-plus"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('New User')</h4>
+							</div>
+							<div class="card-body">
+								{{ $userRecord['todayJoin'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-funnel-dollar"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total User Fund')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($userRecord['totalUserBalance'], config('basic.fraction_number'))}}
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-				<div class="card card-statistic-1 shadow-sm">
-					<div class="card-icon bg-primary">
-						<i class="fas fa-user-tie"></i>
-					</div>
-					<div class="card-wrap">
-						<div class="card-header">
-							<h4>@lang('Active User')</h4>
-						</div>
-						<div class="card-body">
-							{{ (getAmount($userRecord['activeUser']))  }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-				<div class="card card-statistic-1 shadow-sm">
-					<div class="card-icon bg-primary">
-						<i class="fas fa-user-check"></i>
-					</div>
-					<div class="card-wrap">
-						<div class="card-header">
-							<h4>@lang('Verified User')</h4>
-						</div>
-						<div class="card-body">
-							{{ (getAmount($userRecord['verifiedUser'])) }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-				<div class="card card-statistic-1 shadow-sm">
-					<div class="card-icon bg-primary">
-						<i class="fas fa-user-plus"></i>
-					</div>
-					<div class="card-wrap">
-						<div class="card-header">
-							<h4>@lang('New User')</h4>
-						</div>
-						<div class="card-body">
-							{{ (getAmount($userRecord['todayJoin'])) }}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
-    	<!---------- Transaction Summary -------------->
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<div class="card mb-4 shadow-sm">
-					<div class="card-body">
-						<h5 class="card-title">@lang('This month transactions summary')</h5>
-						<div>
-							<canvas id="line-chart" height="80"></canvas>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<h6 class="mb-3 text-darku">@lang('Branch Statistics')</h6>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-code-branch"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Branches')</h4>
+							</div>
+							<div class="card-body">
+								{{ $branchRecord['totalBranches']  }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-users"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Branch Manager')</h4>
+							</div>
+							<div class="card-body">
+								{{ $branchRecord['totalBranchManagers']  }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-bicycle"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Branch Driver')</h4>
+							</div>
+							<div class="card-body">
+								{{ $branchRecord['totalBranchDrivers'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-users-cog"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Branch Employee')</h4>
+							</div>
+							<div class="card-body">
+								{{ $branchRecord['totalBranchEmployees'] }}
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<h6 class="mb-3 text-darku">@lang('Shipment Statistics')</h6>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-shipping-fast"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalShipments']  }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-truck"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Operator Country Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalOperatorCountryShipments']  }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-plane"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Internationally Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalInternationallyShipments']  }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-cubes"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang("Today's Shipments")</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalTodayShipments']  }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-truck"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Drop Off Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalDropOffShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-truck-pickup"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Pickup Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalPickupShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="far fa-money-bill-alt"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Condition Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalConditionShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-spinner" aria-hidden="true"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Pending Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalPendingShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-paper-plane"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Sent In Queue')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalInQueueShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-truck-loading"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Distaptch Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalDispatchShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-spinner" aria-hidden="true"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Delivery In Queue')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalDeliveryInQueueShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-check-double"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Delivered Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalDeliveredShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="far fa-paper-plane fa-rotate-270"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Return In Queue')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalReturnInQueueShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-truck-loading fa-flip-horizontal"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Return In Dispatch')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalReturnInDispatchShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-spinner" aria-hidden="true"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Return Delivery In Queue')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalReturnDeliveryInQueueShipments'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-check-double"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Return Delivered Shipments')</h4>
+							</div>
+							<div class="card-body">
+								{{ $shipmentRecord['totalReturnInDelivered'] }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<h6 class="mb-3 text-darku">@lang('Shipment Transaction')</h6>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-code-branch"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Total Transactions')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalShipmentTransactions'], config('basic.fraction_number'))}}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-users"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Drop Off Transactions')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalDropOffTransactions'], config('basic.fraction_number'))}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-bicycle"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Pickup Transactions')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalPickupTransactions'], config('basic.fraction_number'))}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-users-cog"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Cash On Delivery Transactions')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalConditionTransactions'], config('basic.fraction_number'))}}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{{--			<div class="col-lg-3 col-md-6 col-sm-6 col-12">--}}
+				{{--				<div class="card card-statistic-1 shadow-sm">--}}
+				{{--					<div class="card-icon bg-primary">--}}
+				{{--						<i class="fas fa-users-cog"></i>--}}
+				{{--					</div>--}}
+				{{--					<div class="card-wrap">--}}
+				{{--						<div class="card-header">--}}
+				{{--							<h4>@lang("Today's Transactions")</h4>--}}
+				{{--						</div>--}}
+				{{--						<div class="card-body">--}}
+				{{--							{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['todayTotalTransactions'], config('basic.fraction_number'))}}--}}
+				{{--						</div>--}}
+				{{--					</div>--}}
+				{{--				</div>--}}
+				{{--			</div>--}}
+
+			</div>
+
+			<!---------- Shipments Summary Current Month-------------->
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">@lang('Current month Shipments summary')</h5>
+							<div>
+								<canvas id="shipments-line-chart" height="80"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!---------- Shipments Summary Current Year-------------->
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>
+							<div>
+								<canvas id="shipment-year-chart" height="120"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">@lang('Gateway Used For Deposit')</h5>
+							<div>
+								<canvas id="pie-chart-2" height="255"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">@lang('This month transactions summary')</h5>
+							<div>
+								<canvas id="line-chart" height="80"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!---------- Withdraw & Deposit -------------->
+			<div class="row mb-3">
+				<div class="col-md-8">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">@lang('Withdraw & Deposit')</h5>
+							<div>
+								<canvas id="line-chart-2" height="120"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">@lang('Gateway Used For Deposit')</h5>
+							<div>
+								<canvas id="pie-chart-2" height="255"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!------------------- Latest User --------------------->
+			<div class="row">
+				<div class="col-xl-12 col-lg-7">
+					<div class="card shadow-sm">
+						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+							<h6 class="m-0 font-weight-bold text-primary">@lang('Latest User')</h6>
+							<a class="m-0 float-right btn btn-primary btn-sm"
+							   href="{{ route('user-list') }}">@lang('View More') <i
+									class="fas fa-chevron-right"></i></a>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-hover table-striped align-items-center table-flush">
+								<thead class="thead-light">
+								<tr>
+									<th>@lang('Name')</th>
+									<th>@lang('Phone')</th>
+									<th>@lang('Email')</th>
+									<th>@lang('Join date')</th>
+									<th>@lang('Status')</th>
+									<th>@lang('Last login')</th>
+									<th>@lang('Action')</th>
+								</tr>
+								</thead>
+								<tbody>
+								@forelse($users as $key => $value)
+									<tr>
+										<td data-label="@lang('Name')">
+											<div class="d-lg-flex d-block align-items-center ">
+												<div class="mr-3"><img src="{{ $value->profilePicture() }}" alt="user"
+																	   class="rounded-circle" width="35"
+																	   data-toggle="tooltip" title=""
+																	   data-original-title="{{$value->name}}">
+												</div>
+												<div class="d-inline-flex d-lg-block align-items-center">
+													<p class="text-dark mb-0 font-16 font-weight-medium">{{$value->name}}</p>
+													<span
+														class="text-muted font-14 ml-1">{{ '@'.$value->username}}</span>
+												</div>
+											</div>
+										</td>
+										<td data-label="@lang('Phone')">{{ __(optional($value->profile)->phone ?? __('N/A')) }}</td>
+										<td data-label="@lang('Email')">{{ __($value->email) }}</td>
+										<td data-label="@lang('Join date')">{{ __(date('d/m/Y - h:i A',strtotime($value->created_at))) }}</td>
+										<td data-label="@lang('Status')">
+											@if($value->status)
+												<span class="badge badge-success">@lang('Active')</span>
+											@else
+												<span class="badge badge-warning">@lang('Inactive')</span>
+											@endif
+										</td>
+										<td data-label="@lang('Last login')">{{ (optional($value->profile)->last_login_at) ? __(date('d/m/Y - h:i A',strtotime($value->profile->last_login_at))) : __('N/A') }}</td>
+										<td data-label="@lang('Action')">
+											<a href="{{ route('user.edit',$value) }}"
+											   class="btn btn-sm btn-outline-primary m-1"><i
+													class="fas fa-user-edit"></i> @lang('Edit')</a>
+											<a href="{{ route('send.mail.user',$value) }}"
+											   class="btn btn-sm btn-outline-primary m-1"><i
+													class="fas fa-envelope"></i> @lang('Send mail')</a>
+											<a href="{{ route('user.asLogin',$value) }}"
+											   class="btn btn-sm btn-outline-dark"><i
+													class="fas fa-sign-in-alt"></i> @lang('Login')</a>
+										</td>
+									</tr>
+								@empty
+									<tr>
+										<th colspan="100%" class="text-center">@lang('No data found')</th>
+									</tr>
+								@endforelse
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</div>
 
 
 
-	@if($basic->request)
-		<!---------- User Request Money Summary -------------->
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<h6 class="mb-3 text-darku">@lang('User Request Money Summary')</h6>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-				<div class="card card-statistic-1 shadow-sm">
-					<div class="card-icon bg-warning img-div">
-						<i class="fas fa-calendar-check"></i>
+	@if($basicControl->is_active_cron_notification)
+		<div class="modal fade" id="cron-info" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<i class="fas fa-info-circle"></i>
+							@lang('Cron Job Set Up Instruction')
+						</h5>
+						<button type="button" class="close cron-notification-close" data-dismiss="modal"
+								aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
-					<div class="card-wrap">
-						<div class="card-header">
-							<h4>@lang('Last 30 Days Request Money')</h4>
-						</div>
-						<div class="card-body">
-							{{ __($basicControl->currency_symbol) }}
-							{{ (round($requestMoney['request_money_30_days'], 2)) }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-				<div class="card card-statistic-1 shadow-sm">
-					<div class="card-icon bg-warning">
-						<i class="far fa-calendar"></i>
-					</div>
-					<div class="card-wrap">
-						<div class="card-header">
-							<h4>@lang("Last 7 Days Request Money")</h4>
-						</div>
-						<div class="card-body">
-							{{ __($basicControl->currency_symbol) }}
-							{{ (round($requestMoney['request_money_7_days'], 2)) }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-				<div class="card card-statistic-1 shadow-sm">
-					<div class="card-icon bg-warning">
-						<i class="far fa-calendar-alt"></i>
-					</div>
-					<div class="card-wrap">
-						<div class="card-header">
-							<h4>@lang("Today Request Money")</h4>
-						</div>
-						<div class="card-body">
-							{{ __($basicControl->currency_symbol) }}
-							{{ (round($requestMoney['request_money_today'], 2)) }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-				<div class="card card-statistic-1 shadow-sm">
-					<div class="card-icon bg-warning">
-						<i class="fas fa-coins"></i>
-					</div>
-					<div class="card-wrap">
-						<div class="card-header">
-							<h4>@lang("Last 30 days Income")</h4>
-						</div>
-						<div class="card-body">
-							{{ __($basicControl->currency_symbol) }}
-              {{ (round($requestMoney['request_money_income_30_days'], 2)) }}
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<p class="bg-orange text-white p-2">
+									<i>@lang('**To sending emails and updating currency rate automatically you need to setup cron job in your server. Make sure your job is running properly. We insist to set the cron job time as minimum as possible.**')</i>
+								</p>
+							</div>
+							<div class="col-md-12 form-group">
+								<label><strong>@lang('Command for Email')</strong></label>
+								<div class="input-group ">
+									<input type="text" class="form-control copyText"
+										   value="curl -s {{ route('queue.work') }}" disabled>
+									<div class="input-group-append">
+										<button class="input-group-text bg-primary btn btn-primary text-white copy-btn">
+											<i class="fas fa-copy"></i></button>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12 form-group">
+								<label><strong>@lang('Command for Currency Rate Update')</strong></label>
+								<div class="input-group ">
+									<input type="text" class="form-control copyText"
+										   value="curl -s {{ route('schedule:run') }}"
+										   disabled>
+									<div class="input-group-append">
+										<button class="input-group-text bg-primary btn btn-primary text-white copy-btn">
+											<i class="fas fa-copy"></i></button>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12 text-center">
+								<p class="bg-dark text-white p-2">
+									@lang('*To turn off this pop up go to ')
+									<a href="{{route('basic.control')}}"
+									   class="text-orange">@lang('Basic control')</a>
+									@lang(' and disable `Cron Set Up Pop Up`.*')
+								</p>
+							</div>
+
+							<div class="col-md-12">
+								<p class="text-muted"><span class="text-secondary font-weight-bold">@lang('N.B'):</span>
+									@lang('If you are unable to set up cron job, Here is a video tutorial for you')
+									<a href="https://www.youtube.com/watch?v=wuvTRT2ety0" target="_blank"><i
+											class="fab fa-youtube"></i> @lang('Click Here') </a>
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	@endif
-
-		<!---------- Withdraw & Deposit -------------->
-		<div class="row mb-3">
-			<div class="col-md-8">
-				<div class="card mb-4 shadow-sm">
-				<div class="card-body">
-					<h5 class="card-title">@lang('Withdraw & Deposit')</h5>
-					<div>
-					<canvas id="line-chart-2" height="120"></canvas>
-					</div>
-				</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card mb-4 shadow-sm">
-				<div class="card-body">
-					<h5 class="card-title">@lang('Gateway Used For Deposit')</h5>
-					<div>
-					<canvas id="pie-chart-2" height="255"></canvas>
-					</div>
-				</div>
-				</div>
-			</div>
-		</div>
-
-		<!------------------- Latest User --------------------->
-    	<div class="row">
-			<div class="col-xl-12 col-lg-7">
-				<div class="card shadow-sm">
-					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-						<h6 class="m-0 font-weight-bold text-primary">@lang('Latest User')</h6>
-						<a class="m-0 float-right btn btn-primary btn-sm" href="{{ route('user-list') }}">@lang('View More') <i class="fas fa-chevron-right"></i></a>
-					</div>
-					<div class="table-responsive">
-						<table class="table table-hover table-striped align-items-center table-flush">
-							<thead class="thead-light">
-							<tr>
-								<th>@lang('Name')</th>
-								<th>@lang('Phone')</th>
-								<th>@lang('Email')</th>
-								<th>@lang('Join date')</th>
-								<th>@lang('Status')</th>
-								<th>@lang('Last login')</th>
-								<th>@lang('Action')</th>
-							</tr>
-							</thead>
-							<tbody>
-							@forelse($users as $key => $value)
-								<tr>
-									<td data-label="@lang('Name')">
-										<div class="d-lg-flex d-block align-items-center ">
-											<div class="mr-3"><img src="{{ $value->profilePicture() }}" alt="user"
-																   class="rounded-circle" width="35" data-toggle="tooltip" title="" data-original-title="{{$value->name}}">
-											</div>
-											<div class="d-inline-flex d-lg-block align-items-center">
-												<p class="text-dark mb-0 font-16 font-weight-medium">{{$value->name}}</p>
-												<span class="text-muted font-14 ml-1">{{ '@'.$value->username}}</span>
-											</div>
-										</div>
-									</td>
-									<td data-label="@lang('Phone')">{{ __(optional($value->profile)->phone ?? __('N/A')) }}</td>
-									<td data-label="@lang('Email')">{{ __($value->email) }}</td>
-									<td data-label="@lang('Join date')">{{ __(date('d/m/Y - h:i A',strtotime($value->created_at))) }}</td>
-									<td data-label="@lang('Status')">
-										@if($value->status)
-											<span class="badge badge-success">@lang('Active')</span>
-										@else
-											<span class="badge badge-warning">@lang('Inactive')</span>
-										@endif
-									</td>
-									<td data-label="@lang('Last login')">{{ (optional($value->profile)->last_login_at) ? __(date('d/m/Y - h:i A',strtotime($value->profile->last_login_at))) : __('N/A') }}</td>
-									<td data-label="@lang('Action')">
-										<a href="{{ route('user.edit',$value) }}" class="btn btn-sm btn-outline-primary m-1"><i class="fas fa-user-edit"></i> @lang('Edit')</a>
-										<a href="{{ route('send.mail.user',$value) }}" class="btn btn-sm btn-outline-primary m-1"><i class="fas fa-envelope"></i> @lang('Send mail')</a>
-										<a href="{{ route('user.asLogin',$value) }}" class="btn btn-sm btn-outline-dark"><i class="fas fa-sign-in-alt"></i> @lang('Login')</a>
-									</td>
-								</tr>
-							@empty
-								<tr>
-									<th colspan="100%" class="text-center">@lang('No data found')</th>
-								</tr>
-							@endforelse
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	</section>
-</div>
-
-
-
-@if($basicControl->is_active_cron_notification)
-	<div class="modal fade" id="cron-info" role="dialog">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">
-						<i class="fas fa-info-circle"></i>
-						@lang('Cron Job Set Up Instruction')
-					</h5>
-					<button type="button" class="close cron-notification-close" data-dismiss="modal"
-							aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-12">
-							<p class="bg-orange text-white p-2">
-								<i>@lang('**To sending emails and updating currency rate automatically you need to setup cron job in your server. Make sure your job is running properly. We insist to set the cron job time as minimum as possible.**')</i>
-							</p>
-						</div>
-						<div class="col-md-12 form-group">
-							<label><strong>@lang('Command for Email')</strong></label>
-							<div class="input-group ">
-								<input type="text" class="form-control copyText"
-									   value="curl -s {{ route('queue.work') }}" disabled>
-								<div class="input-group-append">
-									<button class="input-group-text bg-primary btn btn-primary text-white copy-btn">
-										<i class="fas fa-copy"></i></button>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-12 form-group">
-							<label><strong>@lang('Command for Currency Rate Update')</strong></label>
-							<div class="input-group ">
-								<input type="text" class="form-control copyText"
-									   value="curl -s {{ route('schedule:run') }}"
-									   disabled>
-								<div class="input-group-append">
-									<button class="input-group-text bg-primary btn btn-primary text-white copy-btn">
-										<i class="fas fa-copy"></i></button>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-12 text-center">
-							<p class="bg-dark text-white p-2">
-								@lang('*To turn off this pop up go to ')
-								<a href="{{route('basic.control')}}"
-								   class="text-orange">@lang('Basic control')</a>
-								@lang(' and disable `Cron Set Up Pop Up`.*')
-							</p>
-						</div>
-
-						<div class="col-md-12">
-							<p class="text-muted"><span class="text-secondary font-weight-bold">@lang('N.B'):</span>
-								@lang('If you are unable to set up cron job, Here is a video tutorial for you')
-								<a href="https://www.youtube.com/watch?v=wuvTRT2ety0" target="_blank"><i
-										class="fab fa-youtube"></i> @lang('Click Here') </a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-@endif
 @endsection
 
 @push('extra_scripts')
@@ -337,82 +715,216 @@
 @section('scripts')
 	<script>
 		'use strict';
-		$(document).ready(function(){
-		new Chart(document.getElementById("line-chart"), {
-			type: 'line',
-			data: {
-				labels: {!! json_encode($labels) !!},
-				datasets: [
-						@if($basic->deposit)
-					{
-						data: @json($dataDeposit),
-						label: "Deposit",
-						borderColor: "#33d9b2",
-						fill: false
-					},
+		$(document).ready(function () {
+
+			new Chart(document.getElementById("shipments-line-chart"), {
+				type: 'line',
+				data: {
+					labels: {!! json_encode($shipmentDayLabels) !!},
+					datasets: [
+						{
+							data: @json($dataPendingShipment),
+							label: "Requested",
+							borderColor: "#21130d",
+							fill: false
+						},
+
+						{
+							data: @json($dataInQueueShipment),
+							label: "In Queue",
+							borderColor: "#33d9b2",
+							fill: false
+						},
+
+						{
+							data: @json($dataDispatchShipment),
+							label: "Dispatch",
+							borderColor: "#e28743",
+							fill: false
+						},
+
+						{
+							data: @json($dataReceivedShipment),
+							label: "Received",
+							borderColor: "#005B41",
+							fill: false
+						},
+
+						{
+							data: @json($dataReceivedShipment),
+							label: "Delivered",
+							borderColor: "#C70039",
+							fill: false
+						},
+
+						{
+							data: @json($dataReturnInQueueShipment),
+							label: "Return In Queue",
+							borderColor: "#3876BF",
+							fill: false
+						},
+						{
+							data: @json($dataReturnDispatchShipment),
+							label: "Return Dispatch",
+							borderColor: "#F99417",
+							fill: false
+						},
+						{
+							data: @json($dataReturnReceivedShipment),
+							label: "Return Received",
+							borderColor: "#219C90",
+							fill: false
+						},
+						{
+							data: @json($dataReturnDeliveredShipment),
+							label: "Return Delivered",
+							borderColor: "#FF3FA4",
+							fill: false
+						},
+					]
+				}
+			});
+
+			new Chart(document.getElementById("shipment-year-chart"), {
+				type: 'bar',
+				data: {
+					labels: {!! json_encode($shipmentYearLabels) !!},
+					datasets: [
+						{
+							data: @json($yearTotalShipments),
+							label: "Total Shipments",
+							borderColor: "#5272F2",
+							backgroundColor: "#5272F2",
+						},
+						{
+							data: @json($yearOperatorCountryShipments),
+							label: "Operate Country",
+							borderColor: "#B6FFFA",
+							backgroundColor: "#B6FFFA",
+						},
+						{
+							data: @json($yearInternationallyShipments),
+							label: "Internationally",
+							borderColor: "#FCE09B",
+							backgroundColor: "#FCE09B",
+						},
+						{
+							data: @json($yearDropOffShipments),
+							label: "Drop Off",
+							borderColor: "#FF6969",
+							backgroundColor: "#FF6969",
+						},
+						{
+							data: @json($yearPickupShipments),
+							label: "Pickup",
+							borderColor: "#45FFCA",
+							backgroundColor: "#45FFCA",
+						},
+						{
+							data: @json($yearConditionShipments),
+							label: "Condition",
+							borderColor: "#E19898",
+							backgroundColor: "#E19898",
+						},
+						{
+							data: @json($yearRequestShipments),
+							label: "Requested",
+							borderColor: "#191717",
+							backgroundColor: "#191717",
+						},
+
+						{
+							data: @json($yearDeliveredShipments),
+							label: "Delivered",
+							borderColor: "#A6FF96",
+							backgroundColor: "#A6FF96",
+						},
+						{
+							data: @json($yearReturnShipments),
+							label: "Return Shipments",
+							borderColor: "#C70039",
+							backgroundColor: "#C70039",
+						},
+					]
+				}
+			});
+
+
+			new Chart(document.getElementById("line-chart"), {
+				type: 'line',
+				data: {
+					labels: {!! json_encode($labels) !!},
+					datasets: [
+							@if($basic->deposit)
+						{
+							data: @json($dataDeposit),
+							label: "Deposit",
+							borderColor: "#33d9b2",
+							fill: false
+						},
+							@endif
+						{
+							data: @json($dataFund),
+							label: "Add Fund",
+							borderColor: "#007bff",
+							fill: false
+						},
+
+							@if($basic->payout)
+						{
+							data: {!! json_encode($dataPayout) !!},
+							label: "Payout",
+							borderColor: "#05c46b",
+							fill: false
+						},
 						@endif
-					{
-						data: @json($dataFund),
-						label: "Add Fund",
-						borderColor: "#007bff",
-						fill: false
-					},
+					]
+				}
+			});
 
-						@if($basic->payout)
-					{
-						data: {!! json_encode($dataPayout) !!},
-						label: "Payout",
-						borderColor: "#05c46b",
-						fill: false
-					},
-						@endif
-				]
-			}
-		});
+			new Chart(document.getElementById("line-chart-2"), {
+				type: 'bar',
+				data: {
+					labels: {!! json_encode($yearLabels) !!},
+					datasets: [
+						{
+							data: {!! json_encode($yearDeposit) !!},
+							label: "Deposit",
+							borderColor: "#8e44ad",
+							backgroundColor: "#8e44ad",
+						},
+						{
+							data: {!! json_encode($yearPayout) !!},
+							label: "Withdraw",
+							borderColor: "#4455ad",
+							backgroundColor: "#4455ad",
+						},
+					]
+				}
+			});
 
-		new Chart(document.getElementById("line-chart-2"), {
-			type: 'bar',
-			data: {
-				labels:  {!! json_encode($yearLabels) !!},
-				datasets: [
-					{
-						data: {!! json_encode($yearDeposit) !!},
-						label: "Deposit",
-						borderColor: "#8e44ad",
-						backgroundColor: "#8e44ad",
-					},
-					{
-						data: {!! json_encode($yearPayout) !!},
-						label: "Withdraw",
-						borderColor: "#4455ad",
-						backgroundColor: "#4455ad",
-					},
-				]
-			}
-		});
-
-		new Chart(document.getElementById("pie-chart-2"), {
-			type: 'pie',
-			data: {
-				labels: {!! json_encode($paymentMethodeLabel) !!},
-				datasets: [{
-					backgroundColor: ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50",
-						"#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d",
-						"#55efc4", "#81ecec", "#74b9ff", "#a29bfe", "#dfe6e9",
-					],
-					data: {!! json_encode($paymentMethodeData) !!},
-				}]
-			},
-			options: {
-				tooltips: {
-					callbacks: {
-						label: function (tooltipItems, data) {
-							return data.labels[tooltipItems.index] + ': ' + data.datasets[0].data[tooltipItems.index] + " {{ __($basicControl->base_currency_code) }}";
+			new Chart(document.getElementById("pie-chart-2"), {
+				type: 'pie',
+				data: {
+					labels: {!! json_encode($paymentMethodeLabel) !!},
+					datasets: [{
+						backgroundColor: ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50",
+							"#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d",
+							"#55efc4", "#81ecec", "#74b9ff", "#a29bfe", "#dfe6e9",
+						],
+						data: {!! json_encode($paymentMethodeData) !!},
+					}]
+				},
+				options: {
+					tooltips: {
+						callbacks: {
+							label: function (tooltipItems, data) {
+								return data.labels[tooltipItems.index] + ': ' + data.datasets[0].data[tooltipItems.index] + " {{ __($basicControl->base_currency_code) }}";
+							}
 						}
 					}
 				}
-			}
-		});
+			});
 		});
 
 		$(document).ready(function () {

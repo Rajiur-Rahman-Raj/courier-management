@@ -45,9 +45,8 @@
             $shipment_by = $shipment->shipment_by;
 		@endphp
 
-			<!--shipment tracking_area_start -->
+		<!--shipment tracking_area_start -->
 		@if($shipment_status == 0 || $shipment_status == 6 || $shipment_status == 1 || $shipment_status == 2 || $shipment_status == 3 || $shipment_status == 4 || $shipment_status == 5)
-
 			<section class="tracking_area">
 				<div class="container-fluid">
 					<div class="row justify-content-center">
@@ -142,8 +141,6 @@
 					</div>
 				</div>
 			</section>
-
-
 			<section class="package section-2">
 				<div class="container">
 					<div class="package-box">
@@ -173,9 +170,8 @@
 								<div class="col-sm-4 ">
 									<div class="delivery-time">
 										<h4>@lang('Elapsed After Shipment')</h4>
-{{--										$duration .= $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ';--}}
-										<h3>{{ $shipment->shipmentElapsedTime()['difference']->d.' Day'. ($shipment->shipmentElapsedTime()['difference']->d > 1 ? 's' : ''). $shipment->shipmentElapsedTime()['difference']->h . ' ' .' Hour'. ($shipment->shipmentElapsedTime()['difference']->h > 1 ? 's' : '') . $shipment->shipmentElapsedTime()['difference']->i.' Minute' . ($shipment->shipmentElapsedTime()['difference']->i > 1 ? 's' : '') }}</h3>
-{{--										<h3>1 hour, 5 minutes </h3>--}}
+										<h4 class="text-dark elapsed-time">{{ $shipment->shipmentElapsedTime()['difference']->d . ' Day' . ($shipment->shipmentElapsedTime()['difference']->d > 1 ? 's' : '') . ' ' . $shipment->shipmentElapsedTime()['difference']->h . ' Hour' . ($shipment->shipmentElapsedTime()['difference']->h > 1 ? 's' : '') . ' ' . $shipment->shipmentElapsedTime()['difference']->i . ' Minute' . ($shipment->shipmentElapsedTime()['difference']->i > 1 ? 's' : '') }}
+										</h4>
 									</div>
 								</div>
 								<div class="col-sm-4 ">
@@ -187,7 +183,7 @@
 							</div>
 						</div>
 
-						@if($shipment_status == 0)
+						@if($shipment_status == 0 || $shipment_status == 5)
 							<div class="processing">
 								<div class="processing-title">
 									<h2>@lang('Shipment Status')</h2>
@@ -198,6 +194,19 @@
 										<span class="visually-hidden"></span>
 									</div>
 									@lang('Requesting')...
+								</div>
+							</div>
+						@elseif($shipment_status == 6)
+							<div class="processing shipment_info_area">
+								<div class="process d-flex justify-content-center text-center">
+									<div class="estmated_received text-center">
+										<div class="icon_area">
+											<i class="fal fa-times-circle text-danger"></i>
+										</div>
+										<h5>@lang('Shipment Cancel Date')</h5>
+										<h5>{{ customDate($shipment->shipment_cancel_time) }}</h5>
+
+									</div>
 								</div>
 							</div>
 						@elseif($shipment_status == 1)
@@ -225,33 +234,15 @@
 											<h5>@lang(optional($shipment->senderBranch)->address)</h5>
 										</div>
 										<div class="location dot-2">
-											<h4><span>@lang(optional($shipment->receiverBranch)->branch_name)</span></h4>
+											<h4><span>@lang(optional($shipment->receiverBranch)->branch_name)</span>
+											</h4>
 											<h5><span>@lang(optional($shipment->receiverBranch)->address)</h5>
 										</div>
 									</div>
 								</div>
 							</div>
 
-
-{{--							<div class="payment-details-2">--}}
-{{--								<div class="row">--}}
-{{--									<div class="col-md-12">--}}
-{{--										<div class="location dot-3">--}}
-{{--											<h4>bkash LTD.</h4>--}}
-{{--											<h5>bkash limited SKS tower</h5>--}}
-{{--										</div>--}}
-{{--										<div class="location dot-4">--}}
-{{--											<h4><span>Anik kumar</span></h4>--}}
-{{--											<h5><span>House-11, Road-11</h5>--}}
-{{--										</div>--}}
-{{--										<div class="down-icon-2">--}}
-{{--											<i class="fas fa-solid fa-arrow-up"></i>--}}
-{{--										</div>--}}
-{{--									</div>--}}
-{{--								</div>--}}
-{{--							</div>--}}
-
-						@elseif($shipment->status == 3)
+						@elseif($shipment->status == 3 || $shipment->status == 7)
 							<div class="processing shipment_info_area">
 								<div class="process d-flex justify-content-center text-center">
 									<div class="estmated_received text-center">
@@ -259,9 +250,10 @@
 											<i class="fal fa-check-circle"></i>
 										</div>
 										<h5>@lang('Shipment Received Date')</h5>
-										<h5>August 15, 2023</h5>
+										<h5>{{ customDate($shipment->receive_time) }}</h5>
 										<div class="btn_area mt-25">
-											<button disabled type="button" class="cmn_btn">@lang('Ready For Delivery')</button>
+											<button disabled type="button"
+													class="cmn_btn">@lang('Ready For Delivery')</button>
 										</div>
 									</div>
 								</div>
@@ -272,12 +264,12 @@
 									<div class="estmated_delivery text-center">
 										<div class="icon_area">
 											<i class="fal fa-check-circle"></i>
-{{--											<i class="fas fa-check-double"></i>--}}
 										</div>
 										<h5>@lang('Shipment Delivery Date')</h5>
-										<h5>August 15, 2023</h5>
+										<h5>{{ customDate($shipment->delivered_time) }}</h5>
 										<div class="btn_area mt-25">
-											<button disabled type="button" class="cmn_btn">@lang('Delivery Successfully Completed')</button>
+											<button disabled type="button"
+													class="cmn_btn">@lang('Delivery Successfully Completed')</button>
 										</div>
 									</div>
 								</div>
@@ -287,7 +279,6 @@
 				</div>
 			</section>
 		@else
-			<!--return shipment tracking_area_start -->
 			<section class="tracking_area">
 				<div class="container-fluid">
 					<div class="row justify-content-center">
@@ -319,7 +310,7 @@
 							<div class="cmn_box3 text-center">
 								<div
 									class="icon_area mx-auto {{ ($shipment_status == 9 || $shipment_status == 10 || $shipment_status == 11 ? 'active-tracking' : 'inactive-tracking') }}">
-									<i class="fal fa-truck" aria-hidden="true"></i>
+									<i class="fal fa-truck rotate-custom" aria-hidden="true"></i>
 								</div>
 								<div class="text_area">
 									<h5>@lang('Return Order Shipped')</h5>
@@ -342,58 +333,115 @@
 					</div>
 				</div>
 			</section>
-			<!--return shipment tracking_area_end -->
-
-			<section class="shipment_info_area">
+			<section class="package section-2">
 				<div class="container">
-					<div class="row gy-5">
-						<div class="col-md-5">
-							<div class="estmated_delivery shadow3 text-center">
-								<div class="icon_area">
-									<i class="fal fa-check-circle"></i>
+					<div class="package-box">
+						<div class="package-head">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="package-title">
+										<h1>@lang('Shipment information')</h1>
+									</div>
 								</div>
-								<h5>Estmate Delivery</h5>
-								<h5>August 15, 2023</h5>
-								<div class="btn_area mt-25">
-									<a href="" class="cmn_btn">Ready For Pickup</a>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-12">
-							<div class="shipment_details_area shadow3 text-center">
-								<div class="section_subtitle mb-50">
-									<h4>@lang('Shipment Details')</h4>
-								</div>
-								<div class="table_area d-flex text-start">
-									<ul>
-										<li><h5>@lang('Shipment Tracking Number')</h5></li>
-										<li><h5>@lang('Shipment Date')</h5></li>
-										<li><h5>@lang('Sender Branch')</h5></li>
-										<li><h5>@lang('Receiver Branch')</h5></li>
-										<li><h5>@lang('Shipment Status')</h5></li>
-									</ul>
-									<ul>
-										<li><h5>: {{ $shipment->shipment_id }}</h5></li>
-										<li><h5>: {{ customDate($shipment->shipment_date) }}</h5></li>
-										<li><h5>: @lang(optional($shipment->senderBranch)->branch_name)</h5></li>
-										<li><h5>: @lang(optional($shipment->receiverBranch)->branch_name) </h5></li>
-										<li>
-											<h5>:
-												@if($shipment->status == 8)
-													<p class="badge f_text-bg-info">@lang('Return In Queue')</p>
-												@elseif($shipment->status == 9)
-													<p class="badge f_text-bg-warning">@lang('Return In Dispatch')</p>
-												@elseif($shipment->status == 10)
-													<p class="badge f_text-bg-success">@lang('Return In Received')</p>
-												@elseif($shipment->status == 11)
-													<p class="badge f_text-bg-danger">@lang('Return In Delivered')</p>
-												@endif
-											</h5>
-										</li>
-									</ul>
+								<div class="col-sm-6">
+									<div class="track-number">
+										<h3>@lang('Tracking Number')</h3>
+										<span>{{ $shipment->shipment_id }}</span>
+									</div>
 								</div>
 							</div>
 						</div>
+						<div class="delivery">
+							<div class="row">
+								<div class="col-sm-4 ">
+									<div class="delivery-date">
+										<h4>@lang('Shipment Date')</h4>
+										<h4>{{ customDate($shipment->shipment_date) }}</h4>
+									</div>
+								</div>
+								<div class="col-sm-4 ">
+									<div class="delivery-time">
+										<h4>@lang('Elapsed After Shipment')</h4>
+										<h4 class="text-dark elapsed-time">{{ $shipment->shipmentElapsedTime()['difference']->d . ' Day' . ($shipment->shipmentElapsedTime()['difference']->d > 1 ? 's' : '') . ' ' . $shipment->shipmentElapsedTime()['difference']->h . ' Hour' . ($shipment->shipmentElapsedTime()['difference']->h > 1 ? 's' : '') . ' ' . $shipment->shipmentElapsedTime()['difference']->i . ' Minute' . ($shipment->shipmentElapsedTime()['difference']->i > 1 ? 's' : '') }}
+										</h4>
+									</div>
+								</div>
+								<div class="col-sm-4 ">
+									<div class="delivery-type">
+										<h4>@lang('Delivery Type')</h4>
+										<h4>{{ formatedShipmentType($shipment->shipment_type) }}</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						@if($shipment_status == 8)
+							<div class="processing">
+								<div class="processing-title">
+									<h2>@lang('Shipment Status')</h2>
+								</div>
+								<div class="process d-flex justify-content-center text-center">
+									<div class="spinner-border text-warning" role="status">
+										<span class="visually-hidden"></span>
+
+									</div>
+									@lang('Return Processing')...
+								</div>
+							</div>
+						@elseif($shipment_status == 9)
+							<div class="payment-details-2">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="location dot-3">
+											<h4>@lang(optional($shipment->senderBranch)->branch_name)</h4>
+											<h5>@lang(optional($shipment->senderBranch)->address)</h5>
+										</div>
+										<div class="location dot-4">
+											<h4><span>@lang(optional($shipment->receiverBranch)->branch_name)</span>
+											</h4>
+											<h5><span>@lang(optional($shipment->receiverBranch)->address)</h5>
+										</div>
+										<div class="down-icon-2">
+											<i class="fas fa-solid fa-arrow-up"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						@elseif($shipment->status == 10)
+							<div class="processing shipment_info_area">
+								<div class="process d-flex justify-content-center text-center">
+									<div class="estmated_received text-center">
+										<div class="icon_area">
+											<i class="fal fa-check-circle"></i>
+										</div>
+										<h5>@lang('Shipment Received Date')</h5>
+										<h5>{{ customDate($shipment->return_receive_time) }}</h5>
+										<div class="btn_area mt-25">
+											<button disabled type="button"
+													class="cmn_btn">@lang('Ready For Delivery')</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						@elseif($shipment->status == 11)
+							<div class="processing shipment_info_area">
+								<div class="process d-flex justify-content-center text-center">
+									<div class="estmated_delivery text-center">
+										<div class="icon_area">
+											<i class="fal fa-check-circle"></i>
+										</div>
+										<h5>@lang('Shipment Delivery Date')</h5>
+										<h5>{{ customDate($shipment->return_delivered_time) }}</h5>
+										<div class="btn_area mt-25">
+											<button disabled type="button"
+													class="cmn_btn">@lang('Delivery Successfully Completed')</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						@endif
 					</div>
 				</div>
 			</section>
