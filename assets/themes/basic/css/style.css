@@ -4099,7 +4099,7 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 
 /* package css */
 .package{
-	padding: 100px 0px 0px 0px;
+	padding: 70px 0px 70px 0px;
 }
 .package .package-box {
 	border-radius: 5px;
@@ -4151,6 +4151,10 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 }
 .package .package-box .delivery .delivery-time {
 	text-align: center;
+}
+
+.package .package-box .delivery .delivery-time .elapsed-time{
+	font-size: 24px !important;
 }
 .package .package-box .delivery .delivery-time h4 {
 	font-size: 20px;
@@ -4575,3 +4579,6 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	}
 } /*# sourceMappingURL=style.css.map */
 
+.cmn_box3 .icon_area .rotate-custom{
+	transform: rotatey(180deg);
+}

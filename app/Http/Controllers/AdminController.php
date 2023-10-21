@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\Deposit;
 use App\Models\Payout;
+use App\Models\Shipment;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,7 +19,6 @@ class AdminController extends Controller
 {
 	public function index()
 	{
-
 		$basicControl = basicControl();
 		$last30 = date('Y-m-d', strtotime('-30 days'));
 		$last7 = date('Y-m-d', strtotime('-7 days'));
@@ -25,15 +26,75 @@ class AdminController extends Controller
 		$dayCount = date('t', strtotime($today));
 
 		$users = User::selectRaw('COUNT(id) AS totalUser')
-			->selectRaw('COUNT((CASE WHEN created_at >= CURDATE()  THEN id END)) AS todayJoin')
 			->selectRaw('COUNT((CASE WHEN status = 1  THEN id END)) AS activeUser')
+			->selectRaw('COUNT((CASE WHEN created_at >= CURDATE() THEN id END)) AS todayJoin')
+			->selectRaw('SUM(balance) AS totalUserBalance')
 			->selectRaw('COUNT((CASE WHEN email_verified_at IS NOT NULL  THEN id END)) AS verifiedUser')
 			->get()->makeHidden(['mobile', 'profile'])->toArray();
 
 		$data['userRecord'] = collect($users)->collapse();
 
+		$branches = Branch::selectRaw('COUNT(branches.id) AS totalBranches')
+			->selectRaw('COUNT(CASE WHEN branches.status = 1 THEN branches.id END) AS totalActiveBranches')
+			->selectRaw('COUNT(CASE WHEN branches.status = 0 THEN branches.id END) AS totalInactiveBranches')
+			->selectRaw('COUNT(branch_managers.id) AS totalBranchManagers')
+			->selectRaw('COUNT(branch_drivers.id) AS totalBranchDrivers')
+			->selectRaw('COUNT(branch_employees.id) AS totalBranchEmployees')
+			->leftJoin('branch_managers', 'branches.id', '=', 'branch_managers.branch_id')
+			->leftJoin('branch_drivers', 'branches.id', '=', 'branch_drivers.branch_id')
+			->leftJoin('branch_employees', 'branches.id', '=', 'branch_employees.branch_id')
+			->get()
+			->toArray();
+
+		$data['branchRecord'] = collect($branches)->collapse();
+
+		$shipments = Shipment::selectRaw('COUNT(shipments.id) AS totalShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.shipment_identifier = 1 THEN shipments.id END) AS totalOperatorCountryShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.shipment_identifier = 2 THEN shipments.id END) AS totalInternationallyShipments')
+			->selectRaw('COUNT((CASE WHEN created_at >= CURDATE() THEN id END)) AS totalTodayShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.shipment_type = "drop_off" THEN shipments.id END) AS totalDropOffShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.shipment_type = "pickup" THEN shipments.id END) AS totalPickupShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.shipment_type = "condition" THEN shipments.id END) AS totalConditionShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 2 THEN shipments.id END) AS totalDispatchShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 3 THEN shipments.id END) AS totalDeliveryInQueueShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 4 THEN shipments.id END) AS totalDeliveredShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 8 THEN shipments.id END) AS totalReturnInQueueShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 9 THEN shipments.id END) AS totalReturnInDispatchShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 9 THEN shipments.id END) AS totalReturnInDispatchShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 10 THEN shipments.id END) AS totalReturnDeliveryInQueueShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnInDelivered')
+			->get()
+			->toArray();
+
+		$data['shipmentRecord'] = collect($shipments)->collapse();
+
+		$shipmentTransactions = Transaction::selectRaw('SUM(CASE WHEN shipment_id IS NOT NULL THEN amount ELSE 0 END) AS totalShipmentTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_type = "drop_off" THEN amount ELSE 0 END) AS totalDropOffTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_type = "pickup" THEN amount ELSE 0 END) AS totalPickupTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_type = "condition" THEN amount ELSE 0 END) AS totalConditionTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_id IS NOT NULL AND created_at >= CURDATE() THEN amount ELSE 0 END) AS todayTotalTransactions')
+			->get()
+			->toArray();
+
+		$data['transactionRecord'] = collect($shipmentTransactions)->collapse();
 
 		$data['users'] = User::with('profile')->latest()->limit(5)->get();
+
+
+		$dailyShipments = Shipment::select('created_at')
+			->whereMonth('created_at', $today)
+			->selectRaw('COUNT(shipments.id) AS totalShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
+			->get()
+			->groupBy([function ($query){
+				return $query->created_at->format('j');
+			}]);
+
+		dd($dailyShipments);
 
 		$transactions = Transaction::select('created_at')
 			->whereMonth('created_at', $today)
@@ -46,12 +107,14 @@ class AdminController extends Controller
 				return $query->created_at->format('j');
 			}]);
 
+
 		$labels = [];
 		$dataDeposit = [];
 		$dataFund = [];
 		$dataPayout = [];
 		for ($i = 1; $i <= $dayCount; $i++) {
 			$labels[] = date('jS M', strtotime(date('Y/m/') . $i));
+
 			$currentDeposit = 0;
 			$currentFund = 0;
 			$currentPayout = 0;
@@ -64,12 +127,14 @@ class AdminController extends Controller
 			}
 			$dataDeposit[] = round($currentDeposit, $basicControl->fraction_number);
 			$dataFund[] = round($currentFund, $basicControl->fraction_number);
+
 			$dataPayout[] = round($currentPayout, $basicControl->fraction_number);
 		}
 
 		$data['labels'] = $labels;
 		$data['dataDeposit'] = $dataDeposit;
 		$data['dataFund'] = $dataFund;
+
 		$data['dataPayout'] = $dataPayout;
 
 		$deposits = Deposit::select('created_at')
@@ -173,6 +238,7 @@ class AdminController extends Controller
 			return back()->with('success', 'Password changed successfully');
 		}
 	}
+
 //
 	public function forbidden()
 	{

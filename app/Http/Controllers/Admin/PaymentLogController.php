@@ -65,6 +65,7 @@ class PaymentLogController extends Controller
 			'id' => 'required',
 			'status' => ['required', Rule::in(['1', '3'])],
 		]);
+
 		$data = Deposit::where('id', $request->id)->whereIn('status', [2])->with('receiver', 'gateway')->firstOrFail();
 
 		$basic = (object)config('basic');

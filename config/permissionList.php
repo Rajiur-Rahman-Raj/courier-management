@@ -1,6 +1,16 @@
 <?php
 
 $arr = [
+	"Dashboard" => [
+		"Dashboard" => [
+			'permission' => [
+				'view' => ['admin.home'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+	],
 	"Manage_Shipments" => [
 		"Shipment_List" => [
 			'permission' => [

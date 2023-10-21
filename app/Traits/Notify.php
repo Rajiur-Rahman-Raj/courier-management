@@ -310,6 +310,7 @@ trait Notify
             $templateObj = EmailTemplate::where('template_key', $templateKey)->where('mail_status', 1)->first();
         }
 
+		dd($templateObj);
         $message = $email_body;
         if ($templateObj) {
             $message = str_replace("[[message]]", $templateObj->template, $message);
