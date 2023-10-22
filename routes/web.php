@@ -429,7 +429,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 	Route::match(['get', 'post'], 'profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 	Route::match(['get', 'post'], 'change-password', [AdminController::class, 'changePassword'])->name('admin.change.password');
 
-
 	Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.home');
 	Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
 });

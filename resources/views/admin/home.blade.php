@@ -401,6 +401,33 @@
 				</div>
 			</div>
 
+			<!---------- Shipments Summary Current Month-------------->
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">@lang('Current month Shipments summary')</h5>
+							<div>
+								<canvas id="shipments-line-chart" height="80"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!---------- Shipments Summary Current Year-------------->
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>
+							<div>
+								<canvas id="shipment-year-chart" height="120"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div class="row mb-3">
 				<div class="col-md-12">
 					<h6 class="mb-3 text-darku">@lang('Shipment Transaction')</h6>
@@ -467,93 +494,111 @@
 					</div>
 				</div>
 
-				{{--			<div class="col-lg-3 col-md-6 col-sm-6 col-12">--}}
-				{{--				<div class="card card-statistic-1 shadow-sm">--}}
-				{{--					<div class="card-icon bg-primary">--}}
-				{{--						<i class="fas fa-users-cog"></i>--}}
-				{{--					</div>--}}
-				{{--					<div class="card-wrap">--}}
-				{{--						<div class="card-header">--}}
-				{{--							<h4>@lang("Today's Transactions")</h4>--}}
-				{{--						</div>--}}
-				{{--						<div class="card-body">--}}
-				{{--							{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['todayTotalTransactions'], config('basic.fraction_number'))}}--}}
-				{{--						</div>--}}
-				{{--					</div>--}}
-				{{--				</div>--}}
-				{{--			</div>--}}
-
 			</div>
 
-<<<<<<< HEAD
-			<!---------- Shipments Summary Current Month-------------->
-=======
-			<!---------- Transaction Summary -------------->
-
->>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
+			<!---------- Shipments Transactions Current Month-------------->
 			<div class="row mb-3">
 				<div class="col-md-12">
 					<div class="card mb-4 shadow-sm">
 						<div class="card-body">
-<<<<<<< HEAD
-							<h5 class="card-title">@lang('Current month Shipments summary')</h5>
-=======
-							<h5 class="card-title">@lang('This month Shipments summary')</h5>
->>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
+							<h5 class="card-title">@lang('Current month Shipments Transactions')</h5>
 							<div>
-								<canvas id="shipments-line-chart" height="80"></canvas>
+								<canvas id="shipments-transaction-current-month" height="80"></canvas>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-<<<<<<< HEAD
-			<!---------- Shipments Summary Current Year-------------->
+			<!---------- Shipments Transactions Current Year-------------->
 			<div class="row mb-3">
 				<div class="col-md-12">
 					<div class="card mb-4 shadow-sm">
 						<div class="card-body">
-							<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>
+							<h5 class="card-title">@lang('Current Year Shipments Transactions')</h5>
 							<div>
-								<canvas id="shipment-year-chart" height="120"></canvas>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">@lang('Gateway Used For Deposit')</h5>
-							<div>
-								<canvas id="pie-chart-2" height="255"></canvas>
+								<canvas id="shipments-transaction-current-year" height="80"></canvas>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-=======
->>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 			<div class="row mb-3">
 				<div class="col-md-12">
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">@lang('This month transactions summary')</h5>
-							<div>
-								<canvas id="line-chart" height="80"></canvas>
+					<h6 class="mb-3 text-darku">@lang('Tickets')</h6>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-spinner" aria-hidden="true"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Pending Tickets')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalShipmentTransactions'], config('basic.fraction_number'))}}
 							</div>
 						</div>
 					</div>
 				</div>
+
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-check"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Answered Tickets')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalDropOffTransactions'], config('basic.fraction_number'))}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-reply"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Replied Tickets')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalPickupTransactions'], config('basic.fraction_number'))}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 shadow-sm">
+						<div class="card-icon bg-primary">
+							<i class="fas fa-times-circle"></i>
+						</div>
+						<div class="card-wrap">
+							<div class="card-header">
+								<h4>@lang('Closed Tickets')</h4>
+							</div>
+							<div class="card-body">
+								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalConditionTransactions'], config('basic.fraction_number'))}}
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
+
 
 			<!---------- Withdraw & Deposit -------------->
 			<div class="row mb-3">
 				<div class="col-md-8">
 					<div class="card mb-4 shadow-sm">
 						<div class="card-body">
-							<h5 class="card-title">@lang('Withdraw & Deposit')</h5>
+							<h5 class="card-title">@lang('Current Year Payment Gateway Transactions')</h5>
 							<div>
 								<canvas id="line-chart-2" height="120"></canvas>
 							</div>
@@ -567,81 +612,6 @@
 							<div>
 								<canvas id="pie-chart-2" height="255"></canvas>
 							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!------------------- Latest User --------------------->
-			<div class="row">
-				<div class="col-xl-12 col-lg-7">
-					<div class="card shadow-sm">
-						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-							<h6 class="m-0 font-weight-bold text-primary">@lang('Latest User')</h6>
-							<a class="m-0 float-right btn btn-primary btn-sm"
-							   href="{{ route('user-list') }}">@lang('View More') <i
-									class="fas fa-chevron-right"></i></a>
-						</div>
-						<div class="table-responsive">
-							<table class="table table-hover table-striped align-items-center table-flush">
-								<thead class="thead-light">
-								<tr>
-									<th>@lang('Name')</th>
-									<th>@lang('Phone')</th>
-									<th>@lang('Email')</th>
-									<th>@lang('Join date')</th>
-									<th>@lang('Status')</th>
-									<th>@lang('Last login')</th>
-									<th>@lang('Action')</th>
-								</tr>
-								</thead>
-								<tbody>
-								@forelse($users as $key => $value)
-									<tr>
-										<td data-label="@lang('Name')">
-											<div class="d-lg-flex d-block align-items-center ">
-												<div class="mr-3"><img src="{{ $value->profilePicture() }}" alt="user"
-																	   class="rounded-circle" width="35"
-																	   data-toggle="tooltip" title=""
-																	   data-original-title="{{$value->name}}">
-												</div>
-												<div class="d-inline-flex d-lg-block align-items-center">
-													<p class="text-dark mb-0 font-16 font-weight-medium">{{$value->name}}</p>
-													<span
-														class="text-muted font-14 ml-1">{{ '@'.$value->username}}</span>
-												</div>
-											</div>
-										</td>
-										<td data-label="@lang('Phone')">{{ __(optional($value->profile)->phone ?? __('N/A')) }}</td>
-										<td data-label="@lang('Email')">{{ __($value->email) }}</td>
-										<td data-label="@lang('Join date')">{{ __(date('d/m/Y - h:i A',strtotime($value->created_at))) }}</td>
-										<td data-label="@lang('Status')">
-											@if($value->status)
-												<span class="badge badge-success">@lang('Active')</span>
-											@else
-												<span class="badge badge-warning">@lang('Inactive')</span>
-											@endif
-										</td>
-										<td data-label="@lang('Last login')">{{ (optional($value->profile)->last_login_at) ? __(date('d/m/Y - h:i A',strtotime($value->profile->last_login_at))) : __('N/A') }}</td>
-										<td data-label="@lang('Action')">
-											<a href="{{ route('user.edit',$value) }}"
-											   class="btn btn-sm btn-outline-primary m-1"><i
-													class="fas fa-user-edit"></i> @lang('Edit')</a>
-											<a href="{{ route('send.mail.user',$value) }}"
-											   class="btn btn-sm btn-outline-primary m-1"><i
-													class="fas fa-envelope"></i> @lang('Send mail')</a>
-											<a href="{{ route('user.asLogin',$value) }}"
-											   class="btn btn-sm btn-outline-dark"><i
-													class="fas fa-sign-in-alt"></i> @lang('Login')</a>
-										</td>
-									</tr>
-								@empty
-									<tr>
-										<th colspan="100%" class="text-center">@lang('No data found')</th>
-									</tr>
-								@endforelse
-								</tbody>
-							</table>
 						</div>
 					</div>
 				</div>
@@ -732,7 +702,6 @@
 			new Chart(document.getElementById("shipments-line-chart"), {
 				type: 'line',
 				data: {
-<<<<<<< HEAD
 					labels: {!! json_encode($shipmentDayLabels) !!},
 					datasets: [
 						{
@@ -741,43 +710,30 @@
 							borderColor: "#21130d",
 							fill: false
 						},
-
 						{
 							data: @json($dataInQueueShipment),
 							label: "In Queue",
-=======
-					labels: {!! json_encode($labels) !!},
-					datasets: [
-						{
-							data: @json($dataDeposit),
-							label: "Total",
->>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 							borderColor: "#33d9b2",
 							fill: false
 						},
-
 						{
-<<<<<<< HEAD
 							data: @json($dataDispatchShipment),
 							label: "Dispatch",
 							borderColor: "#e28743",
 							fill: false
 						},
-
 						{
 							data: @json($dataReceivedShipment),
 							label: "Received",
 							borderColor: "#005B41",
 							fill: false
 						},
-
 						{
-							data: @json($dataReceivedShipment),
+							data: @json($dataDeliveredShipment),
 							label: "Delivered",
 							borderColor: "#C70039",
 							fill: false
 						},
-
 						{
 							data: @json($dataReturnInQueueShipment),
 							label: "Return In Queue",
@@ -865,77 +821,93 @@
 							label: "Return Shipments",
 							borderColor: "#C70039",
 							backgroundColor: "#C70039",
-=======
-							data: @json($dataFund),
-							label: "Requested",
-							borderColor: "#007bff",
-							fill: false
-						},
-
-						{
-							data: {!! json_encode($dataPayout) !!},
-							label: "In Queue",
-							borderColor: "#05c46b",
-							fill: false
-						},
-
-						{
-							data: @json($dataDeposit),
-							label: "Dispatch",
-							borderColor: "#33d9b2",
-							fill: false
-						},
-
-						{
-							data: @json($dataFund),
-							label: "Received",
-							borderColor: "#007bff",
-							fill: false
-						},
-
-						{
-							data: {!! json_encode($dataPayout) !!},
-							label: "Delivered",
-							borderColor: "#05c46b",
-							fill: false
->>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 						},
 					]
 				}
 			});
 
 
-			new Chart(document.getElementById("line-chart"), {
+			new Chart(document.getElementById("shipments-transaction-current-month"), {
 				type: 'line',
 				data: {
-					labels: {!! json_encode($labels) !!},
+					labels: {!! json_encode($shipmentTransactionsDayLabels) !!},
 					datasets: [
-							@if($basic->deposit)
 						{
-							data: @json($dataDeposit),
-							label: "Deposit",
+							data: @json($dataDropOffTransactions),
+							label: "Drop Off",
+							borderColor: "#21130d",
+							fill: false
+						},
+						{
+							data: @json($dataPickupTransactions),
+							label: "Pickup",
 							borderColor: "#33d9b2",
 							fill: false
 						},
-							@endif
 						{
-							data: @json($dataFund),
-							label: "Add Fund",
-							borderColor: "#007bff",
+							data: @json($dataConditionTransactions),
+							label: "Condition / Cas On Delivery",
+							borderColor: "#e28743",
 							fill: false
 						},
-
-							@if($basic->payout)
-						{
-							data: {!! json_encode($dataPayout) !!},
-							label: "Payout",
-							borderColor: "#05c46b",
-							fill: false
-						},
-						@endif
 					]
 				}
 			});
+
+			new Chart(document.getElementById("shipments-transaction-current-year"), {
+				type: 'bar',
+				data: {
+					labels: {!! json_encode($yearLabels) !!},
+					datasets: [
+						{
+							data: @json($yeartotalShipmentTransactions),
+							label: "Total Transactions",
+							borderColor: "#5272F2",
+							backgroundColor: "#5272F2",
+						},
+						{
+							data: @json($yeartotalDropOffTransactions),
+							label: "Drop Off",
+							borderColor: "#B6FFFA",
+							backgroundColor: "#B6FFFA",
+						},
+						{
+							data: @json($yeartotalPickupTransactions),
+							label: "Pickup",
+							borderColor: "#FCE09B",
+							backgroundColor: "#FCE09B",
+						},
+						{
+							data: @json($yeartotalConditionTransactions),
+							label: "Condition",
+							borderColor: "#FF6969",
+							backgroundColor: "#FF6969",
+						},
+					]
+				}
+			});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			new Chart(document.getElementById("line-chart-2"), {
 				type: 'bar',
@@ -980,7 +952,8 @@
 					}
 				}
 			});
-		});
+		})
+		;
 
 		$(document).ready(function () {
 			let isActiveCronNotification = '{{ $basicControl->is_active_cron_notification }}';

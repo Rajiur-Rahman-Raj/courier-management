@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Branch;
 use App\Models\Country;
 use App\Models\MoneyTransfer;
+use App\Models\Shipment;
 use App\Models\User;
 use App\Models\UserProfile;
 use Carbon\Carbon;
@@ -109,6 +110,30 @@ class HomeController extends Controller
 		$today = today();
 		$dayCount = date('t', strtotime($today));
 
+		$data['walletBalance'] = getAmount($this->user->balance);
+		$data['totalDeposit'] = getAmount($this->user->funds()->whereStatus(1)->sum('amount'));
+
+		$shipments = Shipment::selectRaw('COUNT(shipments.id) AS totalShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.shipment_identifier = 1 THEN shipments.id END) AS totalOperatorCountryShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.shipment_identifier = 2 THEN shipments.id END) AS totalInternationallyShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 4 THEN shipments.id END) AS totalDeliveredShipments')
+			->selectRaw('COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnShipments')
+			->where('sender_id', $user->id)
+			->get()
+			->toArray();
+
+		$data['shipmentRecord'] = collect($shipments)->collapse();
+
+
+		$shipmentTransactions = Transaction::selectRaw('SUM(CASE WHEN shipment_id IS NOT NULL THEN amount ELSE 0 END) AS totalShipmentTransactions')
+			->where('user_id', $user->id)
+			->get()
+			->toArray();
+
+		$data['transactionRecord'] = collect($shipmentTransactions)->collapse();
+
 		$transactions = Transaction::select('created_at')
 			->whereMonth('created_at', $today)
 			->with(['transactional' => function (MorphTo $morphTo) {
@@ -161,7 +186,11 @@ class HomeController extends Controller
 		$data['dataFund'] = $dataFund;
 		$data['dataPayout'] = $dataPayout;
 
+		$data['allShipments'] = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
+			->where('sender_id', $user->id)
+			->paginate(config('basic.paginate'));
 
+//		dd($allShipments);
 		return view($this->theme . 'user.home', $data);
 	}
 

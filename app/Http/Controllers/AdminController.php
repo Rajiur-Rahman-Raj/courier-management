@@ -19,11 +19,13 @@ class AdminController extends Controller
 {
 	public function index()
 	{
+		$admin = Auth::guard('admin')->user();
 		$basicControl = basicControl();
 		$last30 = date('Y-m-d', strtotime('-30 days'));
 		$last7 = date('Y-m-d', strtotime('-7 days'));
 		$today = today();
 		$dayCount = date('t', strtotime($today));
+		$data['yearLabels'] = ['January', 'February', 'March', 'April', 'May', 'June', 'July ', 'August', 'September', 'October', 'November', 'December'];
 
 		$users = User::selectRaw('COUNT(id) AS totalUser')
 			->selectRaw('COUNT((CASE WHEN status = 1  THEN id END)) AS activeUser')
@@ -79,7 +81,7 @@ class AdminController extends Controller
 			->toArray();
 
 		$data['transactionRecord'] = collect($shipmentTransactions)->collapse();
-<<<<<<< HEAD
+
 
 		$dailyShipments = Shipment::select('created_at')
 			->whereMonth('created_at', $today)
@@ -154,7 +156,6 @@ class AdminController extends Controller
 		$data['dataDispatchShipment'] = $dataDispatchShipment;
 		$data['dataReceivedShipment'] = $dataReceivedShipment;
 		$data['dataDeliveredShipment'] = $dataDeliveredShipment;
-
 		$data['dataReturnInQueueShipment'] = $dataReturnInQueueShipment;
 		$data['dataReturnDispatchShipment'] = $dataReturnDispatchShipment;
 		$data['dataReturnReceivedShipment'] = $dataReturnReceivedShipment;
@@ -178,7 +179,6 @@ class AdminController extends Controller
 				return $query->created_at->format('F');
 			}]);
 
-//		dd($monthlyShipments);
 
 		$data['shipmentYearLabels'] = ['January', 'February', 'March', 'April', 'May', 'June', 'July ', 'August', 'September', 'October', 'November', 'December'];
 
@@ -239,28 +239,107 @@ class AdminController extends Controller
 		$data['yearDeliveredShipments'] = $yearDeliveredShipments;
 		$data['yearReturnShipments'] = $yearReturnShipments;
 
-=======
->>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
 
-		$data['users'] = User::with('profile')->latest()->limit(5)->get();
-
-
-<<<<<<< HEAD
-=======
-		$dailyShipments = Shipment::select('created_at')
+		$dailyShipmentTransactions = Transaction::select('created_at')
 			->whereMonth('created_at', $today)
-			->selectRaw('COUNT(shipments.id) AS totalShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+			->selectRaw('SUM(CASE WHEN shipment_type = "drop_off" THEN amount ELSE 0 END) AS totalDropOffTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_type = "pickup" THEN amount ELSE 0 END) AS totalPickupTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_type = "condition" THEN amount ELSE 0 END) AS totalConditionTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_id IS NOT NULL AND created_at >= CURDATE() THEN amount ELSE 0 END) AS todayTotalTransactions')
 			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
 			->get()
 			->groupBy([function ($query){
 				return $query->created_at->format('j');
 			}]);
 
-		dd($dailyShipments);
+		$shipmentTransactionsDayLabels = [];
+		$dataDropOffTransactions = [];
+		$dataPickupTransactions = [];
+		$dataConditionTransactions = [];
 
->>>>>>> 17472b0ed13fe8ef52aa060b5b107303e197f12d
+		for ($i = 1; $i <= $dayCount; $i++) {
+			$shipmentTransactionsDayLabels[] = date('jS M', strtotime(date('Y/m/') . $i));
+
+			$currentDataDropOffTransactions = 0;
+			$currentDataPickupTransactions = 0;
+			$currentConditionTransactions = 0;
+
+			if (isset($dailyShipmentTransactions[$i])) {
+				foreach ($dailyShipmentTransactions[$i] as $key => $shipment) {
+					$currentDataDropOffTransactions += $shipment->totalDropOffTransactions;
+					$currentDataPickupTransactions += $shipment->totalPickupTransactions;
+					$currentConditionTransactions += $shipment->totalConditionTransactions;
+				}
+			}
+
+			$dataDropOffTransactions[] = $currentDataDropOffTransactions;
+			$dataPickupTransactions[] = $currentDataPickupTransactions;
+			$dataConditionTransactions[] = $currentConditionTransactions;
+		}
+
+		$data['shipmentTransactionsDayLabels'] = $shipmentTransactionsDayLabels;
+		$data['dataDropOffTransactions'] = $dataDropOffTransactions;
+		$data['dataPickupTransactions'] = $dataPickupTransactions;
+		$data['dataConditionTransactions'] = $dataConditionTransactions;
+
+
+		$monthlyShipmentTransactions = Transaction::select('created_at')
+			->whereYear('created_at', $today)
+			->groupBy([DB::raw("DATE_FORMAT(created_at, '%m')")])
+			->selectRaw('SUM(CASE WHEN shipment_id IS NOT NULL THEN amount ELSE 0 END) AS totalShipmentTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_type = "drop_off" THEN amount ELSE 0 END) AS totalDropOffTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_type = "pickup" THEN amount ELSE 0 END) AS totalPickupTransactions')
+			->selectRaw('SUM(CASE WHEN shipment_type = "condition" THEN amount ELSE 0 END) AS totalConditionTransactions')
+			->get()
+			->groupBy([function ($query){
+				return $query->created_at->format('F');
+			}]);
+
+
+		$yeartotalShipmentTransactions = [];
+		$yeartotalDropOffTransactions = [];
+		$yeartotalPickupTransactions = [];
+		$yeartotalConditionTransactions = [];
+
+		foreach ($data['yearLabels'] as $yearLabel) {
+			$currenttotalShipmentTransactions = 0;
+			$currenttotalDropOffTransactions = 0;
+			$currenttotalPickupTransactions = 0;
+			$currenttotalConditionTransactions = 0;
+
+			if (isset($monthlyShipmentTransactions[$yearLabel])) {
+				foreach ($monthlyShipmentTransactions[$yearLabel] as $key => $shipment) {
+					$currenttotalShipmentTransactions += $shipment->totalShipmentTransactions;
+					$currenttotalDropOffTransactions += $shipment->totalDropOffTransactions;
+					$currenttotalPickupTransactions += $shipment->totalPickupTransactions;
+					$currenttotalConditionTransactions += $shipment->totalConditionTransactions;
+				}
+			}
+
+			$yeartotalShipmentTransactions[] = $currenttotalShipmentTransactions;
+			$yeartotalDropOffTransactions[] = $currenttotalDropOffTransactions;
+			$yeartotalPickupTransactions[] = $currenttotalPickupTransactions;
+			$yeartotalConditionTransactions[] = $currenttotalConditionTransactions;
+		}
+
+
+		$data['yeartotalShipmentTransactions'] = $yeartotalShipmentTransactions;
+		$data['yeartotalDropOffTransactions'] = $yeartotalDropOffTransactions;
+		$data['yeartotalPickupTransactions'] = $yeartotalPickupTransactions;
+		$data['yeartotalConditionTransactions'] = $yeartotalConditionTransactions;
+
+//		$dailyShipments = Shipment::select('created_at')
+//			->whereMonth('created_at', $today)
+//			->selectRaw('COUNT(shipments.id) AS totalShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+//			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
+//			->get()
+//			->groupBy([function ($query){
+//				return $query->created_at->format('j');
+//			}]);
+
+
 		$transactions = Transaction::select('created_at')
 			->whereMonth('created_at', $today)
 			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
@@ -322,8 +401,6 @@ class AdminController extends Controller
 			->groupBy([function ($query) {
 				return $query->created_at->format('F');
 			}]);
-
-		$data['yearLabels'] = ['January', 'February', 'March', 'April', 'May', 'June', 'July ', 'August', 'September', 'October', 'November', 'December'];
 
 		$yearDeposit = [];
 		$yearPayout = [];

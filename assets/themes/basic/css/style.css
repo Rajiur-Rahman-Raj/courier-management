@@ -13,6 +13,7 @@
 	--border_color1: #e0e0e0;
 	--shadow4: 0 1px 2px rgb(0 0 0 / 20%);
 	--color_success: #01B81A;
+	--gradient: linear-gradient(to right, #cc54f4 0%, #488ff9 100%);
 }
 
 ::-moz-selection {
@@ -1733,7 +1734,7 @@ tr {
 	box-shadow: none;
 }
 
-.pagination_area ul li a {
+.pagination_area ul li .page-link {
 	width: 45px;
 	height: 45px;
 	border-radius: 51% !important;
@@ -1756,11 +1757,11 @@ tr {
 	border: 1px solid var(--theme_color);
 }
 
-.pagination_area ul li a {
+.pagination_area ul li .page-link {
 	box-shadow: none;
 }
 
-.pagination_area ul .active a {
+.pagination_area ul .active .page-link {
 	background-color: var(--theme_color);
 	color: var(--white);
 	border-color: var(--theme_color);
@@ -2761,7 +2762,59 @@ tr {
 	margin-bottom: 0;
 }
 
-#content .dashboard-box .icon_area{
+/* wallet css */
+#content .balance-box {
+	background: var(--gradient);
+	color: var(--white);
+	position: relative;
+	border-radius: 10px;
+}
+
+.user-account-number {
+	position: relative;
+}
+.user-account-number .account-wallet {
+	position: absolute;
+	bottom: 0;
+	color: #fff;
+	opacity: .1;
+	font-size: 150px;
+	line-height: 1;
+	right: 10px;
+}
+
+.balance-box .cash-in {
+	background-color: var(--white);
+	padding: 5px 15px;
+	border-radius: 5px;
+	color: var(--primary);
+	font-size: 14px;
+	font-family: "Jost", sans-serif;
+	font-weight: 400;
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	height: 35px;
+	position: relative;
+	z-index: 1;
+}
+.balance-box .cash-in i {
+	font-size: 13px !important;
+}
+
+.balance-box h5{
+	font-size: 20px !important;
+}
+.balance-box h3{
+	font-size: 30px !important;
+}
+
+#content .dashboard-box .icon_area,
+#content .dashboard-box .icon_area1,
+#content .dashboard-box .icon_area2,
+#content .dashboard-box .icon_area3,
+#content .dashboard-box .icon_area4
+{
 	position: relative;
 	width: 88px;
 	overflow: hidden;
@@ -2775,7 +2828,13 @@ tr {
 	-ms-flex-pack: center;
 	justify-content: center;
 }
-#content .dashboard-box .icon_area::before {
+
+#content .dashboard-box .icon_area::before,
+#content .dashboard-box .icon_area1::before,
+#content .dashboard-box .icon_area2::before,
+#content .dashboard-box .icon_area3::before,
+#content .dashboard-box .icon_area4::before
+{
 	content: "";
 	position: absolute;
 	width: 230px;
@@ -2791,6 +2850,39 @@ tr {
 	border-radius: 50%;
 	overflow: hidden;
 }
+
+#content .dashboard-box-wrapper .dashboard-box .icon_area1::before{
+	background: rgb(0, 170, 255, 0.1);
+}
+
+#content .dashboard-box-wrapper .dashboard-box .icon_area2::before{
+	background: rgb(1, 184, 26, 0.1);
+}
+
+#content .dashboard-box-wrapper .dashboard-box .icon_area3::before{
+	background: rgb(130, 49, 211, 0.1);
+}
+
+#content .dashboard-box-wrapper .dashboard-box .icon_area4::before{
+	background: rgb(88, 64, 255, 0.1);
+}
+
+#content .dashboard-box-wrapper .dashboard-box .icon_area1 i{
+	color: rgb(0, 170, 255);
+}
+
+#content .dashboard-box-wrapper .dashboard-box .icon_area2 i{
+	color: rgb(1, 184, 26);
+}
+
+#content .dashboard-box-wrapper .dashboard-box .icon_area3 i{
+	color: rgb(130, 49, 211);
+}
+
+#content .dashboard-box-wrapper .dashboard-box .icon_area4 i{
+	color: rgb(88, 64, 255);
+}
+
 #content .dashboard-box-wrapper .box:nth-child(1) .dashboard-box .icon_area::before{
 	background: rgb(130, 49, 211, 0.1);
 }

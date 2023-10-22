@@ -19,6 +19,11 @@ class User extends Authenticatable
 		return $this->morphOne(SiteNotification::class, 'siteNotificational', 'site_notificational_type', 'site_notificational_id');
 	}
 
+	public function funds()
+	{
+		return $this->hasMany(Fund::class)->latest()->where('status', '!=', 0);
+	}
+
 	public function profile()
 	{
 		return $this->hasOne(UserProfile::class, 'user_id', 'id');
