@@ -177,11 +177,14 @@
 								</tbody>
 							</table>
 						</div>
-						<nav aria-label="Page navigation example">
-							<ul class="pagination justify-content-center">
-								{{ $allShipments->appends($_GET)->links() }}
-							</ul>
-						</nav>
+
+						<div class="pagination_area">
+							<nav aria-label="Page navigation example">
+								<ul class="pagination justify-content-center">
+									{{ $allShipments->appends($_GET)->links() }}
+								</ul>
+							</nav>
+						</div>
 					</div>
 				</div>
 

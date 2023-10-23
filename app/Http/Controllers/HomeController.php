@@ -190,7 +190,6 @@ class HomeController extends Controller
 			->where('sender_id', $user->id)
 			->paginate(config('basic.paginate'));
 
-//		dd($allShipments);
 		return view($this->theme . 'user.home', $data);
 	}
 

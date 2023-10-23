@@ -4,7 +4,6 @@
 	@lang('Create New Role')
 @endsection
 
-
 @section('content')
 	<div class="main-content">
 		<section class="section">

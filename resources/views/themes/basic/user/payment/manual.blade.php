@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-	<section id="dashboard">
+	<section id="dashboard" class="p-0">
 		<div class="container add-fund pb-50 mt-4">
 			<div class="row profile-setting">
 				<div class="col-md-12">
@@ -12,7 +12,7 @@
 						<div class="card-body ">
 							<div class="row ">
 								<div class="col-md-12">
-									<h3 class="title text-center">{{trans('Please follow the instruction below')}}</h3>
+									<h3 class="title text-center mt-3">{{trans('Please follow the instruction below')}}</h3>
 									<p class="text-center mt-2 ">{{trans('You have requested to deposit')}} <b
 											class="text--base">{{getAmount($deposit->amount)}}
 											{{$basic->base_currency}}</b> , {{trans('Please pay')}}

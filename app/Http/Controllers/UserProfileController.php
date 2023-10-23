@@ -342,13 +342,14 @@ class UserProfileController extends Controller
 
 	public function updateProfile(Request $request)
 	{
-
+		$user = Auth::user();
+		$userProfile = UserProfile::firstOrCreate(['user_id' => $user->id]);
 		$allowedExtensions = array('jpg', 'png', 'jpeg');
 
-		$image = $request->image;
+		$image = $request->profile_picture;
 
 		$this->validate($request, [
-			'image' => [
+			'profile_picture' => [
 				'required',
 				'max:4096',
 				function ($fail) use ($image, $allowedExtensions) {
@@ -364,47 +365,17 @@ class UserProfileController extends Controller
 		]);
 
 
-		if ($request->hasFile('image')) {
-			$path = config('location.user.path');
-			try {
-				$user->image = $this->uploadImage($image, $path);
-				$image = $this->fileUpload($image, $path, $user->driver, null);
-			} catch (\Exception $exp) {
-				return back()->with('error', 'Could not upload your ' . $image)->withInput();
+		if ($request->file('profile_picture') && $request->file('profile_picture')->isValid()) {
+			$extension = $request->profile_picture->extension();
+			$profileName = strtolower($user->username . '.' . $extension);
+			$image = $this->fileUpload($request->profile_picture, config('location.user.path'), $userProfile->driver, $profileName, $userProfile->profile_picture);
+			if ($image) {
+				$userProfile->profile_picture = $image['path'];
+				$userProfile->driver = $image['driver'];
 			}
 		}
-		$user->save();
 
-		$msg = [
-			'name' => $user->fullname,
-		];
-
-		$adminAction = [
-			"link" => route('admin.user-edit', $user->id),
-			"icon" => "fas fa-user text-white"
-		];
-		$userAction = [
-			"link" => route('user.profile'),
-			"icon" => "fas fa-user text-white"
-		];
-
-		$this->adminPushNotification('ADMIN_NOTIFY_USER_PROFILE_UPDATE', $msg, $adminAction);
-		$this->userPushNotification($user, 'USER_NOTIFY_HIS_PROFILE_UPDATE', $msg, $userAction);
-
-		$this->adminFirebasePushNotification('ADMIN_NOTIFY_USER_PROFILE_UPDATE', $msg);
-		$this->userFirebasePushNotification($user, 'USER_NOTIFY_HIS_PROFILE_UPDATE', $msg);
-
-
-		$currentDate = dateTime(Carbon::now());
-		$this->sendMailSms($user, $type = 'USER_MAIL_HIS_PROFILE_UPDATE', [
-			'name' => $user->fullname,
-			'date' => $currentDate,
-		]);
-
-		$this->mailToAdmin($type = 'ADMIN_MAIL_USER_PROFILE_UPDATE', [
-			'name' => $user->fullname,
-			'date' => $currentDate,
-		]);
+		$userProfile->save();
 
 		return back()->with('success', 'Updated Successfully.');
 	}

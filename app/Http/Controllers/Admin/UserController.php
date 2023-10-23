@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\Fund;
 use App\Models\Language;
 use App\Models\Payout;
+use App\Models\Shipment;
 use App\Models\State;
 use App\Models\Transaction;
 use App\Models\User;
@@ -236,15 +237,32 @@ class UserController extends Controller
 			$data['allCities'] = City::where('status', 1)->get();
 			$data['allAreas'] = Area::where('status', 1)->get();
 
-			$addFundCount = Fund::where(['user_id' => $userId])->count();
-			$payoutCount = Payout::where(['user_id' => $userId])->count();
+			$shipments = Shipment::selectRaw('COUNT(shipments.id) AS totalShipments')
+				->selectRaw('COUNT(CASE WHEN shipments.shipment_identifier = 1 THEN shipments.id END) AS totalOperatorCountryShipments')
+				->selectRaw('COUNT(CASE WHEN shipments.shipment_identifier = 2 THEN shipments.id END) AS totalInternationallyShipments')
+				->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+				->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+				->selectRaw('COUNT(CASE WHEN shipments.status = 4 THEN shipments.id END) AS totalDeliveredShipments')
+				->selectRaw('COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnShipments')
+				->where('sender_id', $userId)
+				->get()
+				->toArray();
 
-			$transactionCount = [
-				'fund' => $addFundCount,
-				'payout' => $payoutCount
-			];
+			$data['shipmentRecord'] = collect($shipments)->collapse();
 
-			return view('admin.user.show', $data, compact('user', 'userProfile', 'transactionCount', 'countries', 'languages'));
+
+			$shipmentTransactions = Transaction::selectRaw('SUM(CASE WHEN shipment_id IS NOT NULL THEN amount ELSE 0 END) AS totalShipmentTransactions')
+				->where('user_id', $userId)
+				->get()
+				->toArray();
+
+			$data['transactionRecord'] = collect($shipmentTransactions)->collapse();
+
+			$data['totalDeposit'] = getAmount($user->funds()->whereStatus(1)->sum('amount'));
+			$data['totalPayout'] = getAmount($user->payouts()->whereStatus(2)->sum('amount'));
+
+
+			return view('admin.user.show', $data, compact('user', 'userProfile', 'countries', 'languages'));
 		} elseif ($request->isMethod('post')) {
 			$purifiedData = Purify::clean($request->except('_token', '_method', 'image'));
 

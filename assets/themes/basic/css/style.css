@@ -304,6 +304,9 @@ figure {
 	background: var(--theme_color);
 	color: var(--heading_color) !important;
 }
+.base_background {
+	background: var(--theme_color) !important;
+}
 
 .cmn_btn2 {
 	font-size: 12px;
@@ -2583,7 +2586,7 @@ tr {
 	z-index: 3;
 }
 #content .navbar .user-panel .user-dropdown li {
-	border-bottom: 1px solid var(--bgLight);
+	border-bottom: 1px solid var(--bg_color2);
 	list-style: none;
 }
 #content .navbar .user-panel .user-dropdown li a {
@@ -2737,7 +2740,7 @@ tr {
 	font-weight: 600;
 	font-size: 14px;
 	text-transform: capitalize;
-	border-top: 1px solid var(--bgLight);
+	border-top: 1px solid var(--bg_color2);
 	text-align: center;
 	padding: 10px 10px 11px 15px;
 	position: absolute;
@@ -2933,7 +2936,7 @@ tr {
 #content .table {
 	color: var(--fontColor);
 	background: var(--white);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+	/*box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);*/
 	margin-bottom: 0;
 	border-radius: 10px;
 }
@@ -2956,6 +2959,8 @@ tr {
 }
 #content .table tr {
 	border: none;
+}#content .table tr:last-child td{
+	 border-bottom: none !important;
 }
 #content .table tr th {
 	font-weight: 600;
@@ -3040,7 +3045,7 @@ tr {
 	background: linear-gradient(rgb(28, 78, 178,0.9),rgb(102, 145, 231,0.9)), url(../images/user_panel/profile/profile-bg.jpg);
 }
 .profile-setting{
-	margin-top: -100px;
+	/*margin-top: -100px;*/
 }
 .profile-setting .sidebar-wrapper .profile{
 	background: var(--white);
@@ -3049,6 +3054,7 @@ tr {
 	padding: 20px;
 	text-align: center;
 }
+
 .profile-setting .sidebar-wrapper .profile .img {
 	position: relative;
 	margin-bottom: 25px;
@@ -3447,7 +3453,7 @@ tr {
 		font-weight: 600;
 	}
 	#content .table tbody > tr:nth-of-type(even) > * {
-		--bs-table-accent-bg: var(--bgLight2) !important;
+		--bs-table-accent-bg: var(--bg_color22) !important;
 	}
 	#content .table tr td:first-child {
 		border-top-left-radius: 0;
@@ -3737,7 +3743,7 @@ a.text-lighter:focus {
 }
 .support-ticket-section .inbox-wrapper .chats .chat-box .text-wrapper .text {
 	padding: 10px;
-	background: var(--bgLight);
+	background: var(--bg_color2);
 	border-radius: 3px;
 	float: right;
 	margin-bottom: 5px;
@@ -3745,6 +3751,12 @@ a.text-lighter:focus {
 }
 .support-ticket-section .inbox-wrapper .chats .chat-box .text-wrapper .text p {
 	margin-bottom: 0;
+}
+.support-ticket-section .inbox-wrapper .chats .opposite-side .text-wrapper .time {
+	text-align: left;
+}
+.support-ticket-section .inbox-wrapper .chats .opposite-side .text-wrapper .text {
+	float: left;
 }
 .support-ticket-section .inbox-wrapper .chats .chat-box .text-wrapper .file {
 	color: var(--theme_color);
@@ -3760,7 +3772,6 @@ a.text-lighter:focus {
 	font-size: 12px;
 	display: inline-block;
 	width: 100%;
-	text-align: right;
 }
 .support-ticket-section .inbox-wrapper .chats .chat-box .img {
 	margin-left: 10px;
@@ -3774,11 +3785,14 @@ a.text-lighter:focus {
 }
 .support-ticket-section .inbox-wrapper .typing-area {
 	background: var(--white);
-	border-top: 1px solid var(--bgLight);
+	border-top: 1px solid var(--bg_color2);
 	padding: 20px;
 }
+.support-ticket-section .inbox-wrapper .chats .opposite-side .text-wrapper .name {
+	text-align: left;
+}
 .support-ticket-section .inbox-wrapper .img-preview {
-	background: var(--bgLight);
+	background: var(--bg_color2);
 	display: inline-block;
 	position: relative;
 	left: 0px;
@@ -3790,7 +3804,7 @@ a.text-lighter:focus {
 	position: absolute;
 	right: -10px;
 	top: -10px;
-	background: var(--bgLight);
+	background: var(--bg_color2);
 	width: 20px;
 	height: 20px;
 	border-radius: 20px;
@@ -3801,6 +3815,8 @@ a.text-lighter:focus {
 	font-size: 14px;
 	color: var(--secondary);
 	padding-bottom: 3px;
+	position: relative;
+	bottom: 3px;
 }
 .support-ticket-section .inbox-wrapper .img-preview img {
 	width: 100%;
@@ -3814,7 +3830,6 @@ a.text-lighter:focus {
 }
 .support-ticket-section .inbox-wrapper .typing-area .input-group .send-file-btn {
 	position: relative;
-	background: var(--bgLight);
 	border: none;
 	width: 40px;
 	height: 100%;
@@ -3826,7 +3841,24 @@ a.text-lighter:focus {
 .support-ticket-section .inbox-wrapper .typing-area .input-group .send-file-btn i {
 	transition: 0.4s;
 	position: relative;
-	color: var(--theme_color);
+}
+.support-ticket-section .inbox-wrapper .img-preview button.delete {
+	position: absolute;
+	right: -10px;
+	top: -10px;
+	background: #e7eaed;
+	width: 20px;
+	height: 20px;
+	border-radius: 20px;
+	text-align: center;
+	border: none;
+}
+.support-ticket-section .inbox-wrapper .chats .opposite-side {
+	justify-content: start;
+}
+.support-ticket-section .inbox-wrapper .chats .opposite-side .img {
+	margin-left: 0;
+	margin-right: 10px;
 }
 .support-ticket-section .inbox-wrapper .typing-area .input-group button i {
 	color: var(--white);
@@ -3843,7 +3875,6 @@ a.text-lighter:focus {
 }
 .support-ticket-section .inbox-wrapper .typing-area .input-group .form-control {
 	height: 45px;
-	background: var(--bgLight);
 	border-radius: 0;
 	border: none;
 	font-size: 13px;
@@ -3891,7 +3922,7 @@ a.text-lighter:focus {
 
 .profile-setting .sidebar-wrapper {
 	background: var(--white);
-	box-shadow: var(--shadow2);
+	box-shadow: var(--shadow4);
 	border-radius: 10px;
 	padding: 20px;
 }
@@ -4117,6 +4148,9 @@ a.text-lighter:focus {
 	font-size: 14px;
 	color: gray;
 	cursor: pointer;
+}
+.add-fund-create-page{
+	margin-top: -100px;
 }
 
 .select2 {

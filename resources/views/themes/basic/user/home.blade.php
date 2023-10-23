@@ -254,7 +254,7 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="pagination_area">
+				<div class="pagination_area mt-4">
 					<nav aria-label="Page navigation example">
 						<ul class="pagination justify-content-center">
 							{{ $allShipments->appends($_GET)->links() }}

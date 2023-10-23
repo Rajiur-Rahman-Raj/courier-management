@@ -390,7 +390,6 @@
 									<h6 class="mb-3 font-weight-bold text-primary">@lang('User Transaction Details')</h6>
 									<div class="row">
 										<div class="col-md-6 mb-sm-3">
-
 											<a href="">
 												<div class="card card-statistic-1 shadow-sm branch-box">
 													<div class="card-icon bg-primary">
@@ -398,10 +397,10 @@
 													</div>
 													<div class="card-wrap">
 														<div class="card-header">
-															<h4>@lang('Fund History')</h4>
+															<h4>@lang('Total Deposit')</h4>
 														</div>
 														<div class="card-body">
-															{!! $transactionCount['payout'] == 0 ? 0 : $transactionCount['payout'] !!}
+															{{trans(config('basic.currency_symbol'))}}{{getAmount($totalDeposit, config('basic.fraction_number'))}}
 														</div>
 													</div>
 												</div>
@@ -416,10 +415,10 @@
 													</div>
 													<div class="card-wrap">
 														<div class="card-header">
-															<h4>@lang('Payout History')</h4>
+															<h4>@lang('Total Payout')</h4>
 														</div>
 														<div class="card-body">
-															20
+															{{trans(config('basic.currency_symbol'))}}{{getAmount($totalPayout, config('basic.fraction_number'))}}
 														</div>
 													</div>
 												</div>
@@ -439,10 +438,10 @@
 												</div>
 												<div class="card-wrap">
 													<div class="card-header">
-														<h4>@lang('Total Send Courier')</h4>
+														<h4>@lang('Total Shipments')</h4>
 													</div>
 													<div class="card-body">
-														30
+														{{ $shipmentRecord['totalShipments'] }}
 													</div>
 												</div>
 											</div>
@@ -450,30 +449,14 @@
 										<div class="col-md-6 mb-3">
 											<div class="card card-statistic-1 shadow-sm branch-box">
 												<div class="card-icon bg-primary">
-													<i class="fas fa-people-carry"></i>
+													<i class="fas fa-truck"></i>
 												</div>
 												<div class="card-wrap">
 													<div class="card-header">
-														<h4>@lang('Total Receive Courier')</h4>
+														<h4>@lang(optional(basicControl()->operatorCountry)->name) @lang('Shipments')</h4>
 													</div>
 													<div class="card-body">
-														20
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-md-6 mb-3">
-											<div class="card card-statistic-1 shadow-sm branch-box">
-												<div class="card-icon bg-primary">
-													<i class="fas fa-dollar-sign"></i>
-												</div>
-												<div class="card-wrap">
-													<div class="card-header">
-														<h4>@lang('Total Transaction')</h4>
-													</div>
-													<div class="card-body">
-														20
+														{{ $shipmentRecord['totalOperatorCountryShipments'] }}
 													</div>
 												</div>
 											</div>
@@ -489,7 +472,23 @@
 														<h4>@lang('Total Transaction')</h4>
 													</div>
 													<div class="card-body">
-														20
+														{{trans(config('basic.currency_symbol'))}}{{getAmount($transactionRecord['totalShipmentTransactions'], config('basic.fraction_number'))}}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-md-6 mb-3">
+											<div class="card card-statistic-1 shadow-sm branch-box">
+												<div class="card-icon bg-primary">
+													<i class="fas fa-plane"></i>
+												</div>
+												<div class="card-wrap">
+													<div class="card-header">
+														<h4>@lang('Internationally Shipments')</h4>
+													</div>
+													<div class="card-body">
+														{{ $shipmentRecord['totalInternationallyShipments'] }}
 													</div>
 												</div>
 											</div>

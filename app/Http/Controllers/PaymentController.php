@@ -30,6 +30,7 @@ class PaymentController extends Controller
 			if (!$deposit) throw new \Exception('Invalid Payment Request.');
 
 			$gateway = Gateway::findOrFail($deposit->payment_method_id);
+
 			if (!$gateway) throw new \Exception('Invalid Payment Gateway.');
 
 			if (999 < $gateway->id) {
@@ -37,9 +38,7 @@ class PaymentController extends Controller
 			}
 
 			$getwayObj = 'App\\Services\\Gateway\\' . $gateway->code . '\\Payment';
-
 			$data = $getwayObj::prepareData($deposit, $gateway);
-
 			$data = json_decode($data);
 
 		} catch (\Exception $exception) {
@@ -161,6 +160,7 @@ class PaymentController extends Controller
 
 	public function gatewayIpn(Request $request, $code, $trx = null, $type = null)
 	{
+
 		if (isset($request->m_orderid)) {
 			$trx = $request->m_orderid;
 		}
@@ -183,8 +183,9 @@ class PaymentController extends Controller
 			return redirect()->route('success');
 		}
 
-		try {
+//		try {
 			$gateway = Gateway::where('code', $code)->first();
+
 			if (!$gateway) throw new \Exception('Invalid Payment Gateway.');
 
 			if (isset($trx)) {
@@ -194,9 +195,9 @@ class PaymentController extends Controller
 			$getwayObj = 'App\\Services\\Gateway\\' . $code . '\\Payment';
 			$data = $getwayObj::ipn($request, $gateway, @$deposit, @$trx, @$type);
 
-		} catch (\Exception $exception) {
-			return back()->with('alert', $exception->getMessage());
-		}
+//		} catch (\Exception $exception) {
+//			return back()->with('alert', $exception->getMessage());
+//		}
 		if (isset($data['redirect'])) {
 
 			if (basicControl()->email_notification) {

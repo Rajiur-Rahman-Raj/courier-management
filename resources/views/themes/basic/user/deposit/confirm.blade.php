@@ -4,7 +4,7 @@
 @section('content')
 	<div class="container-fluid">
 		<div class="main row">
-			<section class="section">
+			<section class="section p-0">
 				<div class="section-header mt-3">
 					<h2 class="text-center mb-4">@lang('Add Fund Preview')</h2>
 				</div>

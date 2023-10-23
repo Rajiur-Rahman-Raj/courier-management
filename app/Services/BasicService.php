@@ -48,6 +48,7 @@ class BasicService
 
 	public function prepareOrderUpgradation($deposit)
 	{
+
 		$basicControl = basicControl();
 		$deposit->status = 1;
 		if ($deposit->depositable_type == Fund::class && !isset($deposit->depositable_id)) {
@@ -81,7 +82,7 @@ class BasicService
 			];
 
 			$action = [
-				"link" => route('fund.initialize'),
+				"link" => route('fund.index'),
 				"icon" => "fa fa-money-bill-alt text-white"
 			];
 			$user = Auth::user();
@@ -99,8 +100,8 @@ class BasicService
 				"icon" => "fa fa-money-bill-alt text-white"
 			];
 
-			$this->adminMail('ADD_FUND_USER_USER', $params);
-			$this->adminPushNotification('ADD_FUND_USER_USER', $params, $action);
+			$this->adminMail('ADD_FUND_USER_ADMIN', $params, $subject = null, $requestMessage = null, $superAdmin = 1);
+			$this->adminPushNotification('ADD_FUND_USER_ADMIN', $params, $action);
 
 		}
 		$deposit->save();

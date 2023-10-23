@@ -8,6 +8,7 @@
 					 alt="@lang('Logo')">
 			</a>
 		</div>
+
 		<div class="sidebar-brand sidebar-brand-sm">
 			<a href="{{ route('admin.home') }}">
 				<img src="{{ getFile(config('basic.default_file_driver'),config('basic.favicon_image')) }}"

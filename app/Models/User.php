@@ -24,6 +24,11 @@ class User extends Authenticatable
 		return $this->hasMany(Fund::class)->latest()->where('status', '!=', 0);
 	}
 
+	public function payouts()
+	{
+		return $this->hasMany(Payout::class)->latest()->where('status', '==', 2);
+	}
+
 	public function profile()
 	{
 		return $this->hasOne(UserProfile::class, 'user_id', 'id');

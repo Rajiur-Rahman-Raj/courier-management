@@ -14,6 +14,7 @@ class Payment
 {
 	public static function prepareData($deposit, $gateway)
 	{
+
 		$basic = basicControl();
 		$val['key'] = $gateway->parameters->publishable_key ?? '';
 		$val['name'] = optional($deposit->receiver)->name ?? $basic->site_title;
@@ -32,6 +33,7 @@ class Payment
 	{
 		StripeJS::setApiKey($gateway->parameters->secret_key);
 
+
 		$customer = Customer::create([
 			'email' => $request->stripeEmail,
 			'source' => $request->stripeToken,
@@ -47,7 +49,6 @@ class Payment
 
 		if ($charge['status'] == 'succeeded') {
 			BasicService::prepareOrderUpgradation($deposit);
-
 			$data['status'] = 'success';
 			$data['msg'] = 'Transaction was successful.';
 			$data['redirect'] = route('success');

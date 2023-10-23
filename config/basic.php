@@ -8,7 +8,7 @@
   'base_currency' => 'USD',
   'currency_symbol' => '$',
   'fraction_number' => 2,
-  'paginate' => 15,
+  'paginate' => 20,
   'sender_email' => 'support@mail.com',
   'sender_email_name' => 'Binary Operation',
   'email_configuration' =>

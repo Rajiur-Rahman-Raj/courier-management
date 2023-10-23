@@ -46,6 +46,7 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserShipmentController;
+use App\Http\Controllers\Admin\AdminKycController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 

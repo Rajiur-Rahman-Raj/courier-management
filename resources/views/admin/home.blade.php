@@ -14,608 +14,627 @@
 			</div>
 
 			<!---------- User Statistics -------------->
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<h6 class="mb-3 text-darku">@lang('User Statistics')</h6>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-users"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total User')</h4>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.User_Statistics.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<h6 class="mb-3 text-darku">@lang('User Statistics')</h6>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-users"></i>
 							</div>
-							<div class="card-body">
-								{{ $userRecord['totalUser']  }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total User')</h4>
+								</div>
+								<div class="card-body">
+									{{ $userRecord['totalUser']  }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-user-tie"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Active User')</h4>
+								</div>
+								<div class="card-body">
+									{{ $userRecord['activeUser'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-user-plus"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Last 30 Days Users')</h4>
+								</div>
+								<div class="card-body">
+									{{ $userRecord['last_30_days_join'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-funnel-dollar"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total User Fund')</h4>
+								</div>
+								<div class="card-body">
+									{{trans($basic->currency_symbol)}}{{getAmount($userRecord['totalUserBalance'], config('basic.fraction_number'))}}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-user-tie"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Active User')</h4>
-							</div>
-							<div class="card-body">
-								{{ $userRecord['activeUser'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-user-plus"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('New User')</h4>
-							</div>
-							<div class="card-body">
-								{{ $userRecord['todayJoin'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-funnel-dollar"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total User Fund')</h4>
-							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($userRecord['totalUserBalance'], config('basic.fraction_number'))}}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			@endif
 
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<h6 class="mb-3 text-darku">@lang('Branch Statistics')</h6>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-code-branch"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Branches')</h4>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Branch_Statistics.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<h6 class="mb-3 text-darku">@lang('Branch Statistics')</h6>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-code-branch"></i>
 							</div>
-							<div class="card-body">
-								{{ $branchRecord['totalBranches']  }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Branches')</h4>
+								</div>
+								<div class="card-body">
+									{{ $branchRecord['totalBranches']  }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-users"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Branch Manager')</h4>
+								</div>
+								<div class="card-body">
+									{{ $branchRecord['totalBranchManagers']  }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-bicycle"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Branch Driver')</h4>
+								</div>
+								<div class="card-body">
+									{{ $branchRecord['totalBranchDrivers'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-users-cog"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Branch Employee')</h4>
+								</div>
+								<div class="card-body">
+									{{ $branchRecord['totalBranchEmployees'] }}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-users"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Branch Manager')</h4>
-							</div>
-							<div class="card-body">
-								{{ $branchRecord['totalBranchManagers']  }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-bicycle"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Branch Driver')</h4>
-							</div>
-							<div class="card-body">
-								{{ $branchRecord['totalBranchDrivers'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-users-cog"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Branch Employee')</h4>
-							</div>
-							<div class="card-body">
-								{{ $branchRecord['totalBranchEmployees'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			@endif
 
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<h6 class="mb-3 text-darku">@lang('Shipment Statistics')</h6>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-shipping-fast"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Shipments')</h4>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Shipment_Statistics.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<h6 class="mb-3 text-darku">@lang('Shipment Statistics')</h6>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-shipping-fast"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalShipments']  }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalShipments']  }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-truck"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Operator Country Shipments')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-truck"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalOperatorCountryShipments']  }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang(optional(basicControl()->operatorCountry)->name) @lang('Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalOperatorCountryShipments']  }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-plane"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Internationally Shipments')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-plane"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalInternationallyShipments']  }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Internationally Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalInternationallyShipments']  }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-cubes"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang("Today's Shipments")</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-cubes"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalTodayShipments']  }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang("Today's Shipments")</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalTodayShipments']  }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-truck"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Drop Off Shipments')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-truck"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalDropOffShipments'] }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Drop Off Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalDropOffShipments'] }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-truck-pickup"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Pickup Shipments')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-truck-pickup"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalPickupShipments'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="far fa-money-bill-alt"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Condition Shipments')</h4>
-							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalConditionShipments'] }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Pickup Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalPickupShipments'] }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="far fa-money-bill-alt"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Condition Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalConditionShipments'] }}
+								</div>
+							</div>
+						</div>
+					</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-spinner" aria-hidden="true"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Pending Shipments')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-spinner" aria-hidden="true"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalPendingShipments'] }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Pending Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalPendingShipments'] }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-paper-plane"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Sent In Queue')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-paper-plane"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalInQueueShipments'] }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Sent In Queue')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalInQueueShipments'] }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-truck-loading"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Distaptch Shipments')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-truck-loading"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalDispatchShipments'] }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Distaptch Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalDispatchShipments'] }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-spinner" aria-hidden="true"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Delivery In Queue')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-spinner" aria-hidden="true"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalDeliveryInQueueShipments'] }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Delivery In Queue')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalDeliveryInQueueShipments'] }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-check-double"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Delivered Shipments')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-people-carry"></i>
 							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalDeliveredShipments'] }}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Delivered Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalDeliveredShipments'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="far fa-paper-plane fa-rotate-270"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Return In Queue')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalReturnInQueueShipments'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-truck-loading fa-flip-horizontal"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Return In Dispatch')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalReturnInDispatchShipments'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-spinner" aria-hidden="true"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Return Delivery In Queue')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalReturnDeliveryInQueueShipments'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-check-double"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Return Delivered Shipments')</h4>
+								</div>
+								<div class="card-body">
+									{{ $shipmentRecord['totalReturnInDelivered'] }}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="far fa-paper-plane fa-rotate-270"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Return In Queue')</h4>
-							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalReturnInQueueShipments'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-truck-loading fa-flip-horizontal"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Return In Dispatch')</h4>
-							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalReturnInDispatchShipments'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-spinner" aria-hidden="true"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Return Delivery In Queue')</h4>
-							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalReturnDeliveryInQueueShipments'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-check-double"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Return Delivered Shipments')</h4>
-							</div>
-							<div class="card-body">
-								{{ $shipmentRecord['totalReturnInDelivered'] }}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			@endif
 
 			<!---------- Shipments Summary Current Month-------------->
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">@lang('Current month Shipments summary')</h5>
-							<div>
-								<canvas id="shipments-line-chart" height="80"></canvas>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Shipment_Statistics.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<div class="card mb-4 shadow-sm">
+							<div class="card-body">
+								<h5 class="card-title">@lang('Current month Shipments summary')</h5>
+								<div>
+									<canvas id="shipments-line-chart" height="80"></canvas>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			@endif
 			<!---------- Shipments Summary Current Year-------------->
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>
-							<div>
-								<canvas id="shipment-year-chart" height="120"></canvas>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Shipment_Statistics.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<div class="card mb-4 shadow-sm">
+							<div class="card-body">
+								<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>
+								<div>
+									<canvas id="shipment-year-chart" height="120"></canvas>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			@endif
 
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<h6 class="mb-3 text-darku">@lang('Shipment Transaction')</h6>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-code-branch"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Total Transactions')</h4>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Shipment_Transaction.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<h6 class="mb-3 text-darku">@lang('Shipment Transaction')</h6>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-code-branch"></i>
 							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalShipmentTransactions'], config('basic.fraction_number'))}}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Total Transactions')</h4>
+								</div>
+								<div class="card-body">
+									{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalShipmentTransactions'], config('basic.fraction_number'))}}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-users"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Drop Off Transactions')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-users"></i>
 							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalDropOffTransactions'], config('basic.fraction_number'))}}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-bicycle"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Pickup Transactions')</h4>
-							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalPickupTransactions'], config('basic.fraction_number'))}}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Drop Off Transactions')</h4>
+								</div>
+								<div class="card-body">
+									{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalDropOffTransactions'], config('basic.fraction_number'))}}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-users-cog"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Cash On Delivery Transactions')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-bicycle"></i>
 							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalConditionTransactions'], config('basic.fraction_number'))}}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Pickup Transactions')</h4>
+								</div>
+								<div class="card-body">
+									{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalPickupTransactions'], config('basic.fraction_number'))}}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-users-cog"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Cash On Delivery Transactions')</h4>
+								</div>
+								<div class="card-body">
+									{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalConditionTransactions'], config('basic.fraction_number'))}}
+								</div>
+							</div>
+						</div>
+					</div>
 
-			</div>
+				</div>
+			@endif
 
 			<!---------- Shipments Transactions Current Month-------------->
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">@lang('Current month Shipments Transactions')</h5>
-							<div>
-								<canvas id="shipments-transaction-current-month" height="80"></canvas>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Shipment_Transaction_Chart.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<div class="card mb-4 shadow-sm">
+							<div class="card-body">
+								<h5 class="card-title">@lang('Current month Shipments Transactions')</h5>
+								<div>
+									<canvas id="shipments-transaction-current-month" height="80"></canvas>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			@endif
 
 			<!---------- Shipments Transactions Current Year-------------->
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">@lang('Current Year Shipments Transactions')</h5>
-							<div>
-								<canvas id="shipments-transaction-current-year" height="80"></canvas>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Shipment_Transaction_Chart.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<div class="card mb-4 shadow-sm">
+							<div class="card-body">
+								<h5 class="card-title">@lang('Current Year Shipments Transactions')</h5>
+								<div>
+									<canvas id="shipments-transaction-current-year" height="80"></canvas>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			@endif
 
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<h6 class="mb-3 text-darku">@lang('Tickets')</h6>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-spinner" aria-hidden="true"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Pending Tickets')</h4>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Tickets.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-12">
+						<h6 class="mb-3 text-darku">@lang('Tickets')</h6>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-spinner" aria-hidden="true"></i>
 							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalShipmentTransactions'], config('basic.fraction_number'))}}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Pending Tickets')</h4>
+								</div>
+								<div class="card-body">
+									{{ $ticketRecord['pendingTickets'] }}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-check"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Answered Tickets')</h4>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-check"></i>
 							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalDropOffTransactions'], config('basic.fraction_number'))}}
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Answered Tickets')</h4>
+								</div>
+								<div class="card-body">
+									{{ $ticketRecord['answeredTickets'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-reply"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Replied Tickets')</h4>
+								</div>
+								<div class="card-body">
+									{{ $ticketRecord['repliedTickets'] }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+						<div class="card card-statistic-1 shadow-sm">
+							<div class="card-icon bg-primary">
+								<i class="fas fa-times-circle"></i>
+							</div>
+							<div class="card-wrap">
+								<div class="card-header">
+									<h4>@lang('Closed Tickets')</h4>
+								</div>
+								<div class="card-body">
+									{{ $ticketRecord['closedTickets'] }}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-reply"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Replied Tickets')</h4>
-							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalPickupTransactions'], config('basic.fraction_number'))}}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-					<div class="card card-statistic-1 shadow-sm">
-						<div class="card-icon bg-primary">
-							<i class="fas fa-times-circle"></i>
-						</div>
-						<div class="card-wrap">
-							<div class="card-header">
-								<h4>@lang('Closed Tickets')</h4>
-							</div>
-							<div class="card-body">
-								{{trans($basic->currency_symbol)}}{{getAmount($transactionRecord['totalConditionTransactions'], config('basic.fraction_number'))}}
-							</div>
-						</div>
-					</div>
-				</div>
-
-			</div>
+			@endif
 
 
 			<!---------- Withdraw & Deposit -------------->
-			<div class="row mb-3">
-				<div class="col-md-8">
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">@lang('Current Year Payment Gateway Transactions')</h5>
-							<div>
-								<canvas id="line-chart-2" height="120"></canvas>
+			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Payment_Chart.permission.view'))))
+				<div class="row mb-3">
+					<div class="col-md-8">
+						<div class="card mb-4 shadow-sm">
+							<div class="card-body">
+								<h5 class="card-title">@lang('Current Year Payment Gateway Transactions')</h5>
+								<div>
+									<canvas id="line-chart-2" height="120"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="card mb-4 shadow-sm">
+							<div class="card-body">
+								<h5 class="card-title">@lang('Gateway Used For Deposit')</h5>
+								<div>
+									<canvas id="pie-chart-2" height="255"></canvas>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">@lang('Gateway Used For Deposit')</h5>
-							<div>
-								<canvas id="pie-chart-2" height="255"></canvas>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			@endif
 
 		</section>
 	</div>
@@ -886,27 +905,6 @@
 					]
 				}
 			});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 			new Chart(document.getElementById("line-chart-2"), {

@@ -6,6 +6,7 @@ use App\Models\Branch;
 use App\Models\Deposit;
 use App\Models\Payout;
 use App\Models\Shipment;
+use App\Models\Ticket;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,17 +25,26 @@ class AdminController extends Controller
 		$last30 = date('Y-m-d', strtotime('-30 days'));
 		$last7 = date('Y-m-d', strtotime('-7 days'));
 		$today = today();
+
 		$dayCount = date('t', strtotime($today));
 		$data['yearLabels'] = ['January', 'February', 'March', 'April', 'May', 'June', 'July ', 'August', 'September', 'October', 'November', 'December'];
 
 		$users = User::selectRaw('COUNT(id) AS totalUser')
 			->selectRaw('COUNT((CASE WHEN status = 1  THEN id END)) AS activeUser')
-			->selectRaw('COUNT((CASE WHEN created_at >= CURDATE() THEN id END)) AS todayJoin')
+			->selectRaw("COUNT((CASE WHEN created_at >= $last30 THEN id END)) AS last_30_days_join")
 			->selectRaw('SUM(balance) AS totalUserBalance')
 			->selectRaw('COUNT((CASE WHEN email_verified_at IS NOT NULL  THEN id END)) AS verifiedUser')
 			->get()->makeHidden(['mobile', 'profile'])->toArray();
 
 		$data['userRecord'] = collect($users)->collapse();
+
+		$tickets = Ticket::selectRaw('COUNT((CASE WHEN status = 0  THEN id END)) AS pendingTickets')
+			->selectRaw('COUNT((CASE WHEN status = 1 THEN id END)) AS answeredTickets')
+			->selectRaw('COUNT((CASE WHEN status = 2 THEN id END)) AS repliedTickets')
+			->selectRaw('COUNT((CASE WHEN status = 2 THEN id END)) AS closedTickets')
+			->get()->toArray();
+
+		$data['ticketRecord'] = collect($tickets)->collapse();
 
 		$branches = Branch::selectRaw('COUNT(branches.id) AS totalBranches')
 			->selectRaw('COUNT(CASE WHEN branches.status = 1 THEN branches.id END) AS totalActiveBranches')
@@ -96,7 +106,7 @@ class AdminController extends Controller
 			->selectRaw('COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnDeliveredShipments')
 			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
 			->get()
-			->groupBy([function ($query){
+			->groupBy([function ($query) {
 				return $query->created_at->format('j');
 			}]);
 
@@ -175,7 +185,7 @@ class AdminController extends Controller
 			->selectRaw('COUNT(CASE WHEN shipments.status = 4 THEN shipments.id END) AS totalDeliveredShipments')
 			->selectRaw('COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnInDelivered')
 			->get()
-			->groupBy([function ($query){
+			->groupBy([function ($query) {
 				return $query->created_at->format('F');
 			}]);
 
@@ -248,7 +258,7 @@ class AdminController extends Controller
 			->selectRaw('SUM(CASE WHEN shipment_id IS NOT NULL AND created_at >= CURDATE() THEN amount ELSE 0 END) AS todayTotalTransactions')
 			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
 			->get()
-			->groupBy([function ($query){
+			->groupBy([function ($query) {
 				return $query->created_at->format('j');
 			}]);
 
@@ -291,7 +301,7 @@ class AdminController extends Controller
 			->selectRaw('SUM(CASE WHEN shipment_type = "pickup" THEN amount ELSE 0 END) AS totalPickupTransactions')
 			->selectRaw('SUM(CASE WHEN shipment_type = "condition" THEN amount ELSE 0 END) AS totalConditionTransactions')
 			->get()
-			->groupBy([function ($query){
+			->groupBy([function ($query) {
 				return $query->created_at->format('F');
 			}]);
 
@@ -327,17 +337,6 @@ class AdminController extends Controller
 		$data['yeartotalDropOffTransactions'] = $yeartotalDropOffTransactions;
 		$data['yeartotalPickupTransactions'] = $yeartotalPickupTransactions;
 		$data['yeartotalConditionTransactions'] = $yeartotalConditionTransactions;
-
-//		$dailyShipments = Shipment::select('created_at')
-//			->whereMonth('created_at', $today)
-//			->selectRaw('COUNT(shipments.id) AS totalShipments')
-//			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
-//			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
-//			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
-//			->get()
-//			->groupBy([function ($query){
-//				return $query->created_at->format('j');
-//			}]);
 
 
 		$transactions = Transaction::select('created_at')
@@ -380,7 +379,6 @@ class AdminController extends Controller
 		$data['dataFund'] = $dataFund;
 
 		$data['dataPayout'] = $dataPayout;
-
 
 
 		$deposits = Deposit::select('created_at')

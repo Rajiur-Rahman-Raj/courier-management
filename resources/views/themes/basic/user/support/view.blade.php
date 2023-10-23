@@ -8,7 +8,7 @@
 				<div class="dashboard-heading">
 					<h2 class="mb-0">{{__("Ticket# "). __($ticket->ticket).'-'.$ticket->subject}}</h2>
 				</div>
-				<section class="support-ticket-section">
+				<section class="support-ticket-section p-0 profile-setting">
 					<div class="row g-4">
 						<div class="col-lg-12">
 							<div class="inbox-wrapper">
@@ -120,7 +120,7 @@
 												alt=""
 												class="img-fluid insert"/>
 										</div>
-										<div class="input-group">
+										<div class="input-group input-box">
 											<div>
 												<button class="upload-img send-file-btn">
 													<i class="fal fa-paperclip" aria-hidden="true"></i>

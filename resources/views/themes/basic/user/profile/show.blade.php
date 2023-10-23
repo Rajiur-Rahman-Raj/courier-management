@@ -31,7 +31,7 @@
 											<button class="upload-img">
 												<i class="fal fa-camera"></i>
 												<input class="form-control" accept="image/*" type="file"
-													   onchange="previewImage('profile')"/>
+													   onchange="previewImage('profile')" name="profile_picture" accept="image/*"/>
 											</button>
 										</div>
 										<div class="text">
@@ -43,7 +43,6 @@
 										</div>
 									</div>
 								</form>
-
 							</div>
 						</div>
 						<div class="col-xxl-9 col-lg-8">
@@ -56,20 +55,6 @@
 									<button tab-id="tab2" class="tab {{ $errors->has('password') ? 'active' : '' }}">
 										<i class="fal fa-key"></i> @lang('Password Setting')
 									</button>
-									@if($basic->identity_verification == 1)
-										<button tab-id="tab3"
-												class="tab {{ $errors->has('identity') ? 'active' : '' }}">
-											<i class="fal fa-id-card"></i> @lang('Identity Verification')
-										</button>
-									@endif
-
-									@if($basic->address_verification == 1)
-										<button tab-id="tab4"
-												class="tab {{ $errors->has('addressVerification') ? 'active' : '' }}">
-											<i class="fal fa-map-marked-alt"></i>
-											@lang('Address Verification')
-										</button>
-									@endif
 								</div>
 
 								<div id="tab1"
@@ -215,219 +200,6 @@
 											</div>
 										</div>
 									</form>
-								</div>
-
-								<div id="tab3" class="content {{ $errors->has('identity') ? 'active' : '' }}">
-									@if(in_array($user->identity_verify,[0,3]))
-										@if($user->identity_verify == 3)
-											<div class="alert mb-0">
-												<i class="fal fa-times-circle"></i>
-												<span>@lang('Your previous request has been rejected')</span>
-											</div>
-										@endif
-										<form method="post" action="{{route('user.verificationSubmit')}}"
-											  enctype="multipart/form-data">
-											@csrf
-											<div class="col-md-12 mb-3">
-												<div class="input-box col-md-12">
-													<label for="identity_type">@lang('Identity Type')</label>
-													<select class="form-select"
-															name="identity_type" id="identity_type"
-															aria-label="Default select example">
-														<option value="" disabled>@lang('Select Language')</option>
-														@foreach($identityFormList as $sForm)
-															<option
-																value="{{$sForm->slug}}" {{ old('identity_type', @$identity_type) == $sForm->slug ? 'selected' : '' }}> @lang($sForm->name) </option>
-														@endforeach
-													</select>
-													@error('identity_type')
-													<div class="error text-danger">@lang($message) </div>
-													@enderror
-												</div>
-											</div>
-
-											@if(isset($identityForm))
-												@foreach($identityForm->services_form as $k => $v)
-													@if($v->type == "text")
-														<div class="input-box col-md-12">
-															<label for="{{$k}}">
-																{{trans($v->field_level)}}
-																@if($v->validation == 'required')
-																	<span class="text-danger">*</span>
-																@endif
-															</label>
-															<input type="text" name="{{$k}}"
-																   class="form-control "
-																   value="{{old($k)}}" id="{{$k}}"
-																   @if($v->validation == 'required') required @endif/>
-															@if($errors->has($k))
-																<div
-																	class="error text-danger">@lang($errors->first($k))</div>
-															@endif
-														</div>
-
-													@elseif($v->type == "textarea")
-														<div class="input-box col-12 mt-2">
-															<label for="{{$k}}">
-																{{trans($v->field_level)}}
-																@if($v->validation == 'required')
-																	<span class="text-danger">*</span>
-																@endif
-															</label>
-															<textarea
-																name="{{$k}}"
-																id="{{$k}}"
-																class="form-control"
-																cols="30"
-																rows="3"
-																placeholder="{{trans('Type Here')}}"
-                                                            @if($v->validation == 'required')@endif>{{old($k)}}</textarea>
-															@error($k)
-															<div class="error text-danger">
-																{{trans($message)}}
-															</div>
-															@enderror
-														</div>
-													@elseif($v->type == "file")
-														<div class="col-md-12 mb-2">
-															<div class="form-group">
-																<label class="golden-text">
-																	{{trans($v->field_level)}}
-																	@if($v->validation == 'required')
-																		<span class="text-danger">*</span>
-																	@endif
-																</label>
-
-																<br>
-																<div class="fileinput fileinput-new "
-																	 data-provides="fileinput">
-																	<div class="fileinput-new thumbnail "
-																		 data-trigger="fileinput">
-																		<img class="custom-verification-img"
-																			 src="{{ getFile(config('location.default')) }}"
-																			 alt="@lang('not found')"
-																			 style="width: 200px">
-																	</div>
-																	<div
-																		class="fileinput-preview fileinput-exists thumbnail wh-200-150 ">
-																	</div>
-
-																	<div class="img-input-div">
-                                                                    <span class="btn btn-success btn-file">
-                                                                        <span
-																			class="fileinput-new"> @lang('Select') {{$v->field_level}}</span>
-                                                                        <span
-																			class="fileinput-exists"> @lang('Change')</span>
-                                                                        <input type="file" name="{{$k}}"
-																			   value="{{ old($k) }}"
-																			   accept="image/*" @if($v->validation == "required")@endif>
-                                                                    </span>
-																		<a href="#"
-																		   class="btn btn-danger fileinput-exists"
-																		   data-dismiss="fileinput"> @lang('Remove')</a>
-																	</div>
-																</div>
-
-																@error($k)
-																<div class="error text-danger">
-																	{{trans($message)}}
-																</div>
-																@enderror
-															</div>
-														</div>
-													@endif
-												@endforeach
-
-												<button type="submit" class="gold-btn mt-2 cmn_btn">
-													@lang('Submit')
-												</button>
-											@endif
-										</form>
-									@elseif($user->identity_verify == 1)
-										<div class="alert mb-0">
-											<i class="fal fa-times-circle"></i>
-											<span> @lang('Your KYC submission has been pending')</span>
-										</div>
-									@elseif($user->identity_verify == 2)
-										<div class="alert mb-0">
-											<i class="fal fa-check-circle"></i>
-											<span> @lang('Your KYC already verified')</span>
-										</div>
-									@endif
-								</div>
-
-								<div id="tab4"
-									 class="content {{ $errors->has('addressVerification') ? 'active' : '' }}">
-									@if(in_array($user->address_verify,[0,3])  )
-										@if($user->address_verify == 3)
-											<div class="alert mb-0">
-												<i class="fal fa-times-circle"></i>
-												<span> @lang('You previous request has been rejected')</span>
-											</div>
-										@endif
-
-
-										<form method="post" action="{{route('user.addressVerification')}}"
-											  enctype="multipart/form-data">
-											@csrf
-											<div class="col-md-12 mb-2">
-												<div class="form-group">
-													<label class="form-label golden-text">{{trans('Address Proof')}}
-														<span
-															class="text-danger">*</span> </label><br>
-
-													<div class="fileinput fileinput-new "
-														 data-provides="fileinput">
-														<div class="fileinput-new thumbnail "
-															 data-trigger="fileinput">
-															<img class="custom-verification-img"
-																 src="{{ getFile(config('location.default')) }}"
-																 alt="..." style="height: 200px">
-														</div>
-														<div
-															class="fileinput-preview fileinput-exists thumbnail wh-200-150 "></div>
-
-														<div class="img-input-div">
-                                                        <span class="btn btn-success btn-file">
-                                                            <span
-																class="fileinput-new "> @lang('Select Image') </span>
-                                                            <span
-																class="fileinput-exists"> @lang('Change')</span>
-                                                            <input type="file" name="addressProof"
-																   value="{{ old('addressProof')}}"
-																   accept="image/*">
-                                                        </span>
-															<a href="#" class="btn btn-danger fileinput-exists"
-															   data-dismiss="fileinput"> @lang('Remove')</a>
-														</div>
-
-													</div>
-
-													@error('addressProof')
-													<div class="error text-danger">
-														{{trans($message)}}
-													</div>
-													@enderror
-												</div>
-											</div>
-
-											<button type="submit" class="gold-btn cmn_btn">
-												@lang('Submit')
-											</button>
-
-										</form>
-
-									@elseif($user->address_verify == 1)
-										<div class="alert mb-0">
-											<i class="fal fa-times-circle"></i>
-											<span> @lang('Your KYC submission has been pending')</span>
-										</div>
-									@elseif($user->address_verify == 2)
-										<div class="alert mb-0">
-											<i class="fal fa-check-circle"></i>
-											<span> @lang('Your KYC already verified')</span>
-										</div>
-									@endif
 								</div>
 							</div>
 						</div>

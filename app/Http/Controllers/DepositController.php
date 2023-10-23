@@ -103,12 +103,10 @@ class DepositController extends Controller
 		if ($request->isMethod('get')) {
 			return view($this->theme . 'user.deposit.confirm', compact(['utr', 'deposit']));
 		} elseif ($request->isMethod('post')) {
-
 			$checkAmountValidate = $this->checkAmountValidate($deposit->amount, $deposit->payment_method_id);
 			if (!$checkAmountValidate['status']) {
 				return back()->withInput()->with('alert', $checkAmountValidate['message']);
 			}
-
 			return redirect(route('payment.process', $utr));
 		}
 	}

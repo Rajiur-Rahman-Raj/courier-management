@@ -298,6 +298,7 @@ trait Notify
 
     public function adminMail($admin, $templateKey = null, $params = [], $subject = null, $requestMessage = null, $superAdmin = null)
     {
+
         $basic = basicControl();
 
         if ($basic->email_notification != 1) {
@@ -310,7 +311,6 @@ trait Notify
             $templateObj = EmailTemplate::where('template_key', $templateKey)->where('mail_status', 1)->first();
         }
 
-		dd($templateObj);
         $message = $email_body;
         if ($templateObj) {
             $message = str_replace("[[message]]", $templateObj->template, $message);
@@ -324,7 +324,7 @@ trait Notify
             $message = str_replace("[[message]]", $requestMessage, $message);
         }
 
-        $subject = ($subject == null) ? $templateObj->subject : $subject;
+        $subject = ($subject == null && $templateObj != null) ? $templateObj->subject : $subject;
         $email_from = ($templateObj) ? $templateObj->email_from : $basic->sender_email;
 
 		if ($superAdmin){
@@ -333,8 +333,8 @@ trait Notify
 			Mail::to($superAdmin)->queue(new SendMail($email_from, $subject, $message));
 		}
 
-		$message = str_replace("[[name]]", $admin->username, $message);
-		Mail::to($admin)->queue(new SendMail($email_from, $subject, $message));
+//		$message = str_replace("[[name]]", $admin->username, $message);
+//		Mail::to($admin)->queue(new SendMail($email_from, $subject, $message));
 
 //		$admins = Admin::all();
 //        foreach ($admins as $admin) {

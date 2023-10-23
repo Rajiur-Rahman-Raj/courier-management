@@ -16,7 +16,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<section class="profile-setting">
+					<section class="profile-setting p-3">
 						<div class="row justify-content-md-center">
 							<div class="col-md-6 mb-3">
 								<div class="sidebar-wrapper">

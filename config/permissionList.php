@@ -10,6 +10,70 @@ $arr = [
 				'delete' => [],
 			],
 		],
+		"User_Statistics" => [
+			'permission' => [
+				'view' => ['admin.user-statistics'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Branch_Statistics" => [
+			'permission' => [
+				'view' => ['admin.branch-statistics'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Shipment_Statistics" => [
+			'permission' => [
+				'view' => ['admin.shipment-statistics'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Shipment_Chart_Statistics" => [
+			'permission' => [
+				'view' => ['admin.shipment-chart-statistics'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Shipment_Transaction" => [
+			'permission' => [
+				'view' => ['admin.shipment-transaction'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Shipment_Transaction_Chart" => [
+			'permission' => [
+				'view' => ['admin.shipment-transaction-chart'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Payment_Chart" => [
+			'permission' => [
+				'view' => ['admin.payment-chart'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Tickets" => [
+			'permission' => [
+				'view' => ['admin.tickets'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
 	],
 	"Manage_Shipments" => [
 		"Shipment_List" => [

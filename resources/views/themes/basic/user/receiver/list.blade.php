@@ -22,7 +22,6 @@
 							@lang('Create new receiver')
 						</a>
 					</div>
-
 				</div>
 
 				<div class="table-parent table-responsive">
@@ -63,11 +62,13 @@
 						</tbody>
 					</table>
 				</div>
-				<nav aria-label="Page navigation example">
-					<ul class="pagination justify-content-center">
-						{{ $allReceivers->appends($_GET)->links() }}
-					</ul>
-				</nav>
+				<div class="pagination_area mt-4">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination justify-content-center">
+							{{ $allReceivers->appends($_GET)->links() }}
+						</ul>
+					</nav>
+				</div>
 			</div>
 		</div>
 	</div>
