@@ -9,6 +9,7 @@ use App\Models\Shipment;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -93,83 +94,83 @@ class AdminController extends Controller
 		$data['transactionRecord'] = collect($shipmentTransactions)->collapse();
 
 
-		$dailyShipments = Shipment::select('created_at')
-			->whereMonth('created_at', $today)
-			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 2 THEN shipments.id END) AS totalDispatchShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 3 THEN shipments.id END) AS totalReceivedShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 4 THEN shipments.id END) AS totalDeliveredShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 8 THEN shipments.id END) AS totalReturnInQueueShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 9 THEN shipments.id END) AS totalReturnDispatchShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 10 THEN shipments.id END) AS totalReturnReceivedShipments')
-			->selectRaw('COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnDeliveredShipments')
-			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
-			->get()
-			->groupBy([function ($query) {
-				return $query->created_at->format('j');
-			}]);
-
-
-		$shipmentDayLabels = [];
-		$dataPendingShipment = [];
-		$dataInQueueShipment = [];
-		$dataDispatchShipment = [];
-		$dataReceivedShipment = [];
-		$dataDeliveredShipment = [];
-		$dataReturnInQueueShipment = [];
-		$dataReturnDispatchShipment = [];
-		$dataReturnReceivedShipment = [];
-		$dataReturnDeliveredShipment = [];
-
-		for ($i = 1; $i <= $dayCount; $i++) {
-			$shipmentDayLabels[] = date('jS M', strtotime(date('Y/m/') . $i));
-
-			$currentPendingShipment = 0;
-			$currentInQueueShipment = 0;
-			$currentDispatchShipment = 0;
-			$currentReceivedShipment = 0;
-			$currentDeliveredShipment = 0;
-			$currentReturnInQueueShipment = 0;
-			$currentReturnDispatchShipment = 0;
-			$currentReturnReceivedShipment = 0;
-			$currentReturnDeliveredShipment = 0;
-
-			if (isset($dailyShipments[$i])) {
-				foreach ($dailyShipments[$i] as $key => $shipment) {
-					$currentPendingShipment += $shipment->totalPendingShipments;
-					$currentInQueueShipment += $shipment->totalInQueueShipments;
-					$currentDispatchShipment += $shipment->totalDispatchShipments;
-					$currentReceivedShipment += $shipment->totalReceivedShipments;
-					$currentDeliveredShipment += $shipment->totalDeliveredShipments;
-					$currentReturnInQueueShipment += $shipment->totalReturnInQueueShipments;
-					$currentReturnDispatchShipment += $shipment->totalReturnDispatchShipments;
-					$currentReturnReceivedShipment += $shipment->totalReturnReceivedShipments;
-					$currentReturnDeliveredShipment += $shipment->totalReturnDeliveredShipments;
-				}
-			}
-
-			$dataPendingShipment[] = $currentPendingShipment;
-			$dataInQueueShipment[] = $currentInQueueShipment;
-			$dataDispatchShipment[] = $currentDispatchShipment;
-			$dataReceivedShipment[] = $currentReceivedShipment;
-			$dataDeliveredShipment[] = $currentDeliveredShipment;
-			$dataReturnInQueueShipment[] = $currentReturnInQueueShipment;
-			$dataReturnDispatchShipment[] = $currentReturnDispatchShipment;
-			$dataReturnReceivedShipment[] = $currentReturnReceivedShipment;
-			$dataReturnDeliveredShipment[] = $currentReturnDeliveredShipment;
-		}
-
-		$data['shipmentDayLabels'] = $shipmentDayLabels;
-		$data['dataPendingShipment'] = $dataPendingShipment;
-		$data['dataInQueueShipment'] = $dataInQueueShipment;
-		$data['dataDispatchShipment'] = $dataDispatchShipment;
-		$data['dataReceivedShipment'] = $dataReceivedShipment;
-		$data['dataDeliveredShipment'] = $dataDeliveredShipment;
-		$data['dataReturnInQueueShipment'] = $dataReturnInQueueShipment;
-		$data['dataReturnDispatchShipment'] = $dataReturnDispatchShipment;
-		$data['dataReturnReceivedShipment'] = $dataReturnReceivedShipment;
-		$data['dataReturnDeliveredShipment'] = $dataReturnDeliveredShipment;
+//		$dailyShipments = Shipment::select('created_at')
+//			->whereMonth('created_at', $today)
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 2 THEN shipments.id END) AS totalDispatchShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 3 THEN shipments.id END) AS totalReceivedShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 4 THEN shipments.id END) AS totalDeliveredShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 8 THEN shipments.id END) AS totalReturnInQueueShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 9 THEN shipments.id END) AS totalReturnDispatchShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 10 THEN shipments.id END) AS totalReturnReceivedShipments')
+//			->selectRaw('COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnDeliveredShipments')
+//			->groupBy([DB::raw("DATE_FORMAT(created_at, '%j')")])
+//			->get()
+//			->groupBy([function ($query) {
+//				return $query->created_at->format('j');
+//			}]);
+//
+//
+//		$shipmentDayLabels = [];
+//		$dataPendingShipment = [];
+//		$dataInQueueShipment = [];
+//		$dataDispatchShipment = [];
+//		$dataReceivedShipment = [];
+//		$dataDeliveredShipment = [];
+//		$dataReturnInQueueShipment = [];
+//		$dataReturnDispatchShipment = [];
+//		$dataReturnReceivedShipment = [];
+//		$dataReturnDeliveredShipment = [];
+//
+//		for ($i = 1; $i <= $dayCount; $i++) {
+//			$shipmentDayLabels[] = date('jS M', strtotime(date('Y/m/') . $i));
+//
+//			$currentPendingShipment = 0;
+//			$currentInQueueShipment = 0;
+//			$currentDispatchShipment = 0;
+//			$currentReceivedShipment = 0;
+//			$currentDeliveredShipment = 0;
+//			$currentReturnInQueueShipment = 0;
+//			$currentReturnDispatchShipment = 0;
+//			$currentReturnReceivedShipment = 0;
+//			$currentReturnDeliveredShipment = 0;
+//
+//			if (isset($dailyShipments[$i])) {
+//				foreach ($dailyShipments[$i] as $key => $shipment) {
+//					$currentPendingShipment += $shipment->totalPendingShipments;
+//					$currentInQueueShipment += $shipment->totalInQueueShipments;
+//					$currentDispatchShipment += $shipment->totalDispatchShipments;
+//					$currentReceivedShipment += $shipment->totalReceivedShipments;
+//					$currentDeliveredShipment += $shipment->totalDeliveredShipments;
+//					$currentReturnInQueueShipment += $shipment->totalReturnInQueueShipments;
+//					$currentReturnDispatchShipment += $shipment->totalReturnDispatchShipments;
+//					$currentReturnReceivedShipment += $shipment->totalReturnReceivedShipments;
+//					$currentReturnDeliveredShipment += $shipment->totalReturnDeliveredShipments;
+//				}
+//			}
+//
+//			$dataPendingShipment[] = $currentPendingShipment;
+//			$dataInQueueShipment[] = $currentInQueueShipment;
+//			$dataDispatchShipment[] = $currentDispatchShipment;
+//			$dataReceivedShipment[] = $currentReceivedShipment;
+//			$dataDeliveredShipment[] = $currentDeliveredShipment;
+//			$dataReturnInQueueShipment[] = $currentReturnInQueueShipment;
+//			$dataReturnDispatchShipment[] = $currentReturnDispatchShipment;
+//			$dataReturnReceivedShipment[] = $currentReturnReceivedShipment;
+//			$dataReturnDeliveredShipment[] = $currentReturnDeliveredShipment;
+//		}
+//
+//		$data['shipmentDayLabels'] = $shipmentDayLabels;
+//		$data['dataPendingShipment'] = $dataPendingShipment;
+//		$data['dataInQueueShipment'] = $dataInQueueShipment;
+//		$data['dataDispatchShipment'] = $dataDispatchShipment;
+//		$data['dataReceivedShipment'] = $dataReceivedShipment;
+//		$data['dataDeliveredShipment'] = $dataDeliveredShipment;
+//		$data['dataReturnInQueueShipment'] = $dataReturnInQueueShipment;
+//		$data['dataReturnDispatchShipment'] = $dataReturnDispatchShipment;
+//		$data['dataReturnReceivedShipment'] = $dataReturnReceivedShipment;
+//		$data['dataReturnDeliveredShipment'] = $dataReturnDeliveredShipment;
 
 
 		$monthlyShipments = Shipment::select('created_at')
@@ -486,4 +487,51 @@ class AdminController extends Controller
 	{
 		return view('admin.errors.403');
 	}
+
+
+	public function getDailyShipmentAnalytics(Request $request)
+	{
+		$start = Carbon::createFromFormat('d/m/Y', $request->start);
+		$end = Carbon::createFromFormat('d/m/Y', $request->end);
+
+		$dailyShipments = DB::table('shipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 2 THEN shipments.id END) AS totalDispatchShipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 3 THEN shipments.id END) AS totalReceivedShipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 4 THEN shipments.id END) AS totalDeliveredShipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 8 THEN shipments.id END) AS totalReturnInQueueShipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 9 THEN shipments.id END) AS totalReturnDispatchShipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 10 THEN shipments.id END) AS totalReturnReceivedShipments')
+			->selectRaw('DATE(created_at) as date, COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnDeliveredShipments')
+			->whereBetween('created_at', [$start, $end])
+			->groupBy('date')
+			->get();
+
+		$start = new \DateTime($start);
+		$end = new \DateTime($end);
+		$data = [];
+
+		for ($day = $start; $day <= $end; $day->modify('+1 day')) {
+			$date = $day->format('Y-m-d');
+			$data['labels'][] = $day->format('jS M');
+			$data['dataPendingShipment'][] = $dailyShipments->where('date', $date)->first()->totalPendingShipments ?? 0;
+			$data['dataInQueueShipment'][] = $dailyShipments->where('date', $date)->first()->totalInQueueShipments ?? 0;
+			$data['dataDispatchShipment'][] = $dailyShipments->where('date', $date)->first()->totalDispatchShipments ?? 0;
+			$data['dataReceivedShipment'][] = $dailyShipments->where('date', $date)->first()->totalReceivedShipments ?? 0;
+			$data['dataDeliveredShipment'][] = $dailyShipments->where('date', $date)->first()->totalDeliveredShipments ?? 0;
+			$data['dataReturnInQueueShipment'][] = $dailyShipments->where('date', $date)->first()->totalReturnInQueueShipments ?? 0;
+			$data['dataReturnDispatchShipment'][] = $dailyShipments->where('date', $date)->first()->totalReturnDispatchShipments ?? 0;
+			$data['dataReturnReceivedShipment'][] = $dailyShipments->where('date', $date)->first()->totalReturnReceivedShipments ?? 0;
+			$data['dataReturnDeliveredShipment'][] = $dailyShipments->where('date', $date)->first()->totalReturnDeliveredShipments ?? 0;
+		}
+
+		return response()->json($data);
+	}
+
+
+	public function getMonthlyShipmentAnalytics(Request $request){
+
+	}
+
 }

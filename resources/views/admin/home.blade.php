@@ -1,5 +1,10 @@
 @extends('admin.layouts.master')
 @section('page_title',__('Dashboard'))
+
+@push('extra_styles')
+	<link rel="stylesheet" href="{{ asset('assets/dashboard/css/daterangepicker.css') }}">
+@endpush
+
 @section('content')
 	<div class="main-content">
 		<section class="section">
@@ -410,12 +415,22 @@
 			<!---------- Shipments Summary Current Month-------------->
 			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Shipment_Statistics.permission.view'))))
 				<div class="row mb-3">
+
 					<div class="col-md-12">
 						<div class="card mb-4 shadow-sm">
-							<div class="card-body">
-								<h5 class="card-title">@lang('Current month Shipments summary')</h5>
+							<div class="card-body position-relative">
+								<div class="d-flex justify-content-between">
+									<h5 class="card-title">@lang('Current month Shipments summary')</h5>
+									<div class="daterange-container">
+										<div class="daterange-picker">
+											<input type="text" id="dailyShipments" value="" />
+											<i class="fa fa-caret-down"></i>
+										</div>
+									</div>
+								</div>
+
 								<div>
-									<canvas id="shipments-line-chart" height="80"></canvas>
+									<canvas id="daily-shipments-line-chart" height="80"></canvas>
 								</div>
 							</div>
 						</div>
@@ -428,7 +443,16 @@
 					<div class="col-md-12">
 						<div class="card mb-4 shadow-sm">
 							<div class="card-body">
-								<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>
+{{--								<div class="d-flex justify-content-between">--}}
+{{--									<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>--}}
+{{--									<div class="daterange-container">--}}
+{{--										<div class="daterange-picker">--}}
+{{--											<input type="text" id="monthlyShipments" value="" />--}}
+{{--											<i class="fa fa-caret-down"></i>--}}
+{{--										</div>--}}
+{{--									</div>--}}
+{{--								</div>--}}
+
 								<div>
 									<canvas id="shipment-year-chart" height="120"></canvas>
 								</div>
@@ -711,6 +735,8 @@
 
 @push('extra_scripts')
 	<script src="{{ asset('assets/dashboard/js/Chart.min.js') }}"></script>
+	<script src="{{ asset('assets/dashboard/js/moment.min.js') }}"></script>
+	<script src="{{ asset('assets/dashboard/js/daterangepicker.min.js') }}"></script>
 @endpush
 
 @section('scripts')
@@ -718,68 +744,104 @@
 		'use strict';
 		$(document).ready(function () {
 
-			new Chart(document.getElementById("shipments-line-chart"), {
-				type: 'line',
-				data: {
-					labels: {!! json_encode($shipmentDayLabels) !!},
-					datasets: [
-						{
-							data: @json($dataPendingShipment),
-							label: "Requested",
-							borderColor: "#21130d",
-							fill: false
-						},
-						{
-							data: @json($dataInQueueShipment),
-							label: "In Queue",
-							borderColor: "#33d9b2",
-							fill: false
-						},
-						{
-							data: @json($dataDispatchShipment),
-							label: "Dispatch",
-							borderColor: "#e28743",
-							fill: false
-						},
-						{
-							data: @json($dataReceivedShipment),
-							label: "Received",
-							borderColor: "#005B41",
-							fill: false
-						},
-						{
-							data: @json($dataDeliveredShipment),
-							label: "Delivered",
-							borderColor: "#C70039",
-							fill: false
-						},
-						{
-							data: @json($dataReturnInQueueShipment),
-							label: "Return In Queue",
-							borderColor: "#3876BF",
-							fill: false
-						},
-						{
-							data: @json($dataReturnDispatchShipment),
-							label: "Return Dispatch",
-							borderColor: "#F99417",
-							fill: false
-						},
-						{
-							data: @json($dataReturnReceivedShipment),
-							label: "Return Received",
-							borderColor: "#219C90",
-							fill: false
-						},
-						{
-							data: @json($dataReturnDeliveredShipment),
-							label: "Return Delivered",
-							borderColor: "#FF3FA4",
-							fill: false
-						},
-					]
-				}
+			// daily shipment analytics
+			$('#dailyShipments').daterangepicker({
+				startDate: moment().startOf('month'),
+				endDate: moment().endOf('month'),
+				locale: {
+					format: 'DD/MM/YYYY'
+				},
+				ranges: {
+					'Today': [moment(), moment()],
+					'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+					'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+					'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+					'This Month': [moment().startOf('month'), moment().endOf('month')],
+					'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+				},
+				opens: 'right', // Set the position to top right
+			}, function (start, end, label) {
+				getDailyShipmentAnalytics(start.format('DD/MM/YYYY'), end.format('DD/MM/YYYY'));
 			});
+
+			function getDailyShipmentAnalytics(start, end) {
+				$.ajax({
+					method: "GET",
+					url: "{{ route('get.daily.shipment.analytics') }}",
+					dataType: "json",
+					data: {
+						'start': start,
+						'end': end,
+					}
+				}).done(function (response) {
+						new Chart(document.getElementById("daily-shipments-line-chart"), {
+							type: 'line',
+							data: {
+								labels: response.labels,
+								datasets: [
+
+									{
+										data: response.dataPendingShipment,
+										label: "Requested",
+										borderColor: "#21130d",
+										fill: false
+									},
+									{
+										data: response.dataInQueueShipment,
+										label: "In Queue",
+										borderColor: "#33d9b2",
+										fill: false
+									},
+									{
+										data: response.dataDispatchShipment,
+										label: "Dispatch",
+										borderColor: "#e28743",
+										fill: false
+									},
+									{
+										data: response.dataReceivedShipment,
+										label: "Received",
+										borderColor: "#005B41",
+										fill: false
+									},
+									{
+										data: response.dataDeliveredShipment,
+										label: "Delivered",
+										borderColor: "#C70039",
+										fill: false
+									},
+									{
+										data: response.dataReturnInQueueShipment,
+										label: "Return In Queue",
+										borderColor: "#3876BF",
+										fill: false
+									},
+									{
+										data:response.dataReturnDispatchShipment,
+										label: "Return Dispatch",
+										borderColor: "#F99417",
+										fill: false
+									},
+									{
+										data: response.dataReturnReceivedShipment,
+										label: "Return Received",
+										borderColor: "#219C90",
+										fill: false
+									},
+									{
+										data: response.dataReturnDeliveredShipment,
+										label: "Return Delivered",
+										borderColor: "#FF3FA4",
+										fill: false
+									},
+								]
+							}
+						});
+					});
+			}
+
+			getDailyShipmentAnalytics(moment().startOf('month').format('DD/MM/YYYY'), moment().endOf('month').format('DD/MM/YYYY'));
+
 
 			new Chart(document.getElementById("shipment-year-chart"), {
 				type: 'bar',

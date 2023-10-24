@@ -102,6 +102,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 	// Manage Branch
 	Route::middleware('permission')->group(function () {
+
+
+		Route::get('get-daily-shipment-analytics', [AdminController::class, 'getDailyShipmentAnalytics'])->name('get.daily.shipment.analytics');
+		Route::get('get-monthly-shipment-analytics', [AdminController::class, 'getMonthlyShipmentAnalytics'])->name('get.monthly.shipment.analytics');
+
+
+
+
+
+
+
 		Route::get('branch-list', [BranchController::class, 'branchList'])->name('branchList');
 		Route::get('create-branch', [BranchController::class, 'createBranch'])->name('createBranch');
 		Route::post('branch-store', [BranchController::class, 'branchStore'])->name('branchStore');
@@ -116,7 +127,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::post('branch-manager-update/{id}', [BranchController::class, 'branchManagerUpdate'])->name('branchManagerUpdate');
 		Route::get('branch-staff-list/{id}', [BranchController::class, 'branchStaffList'])->name('branchStaffList');
 
-		// Manage Branch Employee
+		//  Manage Branch Employee
 		Route::get('branch-employee-list', [BranchController::class, 'branchEmployeeList'])->name('branchEmployeeList');
 		Route::get('create-employee', [BranchController::class, 'createEmployee'])->name('createEmployee');
 		Route::post('branch-employee-store', [BranchController::class, 'branchEmployeeStore'])->name('branchEmployeeStore');

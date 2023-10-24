@@ -5084,3 +5084,53 @@ body {
 	align-items: center;
 	justify-content: center;
 }
+
+
+/*date rangepicker css*/
+
+.daterange-picker {
+	position: relative;
+	display: inline-block;
+	background-color: #fff; /* Background color for the input and dropdown */
+	border-radius: 3px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+.daterange-container {
+	position: relative;
+	background-color: transparent !important;
+	padding: 2px;
+	color: #fff;
+	border-radius: 4px;
+}
+.daterange-picker input {
+	outline: none;
+	width: 100%;
+	cursor: pointer;
+	border: 1px solid #dfe2e5;
+	padding: 6px 10px 6px 10px;
+	color: #000000;
+	border-radius: 5px;
+}
+
+.daterange-picker input:focus {
+	outline: none;
+	width: 100%;
+	cursor: pointer;
+	border: 1px solid #dfe2e5;
+	padding: 6px 10px 6px 10px;
+	color: #000000;
+	border-radius: 5px;
+}
+.daterange-picker i {
+	position: absolute;
+	top: 14px;
+	right: 16px;
+	color: black;
+}
+.btn:not(.btn-social):not(.btn-social-icon):active, .btn:not(.btn-social):not(.btn-social-icon):focus, .btn:not(.btn-social):not(.btn-social-icon):hover {
+	border-color: transparent !important;
+	background-color: #ffe9c0;
+	color: black;
+}
