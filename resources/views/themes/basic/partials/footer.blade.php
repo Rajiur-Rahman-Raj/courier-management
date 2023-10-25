@@ -2,6 +2,7 @@
 <section class="footer_area">
 	<div class="container">
 		<div class="row gy-4 gy-sm-5">
+			@if(isset($contactUs))
 			<div class="col-lg-4 col-sm-6">
 				<div class="footer_widget">
 					<div class="widget_logo mb-30">
@@ -26,13 +27,13 @@
 					@endif
 				</div>
 			</div>
+			@endif
 
 			<div class="col-lg-2 col-sm-6">
 				<div class="footer_widget">
 					<h5>@lang('Quick Links')</h5>
 					<ul>
 						<li><a href="{{ route('home') }}">@lang('Home')</a></li>
-						<li><a href="{{ route('about') }}">@lang('About')</a></li>
 						<li><a href="{{ route('faq') }}">@lang('FAQ')</a></li>
 						<li><a href="{{ route('blog') }}">@lang('Blog')</a></li>
 						@if(isset($contentDetails['extra-pages']))
@@ -92,7 +93,7 @@
 			<div class="col-sm-6">
 				<div class="language text-sm-end text-center">
 					@forelse($languages as $item)
-						<a href="{{route('language',$item->short_name)}}" class="language">@lang($item->name)</a>
+						<a href="{{route('language',$item->short_name)}}" class="language {{ $item->short_name  == session()->get('lang') ? 'language_active' : ''}}">@lang($item->name)</a>
 					@empty
 					@endforelse
 				</div>

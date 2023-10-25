@@ -482,7 +482,7 @@ class AdminController extends Controller
 		}
 	}
 
-//
+
 	public function forbidden()
 	{
 		return view('admin.errors.403');
@@ -530,8 +530,33 @@ class AdminController extends Controller
 	}
 
 
-	public function getMonthlyShipmentAnalytics(Request $request){
+	public function getDailyShipmentTransactionsAnalytics(Request $request){
+		$start = Carbon::createFromFormat('d/m/Y', $request->start);
+		$end = Carbon::createFromFormat('d/m/Y', $request->end);
 
+
+		$dailyShipmentTransactions = DB::table('transactions')
+			->selectRaw('DATE(created_at) as date, SUM(CASE WHEN shipment_type = "drop_off" THEN amount ELSE 0 END) AS totalDropOffTransactions')
+			->selectRaw('DATE(created_at) as date, SUM(CASE WHEN shipment_type = "pickup" THEN amount ELSE 0 END) AS totalPickupTransactions')
+			->selectRaw('DATE(created_at) as date, SUM(CASE WHEN shipment_type = "condition" THEN amount ELSE 0 END) AS totalConditionTransactions')
+//			->selectRaw('SUM(CASE WHEN shipment_id IS NOT NULL AND created_at >= CURDATE() THEN amount ELSE 0 END) AS todayTotalTransactions')
+			->whereBetween('created_at', [$start, $end])
+			->groupBy('date')
+			->get();
+
+		$start = new \DateTime($start);
+		$end = new \DateTime($end);
+		$data = [];
+
+		for ($day = $start; $day <= $end; $day->modify('+1 day')) {
+			$date = $day->format('Y-m-d');
+			$data['labels'][] = $day->format('jS M');
+			$data['dataDropOffTransactions'][] = $dailyShipmentTransactions->where('date', $date)->first()->totalDropOffTransactions ?? 0;
+			$data['dataPickupTransactions'][] = $dailyShipmentTransactions->where('date', $date)->first()->totalPickupTransactions ?? 0;
+			$data['dataConditionTransactions'][] = $dailyShipmentTransactions->where('date', $date)->first()->totalConditionTransactions ?? 0;
+		}
+
+		return response()->json($data);
 	}
 
 }

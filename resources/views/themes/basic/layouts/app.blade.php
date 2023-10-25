@@ -21,13 +21,14 @@
 		<link rel="stylesheet" type="text/css" href="{{asset($themeTrue.'css/jquery.fancybox.min.css')}}"/>
 
 		<script src="{{asset($themeTrue.'js/fontawesomepro.js')}}"></script>
-		<link rel="stylesheet" type="text/css" href="{{asset($themeTrue.'css/style.css')}}"/>
+
 
 		@stack('css-lib')
 		<!---- Here is your Css Library----->
 
 		<!----  Push your custom css  ----->
 		@stack('css')
+		<link rel="stylesheet" type="text/css" href="{{asset($themeTrue.'css/style.css')}}"/>
 	</head>
 
 <body onload="preloder_function()" @if(session()->get('rtl') == 1) class="rtl" @endif>
@@ -129,11 +130,11 @@
         }
     });
 
-	$(document).ready(function () {
-		$(".language").find("select").change(function () {
-			window.location.href = "{{route('language')}}/" + $(this).val()
-		})
-	})
+	{{--$(document).ready(function () {--}}
+	{{--	$(".language").find("select").change(function () {--}}
+	{{--		window.location.href = "{{route('language')}}/" + $(this).val()--}}
+	{{--	})--}}
+	{{--})--}}
 </script>
 
 @stack('script')

@@ -14,6 +14,7 @@
 	--shadow4: 0 1px 2px rgb(0 0 0 / 20%);
 	--color_success: #01B81A;
 	--gradient: linear-gradient(to right, #cc54f4 0%, #488ff9 100%);
+	--theme-opacity-low: rgb(255 220 57 / 5%);
 }
 
 ::-moz-selection {
@@ -373,7 +374,9 @@ figure {
 	justify-content: center;
 	align-items: center;
 }
-
+.cmn_box .image_area img{
+	width: 50px;
+}
 .cmn_box i {
 	font-size: 48px;
 	color: var(--heading_color);
@@ -398,7 +401,7 @@ figure {
 
 .cmn_box2 i {
 	margin-right: 20px;
-	font-size: 60px;
+	font-size: 45px;
 	color: var(--theme_color);
 }
 
@@ -2947,7 +2950,7 @@ tr {
 }
 
 #content .table tbody > tr:nth-of-type(odd) > * {
-	--bs-table-accent-bg: var(--white);
+	--bs-table-accent-bg: var(--theme-opacity-low);
 	color: var(--heading_color);
 }
 #content .table thead {
@@ -4130,7 +4133,7 @@ a.text-lighter:focus {
 	box-shadow: none;
 }
 .table-responsive {
-	overflow-x: unset;
+	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 }
 .card .card-header {
@@ -4280,7 +4283,7 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 }
 
 .package .package-box .delivery .delivery-time .elapsed-time{
-	font-size: 24px !important;
+	font-size: 16px !important;
 }
 .package .package-box .delivery .delivery-time h4 {
 	font-size: 20px;
@@ -4477,8 +4480,8 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 }
 .package .package-box .processing .spinner-border,
 .package .package-box .processing .spinner-grow {
-	width: 100px !important;
-	height: 100px !important;
+	width: 70px !important;
+	height: 70px !important;
 }
 @media screen and (max-width: 991px) {
 	.package .package-box .package-head .package-title h1 {
@@ -4497,7 +4500,7 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 		font-size: 17px;
 	}
 	.package .package-box .delivery .delivery-time h4 {
-		font-size: 17px;
+		font-size: 15px;
 	}
 	.package .package-box .delivery .delivery-time h3 {
 		font-size: 20px;
@@ -4594,6 +4597,7 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	}
 }
 @media screen and (max-width: 575px) {
+
 	.package .package-box .package-head .track-number {
 		text-align: start;
 		margin-top: 10px;
@@ -4661,6 +4665,9 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	.package .package-box .processing .processing-title p {
 		font-size: 16px;
 	}
+	.testimonial_area .quote_area i{
+		display: none;
+	}
 }
 @media screen and (max-width: 320px) {
 
@@ -4703,8 +4710,21 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 		left: -36px;
 		top: 0px;
 	}
+	.form-check label{
+		font-size: 14px;
+	}
+	.forgot a{
+		font-size: 14px;
+	}
+
 } /*# sourceMappingURL=style.css.map */
 
 .cmn_box3 .icon_area .rotate-custom{
 	transform: rotatey(180deg);
+}
+.language_active {
+	color: #ffdc39 !important;
+}
+.rc-anchor-normal{
+	width: 250px !important;
 }

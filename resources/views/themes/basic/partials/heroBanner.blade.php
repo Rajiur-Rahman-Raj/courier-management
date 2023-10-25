@@ -13,12 +13,11 @@
 					<a class="cmn_btn" href="{{ $hero->templateMedia()->button_link }}">{{ optional($hero->description)->button_name }}</a>
 				</div>
 			</div>
-
 			<div class="col-lg-5">
 				<div class="image_area">
-					<img class="shape1" src="{{getFile(optional($hero->media)->driver,$hero->templateMedia()->image1)}}" alt="">
-					<img class="shape2" src="{{getFile(optional($hero->media)->driver,$hero->templateMedia()->image2)}}" alt="">
-					<img class="shape3 " src="{{getFile(optional($hero->media)->driver,$hero->templateMedia()->image3)}}" alt="">
+					<img class="shape1" src="{{getFile(optional($hero->media)->driver,$hero->templateMedia()->image1)}}">
+					<img class="shape2" src="{{getFile(optional($hero->media)->driver,$hero->templateMedia()->image2)}}">
+					<img class="shape3 " src="{{getFile(optional($hero->media)->driver,$hero->templateMedia()->image3)}}">
 				</div>
 			</div>
 		</div>

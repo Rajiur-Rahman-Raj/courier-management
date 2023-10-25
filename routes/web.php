@@ -106,11 +106,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 		Route::get('get-daily-shipment-analytics', [AdminController::class, 'getDailyShipmentAnalytics'])->name('get.daily.shipment.analytics');
 		Route::get('get-monthly-shipment-analytics', [AdminController::class, 'getMonthlyShipmentAnalytics'])->name('get.monthly.shipment.analytics');
-
-
-
-
-
+		Route::get('get-daily-shipment-transactions-analytics', [AdminController::class, 'getDailyShipmentTransactionsAnalytics'])->name('get.daily.shipment.transactions.analytics');
 
 
 		Route::get('branch-list', [BranchController::class, 'branchList'])->name('branchList');
@@ -568,7 +564,7 @@ Route::post('/contact/send', [FrontendController::class, 'contactSend'])->name('
 Route::post('subscribe', [FrontendController::class, 'subscribe'])->name('subscribe');
 Route::get('{content_id}/{getLink}', [FrontendController::class, 'getLink'])->name('getLink');
 Route::get('/{template}', [FrontendController::class, 'getTemplate'])->name('getTemplate');
-Route::get('/language/{code?}', [FrontendController::class, 'language'])->name('language');
+Route::get('/language/switch/{code}', [FrontendController::class, 'setLanguage'])->name('language');
 
 
 

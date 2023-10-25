@@ -26,7 +26,7 @@ class TransactionController extends Controller
 	{
 		$user = Auth::user();
 
-		$transactions = Transaction::with('transactional')->where('user_id', $user->id)->latest()->paginate();
+		$transactions = Transaction::with('transactional')->where('user_id', $user->id)->latest()->paginate(config('basic.paginate'));
 		return view($this->theme . 'user.transaction.index', compact('transactions'));
 	}
 

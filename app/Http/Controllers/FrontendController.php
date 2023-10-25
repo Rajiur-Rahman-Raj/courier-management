@@ -164,7 +164,7 @@ class FrontendController extends Controller
 
 	public function CategoryWiseBlog($slug = null, $id){
 		$data['title'] = "Blog";
-		$data['allBlogs'] = Blog::with(['details', 'category.details'])->where('blog_category_id', $id)->where('status', 1)->latest()->paginate(1);
+		$data['allBlogs'] = Blog::with(['details', 'category.details'])->where('blog_category_id', $id)->where('status', 1)->latest()->paginate(config('basic.paginate'));
 		$data['blogCategory'] = BlogCategory::with('details')->withCount('blog')->where('status', 1)->latest()->get();
 		$data['relatedBlogs']  = Blog::with(['details', 'category.details'])->latest()->take(5)->latest()->get();
 		return view($this->theme . 'blog', $data);
@@ -200,12 +200,12 @@ class FrontendController extends Controller
 		$templateSection = ['contact'];
 		$data['templates'] = Template::with('media')->templateMedia()->whereIn('section_name', $templateSection)->get()->groupBy('section_name');
 
-		$data['templatesMedia']  = $data['templates']['contact'][0]->media;
-
 		$title = 'Contact Us';
 
 		$contact = null;
+		$data['templatesMedia'] = null;
 		if (count($data['templates']) > 0) {
+			$data['templatesMedia']  = $data['templates']['contact'][0]->media;
 			$contact = optional($data['templates']['contact'][0])->description;
 		}
 
@@ -295,12 +295,14 @@ class FrontendController extends Controller
 		return view($this->theme . 'getLink', compact('contentDetail', 'title', 'description'));
 	}
 
-	public function language($code)
+	public function setLanguage($code)
 	{
 		$language = Language::where('short_name', $code)->first();
+
 		if (!$language) $code = 'US';
 		session()->put('lang', $code);
 		session()->put('rtl', $language ? $language->rtl : 0);
-		return back();
+
+		return redirect()->back();
 	}
 }

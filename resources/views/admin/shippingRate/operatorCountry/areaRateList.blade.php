@@ -74,8 +74,7 @@
 
 															<td data-label="@lang('Shipping Area')">
 																<a href="{{ route('operatorCountryShowRate', ['area-list', $areaList->parcel_type_id]) }}"
-																   class="text-decoration-underline">({{ $areaList->getTotalArea($areaList->parcel_type_id) }}
-																	)</a>
+																   class="text-decoration-underline">({{ $areaList->getTotalArea($areaList->parcel_type_id) }})</a>
 															</td>
 
 															<td data-label="@lang('Action')">

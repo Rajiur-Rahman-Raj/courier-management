@@ -3,6 +3,10 @@
     @lang($title)
 @endsection
 
+@section('banner_heading')
+	@lang($title)
+@endsection
+
 @section('content')
     <!-- POLICY -->
     <section style="padding: 120px 0"id="policy">
@@ -10,7 +14,7 @@
             <div class="d-flex justify-content-center">
                 <div class="col-lg-6">
                     <div class="heading-container">
-                        <h3 class="heading">@lang(@$title)</h3>
+                        <h3 class="heading text-center">@lang(@$title)</h3>
                     </div>
                 </div>
             </div>

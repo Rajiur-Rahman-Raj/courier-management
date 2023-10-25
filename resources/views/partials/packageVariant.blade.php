@@ -105,30 +105,6 @@
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	$(document).on('change', '.selectedVariant', function () {
 		let selectedPackage = $('.selectedPackage').val();
 		let selectedVariant = $(this).val();
@@ -164,6 +140,7 @@
 				variantId: selectedVariant,
 			},
 			success: function (response) {
+				console.log(response);
 				let responseData = response;
 				let variantPriceClass = ".variantPrice";
 				if (id) {

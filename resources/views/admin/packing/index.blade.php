@@ -294,8 +294,7 @@
 													</tbody>
 												</table>
 											</div>
-											<div
-												class="card-footer d-flex justify-content-center">{{ $allPackingService->links() }}</div>
+											<div class="card-footer d-flex justify-content-center">{{ $allPackingService->appends($_GET)->links() }}</div>
 										</div>
 									</div>
 								</div>

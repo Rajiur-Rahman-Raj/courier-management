@@ -341,7 +341,6 @@
 															<div
 																class="card-footer d-flex justify-content-center">{{ $allShipments->links() }}</div>
 														</div>
-														`
 													</div>
 												</div>
 											</div>

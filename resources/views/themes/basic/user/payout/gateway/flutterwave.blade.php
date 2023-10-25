@@ -9,7 +9,7 @@
 					<h2 class="mb-0">@lang('Payout')</h2>
 				</div>
 				<div class="row mb-3">
-					<section class="profile-setting">
+					<section class="profile-setting p-2">
 						<div class="row justify-content-md-center">
 							<div class="col-md-6 mb-3">
 								<div class="sidebar-wrapper">

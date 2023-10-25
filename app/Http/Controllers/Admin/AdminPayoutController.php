@@ -17,7 +17,7 @@ class AdminPayoutController extends Controller
 	public function index()
 	{
 		$payouts = Payout::with(['user', 'user.profile', 'admin'])
-			->latest()->paginate();
+			->latest()->paginate(config('basic.paginate'));
 		return view('admin.payout.index', compact('payouts'));
 	}
 

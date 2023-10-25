@@ -33,7 +33,7 @@ class PayoutController extends Controller
 	{
 		$payouts = Payout::with(['user', 'user.profile', 'admin'])
 			->where(['user_id' => Auth::id()])
-			->latest()->paginate();
+			->latest()->paginate(config('basic.paginate'));
 		return view($this->theme . 'user.payout.index', compact('payouts'));
 	}
 

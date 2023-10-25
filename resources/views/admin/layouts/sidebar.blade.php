@@ -213,7 +213,7 @@
 						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Parcel Service')</span>
 					</a>
 					<ul class="dropdown-menu">
-						<li class="{{ activeMenu(['packingServiceList']) }}">
+						<li class="{{ activeMenu(['parcelServiceList']) }}">
 							<a class="nav-link" href="{{ route('parcelServiceList') }}">
 								@lang('Service List')
 							</a>

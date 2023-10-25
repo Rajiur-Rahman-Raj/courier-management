@@ -25,6 +25,8 @@ return [
 			'slogan' => 'text',
 			'title' => 'text',
 			'sub_title' => 'text',
+			'happy_clients' => 'number',
+			'total_shipments' => 'number',
 			'image1' => 'file',
 			'image2' => 'file'
 		],

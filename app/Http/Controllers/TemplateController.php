@@ -68,7 +68,7 @@ class TemplateController extends Controller
 
 		// save regular field
 		$field_name = array_diff_key(config("templates.$section.field_name"), config("templates.template_media"));
-
+//		dd($field_name);
 		foreach ($field_name as $name => $type) {
 			$description[$name] = $purifiedData[$name][$language];
 		}

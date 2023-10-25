@@ -264,7 +264,6 @@ function getMethodCurrency($gateway)
 				return 'USD';
 			}
 		}
-//		return 'N/A';
 	}
 }
 
@@ -296,7 +295,6 @@ function linkToEmbed($string)
 
 function getIpInfo()
 {
-//	$ip = '210.1.246.42';
 	$ip = null;
 	$deep_detect = TRUE;
 

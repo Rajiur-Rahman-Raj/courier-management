@@ -538,9 +538,17 @@
 					<div class="col-md-12">
 						<div class="card mb-4 shadow-sm">
 							<div class="card-body">
-								<h5 class="card-title">@lang('Current month Shipments Transactions')</h5>
+								<div class="d-flex justify-content-between">
+									<h5 class="card-title">@lang('Current month Shipments Transactions')</h5>
+									<div class="daterange-container">
+										<div class="daterange-picker">
+											<input type="text" id="dailyShipmentTransactions" value="" />
+											<i class="fa fa-caret-down"></i>
+										</div>
+									</div>
+								</div>
 								<div>
-									<canvas id="shipments-transaction-current-month" height="80"></canvas>
+									<canvas id="daily-shipment-transactions-line-chart" height="80"></canvas>
 								</div>
 							</div>
 						</div>
@@ -843,6 +851,71 @@
 			getDailyShipmentAnalytics(moment().startOf('month').format('DD/MM/YYYY'), moment().endOf('month').format('DD/MM/YYYY'));
 
 
+			// daily shipment transactions analytics
+			$('#dailyShipmentTransactions').daterangepicker({
+				startDate: moment().startOf('month'),
+				endDate: moment().endOf('month'),
+				locale: {
+					format: 'DD/MM/YYYY'
+				},
+				ranges: {
+					'Today': [moment(), moment()],
+					'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+					'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+					'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+					'This Month': [moment().startOf('month'), moment().endOf('month')],
+					'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+				},
+				opens: 'right', // Set the position to top right
+			}, function (start, end, label) {
+				getDailyShipmentTransactionsAnalytics(start.format('DD/MM/YYYY'), end.format('DD/MM/YYYY'));
+			});
+
+			function getDailyShipmentTransactionsAnalytics(start, end) {
+				$.ajax({
+					method: "GET",
+					url: "{{ route('get.daily.shipment.transactions.analytics') }}",
+					dataType: "json",
+					data: {
+						'start': start,
+						'end': end,
+					}
+				}).done(function (response) {
+					new Chart(document.getElementById("daily-shipment-transactions-line-chart"), {
+						type: 'line',
+						data: {
+							labels: response.labels,
+							datasets: [
+
+								{
+									data: response.dataDropOffTransactions,
+									label: "Drop Off",
+									borderColor: "#21130d",
+									fill: false
+								},
+
+								{
+									data: response.dataPickupTransactions,
+									label: "Pickup",
+									borderColor: "#33d9b2",
+									fill: false
+								},
+
+								{
+									data: response.dataConditionTransactions,
+									label: "Condition",
+									borderColor: "#e28743",
+									fill: false
+								},
+							]
+						}
+					});
+				});
+			}
+
+			getDailyShipmentTransactionsAnalytics(moment().startOf('month').format('DD/MM/YYYY'), moment().endOf('month').format('DD/MM/YYYY'));
+
+
 			new Chart(document.getElementById("shipment-year-chart"), {
 				type: 'bar',
 				data: {
@@ -907,33 +980,6 @@
 				}
 			});
 
-
-			new Chart(document.getElementById("shipments-transaction-current-month"), {
-				type: 'line',
-				data: {
-					labels: {!! json_encode($shipmentTransactionsDayLabels) !!},
-					datasets: [
-						{
-							data: @json($dataDropOffTransactions),
-							label: "Drop Off",
-							borderColor: "#21130d",
-							fill: false
-						},
-						{
-							data: @json($dataPickupTransactions),
-							label: "Pickup",
-							borderColor: "#33d9b2",
-							fill: false
-						},
-						{
-							data: @json($dataConditionTransactions),
-							label: "Condition / Cas On Delivery",
-							borderColor: "#e28743",
-							fill: false
-						},
-					]
-				}
-			});
 
 			new Chart(document.getElementById("shipments-transaction-current-year"), {
 				type: 'bar',

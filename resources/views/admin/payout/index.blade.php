@@ -111,8 +111,12 @@
 										</tbody>
 									</table>
 								</div>
-								<div class="card-footer">
-									{{ $payouts->links() }}
+								<div class="pagination_area">
+									<nav aria-label="Page navigation example">
+										<ul class="pagination justify-content-center">
+											{{ $payouts->appends($_GET)->links() }}
+										</ul>
+									</nav>
 								</div>
 							</div>
 						</div>

@@ -208,7 +208,6 @@
 																			<i class="fas fa-sign-in-alt"></i> @lang(' Login As Manager')
 																		</button>
 																	@endif
-
 																	@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_Manager.permission.show_staff_list')))
 																		<a href="{{ route('branchStaffList', optional($manager->branch)->id) }}"
 																		   class="btn btn-outline-primary btn-sm"

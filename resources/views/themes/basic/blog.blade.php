@@ -38,9 +38,12 @@
 								   href="{{route('blogDetails',[slug(optional($blog->details)->title), $blog->id])}}">@lang('Read More')</a>
 							</div>
 						@endforeach
-						<div class="col-lg-12 d-flex justify-content-center">
-							<nav aria-label="Page navigation example mt-3">
-								{{ $allBlogs->links() }}
+
+						<div class="pagination_area mt-3">
+							<nav aria-label="Page navigation example">
+								<ul class="pagination justify-content-center">
+									{{ $allBlogs->appends($_GET)->links() }}
+								</ul>
 							</nav>
 						</div>
 					</div>
@@ -50,7 +53,8 @@
 							<form action="{{ route('blogSearch') }}" method="get">
 								<div class="search_area d-flex align-items-center mb-40">
 									<div class="input-group">
-										<input type="text" class="form-control" id="search" name="search" placeholder="@lang('Search Here')..."
+										<input type="text" class="form-control" id="search" name="search"
+											   placeholder="@lang('Search Here')..."
 											   aria-label="Username" aria-describedby="basic-addon1">
 										<button type="submit" class="input-group-text hover" id="basic-addon1"><i
 												class="far fa-search"></i></button>

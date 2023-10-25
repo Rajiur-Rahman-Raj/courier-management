@@ -1,15 +1,6 @@
 @extends($theme.'layouts.user')
 @section('page_title',__('Profile'))
 
-@push('extra_styles')
-	<style>
-		.user_banner_area {
-			height: 260px;
-			background: linear-gradient(rgb(28, 78, 178, 0.9), rgb(102, 145, 231, 0.9)), url({{ asset($themeTrue.'images/user_panel/profile/profile-bg.jpg') }});
-		}
-	</style>
-@endpush
-
 @section('content')
 	<!-- main -->
 	<div class="container-fluid">
@@ -19,7 +10,7 @@
 				<div class="profile-setting">
 					<div class="row g-4">
 						<div class="col-xxl-3 col-lg-4">
-							<div class="sidebar-wrapper">
+							<div class="sidebar-wrapper p-0">
 								<form method="post" action="{{ route('user.updateProfile') }}" enctype="multipart/form-data">
 									@csrf
 									<div class="profile">

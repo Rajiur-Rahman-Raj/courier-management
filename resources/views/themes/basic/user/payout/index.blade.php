@@ -76,11 +76,13 @@
 						</tbody>
 					</table>
 				</div>
-				<nav aria-label="Page navigation example">
-					<ul class="pagination justify-content-center">
-						{{ $payouts->appends($_GET)->links() }}
-					</ul>
-				</nav>
+				<div class="pagination_area mt-3">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination justify-content-center">
+							{{ $payouts->appends($_GET)->links() }}
+						</ul>
+					</nav>
+				</div>
 			</div>
 		</div>
 	</div>

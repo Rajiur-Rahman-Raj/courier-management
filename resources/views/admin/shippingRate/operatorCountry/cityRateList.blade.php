@@ -73,8 +73,7 @@
 															<td data-label="Parcel Type"> @lang(optional($cityList->parcelType)->parcel_type) </td>
 															<td data-label="@lang('Shipping City')">
 																<a href="{{ route('operatorCountryShowRate', ['city-list', $cityList->parcel_type_id]) }}"
-																   class="text-decoration-underline">({{ $cityList->getTotalCity($cityList->parcel_type_id) }}
-																	)</a>
+																   class="text-decoration-underline">({{ $cityList->getTotalCity($cityList->parcel_type_id) }})</a>
 															</td>
 															<td data-label="@lang('Action')">
 																<a href="{{ route('operatorCountryShowRate', ['city-list', $cityList->parcel_type_id]) }}"
