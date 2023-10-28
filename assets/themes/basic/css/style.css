@@ -432,7 +432,9 @@ section {
 }
 
 .cmn_title {
-	max-width: 600px;
+	max-width: 100%;
+	font-size: 24px;
+	margin-bottom: 25px;
 }
 
 .para_text {
@@ -913,7 +915,7 @@ section {
 }
 
 .service_bottom .cmn_box2 img {
-	width: 150px;
+	width: 100px;
 }
 
 .service_bottom {
@@ -1166,7 +1168,7 @@ section {
 }
 
 .blog_box img {
-	height: 250px;
+	max-height: 490px;
 	width: 100%;
 }
 
@@ -1911,6 +1913,9 @@ tr {
 @media (max-width: 1199px) {
 	h1 {
 		font-size: 55px;
+	}
+	.content_404_title{
+		margin-top: -50px;
 	}
 	.hero_area {
 		padding: 280px 0 50px 0;
@@ -4536,6 +4541,12 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	.package .package-box .payment-details-2::before {
 		bottom:45px;
 	}
+	.content_404{
+		margin-top: -50px !important;
+	}
+	.content_404_title {
+		font-size: 20px !important;
+	}
 }
 @media screen and (max-width: 767px) {
 	.package .package-box .package-head .package-title h1 {
@@ -4594,6 +4605,15 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	}
 	.package .package-box .processing .processing-title p {
 		font-size: 16px;
+	}
+	.content_404{
+		margin-top: -50px !important;
+	}
+	.content_404_title {
+		font-size: 16px !important;
+	}
+	.content_404_subtitle {
+		font-size: 15px !important;
 	}
 }
 @media screen and (max-width: 575px) {
@@ -4716,6 +4736,18 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	.forgot a{
 		font-size: 14px;
 	}
+	.content_404{
+		margin-top: 0px !important;
+	}
+	.content_404_title {
+		font-size: 14px !important;
+	}
+	.content_404_subtitle {
+		font-size: 13px !important;
+	}
+	.shipment_info_area h5 {
+		font-size: 12px;
+	}
 
 } /*# sourceMappingURL=style.css.map */
 
@@ -4727,4 +4759,36 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 }
 .rc-anchor-normal{
 	width: 250px !important;
+}
+.feature_area h4{
+	font-size: 20px;
+}
+
+.image_404{
+	margin-top: -45px;
+}
+
+.image_404 img{
+	width: 600px;
+}
+
+.content_404 {
+	margin-top: -60px;
+	padding-bottom: 60px;
+}
+.content_404_title{
+	font-size: 22px;
+	color: var(--heading_color);
+	font-weight: 700;
+	max-width: 662px;
+	letter-spacing: 1px;
+	position: relative;
+	display: inline-block;
+}
+.content_404_subtitle{
+
+}
+.no-data-img {
+	width: 200px !important;
+	object-fit: contain;
 }

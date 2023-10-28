@@ -3,30 +3,30 @@
 	<div class="container">
 		<div class="row gy-4 gy-sm-5">
 			@if(isset($contactUs))
-			<div class="col-lg-4 col-sm-6">
-				<div class="footer_widget">
-					<div class="widget_logo mb-30">
-						<a href="#nav_area" class="site_logo"><img
-								src="{{ getFile(config('basic.default_file_driver'),config('basic.logo_image')) }}"
-								alt="@lang('logo')"></a>
-					</div>
-					<p>{{optional($contactUs->description)->about_company}}</p>
-
-					@if(isset($contentDetails['social-links']))
-						<div class="social_area mt-50">
-							<ul class="d-flex">
-								@foreach($contentDetails['social-links'] as $data)
-									<li>
-										<a href="{{@$data->content->contentMedia->description->social_link}}">
-											<i class="{{@$data->content->contentMedia->description->social_icon}}"></i>
-										</a>
-									</li>
-								@endforeach
-							</ul>
+				<div class="col-lg-4 col-sm-6">
+					<div class="footer_widget">
+						<div class="widget_logo mb-30">
+							<a href="{{ route('home') }}" class="site_logo"><img
+									src="{{ getFile(config('basic.default_file_driver'),config('basic.logo_image')) }}"
+									alt="@lang('logo')"></a>
 						</div>
-					@endif
+						<p>{{optional($contactUs->description)->about_company}}</p>
+
+						@if(isset($contentDetails['social-links']))
+							<div class="social_area mt-50">
+								<ul class="d-flex">
+									@foreach($contentDetails['social-links'] as $data)
+										<li>
+											<a href="{{@$data->content->contentMedia->description->social_link}}">
+												<i class="{{@$data->content->contentMedia->description->social_icon}}"></i>
+											</a>
+										</li>
+									@endforeach
+								</ul>
+							</div>
+						@endif
+					</div>
 				</div>
-			</div>
 			@endif
 
 			<div class="col-lg-2 col-sm-6">
@@ -35,7 +35,6 @@
 					<ul>
 						<li><a href="{{ route('home') }}">@lang('Home')</a></li>
 						<li><a href="{{ route('faq') }}">@lang('FAQ')</a></li>
-						<li><a href="{{ route('blog') }}">@lang('Blog')</a></li>
 						@if(isset($contentDetails['extra-pages']))
 							@foreach($contentDetails['extra-pages'] as $data)
 								<li>
@@ -62,7 +61,6 @@
 				</div>
 			@endif
 
-
 			<div class="col-lg-3 col-sm-6 pt-sm-0 pt-3">
 				<div class="footer_widget">
 					<h5>@lang('Newsletter')</h5>
@@ -76,6 +74,7 @@
 					</form>
 				</div>
 			</div>
+
 		</div>
 	</div>
 </section>
@@ -87,13 +86,14 @@
 	<div class="container">
 		<div class="row gy-4 ">
 			<div class="col-sm-6 text-sm-start text-center">
-				<p>@lang('All rights reserved') © {{date('Y')}} @lang('by')  <a
-						href="{{route('home')}}">@lang($basic->site_title)</a> </p>
+				<p>@lang('All rights reserved') © {{date('Y')}} @lang('by') <a
+						href="{{route('home')}}">@lang($basic->site_title)</a></p>
 			</div>
 			<div class="col-sm-6">
 				<div class="language text-sm-end text-center">
 					@forelse($languages as $item)
-						<a href="{{route('language',$item->short_name)}}" class="language {{ $item->short_name  == session()->get('lang') ? 'language_active' : ''}}">@lang($item->name)</a>
+						<a href="{{route('language',$item->short_name)}}"
+						   class="language {{ $item->short_name  == session()->get('lang') ? 'language_active' : ''}}">@lang($item->name)</a>
 					@empty
 					@endforelse
 				</div>

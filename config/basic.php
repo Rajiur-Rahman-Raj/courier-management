@@ -8,10 +8,10 @@
   'base_currency' => 'USD',
   'currency_symbol' => '$',
   'fraction_number' => 2,
-  'paginate' => 20,
+  'paginate' => 15,
   'sender_email' => 'support@mail.com',
   'sender_email_name' => 'Binary Operation',
-  'email_configuration' =>
+  'email_configuration' => 
   array (
     'name' => 'smtp',
     'smtp_host' => 'smtp.mailtrap.io',
@@ -24,7 +24,7 @@
   'min_transfer' => '10.00',
   'max_transfer' => '900000.00',
   'transfer_charge' => '0',
-  'refund_time' => '30_minute',
+  'refund_time' => '10_minute',
   'email_notification' => 1,
   'email_verification' => 0,
   'sms_notification' => 1,
@@ -45,9 +45,10 @@
   'logo_image' => 'logo/logo.png',
   'footer_image' => 'logo/footer-logo.png',
   'favicon_image' => 'logo/favicon.png',
-  'admin_logo' => 'logo/admin-logo.png',
+  'admin_logo' => 'logo/9EoeVwPr55Vh1pADrO1oxZCj0GIo037xDj9ii0F4.jpg',
   'logo_meta' => 'logo/meta.png',
   'partial_banner' => 'logo/banner.jpg',
+  'breadcrumb' => 'breadcrumb/breadcrumb.png',
   'operator_country' => '19',
   'address_verification' => 1,
   'identity_verification' => 1,

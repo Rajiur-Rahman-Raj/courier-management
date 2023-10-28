@@ -34,7 +34,7 @@
 						<form action="{{ route('password.email') }}" method="post">
 							@csrf
 							<div class="form_title pb-2">
-								<h4>@lang('Recover Password')</h4>
+								<h4>@lang(optional($template->description)->title)</h4>
 							</div>
 							<div class="mb-4">
 								<input type="email" name="email" @error('email') is-invalid

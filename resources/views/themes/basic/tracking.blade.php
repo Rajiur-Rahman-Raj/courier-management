@@ -19,12 +19,13 @@
 						<div class="icon_area">
 							<i class="fad fa-search-location"></i>
 						</div>
-						<h3 class="mb-15">@lang('Tracking Shipment')</h3>
+						@if(isset($templates['tracking'][0]) && $tracking = $templates['tracking'][0])
+						<h3 class="mb-15">@lang($tracking['description']->title)</h3>
 
 						<form action="" method="get" enctype="multipart/form-data">
 							@csrf
 							<label for="exampleInputEmail1" class="form-label">
-								<h5>@lang('Enter your tracking code')</h5></label>
+								<h5>@lang($tracking['description']->sub_title)</h5></label>
 							<div class="mb-3 position-relative d-flex align-items-center">
 								<input type="text" name="shipment_id" class="form-control" id="exampleInputEmail1"
 									   aria-describedby="emailHelp" placeholder="@lang('Type Shipment Id')"
@@ -32,6 +33,20 @@
 								<button type="submit" class="cmn_btn">@lang('Search')</button>
 							</div>
 						</form>
+						@else
+							<h3 class="mb-15">@lang('Tracking Shipment')</h3>
+							<form action="" method="get" enctype="multipart/form-data">
+								@csrf
+								<label for="exampleInputEmail1" class="form-label">
+									<h5>@lang('Enter your tracking code')</h5></label>
+								<div class="mb-3 position-relative d-flex align-items-center">
+									<input type="text" name="shipment_id" class="form-control" id="exampleInputEmail1"
+										   aria-describedby="emailHelp" placeholder="@lang('Type Shipment Id')"
+										   value="{{ old('shipment_id', request()->shipment_id) }}">
+									<button type="submit" class="cmn_btn">@lang('Search')</button>
+								</div>
+							</form>
+						@endif
 					</div>
 				</div>
 			</div>

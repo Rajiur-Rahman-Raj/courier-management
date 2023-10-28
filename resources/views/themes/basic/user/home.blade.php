@@ -194,7 +194,11 @@
 						@forelse($allShipments as $key => $shipment)
 							<tr>
 								<td data-label="SL."> {{ ++$key }} </td>
-								<td data-label="Shipment Type">@if($shipment->shipment_identifier == 1) @lang(optional(basicControl()->operatorCountry)->name) @else @lang('Internationally') @endif</td>
+								<td data-label="Shipment Type">@if($shipment->shipment_identifier == 1)
+										@lang(optional(basicControl()->operatorCountry)->name)
+									@else
+										@lang('Internationally')
+									@endif</td>
 								<td data-label="Shipment Id"> {{ $shipment->shipment_id }} </td>
 								<td data-label="Shipment Type"> {{ formatedShipmentType($shipment->shipment_type) }} </td>
 								<td data-label="Sender Branch"> @lang(optional($shipment->senderBranch)->branch_name) </td>
@@ -244,9 +248,12 @@
 								</td>
 							</tr>
 						@empty
+
 							<tr>
-								<th colspan="100%"
-									class="text-center">@lang('No data found')</th>
+								<th
+									colspan="100%" class="text-center bg-white">
+									<img src="{{ asset($themeTrue.'images/business.png') }}" alt="">
+								</th>
 							</tr>
 						@endforelse
 

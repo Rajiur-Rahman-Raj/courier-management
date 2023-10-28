@@ -46,9 +46,9 @@
 															<select name="status" class="form-control form-control-sm">
 																<option value="all">@lang('All Status')</option>
 																<option
-																	value="active" {{  request()->status == 'active' ? 'selected' : '' }}>@lang('Active')</option>
+																	value="active" {{  old('status', request()->status) == 'active' ? 'selected' : '' }}>@lang('Active')</option>
 																<option
-																	value="deactive" {{  request()->status == 'deactive' ? 'selected' : '' }}>@lang('Deactive')</option>
+																	value="deactive" {{  old('status', request()->status) == 'deactive' ? 'selected' : '' }}>@lang('Deactive')</option>
 															</select>
 														</div>
 													</div>
@@ -138,8 +138,7 @@
 													</tbody>
 												</table>
 											</div>
-											<div
-												class="card-footer d-flex justify-content-center">{{ $allCountries->links() }}</div>
+											<div class="card-footer d-flex justify-content-center">{{ $allCountries->appends($_GET)->links() }} </div>
 										</div>
 									</div>
 								</div>

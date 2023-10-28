@@ -31,7 +31,10 @@ return [
 	'logo' => [
 		'path' => 'logo',
 	],
-
+	'breadcrumb' => [
+		'path' => 'assets/upload/breadcrumb/',
+		'size' => '1920x750'
+	],
 	'methodLogo' => [
 		'path' => 'methodLogo',
 		'size' => '200x200'

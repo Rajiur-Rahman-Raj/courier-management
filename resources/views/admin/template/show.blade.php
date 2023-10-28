@@ -67,23 +67,8 @@
 																		<div class="valid-feedback"></div>
 																	</div>
 																</div>
-															@elseif($type == 'number' && $key == 0)
-																<div class="col-md-12">
-																	<div class="form-group">
-																		<label
-																			for="{{ $name }}"> @lang(menuFormater($name)) </label>
-																		<input type="{{ $type }}"
-																			   name="{{ $name }}[{{ $language->id }}]"
-																			   class="form-control @error($name.'.'.$language->id) is-invalid @enderror"
-																			   value="{{ old($name.'.'.$language->id, isset($templates[$language->id]) ? optional($templates[$language->id][0]->description)->{$name} : '') }}">
-																		<div class="invalid-feedback">
-																			@error($name.'.'.$language->id) @lang($message)
-																			@enderror
-																		</div>
-																		<div class="valid-feedback"></div>
-																	</div>
-																</div>
-															@elseif($type == 'email' && $key == 0)
+
+															@elseif($type == 'email')
 																<div class="col-md-12">
 																	<div class="form-group">
 																		<label

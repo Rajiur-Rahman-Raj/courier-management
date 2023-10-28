@@ -28,7 +28,7 @@
 							@csrf
 							<div class="row">
 								<div class="form_title pb-2">
-									<h4>@lang('Create Account')</h4>
+									<h4>@lang(optional($template->description)->title)</h4>
 								</div>
 								<div class="col-sm-12">
 									<div class="mb-4">

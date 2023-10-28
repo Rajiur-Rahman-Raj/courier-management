@@ -81,20 +81,18 @@
 															@error('favicon') @lang($message) @enderror
 														</div>
 													</div>
+
 													<div class="form-group mb-4 col-md-6">
-														<label class="col-form-label">@lang('Admin Logo')</label>
-														<div id="image-preview-breadcrumb" class="image-preview"
-															 style="background-image: url({{ getFile(config('basic.default_file_driver'),config('basic.admin_logo')) ? : 0 }});">
-															<label for="image-upload-breadcrumb"
-																   id="image-label-breadcrumb">@lang('Choose File')</label>
-															<input type="file" name="admin_logo"
-																   class=" @error('breadcrumb') is-invalid @enderror"
-																   id="image-upload-breadcrumb"/>
+														<label class="col-form-label">@lang('Breadcrumb')</label>
+														<div id="image-preview-breadcrumb" class="image-preview" style="background-image: url({{ getFile(config('basic.default_file_driver'),config('basic.breadcrumb')) ? : 0 }});">
+															<label for="image-upload-breadcrumb" id="image-label-breadcrumb">@lang('Choose File')</label>
+															<input type="file" name="breadcrumb" class=" @error('breadcrumb') is-invalid @enderror" id="image-upload-breadcrumb"/>
 														</div>
 														<div class="invalid-feedback">
-															@error('admin_logo') @lang($message) @enderror
+															@error('breadcrumb') @lang($message) @enderror
 														</div>
 													</div>
+
 												</div>
 
 												<button type="submit"

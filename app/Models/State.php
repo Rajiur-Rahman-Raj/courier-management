@@ -12,7 +12,7 @@ class State extends Model
 	protected $guarded = ['id'];
 
 	public function country(){
-		return $this->belongsTo(Country::class, 'country_id', 'id');
+		return $this->belongsTo(Country::class, 'country_id', 'id')->where('status', 1);
 	}
 
 	public function getTotalCity(){

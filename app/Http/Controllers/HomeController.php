@@ -245,6 +245,15 @@ class HomeController extends Controller
 				}
 			}
 
+			if ($request->hasFile('breadcrumb')) {
+				try {
+					$old = 'breadcrumb.png';
+					$this->uploadImage($request->breadcrumb, config('location.breadcrumb.path'), config('location.breadcrumb.size'), $old, $old);
+				} catch (\Exception $exp) {
+					return back()->with('error', 'Breadcrumb could not be uploaded.');
+				}
+			}
+
 			$fp = fopen(base_path() . '/config/basic.php', 'w');
 			fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
 			fclose($fp);

@@ -29,8 +29,12 @@
 					<a class="nav-link @if($lastUriSegment == 'tracking') active @endif" href="{{ route('tracking') }}">@lang('Tracking')</a>
 				</li>
 
+{{--				<li class="nav-item">--}}
+{{--					<a class="nav-link @if($lastUriSegment == 'booking') active @endif" href="{{ route('booking') }}">@lang('Booking')</a>--}}
+{{--				</li>--}}
+
 				<li class="nav-item">
-					<a class="nav-link @if($lastUriSegment == 'booking') active @endif" href="{{ route('booking') }}">@lang('Booking')</a>
+					<a class="nav-link @if($lastUriSegment == 'blog') active @endif" href="{{ route('blog') }}">@lang('Blog')</a>
 				</li>
 
 				<li class="nav-item">

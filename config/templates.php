@@ -25,8 +25,8 @@ return [
 			'slogan' => 'text',
 			'title' => 'text',
 			'sub_title' => 'text',
-			'happy_clients' => 'number',
-			'total_shipments' => 'number',
+			'happy_clients' => 'text',
+			'total_shipments' => 'text',
 			'image1' => 'file',
 			'image2' => 'file'
 		],
@@ -143,71 +143,29 @@ return [
 	'login' => [
 		'field_name' => [
 			'title' => 'text',
-			'sub_title' => 'text',
-			'short_description' => 'text',
-			'button_name' => 'text',
-			'button_link' => 'url',
 		],
 		'validation' => [
 			'title.*' => 'required|min:2|max:100',
-			'sub_title.*' => 'required|min:2|max:150',
-			'short_description.*' => 'required|min:2|max:600',
-			'button_name.*' => 'required|max:100',
-			'button_link.*' => 'required|url',
 		],
 	],
 
 	'register' => [
 		'field_name' => [
 			'title' => 'text',
-			'sub_title' => 'text',
-			'short_description' => 'text',
-			'button_name' => 'text',
-			'button_link' => 'url',
 		],
 		'validation' => [
 			'title.*' => 'required|min:2|max:100',
-			'sub_title.*' => 'required|min:2|max:150',
-			'short_description.*' => 'required|min:2|max:600',
-			'button_name.*' => 'required|max:100',
-			'button_link.*' => 'required|url',
 		],
 	],
 
 	'forget-password' => [
 		'field_name' => [
 			'title' => 'text',
-			'sub_title' => 'text',
-			'short_description' => 'text',
-			'button_name' => 'text',
-			'button_link' => 'url',
 		],
 		'validation' => [
 			'title.*' => 'required|min:2|max:100',
-			'sub_title.*' => 'required|min:2|max:150',
-			'short_description.*' => 'required|min:2|max:600',
-			'button_name.*' => 'required|max:100',
-			'button_link.*' => 'required|url',
 		],
 	],
-
-	'reset-password' => [
-		'field_name' => [
-			'title' => 'text',
-			'sub_title' => 'text',
-			'short_description' => 'text',
-			'button_name' => 'text',
-			'button_link' => 'url',
-		],
-		'validation' => [
-			'title.*' => 'required|min:2|max:100',
-			'sub_title.*' => 'required|min:2|max:150',
-			'short_description.*' => 'required|min:2|max:600',
-			'button_name.*' => 'required|max:100',
-			'button_link.*' => 'required|url',
-		],
-	],
-
 	'email-verification' => [
 		'field_name' => [
 			'title' => 'text',
@@ -222,24 +180,9 @@ return [
 	'sms-verification' => [
 		'field_name' => [
 			'title' => 'text',
-			'sub_title' => 'text',
 		],
 		'validation' => [
 			'title.*' => 'required|min:2|max:100',
-			'sub_title.*' => 'required|min:2|max:100',
-		],
-	],
-
-	'cookie-consent' => [
-		'field_name' => [
-			'title' => 'text',
-			'popup_short_description' => 'textarea',
-			'description' => 'textarea',
-		],
-		'validation' => [
-			'title.*' => 'required|min:2|max:180',
-			'popup_short_description.*' => 'required|min:2|max:300',
-			'description.*' => 'required|min:2|max:100000',
 		],
 	],
 

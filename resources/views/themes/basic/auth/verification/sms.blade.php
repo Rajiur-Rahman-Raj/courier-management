@@ -26,7 +26,7 @@
 						<form action="{{ route('user.smsVerify') }}" method="post">
 							@csrf
 							<div class="form_title pb-2">
-								<h4>@lang('Varification Code')</h4>
+								<h4>@lang(optional($template->description)->title)</h4>
 							</div>
 							<div class="mb-4">
 								<input type="text" name="code"

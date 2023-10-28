@@ -18,13 +18,12 @@
 								<div class="thum_inner">
 									<div class="blog_image">
 										<img src="{{ getFile($blog->driver, $blog->image) }}" alt="">
-										<span class="category">@lang(optional($blog->category->details)->name)</span>
 									</div>
 								</div>
 
 								<div class="blog_header py-3">
 									<div class="date_author">
-										<span><a href=""><i class="far fa-user"></i>@lang(optional($blog->details)->author)</a></span>
+										<span><a href=""><i class="fal fa-list"></i>@lang(optional($blog->category->details)->name)</a></span>
 										<span class="float-end"><i class="far fa-calendar-alt" aria-hidden="true"></i>{{ customDate($blog->created_at) }}</span>
 									</div>
 									<h3 class="mt-30">@lang(optional($blog->details)->title)</h3>

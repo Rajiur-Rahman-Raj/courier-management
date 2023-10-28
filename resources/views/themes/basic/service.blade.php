@@ -12,6 +12,6 @@
 @section('content')
 	@include($theme.'sections.feature')
 	@include($theme.'sections.service')
-	@include($theme.'sections.faq')
+	@include($theme.'sections.how-it-work')
 @endsection
 

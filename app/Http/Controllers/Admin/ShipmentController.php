@@ -750,8 +750,7 @@ class ShipmentController extends Controller
 		return view('admin.shippingRate.defaultRate', $data);
 	}
 
-	public
-	function defaultShippingRateOperatorCountryUpdate(Request $request, $id)
+	public function defaultShippingRateOperatorCountryUpdate(Request $request, $id)
 	{
 
 		$purifiedData = Purify::clean($request->except('_token', '_method'));

@@ -1,17 +1,5 @@
 <?php
 return [
-	'hero' => [
-		'field_name' => [
-			'image' => 'file',
-		],
-		'validation' => [
-			'image.*' => 'max:3072|image|mimes:jpg,jpeg,png,gif,svg',
-		],
-		'size' => [
-            'image' => '500x500'
-        ]
-	],
-
 	'feature' => [
 		'field_name' => [
 			'title' => 'text',
@@ -93,17 +81,6 @@ return [
 		'validation' => [
 			'title.*' => 'required|min:2|max:100',
 			'short_description.*' => 'required|min:2|max:2000',
-		],
-	],
-
-	'tracking' => [
-		'field_name' => [
-			'title' => 'text',
-			'image' => 'file',
-		],
-		'validation' => [
-			'title.*' => 'required|min:2|max:100',
-			'image.*' => 'nullable|max:3072|image|mimes:jpg,jpeg,png',
 		],
 	],
 

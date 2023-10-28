@@ -1,9 +1,9 @@
-<!-- Sidebar -->
+	<!-- Sidebar -->
 <div class="main-sidebar sidebar-style-2 shadow-sm">
 	<aside id="sidebar-wrapper">
 		<div class="sidebar-brand">
 			<a href="{{ route('admin.home') }}">
-				<img src="{{ getFile(config('basic.default_file_driver'),config('basic.admin_logo')) }}"
+				<img src="{{ getFile(config('basic.default_file_driver'),config('basic.logo_image')) }}"
 					 class="dashboard-logo"
 					 alt="@lang('Logo')">
 			</a>
@@ -174,7 +174,7 @@
 						@if(adminAccessRoute(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.view')))
 							<li class="{{ activeMenu(['operatorCountryRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate']) }}">
 								<a class="nav-link " href="{{ route('operatorCountryRate', 'state') }}">
-									@lang('Operator Country Rate')
+									@lang(optional(basicControl()->operatorCountry)->name. ' '. 'Rate')
 								</a>
 							</li>
 						@endif

@@ -1,6 +1,6 @@
      <style>
 		 .banner_area {
-			 background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url({{ getFile(config('basic.default_file_driver'),config('basic.partial_banner')) }});
+			 background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url({{ getFile(config('basic.default_file_driver'),config('basic.breadcrumb')) }});
 			 padding: 320px 0 150px 0;
 			 background-size: cover;
 			 background-position: center;

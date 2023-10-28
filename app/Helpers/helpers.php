@@ -115,7 +115,7 @@ function showMenu($routeNames = [])
 
 function basicControl()
 {
-	return BasicControl::firstOrCreate(['id' => 1]);
+	return BasicControl::with('operatorCountry')->firstOrCreate(['id' => 1]);
 }
 
 function menuActive($routeName, $type = null)

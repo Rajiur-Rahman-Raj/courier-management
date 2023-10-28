@@ -10,8 +10,8 @@
 @endsection
 
 @section('content')
-	@include($theme.'sections.feature')
     @include($theme.'sections.about-us')
+	@include($theme.'sections.feature')
     @include($theme.'sections.why-choose-us')
 	@include($theme.'sections.testimonial')
 @endsection

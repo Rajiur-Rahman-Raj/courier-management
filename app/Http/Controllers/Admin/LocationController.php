@@ -29,6 +29,7 @@ class LocationController extends Controller
 			->when(isset($search['status']) && $search['status'] == 'deactive', function ($q3) use ($search) {
 				return $q3->where('status', 0);
 			})
+			->orderBy('status', 'desc')
 			->paginate(config('basic.paginate'));
 
 		return view('admin.country.index', $data);
@@ -99,7 +100,6 @@ class LocationController extends Controller
 
 	public function stateList(Request $request, $type=null, $id=null)
 	{
-
 		$stateManagement = config('stateManagement');
 		$types = array_keys($stateManagement);
 		abort_if(!in_array($type, $types), 404);
@@ -109,6 +109,9 @@ class LocationController extends Controller
 		$data['allCountires'] = Country::where('status', 1)->get();
 
 		$data['allStates'] = State::with('country')
+			->whereHas('country', function ($query) use ($search){
+				return $query->where('status', 1);
+			})
 			->when(isset($search['country']), function ($query) use ($search) {
 				$query->whereHas('country', function ($q) use ($search) {
 					return $q->whereRaw("name REGEXP '[[:<:]]{$search['country']}[[:>:]]'");
@@ -129,8 +132,9 @@ class LocationController extends Controller
 			->when(isset($id) && $id != null, function ($query) use ($id){
 				return $query->where('country_id', $id);
 			})
-			->orderBy('country_id', 'ASC')
+			->orderBy('status', 'desc')
 			->paginate(config('basic.paginate'));
+
 
 		return view($stateManagement[$type]['state_view'], $data);
 	}
@@ -217,6 +221,12 @@ class LocationController extends Controller
 		$data['allStates'] = State::where('status', 1)->get();
 
 		$data['allCities'] = City::with('country', 'state')
+			->whereHas('country', function ($query) use ($search){
+				return $query->where('status', 1);
+			})
+			->whereHas('state', function ($query) use ($search){
+				return $query->where('status', 1);
+			})
 			->when(isset($search['country']), function ($query) use ($search) {
 				$query->whereHas('country', function ($q) use ($search) {
 					return $q->whereRaw("name REGEXP '[[:<:]]{$search['country']}[[:>:]]'");
@@ -241,9 +251,9 @@ class LocationController extends Controller
 			})
 			->when(isset($id) && $id != null, function ($query) use ($id){
 				return $query->where('state_id', $id);
-
 			})
 			->orderBy('country_id', 'ASC')
+			->orderBy('status', 'desc')
 			->paginate(config('basic.paginate'));
 
 		return view($cityManagement[$type]['city_view'], $data);
@@ -332,11 +342,22 @@ class LocationController extends Controller
 		$data['title'] = $areaManagement[$type]['title'];
 
 		$search = $request->all();
+
 		$data['allCountires'] = Country::where('status', 1)->get();
 		$data['allStates'] = State::where('status', 1)->get();
 		$data['allCities'] = City::where('status', 1)->get();
 
+
 		$data['allAreas'] = Area::with('country', 'state', 'city')
+			->whereHas('country', function ($query) use ($search){
+				return $query->where('status', 1);
+			})
+			->whereHas('state', function ($query) use ($search){
+				return $query->where('status', 1);
+			})
+			->whereHas('city', function ($query) use ($search){
+				return $query->where('status', 1);
+			})
 			->when(isset($search['country']), function ($query) use ($search) {
 				$query->whereHas('country', function ($q) use ($search) {
 					return $q->whereRaw("name REGEXP '[[:<:]]{$search['country']}[[:>:]]'");
@@ -369,6 +390,7 @@ class LocationController extends Controller
 
 			})
 			->orderBy('country_id', 'ASC')
+			->orderBy('status', 'desc')
 			->paginate(config('basic.paginate'));
 
 		return view($areaManagement[$type]['area_view'], $data);

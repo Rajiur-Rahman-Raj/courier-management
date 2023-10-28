@@ -12,11 +12,11 @@ class City extends Model
 	protected $guarded = ['id'];
 
 	public function country(){
-		return $this->belongsTo(Country::class, 'country_id', 'id');
+		return $this->belongsTo(Country::class, 'country_id', 'id')->where('status', 1);
 	}
 
 	public function state(){
-		return $this->belongsTo(State::class, 'state_id', 'id');
+		return $this->belongsTo(State::class, 'state_id', 'id')->where('status', 1);
 	}
 
 	public function getTotalArea(){
