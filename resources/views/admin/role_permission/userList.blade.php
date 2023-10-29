@@ -23,7 +23,7 @@
 									<div
 										class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 										<h6 class="m-0 font-weight-bold text-primary">@lang('Staff List')</h6>
-										@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.add')))
+										@if(adminAccessRoute(config('permissionList.Role_And_Permissions.Manage_Staff.permission.add')))
 											<button class="btn btn-sm btn-primary" data-target="#add-modal"
 													data-toggle="modal" @click="makeDataEmpty">@lang('Add New')</button>
 										@endif
@@ -37,7 +37,7 @@
 													<th>@lang('User')</th>
 													<th>@lang('Role')</th>
 													<th>@lang('Status')</th>
-													@if(adminAccessRoute(array_merge(config('permissionList.Role_&_Permissions.Manage_Staff.permission.edit'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.delete'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.login_as'))))
+													@if(adminAccessRoute(array_merge(config('permissionList.Role_And_Permissions.Manage_Staff.permission.edit'), config('permissionList.Role_And_Permissions.Manage_Staff.permission.delete'), config('permissionList.Role_And_Permissions.Manage_Staff.permission.login_as'))))
 														<th>@lang('Action')</th>
 													@endif
 												</tr>
@@ -71,16 +71,18 @@
 														</td>
 														<td data-label="@lang('Status')">
 															@if($value->status == 1)
-																<span
-																	class="badge badge-success rounded">@lang('Active')</span>
+																<span class="badge badge-light">
+           				 											<i class="fa fa-circle text-success font-12"></i> @lang('Active')
+																</span>
 															@else
-																<span
-																	class="badge badge-danger">@lang('Inactive')</span>
+																<span class="badge badge-light">
+           				 											<i class="fa fa-circle text-danger font-12"></i> @lang('Inactive')
+																</span>
 															@endif
 														</td>
-														@if(adminAccessRoute(array_merge(config('permissionList.Role_&_Permissions.Manage_Staff.permission.edit'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.delete'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.login_as'))))
+														@if(adminAccessRoute(array_merge(config('permissionList.Role_And_Permissions.Manage_Staff.permission.edit'), config('permissionList.Role_And_Permissions.Manage_Staff.permission.delete'), config('permissionList.Role_And_Permissions.Manage_Staff.permission.login_as'))))
 															<td data-label="@lang('Action')">
-																@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.edit')))
+																@if(adminAccessRoute(config('permissionList.Role_And_Permissions.Manage_Staff.permission.edit')))
 																	<button data-target="#editStafModal"
 																			data-toggle="modal"
 																			data-route="{{route('admin.role.usersEdit', $value->id)}}"
@@ -90,7 +92,7 @@
 																			class="fas fa-edit"></i> @lang(' Edit')
 																	</button>
 																@endif
-																@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.login_as')))
+																@if(adminAccessRoute(config('permissionList.Role_And_Permissions.Manage_Staff.permission.login_as')))
 																	<button data-target="#login_as" data-toggle="modal"
 																			data-route="{{route('admin.role.usersLogin',$value->id)}}"
 																			class="btn btn-sm btn-outline-success loginUser">
@@ -98,7 +100,7 @@
 																			class="fas fa-sign-in-alt"></i> @lang(' Login As Staff')
 																	</button>
 																@endif
-																@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.edit')))
+																@if(adminAccessRoute(config('permissionList.Role_And_Permissions.Manage_Staff.permission.edit')))
 																	@if($value->status == 0)
 																		<button data-target="#status_change"
 																				data-toggle="modal"
@@ -121,8 +123,12 @@
 													</tr>
 												@empty
 													<tr>
-														<th colspan="100%"
-															class="text-center">@lang('No data found')</th>
+														<td colspan="100%" class="text-center p-2">
+															<img class="not-found-img"
+																 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+																 alt="">
+
+														</td>
 													</tr>
 												@endforelse
 												</tbody>
@@ -137,7 +143,7 @@
 			</section>
 		</div>
 		{{-- Add Staffs Modal --}}
-		<div id="add-modal" class="modal fade" tabindex="-1" role="dialog"
+		<div id="add-modal" class="modal fade" role="dialog"
 			 aria-labelledby="primary-header-modalLabel"
 			 aria-hidden="true">
 			<div class="modal-dialog">

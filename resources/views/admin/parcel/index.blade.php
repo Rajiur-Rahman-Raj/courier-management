@@ -80,8 +80,10 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img" src="{{ asset('assets/dashboard/images/empty-state.png') }}" alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>
@@ -156,8 +158,10 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img" src="{{ asset('assets/dashboard/images/empty-state.png') }}" alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>
@@ -292,8 +296,10 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img" src="{{ asset('assets/dashboard/images/empty-state.png') }}" alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>
@@ -412,7 +418,7 @@
 	</div>
 
 	{{-- Add Parcel Unit Modal --}}
-	<div id="add-parcel-unit-modal" class="modal fade" tabindex="-1" role="dialog"
+	<div id="add-parcel-unit-modal" class="modal fade" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
 		<div class="modal-dialog">
@@ -475,7 +481,7 @@
 	</div>
 
 	{{-- Uddate Parcel Unit Modal --}}
-	<div id="editParcelUnitModal" class="modal fade" tabindex="-1" role="dialog"
+	<div id="editParcelUnitModal" class="modal fade" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
 		<div class="modal-dialog">
@@ -492,7 +498,7 @@
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Parcel Type') <span class="text-danger">*</span></label>
 							<select name="parcel_type_id"
-									class="form-control @error('parcel_type_id') is-invalid @enderror"
+									class="form-control @error('parcel_type_id') is-invalid @enderror select2"
 									id="parcelTypeId">
 								@foreach($allParcelTypes as $type)
 									<option value="{{ $type->id }}">@lang($type->parcel_type)</option>
@@ -543,7 +549,7 @@
 	</div>
 
 	{{-- Add Parcel Service Modal --}}
-	<div id="add-parcelService-modal" class="modal fade" tabindex="-1" role="dialog"
+	<div id="add-parcelService-modal" class="modal fade" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
 		<div class="modal-dialog">
@@ -559,7 +565,7 @@
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Parcel Type') <span class="text-danger">*</span></label>
 							<select name="parcel_type_id"
-									class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType">
+									class="form-control @error('parcel_type_id') is-invalid @enderror selectedParcelType select2">
 								<option value="" disabled selected>@lang('Select Parcel Type')</option>
 								@foreach($allParcelTypes as $type)
 									<option value="{{ $type->id }}">@lang($type->parcel_type)</option>
@@ -574,7 +580,7 @@
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Unit') <span class="text-danger">*</span></label>
 							<select name="parcel_unit_id"
-									class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit">
+									class="form-control @error('parcel_unit_id') is-invalid @enderror selectedParcelUnit select2">
 							</select>
 
 							<div class="invalid-feedback">

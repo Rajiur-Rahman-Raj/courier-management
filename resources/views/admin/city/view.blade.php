@@ -44,7 +44,7 @@
 
 													<div class="col-md-4">
 														<div class="form-group search-currency-dropdown">
-															<select name="status" class="form-control form-control-sm">
+															<select name="status" class="form-control form-control-sm select2">
 																<option value="all">@lang('All Status')</option>
 																<option
 																	value="active" {{  request()->status == 'active' ? 'selected' : '' }}>@lang('Active')</option>
@@ -109,11 +109,14 @@
 															<td data-label="@lang('Status')"
 																class="font-weight-bold text-dark">
 																@if($city->status == 1)
-																	<span
-																		class="badge badge-success rounded">@lang('Active')</span>
+																	<span class="badge badge-light">
+																		<i class="fa fa-circle text-success font-12"></i> @lang('Active')
+																	</span>
 																@else
-																	<span
-																		class="badge badge-danger">@lang('Deactive')</span>
+																	<span class="badge badge-light">
+																		<i class="fa fa-circle text-danger font-12"></i> @lang('Deactive')
+																	</span>
+
 																@endif
 															</td>
 															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.City_List.permission.edit'), config('permissionList.Manage_Locations.City_List.permission.delete'))))
@@ -134,8 +137,12 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img"
+																	 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+																	 alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>

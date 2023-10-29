@@ -1,6 +1,10 @@
 @extends('admin.layouts.master')
 @section('page_title', __('Inactive User List'))
 
+@push('extra_styles')
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
 <div class="main-content">
 	<section class="section">
@@ -82,7 +86,12 @@
 											</tr>
 										@empty
 											<tr>
-												<th colspan="100%" class="text-center">@lang('No data found')</th>
+												<td colspan="100%" class="text-center p-2">
+													<img class="not-found-img"
+														 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+														 alt="">
+
+												</td>
 											</tr>
 										@endforelse
 										</tbody>
@@ -98,4 +107,20 @@
 
 	</section>
 </div>
+@endsection
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
+
+@section('scripts')
+	<script>
+		'use strict'
+		$(document).ready(function () {
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+		})
+	</script>
 @endsection

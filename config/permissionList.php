@@ -362,7 +362,7 @@ $arr = [
 		],
 	],
 
-	'Role_&_Permissions' => [
+	'Role_And_Permissions' => [
 		"Available_Roles" => [
 			'permission' => [
 				'view' => ['admin.role'],

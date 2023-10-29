@@ -1,6 +1,10 @@
 @extends('admin.layouts.master')
 @section('page_title',__('Support Tickets'))
 
+@push('extra_styles')
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
 	<div class="main-content">
 		<section class="section">
@@ -42,7 +46,7 @@
 											</div>
 											<div class="col-md-3">
 												<div class="form-group search-currency-dropdown">
-													<select name="status" class="form-control form-control-sm">
+													<select name="status" class="form-control form-control-sm select2">
 														<option
 															value="-1" {{ @request()->status == '-1' ? 'selected' : '' }}>@lang('All Ticket')</option>
 														<option
@@ -56,13 +60,26 @@
 													</select>
 												</div>
 											</div>
-											<div class="col-md-3">
-												<div class="form-group">
-													<input type="date" class="form-control form-control-sm"
-														   name="date_time"
-														   id="datepicker"/>
+
+											<div class="col-sm-12 col-md-3 input-box">
+												<div class="input-group flatpickr">
+													<input type="date" placeholder="@lang('select date')"
+														   class="form-control" name="date_time" id="date_time"
+														   value="{{ old('date_time', request()->date_time) }}" data-input/>
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															<a class="input-button cursor-pointer" title="clear" data-clear>
+																<i class="fas fa-times"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+												<div class="invalid-feedback d-block">
+													@error('date_time') @lang($message) @enderror
 												</div>
 											</div>
+
+
 											<div class="col-md-12">
 												<div class="form-group">
 													<button type="submit" class="btn btn-sm btn-primary btn-block"><i
@@ -141,17 +158,21 @@
 
 													<td data-label="@lang('Status')">
 														@if($ticket->status == 0)
-															<span
-																class="badge badge-pill badge-primary">@lang('Open')</span>
+															<span class="badge badge-light">
+																<i class="fa fa-circle text-primary font-12"></i> @lang('Open')
+															</span>
 														@elseif($ticket->status == 1)
-															<span
-																class="badge badge-pill badge-success">@lang('Answered')</span>
+															<span class="badge badge-light">
+																<i class="fa fa-circle text-success font-12"></i> @lang('Answered')
+															</span>
 														@elseif($ticket->status == 2)
-															<span
-																class="badge badge-pill badge-dark">@lang('Customer Replied')</span>
+															<span class="badge badge-light">
+																<i class="fa fa-circle text-dark font-12"></i> @lang('Customer Replied')
+															</span>
 														@elseif($ticket->status == 3)
-															<span
-																class="badge badge-pill badge-danger">@lang('Closed')</span>
+															<span class="badge badge-light">
+																<i class="fa fa-circle text-danger font-12"></i> @lang('Closed')
+															</span>
 														@endif
 													</td>
 													<td data-label="@lang('Last Reply')">
@@ -168,7 +189,11 @@
 												</tr>
 											@empty
 												<tr>
-													<th colspan="100%" class="text-center">@lang('No data found')</th>
+													<td colspan="100%" class="text-center p-2">
+														<img class="not-found-img"
+															 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+															 alt="">
+													</td>
 												</tr>
 											@endforelse
 											</tbody>
@@ -187,4 +212,21 @@
 		</section>
 	</div>
 
+@endsection
+
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
+
+@section('scripts')
+	<script>
+		'use strict'
+		$(document).ready(function () {
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+		})
+	</script>
 @endsection

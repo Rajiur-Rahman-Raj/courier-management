@@ -23,8 +23,6 @@ class ParcelController extends Controller
 
 		$data['allParcelTypes'] = ParcelType::latest()->paginate(config('basic.paginate'));
 
-//		$data['allParcelUnits'] = ParcelUnit::where('status', 1)->get();
-
 		$data['allParcelUnits'] = ParcelUnit::with('parcelType')
 			->latest()
 			->paginate(config('basic.paginate'));

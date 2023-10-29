@@ -22,12 +22,13 @@ class PackingController extends Controller
 		$search = $request->all();
 		$data['allPackages'] = Package::latest()->paginate(config('basic.paginate'));
 
-		$data['allPackageVariants'] = PackageVariant::where('status', 1)->get();
+		$data['allPackageVariants'] = PackageVariant::get();
 
 		$data['allVariants'] = PackageVariant::with('package')
 			->latest()
 			->groupBy('package_id')
 			->paginate(config('basic.paginate'));
+
 
 		$data['allPackingService'] = PackingService::with('package', 'variant')
 			->when(isset($search['package']), function ($query) use ($search){

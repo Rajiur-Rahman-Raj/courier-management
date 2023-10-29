@@ -108,11 +108,13 @@
 															<td data-label="@lang('Status')"
 																class="font-weight-bold text-dark">
 																@if($area->status == 1)
-																	<span
-																		class="badge badge-success rounded">@lang('Active')</span>
+																	<span class="badge badge-light">
+																		<i class="fa fa-circle text-success font-12"></i> @lang('Active')
+																	</span>
 																@else
-																	<span
-																		class="badge badge-danger">@lang('Deactive')</span>
+																	<span class="badge badge-light">
+																		<i class="fa fa-circle text-success font-12"></i> @lang('Deactive')
+																	</span>
 																@endif
 															</td>
 															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Locations.Area_List.permission.edit'), config('permissionList.Manage_Locations.Area_List.permission.delete'))))
@@ -134,8 +136,12 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img"
+																	 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+																	 alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>

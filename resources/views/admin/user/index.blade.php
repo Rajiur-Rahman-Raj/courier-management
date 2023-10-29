@@ -1,6 +1,10 @@
 @extends('admin.layouts.master')
 @section('page_title',__('User List'))
 
+@push('extra_styles')
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
 	<div class="main-content">
 		<section class="section">
@@ -88,9 +92,13 @@
 													<td data-label="@lang('Join date')">{{ __(date('d M,Y - H:i',strtotime($value->created_at))) }}</td>
 													<td data-label="@lang('Status')">
 														@if($value->status)
-															<span class="badge badge-success">@lang('Active')</span>
+															<span class="badge badge-light">
+																<i class="fa fa-circle text-success font-12"></i> @lang('Active')
+															</span>
 														@else
-															<span class="badge badge-warning">@lang('Inactive')</span>
+															<span class="badge badge-light">
+																<i class="fa fa-circle text-danger font-12"></i> @lang('Inactive')
+															</span>
 														@endif
 													</td>
 													<td data-label="@lang('Last login')">{{ (optional($value->profile)->last_login_at) ? __(date('d/m/Y - H:i',strtotime($value->profile->last_login_at))) : __('N/A') }}</td>
@@ -119,7 +127,12 @@
 												</tr>
 											@empty
 												<tr>
-													<th colspan="100%" class="text-center">@lang('No data found')</th>
+													<td colspan="100%" class="text-center p-2">
+														<img class="not-found-img"
+															 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+															 alt="">
+
+													</td>
 												</tr>
 											@endforelse
 											</tbody>
@@ -136,4 +149,20 @@
 		</section>
 	</div>
 
+@endsection
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
+
+@section('scripts')
+	<script>
+		'use strict'
+		$(document).ready(function () {
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+		})
+	</script>
 @endsection

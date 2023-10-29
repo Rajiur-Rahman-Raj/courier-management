@@ -3,7 +3,9 @@
 
 @push('extra_styles')
 	<link href="{{ asset('assets/dashboard/css/select2.min.css') }}" rel="stylesheet" type="text/css">
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
 @endpush
+
 
 @section('content')
 <div class="main-content">
@@ -86,16 +88,25 @@
 												<td data-label="@lang('Transaction ID')">{{ __($value->utr) }}</td>
 												<td data-label="@lang('Status')">
 													@if($value->status)
-														<span class="badge badge-success">@lang('Success')</span>
+														<span class="badge badge-light">
+															<i class="fa fa-circle text-success font-12"></i> @lang('Success')
+														</span>
 													@else
-														<span class="badge badge-warning">@lang('Pending')</span>
+														<span class="badge badge-light">
+															<i class="fa fa-circle text-warning font-12"></i> @lang('Pending')
+														</span>
 													@endif
 												</td>
 												<td data-label="@lang('Transaction At')"> {{ dateTime($value->created_at) }} </td>
 											</tr>
 										@empty
 											<tr>
-												<th colspan="100%" class="text-center">@lang('No data found')</th>
+												<td colspan="100%" class="text-center p-2">
+													<img class="not-found-img"
+														 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+														 alt="">
+
+												</td>
 											</tr>
 										@endforelse
 										</tbody>
@@ -117,4 +128,18 @@
 
 @push('extra_scripts')
 	<script src="{{ asset('assets/dashboard/js/select2.min.js') }}"></script>
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
 @endpush
+
+@section('scripts')
+	<script>
+		'use strict'
+		$(document).ready(function () {
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+		})
+	</script>
+@endsection

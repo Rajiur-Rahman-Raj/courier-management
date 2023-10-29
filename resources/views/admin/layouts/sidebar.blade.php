@@ -20,8 +20,7 @@
 			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Dashboard.permission.view'))))
 				<li class="menu-header">@lang('Dashboard')</li>
 				<li class="dropdown {{ activeMenu(['admin.home']) }}">
-					<a href="{{ route('admin.home') }}" class="nav-link"><i
-							class="fas fa-tachometer-alt text-primary"></i><span>@lang('Dashboard')</span></a>
+					<a href="{{ route('admin.home') }}" class="nav-link"> <i class="fas fa-columns text-primary mt-1"></i> <span>@lang('Dashboard')</span></a>
 				</li>
 			@endif
 
@@ -29,16 +28,9 @@
 				<li class="menu-header">@lang('Manage Shipments')</li>
 				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment', 'trashShipmentList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Shipments')</span>
+						 <i class="fas fa-truck text-purple mt-1"></i> <span>@lang('Manage Shipments')</span>
 					</a>
 					<ul class="dropdown-menu">
-						{{--						<li class="{{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment'], null, 'all') }}">--}}
-						{{--							<a class="nav-link "--}}
-						{{--							   href="{{ route('shipmentList', ['shipment_status' => 'all', 'shipment_type' => 'operator-country']) }}">--}}
-						{{--								@lang('All Shipments')--}}
-						{{--							</a>--}}
-						{{--						</li>--}}
-
 						<li class="{{ activeMenu(['shipmentList'], null, 'requested') }}">
 							<a class="nav-link "
 							   href="{{ route('shipmentList', ['shipment_status' => 'requested', 'shipment_type' => 'operator-country']) }}">
@@ -144,7 +136,7 @@
 				<li class="menu-header">@lang('Manage Shipment Types')</li>
 				<li class="dropdown {{ activeMenu(['shipmentTypeList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-building text-primary"></i> <span>@lang('Shipment Types')</span>
+						 <i class="fas fa-text-width mt-1 text-success"></i> <span>@lang('Shipment Types')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['shipmentTypeList']) }}">
@@ -160,7 +152,7 @@
 				<li class="menu-header">@lang('Manage Shipping Rates')</li>
 				<li class="dropdown {{ activeMenu(['defaultRate', 'operatorCountryRate', 'internationallyRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate', 'internationallyShowRate', 'createShippingRateInternationally']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-building text-primary"></i> <span>@lang('Shipping Rates')</span>
+						<i class="fas fa-percent text-warning mt-1"></i> <span>@lang('Shipping Rates')</span>
 					</a>
 					<ul class="dropdown-menu">
 						@if(adminAccessRoute(config('permissionList.Shipping_Rates.Default_Rate.permission.view')))
@@ -174,7 +166,7 @@
 						@if(adminAccessRoute(config('permissionList.Shipping_Rates.Operator_Country_Rate.permission.view')))
 							<li class="{{ activeMenu(['operatorCountryRate', 'createShippingRateOperatorCountry', 'operatorCountryShowRate']) }}">
 								<a class="nav-link " href="{{ route('operatorCountryRate', 'state') }}">
-									@lang(optional(basicControl()->operatorCountry)->name. ' '. 'Rate')
+									@lang('Operator Country Rate')
 								</a>
 							</li>
 						@endif
@@ -194,7 +186,7 @@
 				<li class="menu-header">@lang('Manage Packing Service')</li>
 				<li class="dropdown {{ activeMenu(['packingServiceList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Packing Service')</span>
+						<i class="fas fa-box-open mt-1 text-info"></i> <span>@lang('Packing Service')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['packingServiceList']) }}">
@@ -210,7 +202,7 @@
 				<li class="menu-header">@lang('Manage Parcel Service')</li>
 				<li class="dropdown {{ activeMenu(['parcelServiceList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Parcel Service')</span>
+						 <i class="fas fa-cubes mt-1 text-primary"></i> <span>@lang('Parcel Service')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['parcelServiceList']) }}">
@@ -226,7 +218,7 @@
 				<li class="menu-header">@lang('Manage Branch')</li>
 				<li class="dropdown {{ activeMenu(['branchList', 'branchManagerList', 'branchEmployeeList', 'createEmployee', 'branchEmployeeEdit', 'createBranchManager', 'branchManagerEdit', 'createBranch', 'branchEdit', 'showBranchProfile', 'branchDriverList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-code-branch text-purple"></i> <span>@lang('Manage Branch')</span>
+						 <i class="fab fa-pagelines text-danger mt-1"></i> <span>@lang('Manage Branch')</span>
 					</a>
 					<ul class="dropdown-menu">
 						@if(adminAccessRoute(config('permissionList.Manage_Branch.Branch_List.permission.view')))
@@ -268,7 +260,7 @@
 				<li class="menu-header">@lang('Manage Departments')</li>
 				<li class="dropdown {{ activeMenu(['departmentList', 'createDepartment', 'editDepartment']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-building text-primary"></i> <span>@lang('Manage Department')</span>
+						<i class="fas fa-graduation-cap text-purple mt-1"></i> <span>@lang('Manage Department')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['departmentList']) }}">
@@ -284,7 +276,7 @@
 				<li class="menu-header">@lang('Manage Clients')</li>
 				<li class="dropdown {{ activeMenu(['clientList', 'createClient', 'clientStore']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-map-marker-alt"></i> <span>@lang('Manage Clients')</span>
+						<i class="fas fa-user-plus text-cyan mt-1"></i> <span>@lang('Manage Clients')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['clientList']) }}">
@@ -300,7 +292,7 @@
 				<li class="menu-header">@lang('Manage Locations')</li>
 				<li class="dropdown {{ activeMenu(['areaList', 'countryList', 'stateList', 'cityList']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-map-marker-alt"></i> <span>@lang('Manage Locations')</span>
+						<i class="fas fa-map-marker-alt mt-1 text-warning"></i> <span>@lang('Manage Locations')</span>
 					</a>
 					<ul class="dropdown-menu">
 						@if(adminAccessRoute(config('permissionList.Manage_Locations.Country_List.permission.view')))
@@ -342,7 +334,7 @@
 				<li class="menu-header">@lang('User Panel')</li>
 				<li class="dropdown {{ activeMenu(['user-list','user.search','inactive.user.search','send.mail.user','inactive.user.list']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-users text-dark"></i> <span>@lang('Manage Users')</span>
+						<i class="fas fa-users text-primary mt-1"></i> <span>@lang('Manage Users')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['user-list','user.search']) }}">
@@ -368,7 +360,7 @@
 				<li class="menu-header">@lang('Support Tickets')</li>
 				<li class="dropdown {{ activeMenu(['admin.ticket','admin.ticket.view','admin.ticket.search']) }}">
 					<a href="{{ route('admin.ticket') }}" class="nav-link"><i
-							class="fas fa-headset text-info"></i><span>@lang('Tickets')</span></a>
+							class="fas fa-headset text-info mt-1"></i><span>@lang('Tickets')</span></a>
 				</li>
 			@endif
 
@@ -376,17 +368,17 @@
 				<li class="menu-header">@lang('Transactions')</li>
 				<li class="dropdown {{ activeMenu(['admin.fund.add.index','admin.fund.add.search']) }}">
 					<a href="{{ route('admin.fund.add.index') }}" class="nav-link"><i
-							class="fas fa-money-check-alt text-green"></i><span>@lang('Add Fund List')</span></a>
+							class="fas fa-money-check-alt text-success mt-1"></i><span>@lang('Add Fund List')</span></a>
 				</li>
 
 				<li class="dropdown {{ activeMenu(['admin.payout.index','admin.payout.search','payout.details']) }}">
 					<a href="{{ route('admin.payout.index') }}" class="nav-link"><i
-							class="far fa-money-bill-alt text-primary"></i><span>@lang('Payout List')</span></a>
+							class="far fa-money-bill-alt text-danger mt-1"></i><span>@lang('Payout List')</span></a>
 				</li>
 
 				<li class="dropdown {{ activeMenu(['admin.transaction.index','admin.transaction.search']) }}">
 					<a href="{{ route('admin.transaction.index') }}" class="nav-link"><i
-							class="fas fa-chart-line text-success"></i><span>@lang('Transaction List')</span></a>
+							class="fas fa-chart-line text-purple mt-1"></i><span>@lang('Transaction List')</span></a>
 				</li>
 			@endif
 
@@ -394,7 +386,7 @@
 				<li class="menu-header">@lang('Control Panel')</li>
 				<li class="dropdown {{ activeMenu(['settings','seo.update','plugin.config','tawk.control','google.analytics.control','google.recaptcha.control','fb.messenger.control','service.control','logo.update','breadcrumb.update','seo.update','currency.exchange.api.config','sms.config', 'sms.template.index','sms.template.edit','voucher.settings','basic.control','securityQuestion.index','securityQuestion.create','securityQuestion.edit','pusher.config','notify.template.index','notify.template.edit','language.index','language.create', 'language.edit','language.keyword.edit', 'email.config','email.template.index','email.template.default', 'email.template.edit', 'charge.index', 'charge.edit', 'currency.index', 'currency.create', 'currency.edit', 'charge.chargeEdit' ]) }}">
 					<a href="{{ route('settings') }}" class="nav-link"><i
-							class="fas fa-cog text-primary"></i><span>@lang('Control Panel')</span></a>
+							class="fas fa-cog text-primary mt-1"></i><span>@lang('Control Panel')</span></a>
 				</li>
 			@endif
 
@@ -402,7 +394,7 @@
 				<li class="menu-header">@lang('Payment Settings')</li>
 				<li class="dropdown {{ activeMenu(['payment.methods','edit.payment.methods','admin.deposit.manual.index','admin.deposit.manual.create','admin.deposit.manual.edit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-money-check-alt text-success"></i> <span>@lang('Payment Settings')</span>
+						<i class="fas fa-money-check-alt text-success mt-1"></i> <span>@lang('Payment Settings')</span>
 					</a>
 					<ul class="dropdown-menu">
 						@if(adminAccessRoute(config('permissionList.Payment_Settings.Payment_Methods.permission.view')))
@@ -442,23 +434,9 @@
 
 
 			@if(adminAccessRoute(config('permissionList.Payout_Settings.Payout_Methods.permission.view')))
-				{{--				<li class="menu-header">@lang('Payout Settings')</li>--}}
-				{{--				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">--}}
-				{{--					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">--}}
-				{{--						<i class="fas fa-users-cog text-danger"></i> <span>@lang('Payout Settings')</span>--}}
-				{{--					</a>--}}
-				{{--					<ul class="dropdown-menu">--}}
-				{{--						<li class="{{ activeMenu(['payout.method.list','payout.method.edit']) }}">--}}
-				{{--							<a class="nav-link" href="{{ route('payout.method.list') }}">--}}
-				{{--								@lang('Payout Methods')--}}
-				{{--							</a>--}}
-				{{--						</li>--}}
-				{{--					</ul>--}}
-				{{--				</li>--}}
-
 				<li class="dropdown {{ activeMenu(['payout.method.list','payout.method.add','payout.method.edit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-users-cog text-danger"></i> <span>@lang('Payout Settings')</span>
+						<i class="fas fa-users-cog text-danger mt-1"></i> <span>@lang('Payout Settings')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['payout.method.list','payout.method.edit']) }}">
@@ -475,22 +453,22 @@
 				</li>
 			@endif
 
-			@if(adminAccessRoute(array_merge(config('permissionList.Role_&_Permissions.Available_Roles.permission.view'), config('permissionList.Role_&_Permissions.Manage_Staff.permission.view'))))
+			@if(adminAccessRoute(array_merge(config('permissionList.Role_And_Permissions.Available_Roles.permission.view'), config('permissionList.Role_And_Permissions.Manage_Staff.permission.view'))))
 				<li class="menu-header">@lang('Role & Permissions')</li>
 				<li class="dropdown {{ activeMenu(['admin.role','admin.role.staff']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-user-friends text-success"></i> <span>@lang('Roles and Permission')</span>
+						<i class="fas fa-user-friends text-purple mt-1"></i> <span>@lang('Roles and Permission')</span>
 					</a>
 
 					<ul class="dropdown-menu">
-						@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Available_Roles.permission.view')))
+						@if(adminAccessRoute(config('permissionList.Role_And_Permissions.Available_Roles.permission.view')))
 							<li class="{{ activeMenu(['admin.role']) }}">
 								<a class="nav-link" href="{{ route('admin.role') }}">
 									@lang('Available Roles')
 								</a>
 							</li>
 						@endif
-						@if(adminAccessRoute(config('permissionList.Role_&_Permissions.Manage_Staff.permission.view')))
+						@if(adminAccessRoute(config('permissionList.Role_And_Permissions.Manage_Staff.permission.view')))
 							<li class="{{ activeMenu(['admin.role.staff']) }}">
 								<a class="nav-link" href="{{ route('admin.role.staff') }}">
 									@lang('Manage Staffs')
@@ -506,7 +484,7 @@
 				@if(adminAccessRoute(config('permissionList.Theme_Settings.Ui_Settings.permission.view')))
 					<li class="dropdown {{ activeMenu(['template.show']) }}">
 						<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-							<i class="fas fa-users text-info"></i> <span>@lang('UI Settings')</span>
+							<i class="fas fa-tasks text-info mt-1"></i> <span>@lang('UI Settings')</span>
 						</a>
 						<ul class="dropdown-menu">
 							@foreach(array_diff(array_keys(config('templates')),['message','template_media']) as $name)
@@ -523,7 +501,7 @@
 				@if(adminAccessRoute(config('permissionList.Theme_Settings.Content_Settings.permission.view')))
 					<li class="dropdown {{ activeMenu(['content.index','content.create','content.show']) }}">
 						<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-							<i class="fas fa-cogs text-dark"></i> <span>@lang('Content Settings')</span>
+							<i class="fas fa-cogs text-primary mt-1"></i> <span>@lang('Content Settings')</span>
 						</a>
 						<ul class="dropdown-menu">
 							@foreach(array_diff(array_keys(config('contents')),['message','content_media']) as $name)
@@ -541,7 +519,7 @@
 			@if(adminAccessRoute(array_merge(config('permissionList.Blog_Settings.Category_List.permission.view'), config('permissionList.Blog_Settings.Blog_List.permission.view'))))
 				<li class="dropdown {{ activeMenu(['blogCategory','blogCategoryEdit','blogCategoryCreate', 'blogList', 'blogCreate', 'blogEdit']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-cogs text-dark"></i> <span>@lang('Blog Settings')</span>
+						<i class="fas fa-cog mt-1 text-warning"></i> <span>@lang('Blog Settings')</span>
 					</a>
 
 					<ul class="dropdown-menu">

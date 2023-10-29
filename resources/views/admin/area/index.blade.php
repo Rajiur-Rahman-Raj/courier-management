@@ -143,8 +143,12 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img"
+																	 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+																	 alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>
@@ -165,7 +169,7 @@
 
 
 	{{-- Add City Modal --}}
-	<div id="add-modal" class="modal fade" tabindex="-1" role="dialog"
+	<div id="add-modal" class="modal fade" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
 		<div class="modal-dialog">
@@ -181,7 +185,7 @@
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Country')</label>
 							<select name="country_id"
-									class="form-control @error('country_id') is-invalid @enderror selectedCountry">
+									class="form-control @error('country_id') is-invalid @enderror selectedCountry select2">
 								<option value="" disabled selected>@lang('Select Country')</option>
 								@foreach($allCountires as $country)
 									<option value="{{ $country->id }}">@lang($country->name)</option>
@@ -195,7 +199,7 @@
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select State')</label>
 							<select name="state_id"
-									class="form-control @error('state_id') is-invalid @enderror selectedState">
+									class="form-control @error('state_id') is-invalid @enderror selectedState select2">
 
 							</select>
 							<div class="invalid-feedback">
@@ -206,7 +210,7 @@
 						<div class="col-12 mt-3">
 							<label for="city_id">@lang('Select City')</label>
 							<select name="city_id"
-									class="form-control @error('city_id') is-invalid @enderror selectedCity">
+									class="form-control @error('city_id') is-invalid @enderror selectedCity select2">
 
 							</select>
 							<div class="invalid-feedback">

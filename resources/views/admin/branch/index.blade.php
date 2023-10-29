@@ -31,21 +31,21 @@
 										<div class="card-body">
 											<form action="" method="get">
 												<div class="row">
-													<div class="col-md-2">
+													<div class="col-md-3">
 														<div class="form-group">
 															<input placeholder="@lang('Branch name')" name="name"
 																   value="{{ old('name',request()->name) }}" type="text"
 																   class="form-control form-control-sm">
 														</div>
 													</div>
-													<div class="col-md-2">
+													<div class="col-md-3">
 														<div class="form-group">
 															<input placeholder="@lang('Phone')" name="phone"
 																   value="{{ old('phone',request()->phone) }}"
 																   type="text" class="form-control form-control-sm">
 														</div>
 													</div>
-													<div class="col-md-2">
+													<div class="col-md-3">
 														<div class="form-group">
 															<input placeholder="@lang('E-mail')" name="email"
 																   value="{{ old('email',request()->email) }}"
@@ -53,9 +53,10 @@
 														</div>
 													</div>
 
-													<div class="col-md-2">
+													<div class="col-md-3">
 														<div class="form-group search-currency-dropdown">
-															<select name="status" class="form-control form-control-sm">
+															<select name="status"
+																	class="form-control form-control-sm select2">
 																<option value="all">@lang('All Status')</option>
 																<option
 																	value="active" {{  request()->status == 'active' ? 'selected' : '' }}>@lang('Active')</option>
@@ -65,22 +66,8 @@
 														</div>
 													</div>
 
-													<div class="col-md-2">
-														<div class="form-group search-currency-dropdown">
-															<select name="branch_type"
-																	class="form-control form-control-sm">
-																<option value="">@lang('All Branch')</option>
-																<option
-																	value="head_office" {{  request()->branch_type == 'head_office' ? 'selected' : '' }}>@lang('Head Office')</option>
-																<option
-																	value="main_branch" {{  request()->branch_type == 'main_branch' ? 'selected' : '' }}>@lang('Main Branch')</option>
-																<option
-																	value="sub_branch" {{  request()->branch_type == 'sub_branch' ? 'selected' : '' }}>@lang('Sub Branch')</option>
-															</select>
-														</div>
-													</div>
 
-													<div class="col-md-2">
+													<div class="col-md-12">
 														<div class="form-group">
 															<button type="submit"
 																	class="btn btn-primary btn-sm btn-block"><i
@@ -165,11 +152,15 @@
 															<td data-label="@lang('Status')"
 																class="font-weight-bold text-dark">
 																@if($branch->status == 1)
-																	<span
-																		class="badge badge-success rounded">@lang('Active')</span>
+																	<span class="badge badge-light">
+            															<i class="fa fa-circle text-success"></i>
+																		@lang('Active')
+																	</span>
 																@else
-																	<span
-																		class="badge badge-danger">@lang('Deactive')</span>
+																	<span class="badge badge-light">
+            															<i class="fa fa-circle text-danger"></i>
+																		@lang('Deactive')
+																	</span>
 																@endif
 															</td>
 															@if(adminAccessRoute(array_merge(config('permissionList.Manage_Branch.Branch_List.permission.edit'), config('permissionList.Manage_Branch.Branch_List.permission.delete'), config('permissionList.Manage_Branch.Branch_List.permission.show_profile'))))
@@ -194,8 +185,12 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img"
+																	 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+																	 alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>

@@ -1495,6 +1495,10 @@ table tr:hover .table-links {
 .badge.badge-light {
 	background-color: #e3eaef;
 	color: #191d21;
+	padding: 6px 15px;
+}
+.badge.badge-light i{
+	margin-right: 5px;
 }
 
 .badge.badge-white {

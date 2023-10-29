@@ -80,8 +80,10 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img" src="{{ asset('assets/dashboard/images/empty-state.png') }}" alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>
@@ -144,8 +146,10 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img" src="{{ asset('assets/dashboard/images/empty-state.png') }}" alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>
@@ -287,8 +291,10 @@
 														</tr>
 													@empty
 														<tr>
-															<th colspan="100%"
-																class="text-center">@lang('No data found')</th>
+															<td colspan="100%" class="text-center p-2">
+																<img class="not-found-img" src="{{ asset('assets/dashboard/images/empty-state.png') }}" alt="">
+
+															</td>
 														</tr>
 													@endforelse
 													</tbody>
@@ -406,7 +412,7 @@
 	</div>
 
 	{{-- Add Variant Modal --}}
-	<div id="add-variant-modal" class="modal fade" tabindex="-1" role="dialog"
+	<div id="add-variant-modal" class="modal fade" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
 		<div class="modal-dialog">
@@ -613,7 +619,7 @@
 	</div>
 
 	{{-- Add Packing Service Modal --}}
-	<div id="add-packingService-modal" class="modal fade" tabindex="-1" role="dialog"
+	<div id="add-packingService-modal" class="modal fade" role="dialog"
 		 aria-labelledby="primary-header-modalLabel"
 		 aria-hidden="true">
 		<div class="modal-dialog">
@@ -629,7 +635,7 @@
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Package') <span class="text-danger">*</span></label>
 							<select name="package_id"
-									class="form-control @error('package_id') is-invalid @enderror selectedPackage">
+									class="form-control @error('package_id') is-invalid @enderror selectedPackage select2">
 								<option value="" disabled selected>@lang('Select Package')</option>
 								@foreach($allPackages as $package)
 									<option value="{{ $package->id }}">@lang($package->package_name)</option>
@@ -644,7 +650,7 @@
 						<div class="col-12 mt-3">
 							<label for="">@lang('Select Variant') <span class="text-danger">*</span></label>
 							<select name="variant_id"
-									class="form-control @error('variant_id') is-invalid @enderror selectedVariant">
+									class="form-control @error('variant_id') is-invalid @enderror selectedVariant select2">
 							</select>
 
 							<div class="invalid-feedback">

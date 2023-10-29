@@ -70,7 +70,7 @@
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label
-																for="operator_country">@lang('Operator Country')</label>
+																for="operator_country">@lang('Operator Country') </label> <span><span class="">(@lang('Select the country from which you are handling your business'))</span></span>
 															<select name="operator_country"
 																	class="select2-single form-control @error('operator_country') is-invalid @enderror"
 																	id="operator_country">

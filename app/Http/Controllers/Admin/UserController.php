@@ -64,7 +64,7 @@ class UserController extends Controller
 			->when($inactive == 1, function ($query) use ($search) {
 				return $query->where("status", 0);
 			})
-			->when($created_date == 1, function ($query) use ($search) {
+			->when($created_date == 0, function ($query) use ($search) {
 				return $query->whereDate("created_at", $search['created_at']);
 			})
 			->when($last_login_at == 1, function ($query) use ($search) {

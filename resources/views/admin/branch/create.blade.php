@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title')
+@section('page_title')
 	@lang('Create Branch')
 @endsection
 
@@ -35,7 +35,8 @@
 
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="branch_name"> @lang('Branch Name') <span class="text-danger">*</span></label>
+										<label for="branch_name"> @lang('Branch Name') <span
+												class="text-danger">*</span></label>
 										<input type="text" name="branch_name"
 											   class="form-control @error('branch_name') is-invalid @enderror"
 											   value="{{ old('branch_name') }}">
@@ -74,7 +75,8 @@
 
 								<div class="row">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="address"> @lang('address') <span class="text-danger">*</span></label>
+										<label for="address"> @lang('address') <span
+												class="text-danger">*</span></label>
 										<input type="text" name="address"
 											   class="form-control @error('address') is-invalid @enderror"
 											   value="{{ old('address') }}">
@@ -90,8 +92,10 @@
 										<div class="form-group ">
 											<label for="details"> @lang('Details') </label>
 
-											<textarea class="form-control details_height @error('details') is-invalid @enderror"
-													  name="details" value="{{ old('details') }}">{{old('details')}}</textarea>
+											<textarea
+												class="form-control details_height @error('details') is-invalid @enderror"
+												name="details"
+												value="{{ old('details') }}">{{old('details')}}</textarea>
 
 											<div class="invalid-feedback">
 												@error('details') @lang($message) @enderror
@@ -128,7 +132,8 @@
 											</label>
 											<label class="selectgroup-item">
 												<input type="radio" name="status" value="1"
-													   class="selectgroup-input" checked {{ old('status') == 1 ? 'checked' : ''}}>
+													   class="selectgroup-input"
+													   checked {{ old('status') == 1 ? 'checked' : ''}}>
 												<span class="selectgroup-button">@lang('ON')</span>
 											</label>
 										</div>
