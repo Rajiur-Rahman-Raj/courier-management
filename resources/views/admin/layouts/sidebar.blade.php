@@ -272,16 +272,16 @@
 				</li>
 			@endif
 
-			@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.view')))
-				<li class="menu-header">@lang('Manage Clients')</li>
+			@if(adminAccessRoute(config('permissionList.Manage_Customers.Customer_List.permission.view')))
+				<li class="menu-header">@lang('Manage Customers')</li>
 				<li class="dropdown {{ activeMenu(['clientList', 'createClient', 'clientStore']) }}">
 					<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
-						<i class="fas fa-user-plus text-cyan mt-1"></i> <span>@lang('Manage Clients')</span>
+						<i class="fas fa-user-plus text-cyan mt-1"></i> <span>@lang('Manage Customers')</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="{{ activeMenu(['clientList']) }}">
 							<a class="nav-link " href="{{ route('clientList') }}">
-								@lang('Client List')
+								@lang('Customer List')
 							</a>
 						</li>
 					</ul>

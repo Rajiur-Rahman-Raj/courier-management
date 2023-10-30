@@ -64,7 +64,7 @@
 
 		<div class="col-sm-12 col-md-3 mb-3">
 			<label for="delivery_date"> @lang('Estimate Delivery Date') </label>
-			<div class="flatpickr2">
+			<div class="flatpickr">
 				<div class="input-group">
 					<input type="date" placeholder="@lang('Select Date')" class="form-control delivery_date"  name="delivery_date"
 						   value="{{ old('delivery_date',request()->delivery_date) }}" data-input>
@@ -758,30 +758,13 @@
 
 
 	<div class="row">
-		<div class="col-sm-12 col-md-7">
+		<div class="col-sm-12 col-md-12">
 			<div class="form-group mb-4">
 				<label class="col-form-label">@lang("Attatchments")</label>
 				<div class="shipment_image"></div>
 				@error('shipment_image.*')
 				<span class="text-danger">@lang($message)</span>
 				@enderror
-			</div>
-		</div>
-
-
-		<div class="col-md-5 form-group">
-			<label>@lang('Status')</label>
-			<div class="selectgroup w-100">
-				<label class="selectgroup-item">
-					<input type="radio" name="status" value="0"
-						   class="selectgroup-input" {{ old('status') == 0 ? 'checked' : ''}}>
-					<span class="selectgroup-button">@lang('OFF')</span>
-				</label>
-				<label class="selectgroup-item">
-					<input type="radio" name="status" value="1"
-						   class="selectgroup-input" {{ old('status') == 1 ? 'checked' : ''}}>
-					<span class="selectgroup-button">@lang('ON')</span>
-				</label>
 			</div>
 		</div>
 	</div>

@@ -121,49 +121,72 @@
 
 																			<td data-label="Status">
 																				@if(($shipment->status == 0) || ($shipment->status == 5 && $shipment->assign_to_collect != null))
-																					<span
-																						class="badge badge-dark rounded">@lang('Requested')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-dark"></i>
+																						@lang('Requested')
+																					</span>
 																				@elseif($shipment->status == 6)
-																					<span
-																						class="badge badge-danger rounded">@lang('Canceled')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-danger"></i>
+																						@lang('Canceled')
+																					</span>
 																				@elseif($shipment->status == 1)
-																					<span
-																						class="badge badge-info rounded">@lang('In Queue')</span>
-																					{{--																					optional(auth()->guard('admin')->user()->branch)->branch_id--}}
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-info"></i>
+																						@lang('In Queue')
+																					</span>
 																				@elseif(($shipment->status == 2) && ($status == 'dispatch'))
-																					<span
-																						class="badge badge-warning rounded">@lang('Dispatch')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-warning"></i>
+																						@lang('Dispatch')
+																					</span>
 																				@elseif($shipment->status == 2 && $status == 'upcoming')
-																					<span
-																						class="badge badge-indigo rounded">@lang('Upcoming')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-indigo"></i>
+																						@lang('Upcoming')
+																					</span>
 																				@elseif(($shipment->status == 3) || ($shipment->status == 7 && $shipment->assign_to_delivery != null))
-																					<span
-																						class="badge badge-success rounded">@lang('Received')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-success"></i>
+																						@lang('Received')
+																					</span>
 																				@elseif($shipment->status == 4)
-																					<span
-																						class="badge badge-danger rounded">@lang('Delivered')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-danger"></i>
+																						@lang('Delivered')
+																					</span>
 																				@elseif($shipment->status == 8)
-																					<span
-																						class="badge badge-info rounded">@lang('Return In Queue')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-info"></i>
+																						@lang('Return In Queue')
+																					</span>
 																				@elseif(($shipment->status == 9) && ($status == 'return_in_dispatch'))
-																					<span
-																						class="badge badge-warning rounded">@lang('Return In Dispatch')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-warning"></i>
+																						@lang('Return In Dispatch')
+																					</span>
 																				@elseif($shipment->status == 9 && $status == 'return_in_upcoming')
-																					<span
-																						class="badge badge-indigo rounded">@lang('Return In Upcoming')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-indigo"></i>
+																						@lang('Return In Upcoming')
+																					</span>
 																				@elseif($shipment->status == 10 && $status == 'return_in_received')
-																					<span
-																						class="badge badge-success rounded">@lang('Return Received')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-success"></i>
+																						@lang('Return Received')
+																					</span>
 																				@elseif($shipment->status == 11 && $status == 'return_in_delivered')
-																					<span
-																						class="badge badge-danger rounded">@lang('Return Delivered')</span>
+																					<span class="badge badge-light">
+            																			<i class="fa fa-circle text-danger"></i>
+																						@lang('Return Delivered')
+																					</span>
 																				@endif
 																			</td>
 
 																			<td data-label="@lang('Action')">
 																				<div class="btn-group">
 																					<button type="button"
-																							class="btn btn-primary btn-sm dropdown-toggle"
+																							class="btn btn-outline-primary btn-sm dropdown-toggle"
 																							data-toggle="dropdown"
 																							aria-haspopup="true"
 																							aria-expanded="false">
@@ -331,8 +354,11 @@
 																		</tr>
 																	@empty
 																		<tr>
-																			<th colspan="100%"
-																				class="text-center">@lang('No data found')</th>
+																			<td colspan="100%" class="text-center p-2">
+																				<img class="not-found-img"
+																					 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+																					 alt="">
+																			</td>
 																		</tr>
 																	@endforelse
 																	</tbody>

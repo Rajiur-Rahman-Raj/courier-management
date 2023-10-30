@@ -2775,10 +2775,31 @@ tr {
 
 /* wallet css */
 #content .balance-box {
-	background: var(--gradient);
+	/*background: var(--gradient);*/
+	background: var(--white);
 	color: var(--white);
-	position: relative;
 	border-radius: 10px;
+	position: relative;
+}
+#content .balance-box::before{
+content: "";
+position: absolute;
+width: 180px;
+/*height: 168px;*/
+/*left: 0;*/
+height: 100%;
+/*left: 5px;*/
+	right: 0;
+top: 50%;
+	background: rgb(255, 220, 57, 0.1);
+-webkit-transform: translateY(-50%);
+-ms-transform: translateY(-50%);
+transform: translateY(-50%);
+/*-webkit-border-radius: 50%;*/
+/*border-radius: 50%;*/
+	border-top-left-radius: 90%;
+	border-bottom-left-radius: 90%;
+overflow: hidden;
 }
 
 .user-account-number {
@@ -2795,10 +2816,11 @@ tr {
 }
 
 .balance-box .cash-in {
-	background-color: var(--white);
+	position: absolute;
+	background-color: #ffe984;
 	padding: 5px 15px;
 	border-radius: 5px;
-	color: var(--primary);
+	color: #fffffe;
 	font-size: 14px;
 	font-family: "Jost", sans-serif;
 	font-weight: 400;
@@ -2806,8 +2828,13 @@ tr {
 	align-items: center;
 	cursor: pointer;
 	height: 35px;
-	position: relative;
+	/*position: relative;*/
 	z-index: 1;
+	right: 15px;
+	top: 110px;
+}
+.balance-box .cash-in:hover{
+	color: black !important;
 }
 .balance-box .cash-in i {
 	font-size: 13px !important;
@@ -2849,8 +2876,8 @@ tr {
 	content: "";
 	position: absolute;
 	width: 230px;
-	height: 168px;
-	left: 0;
+	/*height: 168px;*/
+	/*left: 0;*/
 	height: 110%;
 	left: 5px;
 	top: 50%;
@@ -3449,7 +3476,7 @@ tr {
 	#content .table tbody tr td {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: center;
 		border-bottom: none !important;
 		margin: 0 !important;
 		padding: 10px 15px;
@@ -4353,13 +4380,13 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	font-family: "Urbanist", sans-serif;
 }
 .package .package-box .payment-details .location h4 span {
-	text-transform: uppercase;
+	text-transform: capitalize;
 }
 .package .package-box .payment-details .location h5 {
 	color: #666a6b;
 }
 .package .package-box .payment-details .location h5 span {
-	text-transform: uppercase;
+	text-transform: capitalize;
 }
 .package .package-box .payment-details .down-icon {
 	position: relative;
@@ -4788,7 +4815,7 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 .content_404_subtitle{
 
 }
-.no-data-img {
-	width: 200px !important;
-	object-fit: contain;
+
+.not-found-img{
+	width: 50px;
 }

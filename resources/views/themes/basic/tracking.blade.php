@@ -191,7 +191,7 @@
 								</div>
 								<div class="col-sm-4 ">
 									<div class="delivery-type">
-										<h4>@lang('Delivery Type')</h4>
+										<h4>@lang('Shipment Type')</h4>
 										<h4>{{ formatedShipmentType($shipment->shipment_type) }}</h4>
 									</div>
 								</div>
@@ -383,7 +383,7 @@
 								</div>
 								<div class="col-sm-4 ">
 									<div class="delivery-type">
-										<h4>@lang('Delivery Type')</h4>
+										<h4>@lang('Shipment Type')</h4>
 										<h4>{{ formatedShipmentType($shipment->shipment_type) }}</h4>
 									</div>
 								</div>

@@ -156,9 +156,9 @@ class Shipment extends Model
 
 	public function shipmentElapsedTime(){
 		$todayDate = now();
-		$shipmentDate = $this->shipment_date;
+		$createdDate = $this->created_at;
 		$datetime1 = new DateTime($todayDate);
-		$datetime2 = new DateTime($shipmentDate);
+		$datetime2 = new DateTime($createdDate);
 
 		$difference = $datetime1->diff($datetime2);
 

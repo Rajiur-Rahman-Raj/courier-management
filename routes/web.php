@@ -220,8 +220,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::put('parcel-service-update/{id}', [ParcelController::class, 'parcelServiceUpdate'])->name('parcelServiceUpdate');
 
 		// Manage Clients
-		Route::get('client-list', [ClientController::class, 'clientList'])->name('clientList');
-		Route::get('client-create', [ClientController::class, 'createClient'])->name('createClient');
+		Route::get('customer-list', [ClientController::class, 'clientList'])->name('clientList');
+		Route::get('customer-create', [ClientController::class, 'createClient'])->name('createClient');
 		Route::post('client-store', [ClientController::class, 'clientStore'])->name('clientStore');
 
 		Route::get('client-edit/{id}', [ClientController::class, 'clientEdit'])->name('clientEdit');

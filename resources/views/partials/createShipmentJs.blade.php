@@ -760,8 +760,6 @@
 				responseData.forEach(res => {
 					$('.getReceiver').append(`<option value="${res.id}">${res.name} (${res.username})</option>`)
 				})
-				jhon
-				(johndoe)
 				$('.getReceiver').prepend(`<option value="" selected disabled>@lang('Select Receiver')</option>`)
 			},
 			error: function (xhr, status, error) {

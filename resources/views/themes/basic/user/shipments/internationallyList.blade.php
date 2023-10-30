@@ -152,8 +152,12 @@
 									</tr>
 								@empty
 									<tr>
-										<th colspan="100%"
-											class="text-center">@lang('No data found')</th>
+										<td colspan="100%" class="text-center p-2">
+											<img class="not-found-img"
+												 src="{{ asset($themeTrue.'images/business.png') }}"
+												 alt="">
+
+										</td>
 									</tr>
 								@endforelse
 								</tbody>

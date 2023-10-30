@@ -37,13 +37,13 @@ class ClientController extends Controller
 			->when(isset($search['name']), function ($query) use ($search) {
 				return $query->whereRaw("name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");
 			})
-			->when(isset($search['phone']), function ($query) use ($search) {
-				return $query->whereHas('profile', function ($q) use ($search) {
-					$q->where('phone', $search['phone']);
+			->when(isset($search['branch']), function ($query) use ($search) {
+				return $query->whereHas('profile.branch', function ($q) use ($search){
+					$q->whereRaw("branch_name REGEXP '[[:<:]]{$search['branch']}[[:>:]]'");
 				});
 			})
-			->when(isset($search['email']), function ($q2) use ($search) {
-				return $q2->where('email', $search['email']);
+			->when(isset($search['created_at']), function ($query) use ($search) {
+				return $query->whereDate("created_at", $search['created_at']);
 			})
 			->when(isset($search['client_type']) && $search['client_type'] == 1, function ($q3) use ($search) {
 				return $q3->where('user_type', 1);

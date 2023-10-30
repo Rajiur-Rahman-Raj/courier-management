@@ -1,16 +1,20 @@
 @extends('admin.layouts.master')
-@section('page_title',__('Client List'))
+@section('page_title',__('Customer List'))
+
+@push('extra_styles')
+	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
+@endpush
 
 @section('content')
 	<div class="main-content">
 		<section class="section">
 			<div class="section-header">
-				<h1>@lang('Client List')</h1>
+				<h1>@lang('Customer List')</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active">
 						<a href="{{ route('admin.home') }}">@lang('Dashboard')</a>
 					</div>
-					<div class="breadcrumb-item">@lang('Client List')</div>
+					<div class="breadcrumb-item">@lang('Customer List')</div>
 				</div>
 			</div>
 
@@ -28,7 +32,7 @@
 										<div class="row">
 											<div class="col-md-2">
 												<div class="form-group">
-													<input placeholder="@lang('Name')" name="name"
+													<input placeholder="@lang('Customer Name')" name="name"
 														   value="{{ old('name',request()->name) }}"
 														   type="text"
 														   class="form-control form-control-sm">
@@ -37,23 +41,33 @@
 
 											<div class="col-md-2">
 												<div class="form-group">
-													<input placeholder="@lang('Phone')" name="phone"
-														   value="{{ old('phone',request()->phone) }}"
+													<input placeholder="@lang('Branch Name')" name="branch"
+														   value="{{ old('branch',request()->branch) }}"
 														   type="text" class="form-control form-control-sm">
 												</div>
 											</div>
 
-											<div class="col-md-2">
-												<div class="form-group">
-													<input placeholder="@lang('E-mail')" name="email"
-														   value="{{ old('email',request()->email) }}"
-														   type="text" class="form-control form-control-sm">
+											<div class="col-sm-12 col-md-2 input-box">
+												<div class="input-group flatpickr">
+													<input type="date" placeholder="@lang('Join Date')"
+														   class="form-control transaction_date" name="created_at" id="created_at"
+														   value="{{ old('created_at', request()->created_at) }}" data-input/>
+													<div class="input-group-append" readonly="">
+														<div class="form-control">
+															<a class="input-button cursor-pointer" title="clear" data-clear>
+																<i class="fas fa-times"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+												<div class="invalid-feedback d-block">
+													@error('created_at') @lang($message) @enderror
 												</div>
 											</div>
 
 											<div class="col-md-2">
 												<div class="form-group search-currency-dropdown">
-													<select name="client_type" class="form-control form-control-sm">
+													<select name="client_type" class="form-control form-control-sm select2">
 														<option value="all">@lang('All Types')</option>
 														<option
 															value="1" {{  request()->client_type == 1 ? 'selected' : '' }}>@lang('Sender/Customer')</option>
@@ -65,7 +79,7 @@
 
 											<div class="col-md-2">
 												<div class="form-group search-currency-dropdown">
-													<select name="status" class="form-control form-control-sm">
+													<select name="status" class="form-control form-control-sm select2">
 														<option value="all">@lang('All Status')</option>
 														<option
 															value="active" {{  request()->status == 'active' ? 'selected' : '' }}>@lang('Active')</option>
@@ -93,12 +107,12 @@
 							<div class="card mb-4 card-primary shadow">
 								<div
 									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-									<h6 class="m-0 font-weight-bold text-primary">@lang('Client List')</h6>
-									@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.add')))
+									<h6 class="m-0 font-weight-bold text-primary">@lang('Customer List')</h6>
+									@if(adminAccessRoute(config('permissionList.Manage_Customers.Customer_List.permission.add')))
 										@if($authenticateUser->branch != null || $authenticateUser->role_id == null)
 											<a href="{{ route('createClient') }}"
 											   class="btn btn-sm btn-outline-primary"><i
-													class="fas fa-plus-circle"></i> @lang('Create New Client')</a>
+													class="fas fa-plus-circle"></i> @lang('Create New Customer')</a>
 										@endif
 									@endif
 								</div>
@@ -109,12 +123,12 @@
 											<thead class="thead-light">
 											<tr>
 												<th>@lang('Name')</th>
-												<th>@lang('Phone')</th>
-												<th>@lang('Email')</th>
+												<th>@lang('Branch')</th>
+
 												<th>@lang('Join date')</th>
 												<th>@lang('User Type')</th>
 												<th>@lang('Status')</th>
-												@if(adminAccessRoute(array_merge(config('permissionList.Manage_Clients.Client_List.permission.edit'), config('permissionList.Manage_Clients.Client_List.permission.delete'), config('permissionList.Manage_Clients.Client_List.permission.show_profile'), config('permissionList.Manage_Clients.Client_List.permission.login_as'))))
+												@if(adminAccessRoute(array_merge(config('permissionList.Manage_Customers.Customer_List.permission.edit'), config('permissionList.Manage_Customers.Customer_List.permission.delete'), config('permissionList.Manage_Customers.Customer_List.permission.show_profile'), config('permissionList.Manage_Customers.Customer_List.permission.login_as'))))
 													<th>@lang('Action')</th>
 												@endif
 											</tr>
@@ -145,40 +159,55 @@
 														</div>
 													</td>
 
-													<td data-label="@lang('Phone')">{{ optional($client->profile)->phone ?? __('N/A') }}</td>
-													<td data-label="@lang('Email')">{{ $client->email }}</td>
+													<td data-label="@lang('Branch')">
+														<a href="{{ route('showBranchProfile', optional($client->profile->branch)->id) }}" target="_blank">@lang(optional($client->profile->branch)->branch_name)</a>
+													</td>
+
 													<td data-label="@lang('Join date')">{{ __(date('d M,Y - H:i a',strtotime($client->created_at))) }}</td>
+
 													<td data-label="@lang('Status')">
 														@if($client->user_type == 1)
-															<span
-																class="badge badge-primary">@lang('Sender')</span>
+
+															<span class="badge badge-light">
+            															<i class="fa fa-circle text-primary"></i>
+																		@lang('Sender')
+																	</span>
 														@else
-															<span class="badge badge-info">@lang('Receiver')</span>
+															<span class="badge badge-light">
+            															<i class="fa fa-circle text-warning"></i>
+																		@lang('Receiver')
+																	</span>
 														@endif
 													</td>
+
 													<td data-label="@lang('Status')">
 														@if($client->status)
-															<span class="badge badge-success">@lang('Active')</span>
+															<span class="badge badge-light">
+            															<i class="fa fa-circle text-success"></i>
+																		@lang('Active')
+																	</span>
 														@else
-															<span
-																class="badge badge-warning">@lang('Inactive')</span>
+															<span class="badge badge-light">
+            															<i class="fa fa-circle text-danger"></i>
+																		@lang('Deactive')
+																	</span>
 														@endif
 													</td>
-													@if(adminAccessRoute(array_merge(config('permissionList.Manage_Clients.Client_List.permission.edit'), config('permissionList.Manage_Clients.Client_List.permission.delete'), config('permissionList.Manage_Clients.Client_List.permission.show_profile'), config('permissionList.Manage_Clients.Client_List.permission.login_as'))))
+													@if(adminAccessRoute(array_merge(config('permissionList.Manage_Customers.Customer_List.permission.edit'), config('permissionList.Manage_Customers.Customer_List.permission.delete'), config('permissionList.Manage_Customers.Customer_List.permission.show_profile'), config('permissionList.Manage_Customers.Customer_List.permission.login_as'))))
 														<td data-label="@lang('Action')">
-															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.edit')))
+															@if(adminAccessRoute(config('permissionList.Manage_Customers.Customer_List.permission.edit')))
 																<a href="{{ route('clientEdit',$client->id) }}"
 																   class="btn btn-sm btn-outline-primary mb-1"><i
 																		class="fas fa-edit"></i> @lang('Edit')</a>
 															@endif
-															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.show_profile')))
+															@if(adminAccessRoute(config('permissionList.Manage_Customers.Customer_List.permission.show_profile')))
 																<a href="{{ route('client.edit', $client) }}"
 																   class="btn btn-sm btn-outline-primary mb-1"><i
 																		class="fas fa-user"></i> @lang('Profile')
 																</a>
 															@endif
 
-															@if(adminAccessRoute(config('permissionList.Manage_Clients.Client_List.permission.login_as')))
+															@if(adminAccessRoute(config('permissionList.Manage_Customers.Customer_List.permission.login_as')))
 																<a href="{{ route('user.clientLogin',$client) }}"
 																   class="btn btn-sm btn-outline-dark mb-1"><i
 																		class="fas fa-sign-in-alt"></i> @lang('Login')
@@ -189,8 +218,12 @@
 												</tr>
 											@empty
 												<tr>
-													<th colspan="100%"
-														class="text-center">@lang('No data found')</th>
+													<td colspan="100%" class="text-center p-2">
+														<img class="not-found-img"
+															 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
+															 alt="">
+
+													</td>
 												</tr>
 											@endforelse
 
@@ -207,5 +240,21 @@
 
 		</section>
 	</div>
+@endsection
 
+@push('extra_scripts')
+	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
+@endpush
+
+@section('scripts')
+	<script>
+		'use strict'
+		$(document).ready(function () {
+			$(".flatpickr").flatpickr({
+				wrap: true,
+				altInput: true,
+				dateFormat: "Y-m-d H:i",
+			});
+		})
+	</script>
 @endsection

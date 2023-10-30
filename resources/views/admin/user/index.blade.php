@@ -148,8 +148,8 @@
 
 		</section>
 	</div>
-
 @endsection
+
 @push('extra_scripts')
 	<script src="{{ asset('assets/dashboard/js/flatpickr.js') }}"></script>
 @endpush

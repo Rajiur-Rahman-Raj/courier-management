@@ -1,18 +1,18 @@
 @extends('admin.layouts.master')
 
-@section('title')
-	@lang('Create Client')
+@section('page_title')
+	@lang('Create Customer')
 @endsection
 
 @section('content')
 	<div class="main-content">
 		<section class="section">
 			<div class="section-header">
-				<h1>@lang("Create New Client")</h1>
+				<h1>@lang("Create New Customer")</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active"><a href="{{ route('admin.home') }}">@lang("Dashboard")</a></div>
-					<div class="breadcrumb-item"><a href="{{route('clientList')}}">@lang("Client List")</a></div>
-					<div class="breadcrumb-item">@lang("Create Client")</div>
+					<div class="breadcrumb-item"><a href="{{route('clientList')}}">@lang("Customer List")</a></div>
+					<div class="breadcrumb-item">@lang("Create Customer")</div>
 				</div>
 			</div>
 		</section>
@@ -22,7 +22,7 @@
 				<div class="col-12 col-md-12 col-lg-12">
 					<div class="card mb-4 card-primary shadow-sm">
 						<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-							<h5>@lang("Create Client")</h5>
+							<h5>@lang("Create Customer")</h5>
 
 							<a href="{{route('clientList')}}" class="btn btn-sm  btn-primary mr-2">
 								<span><i class="fas fa-arrow-left"></i> @lang('Back')</span>
@@ -177,9 +177,7 @@
 									<div class="col-sm-12 col-md-12 mb-3">
 										<label for="address"> @lang('Address') </label>
 										<textarea class="form-control @error(' ') is-invalid @enderror" name="address"
-												  rows="5" value="{{ old('address') }}">
-											{{old('address')}}
-										</textarea>
+												  rows="5" value="{{ old('address') }}">{{old('address')}}</textarea>
 
 										<div class="invalid-feedback d-block">
 											@error('address') @lang($message) @enderror
@@ -190,7 +188,7 @@
 								<div class="row">
 									<div class="col-sm-12 col-md-3">
 										<div class="form-group mb-4">
-											<label class="col-form-label">@lang("Client Photo")</label>
+											<label class="col-form-label">@lang("Photo")</label>
 											<div id="image-preview" class="image-preview"
 												 style="background-image: url({{ getFile(config('location.category.path'))}}">
 												<label for="image-upload"
@@ -211,7 +209,7 @@
 												<input type="radio" name="client_type" value="1"
 													   class="selectgroup-input"
 													   checked {{ old('client_type') == 1 ? 'checked' : ''}}>
-												<span class="selectgroup-button">@lang('Sender/Customer')</span>
+												<span class="selectgroup-button">@lang('Sender')</span>
 											</label>
 											<label class="selectgroup-item">
 												<input type="radio" name="client_type" value="2"

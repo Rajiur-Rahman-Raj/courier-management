@@ -390,7 +390,7 @@ class ShipmentController extends Controller
 		$data['packageList'] = Package::where('status', 1)->get();
 		$data['parcelTypes'] = ParcelType::where('status', 1)->get();
 
-		$data['singleShipment'] = Shipment::findOrFail($id);
+		$data['singleShipment'] = Shipment::with('sender')->findOrFail($id);
 		$data['shipmentAttatchments'] = ShipmentAttatchment::where('shipment_id', $id)->get()->map(function ($image) {
 			$image->src = getFile($image->driver, $image->image);
 			return $image;

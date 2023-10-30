@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title')
+@section('page_title')
 	@lang('Create Branch Driver')
 @endsection
 

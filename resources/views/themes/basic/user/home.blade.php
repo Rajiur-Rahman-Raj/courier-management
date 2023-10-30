@@ -11,7 +11,7 @@
 		<div class="main row">
 			<div class="col-12">
 				<div class="d-flex justify-content-between align-items-center mb-4">
-					<h2 class="mb-0">@lang('Dashboard')</h2>
+					<h3 class="mb-0">@lang('Dashboard')</h3>
 				</div>
 
 				<div class="col-12">
@@ -22,25 +22,25 @@
 									<i class="account-wallet far fa-wallet"></i>
 									<div class="mb-4 d-flex justify-content-between">
 										<div>
-											<h5 class="text-white mb-2">
+											<h5 class="text-black mb-2">
 												@lang('Current Balance')
 											</h5>
 											<h3>
                                         <span
-											class="text-white"><small><sup>{{trans(config('basic.currency_symbol'))}}</sup></small>{{getAmount($walletBalance, config('basic.fraction_number'))}}</span>
+											class="text-black"><small><sup>{{trans(config('basic.currency_symbol'))}}</sup></small>{{getAmount($walletBalance, config('basic.fraction_number'))}}</span>
 											</h3>
 										</div>
 
-										<a href="{{ route('fund.initialize') }}" class="cash-in text-warning"><i
-												class="fal fa-plus me-1 text-warning"></i> @lang('Cash In')</a>
+										<a href="{{ route('fund.initialize') }}" class="cash-in text-black"><i
+												class="fal fa-plus me-1 text-black"></i> @lang('Cash In')</a>
 									</div>
 									<div class="d-flex justify-content-between">
 										<div>
-											<h5 class="text-white mb-2">
+											<h5 class="text-black mb-2">
 												@lang('Total Deposit')
 											</h5>
 											<h3><span
-													class="text-white otal_available__balance"><small><sup>{{trans(config('basic.currency_symbol'))}}</sup></small>{{getAmount($totalDeposit, config('basic.fraction_number'))}}</span>
+													class="text-black otal_available__balance"><small><sup>{{trans(config('basic.currency_symbol'))}}</sup></small>{{getAmount($totalDeposit, config('basic.fraction_number'))}}</span>
 											</h3>
 										</div>
 									</div>
@@ -165,6 +165,9 @@
 
 				<!-- table -->
 				<div class="table-parent table-responsive mt-5">
+					<div class="d-flex justify-content-between align-items-center mb-4">
+						<h4 class="mb-0 font-weight-bold">@lang(' Latest Shipments')</h4>
+					</div>
 					<table class="table table-striped">
 						<thead>
 						<tr>
@@ -248,16 +251,15 @@
 								</td>
 							</tr>
 						@empty
-
 							<tr>
-								<th
-									colspan="100%" class="text-center bg-white">
-									<img src="{{ asset($themeTrue.'images/business.png') }}" alt="">
-								</th>
+								<td colspan="100%" class="text-center p-2">
+									<img class="not-found-img"
+										 src="{{ asset($themeTrue.'images/business.png') }}"
+										 alt="">
+
+								</td>
 							</tr>
 						@endforelse
-
-
 						</tbody>
 					</table>
 				</div>

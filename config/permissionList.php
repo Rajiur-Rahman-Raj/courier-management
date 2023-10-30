@@ -206,8 +206,8 @@ $arr = [
 		],
 	],
 
-	'Manage_Clients' => [
-		"Client_List" => [
+	'Manage_Customers' => [
+		"Customer_List" => [
 			'permission' => [
 				'view' => ['clientList'],
 				'add' => ['createClient', 'clientStore'],

@@ -117,7 +117,7 @@
 																					<th>@lang('Login As')</th>
 																				@endif
 
-																				@if($key1 == 'Manage_Clients')
+																				@if($key1 == 'Manage_Customers')
 																					<th>@lang('Profile')</th>
 																					<th>@lang('Login As')</th>
 																				@endif
@@ -397,7 +397,7 @@
 																						</td>
 																					@endif
 
-																					@if($key2 == 'Client_List')
+																					@if($key2 == 'Customer_List')
 																						<td data-label="Profile">
 																							@if(!empty($subMenu['permission']['show_profile']))
 																								<input type="checkbox"

@@ -206,7 +206,6 @@ class BranchController extends Controller
 
 	public function branchManagerList(Request $request)
 	{
-
 		$search = $request->all();
 
 		$data['allBranchManagers'] = BranchManager::with('branch', 'admin')

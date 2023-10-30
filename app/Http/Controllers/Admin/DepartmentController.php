@@ -15,7 +15,6 @@ class DepartmentController extends Controller
 
 	public function departmentList(Request $request)
 	{
-
 		$search = $request->all();
 		$data['allDepartments'] = Department::when(isset($search['name']), function ($query) use ($search) {
 			return $query->whereRaw("name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");

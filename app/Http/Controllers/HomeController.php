@@ -188,6 +188,7 @@ class HomeController extends Controller
 
 		$data['allShipments'] = Shipment::with('senderBranch.branchManager', 'receiverBranch', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea')
 			->where('sender_id', $user->id)
+			->latest()
 			->paginate(config('basic.paginate'));
 
 		return view($this->theme . 'user.home', $data);
@@ -429,7 +430,7 @@ class HomeController extends Controller
 	}
 
 	public function receiverCreate(){
-		$data['allBranches'] = Branch::where('status', 1)->latest()->get();
+		$data['allBranches'] = Branch::where('status', 1)->get();
 		$data['allCountries'] = Country::where('status', 1)->get();
 		return  view($this->theme . 'user.receiver.create', $data);
 	}
