@@ -141,7 +141,6 @@
 					toAreaId: toAreaId,
 				},
 				success: function (response) {
-					console.log(response);
 						let responseData = response;
 						let shippingCost = parseFloat(responseData.shipping_cost);
 						let returnShipmentCost = parseFloat(responseData.return_shipment_cost);

@@ -129,12 +129,6 @@
             }
         }
     });
-
-	{{--$(document).ready(function () {--}}
-	{{--	$(".language").find("select").change(function () {--}}
-	{{--		window.location.href = "{{route('language')}}/" + $(this).val()--}}
-	{{--	})--}}
-	{{--})--}}
 </script>
 
 @stack('script')

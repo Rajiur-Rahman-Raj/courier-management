@@ -128,12 +128,14 @@
 	<div class="row">
 		@if($singleShipment->shipment_by)
 			<div class="col-sm-12 col-md-3 mb-3">
-				<label for="sender_id"> @lang('Sender') </label>
-				<input type="text" name="sender_id"
-					   class="form-control @error("sender_id") is-invalid @enderror"
-					   value="{{ old("sender_id", optional($singleShipment->sender)->name) }}" required>
+				<label for="sender_id"> @lang('Sender')</label>
+				<select name="sender_id"
+						class="form-control @error('sender_id') is-invalid @enderror select2 select-client getSender">
+					<option value="{{ optional($singleShipment->sender)->id }}">@lang(optional($singleShipment->sender)->name)</option>
+				</select>
+
 				<div class="invalid-feedback">
-					@error("sender_id") @lang($message) @enderror
+					@error('sender_id') @lang($message) @enderror
 				</div>
 			</div>
 		@else
@@ -687,7 +689,7 @@
 
 
 	<div class="row">
-		<div class="col-sm-12 col-md-7">
+		<div class="col-sm-12 col-md-12">
 			<div class="form-group mb-4">
 				<label class="col-form-label">@lang("Attatchments")</label>
 				<div class="shipment_image"></div>
@@ -697,22 +699,6 @@
 			</div>
 		</div>
 
-
-		<div class="col-md-5 form-group">
-			<label>@lang('Status')</label>
-			<div class="selectgroup w-100">
-				<label class="selectgroup-item">
-					<input type="radio" name="status" value="0"
-						   class="selectgroup-input" {{ old('status', $singleShipment->status) == 0 ? 'checked' : ''}}>
-					<span class="selectgroup-button">@lang('OFF')</span>
-				</label>
-				<label class="selectgroup-item">
-					<input type="radio" name="status" value="1"
-						   class="selectgroup-input" {{ old('status', $singleShipment->status) == 1 ? 'checked' : ''}}>
-					<span class="selectgroup-button">@lang('ON')</span>
-				</label>
-			</div>
-		</div>
 	</div>
 
 

@@ -11,7 +11,8 @@
 				<h1>@lang("Edit Branch Manager")</h1>
 				<div class="section-header-breadcrumb">
 					<div class="breadcrumb-item active"><a href="{{ route('admin.home') }}">@lang("Dashboard")</a></div>
-					<div class="breadcrumb-item"><a href="{{route('branchManagerList')}}">@lang("Branch Manager List")</a></div>
+					<div class="breadcrumb-item"><a
+							href="{{route('branchManagerList')}}">@lang("Branch Manager List")</a></div>
 					<div class="breadcrumb-item">@lang("Edit Branch Manager")</div>
 				</div>
 			</div>
@@ -28,16 +29,20 @@
 							</a>
 						</div>
 						<div class="card-body">
-							<form method="post" action="{{ route('branchManagerUpdate', $singleBranchManagerInfo->id) }}"
+							<form method="post"
+								  action="{{ route('branchManagerUpdate', $singleBranchManagerInfo->id) }}"
 								  class="mt-4" enctype="multipart/form-data">
 								@csrf
 								<div class="row mb-3">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="branch_id"> @lang('Select Branch') <span class="text-danger">*</span></label>
-										<select name="branch_id" class="form-control @error('branch_id') is-invalid @enderror">
+										<label for="branch_id"> @lang('Select Branch') <span
+												class="text-danger">*</span></label>
+										<select name="branch_id"
+												class="form-control @error('branch_id') is-invalid @enderror">
 											<option value="" disabled selected>@lang('Select Branch')</option>
 											@foreach($allBranches as $branch)
-												<option value="{{ $branch->id }}" {{ $singleBranchManagerInfo->branch_id == $branch->id ? 'selected' : ''}}>@lang($branch->branch_name)</option>
+												<option
+													value="{{ $branch->id }}" {{ $singleBranchManagerInfo->branch_id == $branch->id ? 'selected' : ''}}>@lang($branch->branch_name)</option>
 											@endforeach
 										</select>
 
@@ -50,10 +55,13 @@
 
 								<div class="row mb-3">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="role_id"> @lang('Select Role') <span class="text-danger">*</span></label>
-										<select name="role_id" class="form-control @error('role_id') is-invalid @enderror select2 selectRole">
+										<label for="role_id"> @lang('Select Role') <span
+												class="text-danger">*</span></label>
+										<select name="role_id"
+												class="form-control @error('role_id') is-invalid @enderror select2 selectRole">
 											@foreach($allRoles as $role)
-												<option value="{{ $role->id }}" {{ $singleBranchManagerInfo->role_id == $role->id ? 'selected' : '' }}>@lang($role->name)</option>
+												<option
+													value="{{ $role->id }}" {{ $singleBranchManagerInfo->role_id == $role->id ? 'selected' : '' }}>@lang($role->name)</option>
 											@endforeach
 										</select>
 
@@ -66,10 +74,14 @@
 
 								<div class="row mb-3">
 									<div class="col-sm-12 col-md-12 mb-3">
-										<label for="branch_manager_id"> @lang('Select Manager') <span class="text-danger">*</span></label>
-										<select name="branch_manager_id" class="form-control @error('branch_manager_id') is-invalid @enderror select2 branchManager"  id="branchManager">
+										<label for="branch_manager_id"> @lang('Select Manager') <span
+												class="text-danger">*</span></label>
+										<select name="branch_manager_id"
+												class="form-control @error('branch_manager_id') is-invalid @enderror select2 branchManager"
+												id="branchManager">
 											@foreach($allManagers as $manager)
-												<option value="{{ $manager->id }}" {{ $singleBranchManagerInfo->admin_id == $manager->id ? 'selected' : '' }}>@lang($manager->name)</option>
+												<option
+													value="{{ $manager->id }}" {{ $singleBranchManagerInfo->admin_id == $manager->id ? 'selected' : '' }}>@lang($manager->name)</option>
 											@endforeach
 										</select>
 
@@ -110,7 +122,8 @@
 								<div class="row">
 									<div class="col-sm-12 col-md-12 my-3">
 										<div class="form-group ">
-											<label for="address"> @lang('Address') <span class="text-danger">*</span> </label>
+											<label for="address"> @lang('Address') <span class="text-danger">*</span>
+											</label>
 
 											<textarea class="form-control @error('address') is-invalid @enderror"
 													  name="address" rows="5"
@@ -200,7 +213,7 @@
 					});
 				});
 
-				$('.selectRole').on('change', function (){
+				$('.selectRole').on('change', function () {
 					let selectedValue = $(this).val();
 					getSeletedRoleUser(selectedValue);
 				})
@@ -234,7 +247,7 @@
 				}
 
 
-				$('.branchManager').on('change', function (){
+				$('.branchManager').on('change', function () {
 					let selectedValue = $(this).val();
 					getSeletedRoleUserInfo(selectedValue);
 				})

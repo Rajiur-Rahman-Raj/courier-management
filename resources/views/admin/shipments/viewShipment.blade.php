@@ -418,7 +418,7 @@
 											@if($singleShipment->parcel_information != null)
 												<li class="my-3">
 													<span class="custom-text"><i
-															class="fas fa-check-circle mr-2 text-success"></i>  @lang('Parcel Details')</span>
+															class="fas fa-check-circle mr-2 text-success"></i>  @lang('Parcel Details') </span>
 												</li>
 
 												<table class="table table-bordered">
@@ -504,17 +504,6 @@
 												<span class="font-weight-bold text-dark"> <i
 														class="fas fa-credit-card mr-2 text-primary"></i> @lang('Payment Calculation')</span>
 											</li>
-											@if($singleShipment->discount != null)
-												<li class="my-3 ">
-                                            <span class="custom-text"><i
-													class="fas fa-dollar-sign mr-2 text-warning"></i>  @lang('Discount') :
-												<span
-													class="font-weight-medium">{{ $basic->currency_symbol }}@lang($singleShipment->discount_amount)</span>
-
-                                            </span>
-												</li>
-											@endif
-
 											<li class="my-3">
                                             <span class="custom-text"> <i
 													class="fas fa-dollar-sign mr-2 text-primary"></i> @lang('Sub Total') :
@@ -523,6 +512,19 @@
 
                                             </span>
 											</li>
+
+											@if($singleShipment->discount != null)
+												<li class="my-3 ">
+                                            <span class="custom-text"><i
+													class="fas fa-dollar-sign mr-2 text-warning"></i>  @lang('Discount') :
+												<span
+													class="font-weight-medium">{{ $basic->currency_symbol }}{{$singleShipment->discount_amount}}</span>
+
+                                            </span>
+												</li>
+											@endif
+
+
 											@if($singleShipment->shipment_type == 'pickup')
 												<li class="my-3">
                                             <span class="custom-text"><i
@@ -600,10 +602,6 @@
 			document.getElementById('body').innerHTML = allContents;
 		})
 
-		$(document).on('click', '.confirmButton,f.returnButton', function () {
-			let submitUrl = $(this).data('route');
-			$('#confirmForm').attr('action', submitUrl)
-		})
 	</script>
 @endsection
 

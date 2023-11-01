@@ -21,6 +21,7 @@ class AdminTransactionController extends Controller
 
 		$search = $filterData['search'];
 		$transactions = $filterData['transactions']
+			->whereNotNull('shipment_type')
 			->latest()
 			->paginate(config('basic.paginate'));
 

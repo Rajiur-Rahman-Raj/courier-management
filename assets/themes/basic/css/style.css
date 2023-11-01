@@ -31,7 +31,7 @@
 	position: fixed;
 	width: 100%;
 	height: 100vh;
-	background: #ffffff url(../images/preloader/Disk-1s-200px.svg) no-repeat center;
+	background: #ffffff url(../images/preloader/preloader.svg) no-repeat center;
 	z-index: 99999;
 	background-size: 20%;
 }
@@ -1119,7 +1119,7 @@ section {
 }
 
 .accordion-button::after {
-	background: url(../images/accordion/plus.png);
+	background: url(../images/plus.png);
 	width: 35px;
 	height: 35px;
 	background-color: var(--theme_color);
@@ -1130,7 +1130,7 @@ section {
 }
 
 .accordion-button:not(.collapsed)::after {
-	background: url(../images/accordion/minus.png);
+	background: url(../images/minus.png);
 	width: 35px;
 	height: 35px;
 	background-color: var(--theme_color);
@@ -1139,7 +1139,6 @@ section {
 	background-position: center;
 	border-radius: 50%;
 }
-
 /* faq_area_end */
 
 /* blog_area_start */
@@ -1564,7 +1563,7 @@ tr {
 }
 
 .form-select {
-	background-image: url(../images/shipment_calculator/downward-arrow.png);
+	background-image: url(../images/shipment-calculator-arrow.png);
 	background-repeat: no-repeat;
 }
 
@@ -3476,7 +3475,16 @@ overflow: hidden;
 	#content .table tbody tr td {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
+		border-bottom: none !important;
+		margin: 0 !important;
+		padding: 10px 15px;
+		font-weight: 300;
+	}
+	.table-not-found{
+		display: flex;
+		align-items: center;
+		justify-content: center !important;
 		border-bottom: none !important;
 		margin: 0 !important;
 		padding: 10px 15px;
@@ -4460,13 +4468,13 @@ button.btn.btn-danger.delete_packing_desc.custom_delete_desc_padding {
 	font-family: "Urbanist", sans-serif;
 }
 .package .package-box .payment-details-2 .location h4 span {
-	text-transform: uppercase;
+	text-transform: capitalize;
 }
 .package .package-box .payment-details-2 .location h5 {
 	color: #666a6b;
 }
 .package .package-box .payment-details-2 .location h5 span {
-	text-transform: uppercase;
+	text-transform: capitalize;
 }
 .package .package-box .payment-details-2 .down-icon-2 {
 	position: relative;

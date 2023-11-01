@@ -140,6 +140,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		// Manage Shipments
 		Route::get('shipment-list/{shipment_status}/{shipment_type}', [ShipmentController::class, 'shipmentList'])->name('shipmentList');
 
+		Route::get('shipment-invoice/{id}', [ShipmentController::class, 'shipmentInvoice'])->name('shipmentInvoice');
+
 		Route::get('{shipment_type}/create-shipment', [ShipmentController::class, 'createShipment'])->name('createShipment');
 		Route::get('shipment/{id}/edit/{shipment_identifier}', [ShipmentController::class, 'editShipment'])->name('editShipment');
 		Route::get('view-shipment/{id}', [ShipmentController::class, 'viewShipment'])->name('viewShipment');
@@ -252,7 +254,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::post('department-store', [DepartmentController::class, 'departmentStore'])->name('departmentStore');
 		Route::get('department-edit/{id}', [DepartmentController::class, 'departmentEdit'])->name('departmentEdit');
 		Route::post('department-update/{id}', [DepartmentController::class, 'departmentUpdate'])->name('departmentUpdate');
-
 
 		/* USER LIST */
 		Route::get('user-list', [UserController::class, 'index'])->name('user-list');

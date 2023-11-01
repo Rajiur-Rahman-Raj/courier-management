@@ -14,7 +14,8 @@
 						<div class="row justify-content-md-center">
 							<div class="col-lg-6">
 								<div class="card mb-4 shadow card-primary">
-									<div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+									<div
+										class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
 										<h6 class="m-0 font-weight-bold text-dark">@lang('Preview Deposit')</h6>
 									</div>
 									<div class="card-body">

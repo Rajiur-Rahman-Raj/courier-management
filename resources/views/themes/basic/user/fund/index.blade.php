@@ -5,7 +5,6 @@
 	<link href="{{ asset('assets/dashboard/css/flatpickr.min.css') }}" rel="stylesheet">
 @endpush
 
-
 @section('content')
 	<!-- Main Content -->
 	<div class="container-fluid">

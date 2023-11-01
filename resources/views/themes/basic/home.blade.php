@@ -11,5 +11,4 @@
     @include($theme.'sections.how-it-work')
     @include($theme.'sections.faq')
     @include($theme.'sections.blog')
-{{--    @include($theme.'sections.we-accept')--}}
 @endsection

@@ -70,7 +70,8 @@
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label
-																for="operator_country">@lang('Operator Country') </label> <span><span class="">(@lang('Select the country from which you are handling your business'))</span></span>
+																for="operator_country">@lang('Operator Country') </label>
+															<span><span class="">(@lang('Select the country from which you are handling your business'))</span></span>
 															<select name="operator_country"
 																	class="select2-single form-control @error('operator_country') is-invalid @enderror"
 																	id="operator_country">
@@ -136,22 +137,36 @@
 															<select name="refund_time"
 																	class="select2-single form-control @error('refund_time') is-invalid @enderror"
 																	id="refund_time">
-																<option value="1_minute" {{ old('refund_time', $basicControl->refund_time == '1_minute' ? 'selected' : '') }}>@lang('1 minute')</option>
-																<option value="5_minute" {{ old('refund_time', $basicControl->refund_time == '5_minute' ? 'selected' : '') }}>@lang('5 minutes')</option>
-																<option value="10_minute" {{ old('refund_time', $basicControl->refund_time == '1_hour' ? 'selected' : '') }}>@lang('10 minutes')</option>
-																<option value="30_minute" {{ old('refund_time', $basicControl->refund_time == '10_minute' ? 'selected' : '') }}>@lang('30 minutes')</option>
-																<option value="1_hour" {{ old('refund_time', $basicControl->refund_time == '30_minute' ? 'selected' : '') }}>@lang('1 Hour')</option>
-																<option value="2_hour" {{ old('refund_time', $basicControl->refund_time == '2_hour' ? 'selected' : '') }}>@lang('2 Hours')</option>
-																<option value="3_hour" {{ old('refund_time', $basicControl->refund_time == '3_hour' ? 'selected' : '') }}>@lang('3 Hours')</option>
-																<option value="6_hour" {{ old('refund_time', $basicControl->refund_time == '6_hour' ? 'selected' : '') }}>@lang('6 Hours')</option>
-																<option value="12_hours {{ old('refund_time', $basicControl->refund_time == '12_hours' ? 'selected' : '') }}">@lang('12 Hours')</option>
-																<option value="1_day" {{ old('refund_time', $basicControl->refund_time == '1_day' ? 'selected' : '') }}>@lang('1 day')</option>
-																<option value="2_day" {{ old('refund_time', $basicControl->refund_time == '2_day' ? 'selected' : '') }}>@lang('2 days')</option>
-																<option value="3_day" {{ old('refund_time', $basicControl->refund_time == '3_day' ? 'selected' : '') }}>@lang('3 days')</option>
-																<option value="7_day" {{ old('refund_time', $basicControl->refund_time == '7_day' ? 'selected' : '') }}>@lang('7 days')</option>
+																<option
+																	value="1_minute" {{ old('refund_time', $basicControl->refund_time == '1_minute' ? 'selected' : '') }}>@lang('1 minute')</option>
+																<option
+																	value="5_minute" {{ old('refund_time', $basicControl->refund_time == '5_minute' ? 'selected' : '') }}>@lang('5 minutes')</option>
+																<option
+																	value="10_minute" {{ old('refund_time', $basicControl->refund_time == '1_hour' ? 'selected' : '') }}>@lang('10 minutes')</option>
+																<option
+																	value="30_minute" {{ old('refund_time', $basicControl->refund_time == '10_minute' ? 'selected' : '') }}>@lang('30 minutes')</option>
+																<option
+																	value="1_hour" {{ old('refund_time', $basicControl->refund_time == '30_minute' ? 'selected' : '') }}>@lang('1 Hour')</option>
+																<option
+																	value="2_hour" {{ old('refund_time', $basicControl->refund_time == '2_hour' ? 'selected' : '') }}>@lang('2 Hours')</option>
+																<option
+																	value="3_hour" {{ old('refund_time', $basicControl->refund_time == '3_hour' ? 'selected' : '') }}>@lang('3 Hours')</option>
+																<option
+																	value="6_hour" {{ old('refund_time', $basicControl->refund_time == '6_hour' ? 'selected' : '') }}>@lang('6 Hours')</option>
+																<option
+																	value="12_hours {{ old('refund_time', $basicControl->refund_time == '12_hours' ? 'selected' : '') }}">@lang('12 Hours')</option>
+																<option
+																	value="1_day" {{ old('refund_time', $basicControl->refund_time == '1_day' ? 'selected' : '') }}>@lang('1 day')</option>
+																<option
+																	value="2_day" {{ old('refund_time', $basicControl->refund_time == '2_day' ? 'selected' : '') }}>@lang('2 days')</option>
+																<option
+																	value="3_day" {{ old('refund_time', $basicControl->refund_time == '3_day' ? 'selected' : '') }}>@lang('3 days')</option>
+																<option
+																	value="7_day" {{ old('refund_time', $basicControl->refund_time == '7_day' ? 'selected' : '') }}>@lang('7 days')</option>
 															</select>
 
-															<div class="invalid-feedback">@error('operator_country') @lang($message) @enderror</div>
+															<div
+																class="invalid-feedback">@error('operator_country') @lang($message) @enderror</div>
 														</div>
 													</div>
 

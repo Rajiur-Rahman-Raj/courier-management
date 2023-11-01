@@ -89,7 +89,6 @@
     // for search
     $(document).on('input', '.global-search', function () {
         var search = $(this).val().toLowerCase();
-        console.log(search);
 
         if (search.length == 0) {
             $('.search-result').find('.content').html('');

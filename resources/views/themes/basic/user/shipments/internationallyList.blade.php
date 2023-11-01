@@ -97,6 +97,12 @@
 											@if($shipment->status == 0)
 												<span
 													class="badge text-bg-dark">@lang('Requested')</span>
+											@elseif($shipment->status == 6)
+												<span
+													class="badge text-bg-danger">@lang('Canceled')</span>
+											@elseif($shipment->status == 5 && $shipment->assign_to_collect != null)
+												<span
+													class="badge text-bg-primary">@lang('Assigned Driver For Pickup')</span>
 											@elseif($shipment->status == 1)
 												<span
 													class="badge text-bg-info">@lang('In Queue')</span>
@@ -105,13 +111,25 @@
 													class="badge text-bg-warning">@lang('Dispatch')</span>
 											@elseif($shipment->status == 3)
 												<span
-													class="badge text-bg-primary">@lang('Upcoming')</span>
+													class="badge text-bg-success">@lang('Received')</span>
+											@elseif($shipment->status == 7 && $shipment->assign_to_delivery != null)
+												<span
+													class="badge text-bg-primary">@lang('Delivery In Queue')</span>
 											@elseif($shipment->status == 4)
 												<span
-													class="badge text-bg-success">@lang('Received')</span>
-											@elseif($shipment->status == 5)
-												<span
 													class="badge text-bg-danger">@lang('Delivered')</span>
+											@elseif($shipment->status == 8)
+												<span
+													class="badge text-bg-info">@lang('Return In Queue')</span>
+											@elseif($shipment->status == 9)
+												<span
+													class="badge text-bg-warning">@lang('Return In Dispatch')</span>
+											@elseif($shipment->status == 10)
+												<span
+													class="badge text-bg-success">@lang('Return In Received')</span>
+											@elseif($shipment->status == 11)
+												<span
+													class="badge text-bg-danger">@lang('Return Delivered')</span>
 											@endif
 										</td>
 

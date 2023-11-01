@@ -17,7 +17,8 @@
 						<div class="blog_box box1">
 							<div class="thum_inner">
 								<div class="image_area">
-									<img src="{{ getFile($blog->driver, $blog->image) }}" alt="{{config('basic.site_title')}}">
+									<img src="{{ getFile($blog->driver, $blog->image) }}"
+										 alt="{{config('basic.site_title')}}">
 								</div>
 
 								<div class="date">
@@ -31,7 +32,8 @@
 								</h5>
 							</div>
 							<div class="btn_area">
-								<a href="{{route('blogDetails',[slug(optional($blog->details)->title), $blog->id])}}">@lang('READ MORE') <i class="fal fa-long-arrow-right"></i></a>
+								<a href="{{route('blogDetails',[slug(optional($blog->details)->title), $blog->id])}}">@lang('READ MORE')
+									<i class="fal fa-long-arrow-right"></i></a>
 							</div>
 						</div>
 					</div>

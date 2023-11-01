@@ -38,9 +38,6 @@
     </section>
 
 
-
-
-
     @push('loadModal')
         <div id="addFundModal" class="modal fade addFundModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -93,8 +90,6 @@
             </div>
         </div>
     @endpush
-
-
 @endsection
 
 

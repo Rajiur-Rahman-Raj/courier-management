@@ -132,7 +132,6 @@ class UserProfileController extends Controller
 		$rules = [
 			'name' => 'required',
 			'username' => "sometimes|required|alpha_dash|min:5|unique:users,username," . $user->id,
-			'language_id' => Rule::in($languages),
 		];
 		$message = [
 			'name.required' => 'Name field is required',
@@ -143,7 +142,7 @@ class UserProfileController extends Controller
 			$validator->errors()->add('profile', '1');
 			return back()->withErrors($validator)->withInput();
 		}
-		$user->language_id = $req['language_id'];
+
 		$user->name = $req['name'];
 		$user->username = $req['username'];
 		$user->email = $req['email'];

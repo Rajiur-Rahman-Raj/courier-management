@@ -67,7 +67,8 @@
 														<td>
 															<div class="social_area mt-50">
 																<ul class="d-flex">
-																	<li><a href="javascript:void(0)"><i class="{{ optional($value->contentMedia->description)->social_icon }}"></i></a>
+																	<li><a href="javascript:void(0)"><i
+																				class="{{ optional($value->contentMedia->description)->social_icon }}"></i></a>
 																	</li>
 																</ul>
 															</div>

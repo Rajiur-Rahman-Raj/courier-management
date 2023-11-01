@@ -22,4 +22,8 @@ class Branch extends Model
 	public function transaction(){
 		return $this->hasMany(Transaction::class, 'branch_id', 'id');
 	}
+
+	public function shipments(){
+		return $this->hasMany(Shipment::class, 'sender_branch', 'id');
+	}
 }

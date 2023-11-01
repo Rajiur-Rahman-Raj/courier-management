@@ -1,5 +1,5 @@
 @extends('admin.layouts.master')
-@section('title')
+@section('page_title')
 	@lang('Blog List')
 @endsection
 

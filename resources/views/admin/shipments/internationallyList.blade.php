@@ -181,6 +181,10 @@
 																						@lang('Options')
 																					</button>
 																					<div class="dropdown-menu">
+																						<a href="{{ route('shipmentInvoice', ['id' => $shipment->id, 'segment' => $status, 'shipment_type' => 'internationally']) }}"
+																						   class="dropdown-item btn-outline-primary btn-sm"><i
+																								class="fas fa-file-invoice mr-2"></i> @lang('Invoice')
+																						</a>
 																						@if(($shipment->status == 1) && ($status == 'in_queue' || $status == 'all') && (optional(optional($shipment->senderBranch)->branchManager)->admin_id == $authenticateUser->id || $authenticateUser->role_id == null))
 																							@if(adminAccessRoute(config('permissionList.Manage_Shipments.Shipment_List.permission.dispatch')))
 																								<a data-target="#updateShipmentStatus"
@@ -188,8 +192,7 @@
 																								   data-status="{{ $status }}"
 																								   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'dispatch'])}}"
 																								   href="javascript:void(0)"
-																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
-																										class="fas fa-file-invoice mr-2"></i> @lang('Dispatch')
+																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i class="fas fa-sign-out-alt mr-2"></i> @lang('Dispatch')
 																								</a>
 																							@endif
 																						@elseif($shipment->status == 2 && $status == 'upcoming')

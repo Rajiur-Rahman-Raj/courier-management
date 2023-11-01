@@ -6,7 +6,6 @@
 @endsection
 
 @section('content')
-
 	<!-- blog_area_start -->
 	@if (count($allBlogs) > 0)
 		<section class="blog_details_area">
@@ -116,7 +115,7 @@
 		</section>
 	@else
 		<div class="custom-not-found">
-			<img src="{{ asset($themeTrue.'images/not_found/not_found.png') }}" alt="@lang('not found image')"
+			<img src="{{ asset($themeTrue.'images/not_found.png') }}" alt="@lang('not found image')"
 				 class="img-fluid">
 		</div>
 	@endif

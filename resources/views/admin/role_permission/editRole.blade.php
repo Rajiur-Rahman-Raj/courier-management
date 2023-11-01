@@ -297,7 +297,7 @@
 																							@endif
 																						</td>
 
-																						{{--																		@dd($singleRole)--}}
+																					
 																						<td data-label="Login As">
 																							@if(!empty($subMenu['permission']['login_as']))
 																								<input type="checkbox"

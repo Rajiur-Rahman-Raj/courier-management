@@ -40,6 +40,8 @@
 				$('.shipmentStatusChangeMessage').text('Are you sure to delivered this shipment?')
 			} else if (dataStatus == 'return_in_queue') {
 				$('.shipmentStatusChangeMessage').text('Are you sure to return back this shipment?')
+			}else if (dataStatus == 'return_in_dispatch') {
+				$('.shipmentStatusChangeMessage').text('Are you sure to return dispatch this shipment?')
 			} else if (dataStatus == 'return_in_upcoming') {
 				$('.shipmentStatusChangeMessage').text('Are you sure to received return shipment?')
 			} else if (dataStatus == 'return_in_received') {

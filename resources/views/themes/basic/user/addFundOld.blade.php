@@ -72,8 +72,6 @@
                                 </div>
                                 <pre class="text-danger errors"></pre>
                             </div>
-
-
                         </div>
 
                         <div class="payment-info text-center">
@@ -84,15 +82,11 @@
                     <div class="modal-footer border-top-0">
                         <button type="button" class="btn btn-primary checkCalc">@lang('Next')</button>
                     </div>
-
                 </div>
             </div>
         </div>
     @endpush
-
-
 @endsection
-
 
 
 @push('script')
@@ -119,7 +113,6 @@
             $('.show-currency').text("{{config('basic.currency')}}");
             $('.gateway').val(currency);
 
-            // amount
         });
 
 

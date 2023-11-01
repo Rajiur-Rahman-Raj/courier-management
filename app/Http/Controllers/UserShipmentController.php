@@ -48,6 +48,7 @@ class UserShipmentController extends Controller
 		$userId = $filterData['userId'];
 		$data['allShipments'] = $filterData['allShipments']
 			->where('sender_id', $userId)
+			->latest()
 			->paginate(config('basic.paginate'));
 
 		return view($this->theme . $userShipmentManagement[$type]['shipment_view'], $data, compact('type', 'search', 'status'));

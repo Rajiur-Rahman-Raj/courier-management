@@ -24,13 +24,17 @@
 					<div class="row justify-content-md-center">
 						<div class="col-lg-12">
 							<div class="card mb-4 card-primary shadow">
-								<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+								<div
+									class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 									<h6 class="m-0 font-weight-bold text-primary">@lang('Edit') @lang(kebab2Title($content->name))</h6>
-									<a href="{{ route('content.index', $content->name) }}" class="btn btn-sm btn-outline-primary"> <i class="fas fa-arrow-left"></i> @lang('Back')</a>
+									<a href="{{ route('content.index', $content->name) }}"
+									   class="btn btn-sm btn-outline-primary"> <i
+											class="fas fa-arrow-left"></i> @lang('Back')</a>
 								</div>
 								<div class="card-body">
 									@if(array_key_exists('language',config("contents.$content->name")) && config("contents.$content.language") == 0)
-										<form method="post" action="{{ route('content.update', [$content,0]) }}" enctype="multipart/form-data">
+										<form method="post" action="{{ route('content.update', [$content,0]) }}"
+											  enctype="multipart/form-data">
 											@csrf
 											@method('put')
 											<div class="row">
@@ -38,10 +42,15 @@
 													@if($type == 'file')
 														<div class="col-md-6">
 															<div class="form-group mb-4">
-																<label class="col-form-label">@lang(ucwords(str_replace('_',' ',$name)))</label>
-																<div id="image-preview" class="image-preview" style="background-image: url({{ getFile(config('location.content.path').(isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '')) }});">
-																	<label for="image-upload" id="image-label">@lang('Choose File')</label>
-																	<input type="file" name="{{ $name }}[0]" class="@error($name.'.0') is-invalid @enderror" id="image-upload"/>
+																<label
+																	class="col-form-label">@lang(ucwords(str_replace('_',' ',$name)))</label>
+																<div id="image-preview" class="image-preview"
+																	 style="background-image: url({{ getFile(config('location.content.path').(isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '')) }});">
+																	<label for="image-upload"
+																		   id="image-label">@lang('Choose File')</label>
+																	<input type="file" name="{{ $name }}[0]"
+																		   class="@error($name.'.0') is-invalid @enderror"
+																		   id="image-upload"/>
 																</div>
 																<div class="invalid-feedback">
 																	@error($name.'.0') @lang($message) @enderror
@@ -51,7 +60,8 @@
 													@elseif($type == 'url')
 														<div class="col-md-12">
 															<div class="form-group">
-																<label for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
+																<label
+																	for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
 																<input type="{{ $type }}" name="{{ $name }}[0]"
 																	   class="form-control @error($name.'.0') is-invalid @enderror"
 																	   value="{{ old($name.'.0', isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '') }}">
@@ -64,38 +74,47 @@
 													@elseif($type == 'icon')
 														<div class="col-md-12">
 															<div class="form-group">
-																<label for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
+																<label
+																	for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
 																<div class="input-group input-group-sm">
 																	<input type="text" name="{{ $name }}[{{ 0 }}]"
 																		   class="form-control icon @error($name.'.0') is-invalid @enderror"
 																		   value="{{ old($name.'.0', isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '') }}">
 																	<div class="input-group-append">
-																		<button class="btn btn-outline-primary iconPicker"
-																				data-icon="{{ old($name.'.0', isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '') }}"
-																				role="iconpicker"></button>
+																		<button
+																			class="btn btn-outline-primary iconPicker"
+																			data-icon="{{ old($name.'.0', isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '') }}"
+																			role="iconpicker"></button>
 																	</div>
-																	<div class="invalid-feedback">@error($name.'.0') @lang($message) @enderror</div>
+																	<div
+																		class="invalid-feedback">@error($name.'.0') @lang($message) @enderror</div>
 																</div>
 															</div>
 														</div>
 													@endif
 												@endforeach
 											</div>
-											<button type="submit" class="btn btn-primary btn-sm btn-block">@lang('Save Change')</button>
+											<button type="submit"
+													class="btn btn-primary btn-sm btn-block">@lang('Save Change')</button>
 										</form>
 									@else
 										<ul class="nav nav-tabs" id="myTab" role="tablist">
 											@foreach($languages as $key => $language)
 												<li class="nav-item">
-													<a class="nav-link {{ $loop->first ? 'active' : '' }}" data-toggle="tab" href="#lang-tab-{{ $key }}" role="tab" aria-controls="lang-tab-{{ $key }}"
+													<a class="nav-link {{ $loop->first ? 'active' : '' }}"
+													   data-toggle="tab" href="#lang-tab-{{ $key }}" role="tab"
+													   aria-controls="lang-tab-{{ $key }}"
 													   aria-selected="{{ $loop->first ? 'true' : 'false' }}">@lang($language->name)</a>
 												</li>
 											@endforeach
 										</ul>
 										<div class="tab-content mt-2" id="myTabContent">
 											@foreach($languages as $key => $language)
-												<div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="lang-tab-{{ $key }}" role="tabpanel">
-													<form method="post" action="{{ route('content.update', [$content,$language->id]) }}" enctype="multipart/form-data">
+												<div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
+													 id="lang-tab-{{ $key }}" role="tabpanel">
+													<form method="post"
+														  action="{{ route('content.update', [$content,$language->id]) }}"
+														  enctype="multipart/form-data">
 														@csrf
 														@method('put')
 														<div class="row">
@@ -103,8 +122,10 @@
 																@if($type == 'text')
 																	<div class="col-md-12">
 																		<div class="form-group">
-																			<label for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
-																			<input type="{{ $type }}" name="{{ $name }}[{{ $language->id }}]"
+																			<label
+																				for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
+																			<input type="{{ $type }}"
+																				   name="{{ $name }}[{{ $language->id }}]"
 																				   class="form-control @error($name.'.'.$language->id) is-invalid @enderror"
 																				   value="{{ old($name.'.'.$language->id, isset($contentDetails[$language->id]) ? @$contentDetails[$language->id][0]->description->{$name} : '') }}">
 																			<div class="invalid-feedback">
@@ -116,10 +137,17 @@
 																@elseif($type == 'file' && $key == 0)
 																	<div class="col-md-6">
 																		<div class="form-group mb-4">
-																			<label class="col-form-label">@lang(ucwords(str_replace('_',' ',$name)))</label>
-																			<div id="image-preview" class="image-preview" style="background-image: url({{ getFile(@$contentMedia->driver,(isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '')) }});">
-																				<label for="image-upload" id="image-label">@lang('Choose File')</label>
-																				<input type="file" name="{{ $name }}[{{ $language->id }}]" class="@error($name.'.'.$language->id) is-invalid @enderror" id="image-upload"/>
+																			<label
+																				class="col-form-label">@lang(ucwords(str_replace('_',' ',$name)))</label>
+																			<div id="image-preview"
+																				 class="image-preview"
+																				 style="background-image: url({{ getFile(@$contentMedia->driver,(isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '')) }});">
+																				<label for="image-upload"
+																					   id="image-label">@lang('Choose File')</label>
+																				<input type="file"
+																					   name="{{ $name }}[{{ $language->id }}]"
+																					   class="@error($name.'.'.$language->id) is-invalid @enderror"
+																					   id="image-upload"/>
 																			</div>
 																			<div class="invalid-feedback">
 																				@error($name.'.'.$language->id) @lang($message) @enderror
@@ -129,10 +157,12 @@
 																@elseif($type == 'number')
 																	<div class="col-md-12">
 																		<div class="form-group">
-																			<label for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
-																			<input type="{{ $type }}" name="{{ $name }}[{{ $language->id }}]"
+																			<label
+																				for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
+																			<input type="{{ $type }}"
+																				   name="{{ $name }}[{{ $language->id }}]"
 																				   class="form-control @error($name.'.'.$language->id) is-invalid @enderror"
-																				   value="{{ old($name.'.'.$language->id, isset($contentDetails[$language->id]) ? @$contentDetails[$language->id][0]->description->{$name} : '') }}" >
+																				   value="{{ old($name.'.'.$language->id, isset($contentDetails[$language->id]) ? @$contentDetails[$language->id][0]->description->{$name} : '') }}">
 																			<div class="invalid-feedback">
 																				@error($name.'.'.$language->id) @lang($message) @enderror
 																			</div>
@@ -142,8 +172,10 @@
 																@elseif($type == 'url' && $key == 0)
 																	<div class="col-md-12">
 																		<div class="form-group">
-																			<label for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
-																			<input type="{{ $type }}" name="{{ $name }}[{{ $language->id }}]"
+																			<label
+																				for="{{ $name }}"> @lang(ucwords(str_replace('_',' ',$name))) </label>
+																			<input type="{{ $type }}"
+																				   name="{{ $name }}[{{ $language->id }}]"
 																				   class="form-control @error($name.'.'.$language->id) is-invalid @enderror"
 																				   value="{{ old($name.'.'.$language->id, isset($contentMedia->description->{$name}) ? @$contentMedia->description->{$name} : '') }}">
 																			<div class="invalid-feedback">
@@ -155,10 +187,12 @@
 																@elseif($type == 'textarea')
 																	<div class="col-md-12">
 																		<div class="form-group">
-																			<label for="{{ $name }}">@lang(ucwords(str_replace('_',' ',$name)))</label>
-																			<textarea class="form-control summernote @error($name.'.'.$language->id) is-invalid @enderror"
-																					  name="{{ $name }}[{{ $language->id }}]"
-																					  rows="5">{{ old($name.'.'.$language->id, isset($contentDetails[$language->id]) ? @$contentDetails[$language->id][0]->description->{$name} : '') }}</textarea>
+																			<label
+																				for="{{ $name }}">@lang(ucwords(str_replace('_',' ',$name)))</label>
+																			<textarea
+																				class="form-control summernote @error($name.'.'.$language->id) is-invalid @enderror"
+																				name="{{ $name }}[{{ $language->id }}]"
+																				rows="5">{{ old($name.'.'.$language->id, isset($contentDetails[$language->id]) ? @$contentDetails[$language->id][0]->description->{$name} : '') }}</textarea>
 																			<div class="invalid-feedback">
 																				@error($name.'.'.$language->id) @lang($message) @enderror
 																			</div>
@@ -167,7 +201,8 @@
 																@endif
 															@endforeach
 														</div>
-														<button type="submit" class="btn btn-primary btn-sm btn-block">@lang('Save Change')</button>
+														<button type="submit"
+																class="btn btn-primary btn-sm btn-block">@lang('Save Change')</button>
 													</form>
 												</div>
 											@endforeach

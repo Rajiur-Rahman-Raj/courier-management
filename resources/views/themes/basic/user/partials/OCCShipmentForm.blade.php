@@ -278,21 +278,6 @@
 				@error('payment_type') @lang($message) @enderror
 			</div>
 		</div>
-
-		{{--		<div class="col-sm-12 col-md-4 mb-3 input-box">--}}
-		{{--			<label for="payment_status"> @lang('Payment Status')</label>--}}
-		{{--			<select name="payment_status"--}}
-		{{--					class="form-control @error('payment_status') is-invalid @enderror select2">--}}
-		{{--				<option value="" disabled--}}
-		{{--						selected>@lang('Select Payment Status')</option>--}}
-		{{--				<option value="1" {{ old('payment_status') == '1' ? 'selected' : '' }}>@lang('Paid')</option>--}}
-		{{--				<option value="2" {{ old('payment_status') == '2' ? 'selected' : '' }}>@lang('Unpaid')</option>--}}
-		{{--			</select>--}}
-
-		{{--			<div class="invalid-feedback">--}}
-		{{--				@error('payment_status') @lang($message) @enderror--}}
-		{{--			</div>--}}
-		{{--		</div>--}}
 	</div>
 
 
@@ -606,8 +591,8 @@
 			</div>
 
 			<div class="col-sm-12 col-md-12 d-flex justify-content-between input-box">
-				<label for="email"> @lang('Dimensions') [Length x Width x Height]
-					(cm)
+				<label for="email"> @lang('Dimensions') @lang('[Length x Width x Height]
+					(cm)')
 					<span
 						class="text-dark font-weight-bold">(@lang('optional'))</span></label>
 			</div>
@@ -817,35 +802,6 @@
 		<h6 class="border-line-title">@lang('Summary')</h6>
 	</div>
 
-	{{--	<div class="d-flex justify-content-end shipmentsDiscount">--}}
-	{{--		<div class="col-md-3">--}}
-	{{--			<div class="input-group">--}}
-	{{--				<span class="input-group-text">@lang('Discount')</span>--}}
-	{{--				<input type="text" name="discount" value="{{ old('discount') ?? '0' }}"--}}
-	{{--					   class="form-control bg-white text-dark OCDiscount"--}}
-	{{--					   onkeyup="this.value = this.value.replace (/^\.|[^\d\.]/g, '')"--}}
-	{{--					   id="discount" min="0">--}}
-	{{--				<span class="input-group-text">%</span>--}}
-	{{--			</div>--}}
-	{{--		</div>--}}
-	{{--	</div>--}}
-
-	{{--	<div class=" d-flex justify-content-end mt-2">--}}
-	{{--		<div class="col-md-3 d-flex justify-content-between">--}}
-	{{--			<span class="fw-bold">@lang('Discount Amount')</span>--}}
-	{{--			<div class="input-group w-50">--}}
-	{{--				<input type="number" name="discount_amount" value="{{ old('discount_amount') ?? '0' }}"--}}
-	{{--					   class="form-control bg-white text-dark OCDiscountAmount" data-discountamount="{{ old('discount_amount') }}"--}}
-	{{--					   readonly>--}}
-	{{--				<div class="input-group-append" readonly="">--}}
-	{{--					<div class="form-control">--}}
-	{{--						{{ $basic->currency_symbol }}--}}
-	{{--					</div>--}}
-	{{--				</div>--}}
-	{{--			</div>--}}
-	{{--		</div>--}}
-	{{--	</div>--}}
-
 	<div class=" d-flex justify-content-end mt-2">
 		<div class="col-md-3 d-flex justify-content-between">
 			<span class="fw-bold">@lang('Subtotal')</span>
@@ -973,8 +929,6 @@
 			</div>
 		</div>
 	</div>
-
-	{{--	<input type="hidden" name="shipment_by" value="1">--}}
 
 	<input type="hidden" name="first_fiv" class="firstFiv" value="{{ old('first_fiv') ?? '0' }}">
 	<input type="hidden" name="last_fiv" class="lastFiv" value="{{ old('last_fiv') ?? '0' }}">

@@ -143,7 +143,6 @@
 					}
 				})
 					.done(function (response) {
-						console.log(response)
 						let amountField = $('#amount');
 						if (response.status) {
 							clearMessage(amountField);

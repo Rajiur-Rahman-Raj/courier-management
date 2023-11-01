@@ -16,7 +16,9 @@ class CreateBlogsTable extends Migration
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
 			$table->integer('blog_category_id');
-            $table->string('image');
+            $table->string('image')->nullable();
+            $table->string('driver')->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

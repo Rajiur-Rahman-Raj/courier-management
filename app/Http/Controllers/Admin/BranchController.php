@@ -172,6 +172,7 @@ class BranchController extends Controller
 	{
 		$data['branchInfo'] = Branch::with('transaction')
 			->withCount('transaction')
+			->withCount('shipments')
 			->withCount([
 				'transaction as total_transactions' => function ($query) use ($id) {
 					$query->where('branch_id', $id)
@@ -192,7 +193,7 @@ class BranchController extends Controller
 			->where('status', 1)
 			->findOrFail($id);
 
-		$data['totalShipments'] = $data['branchInfo']->transaction_count;
+		$data['totalShipments'] = $data['branchInfo']->shipments_count;
 		$data['totalTransactions'] = $data['branchInfo']->total_transactions;
 		$data['conditionReceiveAmount'] = $data['branchInfo']->total_condition_receive_amount;
 		$data['conditionPayAmount'] = $data['branchInfo']->total_condition_pay_amount;

@@ -115,13 +115,13 @@
 							});
 						}
 					});
-					// console.log(payload);
+				
 				},
 				onError(error) {
-					console.log(error);
+				
 				},
 				onClose() {
-					console.log('widget is closing');
+				
 				}
 			}
 		};

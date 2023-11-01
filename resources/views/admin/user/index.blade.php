@@ -74,7 +74,7 @@
 
 													<td data-label="@lang('Name')">
 														<div class="d-lg-flex d-block align-items-center ">
-															<div class="mr-3"><img src="{{ $value->profilePicture() }}"
+															<div class="mr-3"><img src="{{ getFile(optional($value->profile)->driver, optional($value->profile)->profile_picture) }}"
 																				   alt="user"
 																				   class="rounded-circle" width="35"
 																				   data-toggle="tooltip" title=""

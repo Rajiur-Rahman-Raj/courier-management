@@ -1,10 +1,6 @@
 @extends($theme.'layouts.user')
 @section('page_title',__('Dashboard'))
 
-@push('extra_styles')
-
-@endpush
-
 @section('content')
 	<!-- main -->
 	<div class="container-fluid">
@@ -44,7 +40,6 @@
 											</h3>
 										</div>
 									</div>
-
 								</div>
 							</div>
 						</div>
@@ -103,7 +98,6 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 
@@ -273,12 +267,4 @@
 			</div>
 		</div>
 	</div>
-@endsection
-
-@push('extra_scripts')
-
-@endpush
-
-@section('scripts')
-
 @endsection

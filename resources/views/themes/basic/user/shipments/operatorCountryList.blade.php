@@ -170,7 +170,7 @@
 									</tr>
 								@empty
 									<tr>
-										<td colspan="100%" class="text-center p-2">
+										<td colspan="100%" class="text-center p-2 table-not-found">
 											<img class="not-found-img"
 												 src="{{ asset($themeTrue.'images/business.png') }}"
 												 alt="">

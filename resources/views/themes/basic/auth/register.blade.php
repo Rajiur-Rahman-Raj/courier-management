@@ -144,13 +144,12 @@
 	<!-- login_signup_area_start -->
 @endsection
 
-
 @section('scripts')
 	<script>
 		"use strict";
 		$(document).ready(function () {
 			$(document).on('change', ".country_code", function () {
-				console.log($(this).val())
+
 			});
 		})
 	</script>

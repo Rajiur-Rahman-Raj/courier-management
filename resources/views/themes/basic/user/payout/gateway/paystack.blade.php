@@ -127,9 +127,7 @@
 											<span
 												class="text-success">{{ (getAmount(auth()->user()->balance - $payout->transfer_amount)) }} {{ config('basic.base_currency') }}</span>
 										</li>
-										<div class="dynamic">
-
-										</div>
+										<div class="dynamic"></div>
 									</ul>
 								</div>
 							</div>

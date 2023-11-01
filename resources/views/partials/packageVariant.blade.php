@@ -140,7 +140,6 @@
 				variantId: selectedVariant,
 			},
 			success: function (response) {
-				console.log(response);
 				let responseData = response;
 				let variantPriceClass = ".variantPrice";
 				if (id) {

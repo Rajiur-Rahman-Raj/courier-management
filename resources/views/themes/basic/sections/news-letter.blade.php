@@ -5,7 +5,6 @@
 <section style="padding: 120px 0"id="refferal">
     <div class="container">
         <div class="row" id="subscribe">
-            {{-- @dd($referralLevel) --}}
             <div @if(isset($templates['news-letter-referral'][0]) ) class="col-md-6" @else class="col-md-12"  @endif>
                 <div
                     class="d-flex align-items-center justify-content-center justify-content-md-start h-fill wow fadeInLeft"
@@ -26,8 +25,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </section>

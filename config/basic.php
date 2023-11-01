@@ -1,5 +1,5 @@
 <?php return array (
-  'site_title' => 'Go Courier',
+  'site_title' => 'Go Courier Service',
   'theme' => 'basic',
   'primaryColor' => '#f05822',
   'secondaryColor' => '#f0aa22',
@@ -24,7 +24,7 @@
   'min_transfer' => '10.00',
   'max_transfer' => '900000.00',
   'transfer_charge' => '0',
-  'refund_time' => '10_minute',
+  'refund_time' => '1_hour',
   'email_notification' => 1,
   'email_verification' => 0,
   'sms_notification' => 1,

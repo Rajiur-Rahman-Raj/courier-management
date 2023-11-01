@@ -44,7 +44,8 @@
 
 													<div class="col-md-4">
 														<div class="form-group search-currency-dropdown">
-															<select name="status" class="form-control form-control-sm select2">
+															<select name="status"
+																	class="form-control form-control-sm select2">
 																<option value="all">@lang('All Status')</option>
 																<option
 																	value="active" {{  request()->status == 'active' ? 'selected' : '' }}>@lang('Active')</option>

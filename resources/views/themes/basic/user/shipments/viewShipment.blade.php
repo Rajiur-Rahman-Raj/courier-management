@@ -354,7 +354,7 @@
 														@endforeach
 
 														<tr>
-															<th colspan="4" class="text-right">@lang('Total Price')</th>
+															<td colspan="4" class="text-right">@lang('Total Price')</td>
 															<td>{{ $basic->currency_symbol }}{{ number_format($totalPackingCost, 2) }}</td>
 														</tr>
 														</tbody>

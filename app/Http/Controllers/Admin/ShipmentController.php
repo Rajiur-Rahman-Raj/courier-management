@@ -53,6 +53,7 @@ class ShipmentController extends Controller
 		$filterData = $this->_filter($request, $status, $type, $authenticateUser);
 		$data['search'] = $filterData['search'];
 		$data['allShipments'] = $filterData['allShipments']
+			->latest()
 			->paginate(config('basic.paginate'));
 
 		return view($shipmentManagement[$type]['shipment_view'], $data, compact('type', 'status', 'authenticateUser'));
@@ -412,8 +413,19 @@ class ShipmentController extends Controller
 		$data['status'] = $request->input('segment');
 		$data['shipment_type'] = $request->input('shipment_type');
 		$data['singleShipment'] = Shipment::with('shipmentAttachments', 'senderBranch.branchManager', 'receiverBranch', 'sender.profile', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea', 'assignToCollect')->findOrFail($id);
-
 		return view('admin.shipments.viewShipment', $data, compact('authenticateUser'));
+	}
+
+	public function shipmentInvoice(Request $request, $id){
+		$data['status'] = $request->input('segment');
+		$data['shipment_type'] = $request->input('shipment_type');
+		$data['singleShipment'] = Shipment::with('shipmentAttachments', 'senderBranch.branchManager', 'receiverBranch', 'sender.profile', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea', 'assignToCollect')->findOrFail($id);
+
+		if ($data['shipment_type'] == 'operator-country'){
+			return view('admin.invoice.operatorCountry', $data);
+		}else{
+			return view('admin.invoice.internationally', $data);
+		}
 	}
 
 	public function shipmentStore(ShipmentRequest $request, $type = null)
@@ -834,8 +846,7 @@ class ShipmentController extends Controller
 		return back()->with('success', 'Default rate internationally update successfully');
 	}
 
-	public
-	function operatorCountryRate(Request $request, $type = null)
+	public function operatorCountryRate(Request $request, $type = null)
 	{
 		$operatorCountryShippingRateManagement = config('operatorCountryShippingRateManagement');
 		$types = array_keys($operatorCountryShippingRateManagement);
@@ -1757,6 +1768,11 @@ class ShipmentController extends Controller
 				$shipment->save();
 				DB::commit();
 				return back()->with('success', 'Shipment return back successfully! Now this shipment is in return in queue.');
+			}elseif ($type == 'return_in_dispatch') {
+				$shipment->status = 9;
+				$shipment->save();
+				DB::commit();
+				return back()->with('success', 'Return Shipment Dispatch successfully! Now this shipment is in return in dispatch.');
 			} elseif ($type == 'return_in_received') {
 				if ($shipment->return_shipment_cost != null || $shipment->return_shipment_cost != 0) {
 					$shipment->payment_status = 2;

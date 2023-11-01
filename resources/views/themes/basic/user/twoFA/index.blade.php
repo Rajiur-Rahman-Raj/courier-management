@@ -90,19 +90,12 @@
                             <a class="btn btn-success btn-md mt-3"
                                href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en"
                                target="_blank">@lang('DOWNLOAD APP')</a>
-
                         </div>
-
                     </div>
                 </div>
-
-
             </div>
         </div>
     </section>
-
-
-
 
 
     <!--Enable Modal -->
@@ -163,13 +156,7 @@
 
         </div>
     </div>
-
-
-
-
 @endsection
-
-
 
 @push('script')
     <script>

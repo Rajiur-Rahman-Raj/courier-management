@@ -10,14 +10,12 @@
                     <div class="d-flex align-items-center justify-content-start">
                         <div class="wrapper">
                             <div class="login-info-wrapper">
-
                                 <img class="w-100"src="{{asset(template(true).'images/verification.jpg')}}" alt="" class="w-100">
                             </div>
                         </div>
 
                     </div>
                 </div>
-
 
                 <div class="col-lg-7">
                     <div
@@ -37,15 +35,12 @@
 
                             </div>
 
-
                             <button class="btn mt-20" type="submit">@lang('Submit')</button>
                         </form>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
     <!-- /LOGIN-SIGNUP -->
-
 @endsection

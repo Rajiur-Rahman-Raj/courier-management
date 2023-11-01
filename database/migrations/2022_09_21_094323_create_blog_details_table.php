@@ -15,11 +15,11 @@ class CreateBlogDetailsTable extends Migration
     {
         Schema::create('blog_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('blog_id')->references('id')->on('blogs')->onDelete('cascade');
+            $table->foreignId('blog_id')->index();
             $table->integer('language_id');
-            $table->string('author');
-            $table->string('title');
-            $table->longText('details');
+            $table->string('author')->nullable();
+            $table->string('title')->nullable();
+            $table->longText('details')->nullable();
             $table->timestamps();
         });
     }

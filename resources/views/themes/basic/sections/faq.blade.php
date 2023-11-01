@@ -18,9 +18,9 @@
 						@foreach($faqs as $key => $faq)
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="heading{{ $key }}">
-									<button class="accordion-button" type="button" data-bs-toggle="collapse"
+									<button class="accordion-button {{ $key != 0 ? 'collapsed' : '' }}" type="button" data-bs-toggle="collapse"
 											data-bs-target="#collapse{{ $key }}"
-											aria-expanded="true" aria-controls="collapse{{ $key }}">
+											aria-expanded="true{{ $key == 0 ? 'true' : 'false' }}" aria-controls="collapse{{ $key }}">
 										@lang(optional($faq->description)->title)
 									</button>
 								</h2>

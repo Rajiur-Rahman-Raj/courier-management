@@ -22,6 +22,7 @@
 		"league/flysystem-sftp": "~1.0",
 		"midtrans/midtrans-php": "^2.5",
 		"mollie/laravel-mollie": "^2.13",
+		"predis/predis": "^2.2",
 		"pusher/pusher-php-server": "^4.1",
 		"securionpay/securionpay-php": "^2.2",
 		"stevebauman/purify": "^3.0"

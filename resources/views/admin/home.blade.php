@@ -443,15 +443,9 @@
 					<div class="col-md-12">
 						<div class="card mb-4 shadow-sm">
 							<div class="card-body">
-{{--								<div class="d-flex justify-content-between">--}}
-{{--									<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>--}}
-{{--									<div class="daterange-container">--}}
-{{--										<div class="daterange-picker">--}}
-{{--											<input type="text" id="monthlyShipments" value="" />--}}
-{{--											<i class="fa fa-caret-down"></i>--}}
-{{--										</div>--}}
-{{--									</div>--}}
-{{--								</div>--}}
+								<div class="d-flex justify-content-between">
+									<h5 class="card-title">@lang('Current Year Shipments Summery')</h5>
+								</div>
 
 								<div>
 									<canvas id="shipment-year-chart" height="120"></canvas>

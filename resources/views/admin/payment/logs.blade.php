@@ -247,7 +247,6 @@
 @section('scripts')
 	<script>
 		"use strict";
-		console.log("lol")
 		$(document).ready(function () {
 			$(document).on("click", '.edit_button', function (e) {
 				var id = $(this).data('id');

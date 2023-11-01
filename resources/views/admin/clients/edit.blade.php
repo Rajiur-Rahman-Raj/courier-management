@@ -45,7 +45,8 @@
 									</div>
 
 									<div class="col-sm-12 col-md-3 mb-3">
-										<label for="username"> @lang('Username') <span class="text-danger">*</span></label>
+										<label for="username"> @lang('Username') <span
+												class="text-danger">*</span></label>
 										<input type="text" name="username"
 											   class="form-control @error('username') is-invalid @enderror managerEmail"
 											   value="{{ old('username', $singleClientInfo->username) }}">
@@ -106,7 +107,8 @@
 												class="form-control @error('branch_id') is-invalid @enderror select2">
 											<option value="" disabled selected>@lang('Select Branch')</option>
 											@foreach($allBranches as $branch)
-												<option value="{{ $branch->id }}" {{ $branch->id == optional($singleClientInfo->profile)->branch_id ? 'selected' : '' }}>@lang($branch->branch_name)</option>
+												<option
+													value="{{ $branch->id }}" {{ $branch->id == optional($singleClientInfo->profile)->branch_id ? 'selected' : '' }}>@lang($branch->branch_name)</option>
 											@endforeach
 										</select>
 
@@ -119,10 +121,12 @@
 									<div class="col-sm-12 col-md-3 mb-3">
 										<label for="country_id"> @lang('Select Country') <span
 												class="text-danger">*</span></label>
-										<select name="country_id" class="form-control @error('country_id') is-invalid @enderror selectedCountry select2">
+										<select name="country_id"
+												class="form-control @error('country_id') is-invalid @enderror selectedCountry select2">
 											<option value="" disabled selected>@lang('Select Country')</option>
 											@foreach($allCountries as $country)
-												<option value="{{ $country->id }}" {{ $country->id == optional($singleClientInfo->profile)->country_id ? 'selected' : '' }}>@lang($country->name)</option>
+												<option
+													value="{{ $country->id }}" {{ $country->id == optional($singleClientInfo->profile)->country_id ? 'selected' : '' }}>@lang($country->name)</option>
 											@endforeach
 										</select>
 
@@ -135,10 +139,12 @@
 									<div class="col-sm-12 col-md-4 mb-3">
 										<label for="state_id"> @lang('Select State') <span
 												class="text-danger">*</span></label>
-										<select name="state_id" class="form-control @error('state_id') is-invalid @enderror selectedState select2">
+										<select name="state_id"
+												class="form-control @error('state_id') is-invalid @enderror selectedState select2">
 											<option value="" disabled selected>@lang('Select State')</option>
 											@foreach($allStates as $state)
-												<option value="{{ $state->id }}" {{ $state->id == optional($singleClientInfo->profile)->state_id ? 'selected' : '' }}>@lang($state->name)</option>
+												<option
+													value="{{ $state->id }}" {{ $state->id == optional($singleClientInfo->profile)->state_id ? 'selected' : '' }}>@lang($state->name)</option>
 											@endforeach
 										</select>
 
@@ -150,10 +156,12 @@
 
 									<div class="col-sm-12 col-md-4 mb-3">
 										<label for="city_id"> @lang('Select city')</label>
-										<select name="city_id" class="form-control @error('city_id') is-invalid @enderror selectedCity select2">
+										<select name="city_id"
+												class="form-control @error('city_id') is-invalid @enderror selectedCity select2">
 											<option value="" disabled selected>@lang('Select City')</option>
 											@foreach($allCities as $city)
-												<option value="{{ $city->id }}" {{ $city->id == optional($singleClientInfo->profile)->city_id ? 'selected' : '' }}>@lang($city->name)</option>
+												<option
+													value="{{ $city->id }}" {{ $city->id == optional($singleClientInfo->profile)->city_id ? 'selected' : '' }}>@lang($city->name)</option>
 											@endforeach
 										</select>
 
@@ -165,10 +173,12 @@
 
 									<div class="col-sm-12 col-md-4 mb-3">
 										<label for="area_id"> @lang('Select Area') </label>
-										<select name="area_id" class="form-control @error('area_id') is-invalid @enderror selectedArea select2">
+										<select name="area_id"
+												class="form-control @error('area_id') is-invalid @enderror selectedArea select2">
 											<option value="" disabled selected>@lang('Select Area')</option>
 											@foreach($allAreas as $area)
-												<option value="{{ $area->id }}" {{ $area->id == optional($singleClientInfo->profile)->area_id ? 'selected' : '' }}>@lang($area->name)</option>
+												<option
+													value="{{ $area->id }}" {{ $area->id == optional($singleClientInfo->profile)->area_id ? 'selected' : '' }}>@lang($area->name)</option>
 											@endforeach
 										</select>
 
@@ -184,7 +194,9 @@
 									<div class="col-sm-12 col-md-12 mb-3">
 										<label for="address"> @lang('Address') <span
 												class="text-danger">*</span></label>
-										<textarea class="form-control @error('address') is-invalid @enderror" name="address" rows="5" value="{{ old('address', optional($singleClientInfo->profile)->address) }}">{{old('address', optional($singleClientInfo->profile)->address)}}</textarea>
+										<textarea class="form-control @error('address') is-invalid @enderror"
+												  name="address" rows="5"
+												  value="{{ old('address', optional($singleClientInfo->profile)->address) }}">{{old('address', optional($singleClientInfo->profile)->address)}}</textarea>
 
 										<div class="invalid-feedback">
 											@error('address') @lang($message) @enderror
@@ -243,7 +255,8 @@
 									</div>
 								</div>
 
-								<button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
+								<button type="submit"
+										class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">@lang('Save')</button>
 							</form>
 						</div>
 					</div>

@@ -73,7 +73,7 @@
 					<div class="col-lg-6 order-1 order-lg-2">
 						<div class="section_right">
 							<div class="image_area">
-								<img src="{{ asset($themeTrue.'images/contact/Messaging fun.gif') }}" alt="">
+								<img src="{{ asset($themeTrue.'images/contact_icon.gif') }}" alt="">
 							</div>
 						</div>
 					</div>
@@ -141,6 +141,5 @@
 				referrerpolicy="no-referrer-when-downgrade"></iframe>
 		</div>
 	@endif
-
 	<!-- map_area_end -->
 @endsection

@@ -1,7 +1,3 @@
-=====================
-RoleList.blade.php
-=====================
-
 
 @extends('admin.layouts.master')
 @section('page_title',__('Role List'))
@@ -134,26 +130,6 @@ RoleList.blade.php
 									<div class="title">
 										<h6 class="text-dark">@lang('Manage Branch')</h6>
 									</div>
-									{{--									@if(config('permissionList'))--}}
-									{{--										<div class="row mt-3">--}}
-									{{--											@foreach(config('permissionList') as $key => $item)--}}
-									{{--												@php--}}
-									{{--													$words = explode(" ", $key);--}}
-									{{--													$camelCaseKey = lcfirst(implode("", $words));--}}
-									{{--												@endphp--}}
-									{{--												<div class="input-box col-md-6 mt-3">--}}
-									{{--													<div class="form-check form-switch">--}}
-									{{--														<input class="form-check-input" type="checkbox"--}}
-									{{--															   v-model="item.permissions"--}}
-									{{--															   value="{{$item}}" role="switch"--}}
-									{{--															   id="{{ $camelCaseKey }}"/>--}}
-									{{--														<label class="form-check-label"--}}
-									{{--															   for="{{ $camelCaseKey }}">{{str_replace('_',' ',ucfirst($key))}}</label>--}}
-									{{--													</div>--}}
-									{{--												</div>--}}
-									{{--											@endforeach--}}
-									{{--										</div>--}}
-									{{--									@endif--}}
 								</div>
 								<span class="text-danger mb-2 permissions-error"></span>
 							</div>

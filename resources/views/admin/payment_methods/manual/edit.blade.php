@@ -282,7 +282,6 @@
 @section('scripts')
 	<script>
 		"use strict";
-		console.log("lol")
 		setCurrency();
 		$(document).on('change', 'input[name="currency"]', function () {
 			setCurrency();
