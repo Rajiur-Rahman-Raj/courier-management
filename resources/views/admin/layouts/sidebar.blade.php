@@ -25,6 +25,37 @@
 				</li>
 			@endif
 
+				@if(adminAccessRoute(config('permissionList.Manage_Reports.Shipment_Report.permission.view')))
+					<li class="menu-header">@lang('Manage Reports')</li>
+					<li class="dropdown {{ activeMenu(['shipmentTypeList']) }}">
+						<a href="javascript:void(0)" class="nav-link has-dropdown" data-toggle="dropdown">
+							<i class="fas fa-text-width mt-1 text-success"></i> <span>@lang('Manage Reports')</span>
+						</a>
+						<ul class="dropdown-menu">
+							<li class="{{ activeMenu(['shipmentReport']) }}">
+								<a class="nav-link"
+								   href="{{ route('shipmentReport') }}">
+									@lang('Shipment Report')
+								</a>
+							</li>
+
+							<li class="{{ activeMenu(['shipmentList'], null, 'in_queue') }}">
+								<a class="nav-link "
+								   href="{{ route('shipmentList', ['shipment_status' => 'in_queue', 'shipment_type' => 'operator-country']) }}">
+									@lang('Shipment Transaction')
+								</a>
+							</li>
+
+							<li class="{{ activeMenu(['shipmentList'], null, 'dispatch') }}">
+								<a class="nav-link "
+								   href="{{ route('shipmentList', ['shipment_status' => 'dispatch', 'shipment_type' => 'operator-country']) }}">
+									@lang('Payment Transaction')
+								</a>
+							</li>
+						</ul>
+					</li>
+				@endif
+
 			@if(adminAccessRoute(array_merge(config('permissionList.Manage_Shipments.Shipment_List.permission.view'))))
 				<li class="menu-header">@lang('Manage Shipments')</li>
 				<li class="dropdown {{ activeMenu(['shipmentList', 'createShipment', 'editShipment', 'viewShipment', 'trashShipmentList']) }}">

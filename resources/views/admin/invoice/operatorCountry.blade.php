@@ -5,7 +5,6 @@
 
 	<div class="main-content">
 		<section class="section">
-
 			<div class="section-header">
 				<h1> @lang('Shipment Invoice') </h1>
 				<div class="section-header-breadcrumb">
@@ -23,9 +22,7 @@
 							<div class="invoice-logo text-center">
 								<h3>@lang(config('basic.site_title'))</h3>
 								<div class="invoice-img">
-									<img
-										src="http://127.0.0.1/courier/courier-management-master/assets/upload/logo/logo.png"
-										alt="">
+									<img src="http://127.0.0.1/courier/courier-management-master/assets/upload/logo/logo.png" alt="">
 								</div>
 							</div>
 							<div class="invoice-date-box d-flex flex-wrap justify-content-between mt-5">
@@ -198,57 +195,57 @@
 							<div class="invoice-table">
 								<h3>@lang('Payment Calculation')</h3>
 								<table class="table  table-hover">
-{{--									<thead class="">--}}
-{{--									<th>#</th>--}}
-{{--									<th>couriur type</th>--}}
-{{--									<th>sending time</th>--}}
-{{--									<th>price</th>--}}
-{{--									<th>qty</th>--}}
-{{--									<th>subtotal</th>--}}
-{{--									</thead>--}}
 									<tbody>
 									<tr>
 										<td class="t-total" colspan="5">@lang('Subtotal'):</td>
-										<td class="text-right" data-label="subtotal">{{ $basic->currency_symbol }}{{ $singleShipment->sub_total }}</td>
+										<td class="text-right"
+											data-label="subtotal">{{ $basic->currency_symbol }}{{ $singleShipment->sub_total }}</td>
 									</tr>
 
 									@if($singleShipment->discount != null)
-									<tr>
-										<td class="t-total" colspan="5">@lang('Discount'):</td>
-										<td class="text-right" data-label="discount">{{ $basic->currency_symbol }} {{ $singleShipment->discount_amount }}</td>
-									</tr>
+										<tr>
+											<td class="t-total" colspan="5">@lang('Discount'):</td>
+											<td class="text-right"
+												data-label="discount">{{ $basic->currency_symbol }} {{ $singleShipment->discount_amount }}</td>
+										</tr>
 									@endif
 
 									@if($singleShipment->shipment_type == 'pickup')
 										<tr>
 											<td class="t-total" colspan="5">@lang('Pickup Cost'):</td>
-											<td class="text-right" data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->pickup_cost }}</td>
+											<td class="text-right"
+												data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->pickup_cost }}</td>
 										</tr>
 
 										<tr>
 											<td class="t-total" colspan="5">@lang('Supply Cost'):</td>
-											<td class="text-right" data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->supply_cost }}</td>
+											<td class="text-right"
+												data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->supply_cost }}</td>
 										</tr>
 									@endif
 
 									<tr>
 										<td class="t-total" colspan="5">@lang('Shipping Cost'):</td>
-										<td class="text-right" data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->shipping_cost }}</td>
+										<td class="text-right"
+											data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->shipping_cost }}</td>
 									</tr>
 
 									<tr>
 										<td class="t-total" colspan="5">@lang('Tax'):</td>
-										<td class="text-right" data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->tax }}</td>
+										<td class="text-right"
+											data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->tax }}</td>
 									</tr>
 
 									<tr>
 										<td class="t-total" colspan="5">@lang('Insurance'):</td>
-										<td class="text-right" data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->insurance }}</td>
+										<td class="text-right"
+											data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->insurance }}</td>
 									</tr>
 
 									<tr>
 										<td class="t-total" colspan="5">@lang('total'):</td>
-										<td class="text-right" data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->total_pay }}</td>
+										<td class="text-right"
+											data-label="total">{{ $basic->currency_symbol }}{{ $singleShipment->total_pay }}</td>
 									</tr>
 									</tbody>
 								</table>
@@ -256,7 +253,8 @@
 						</div>
 
 						<div class="invoice-btn clearfix">
-							<a class="float-right" href="javascript:void(0)" id="shipmentInvoicePrint"><i class="fas fa-print"></i> @lang('Print') </a>
+							<a class="float-right" href="javascript:void(0)" id="shipmentInvoicePrint"><i
+									class="fas fa-print"></i> @lang('Print') </a>
 						</div>
 					</div>
 				</div>

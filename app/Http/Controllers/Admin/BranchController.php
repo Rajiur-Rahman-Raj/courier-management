@@ -30,28 +30,29 @@ class BranchController extends Controller
 		$data['allBranches'] = Branch::when(isset($search['name']), function ($query) use ($search) {
 			return $query->whereRaw("branch_name REGEXP '[[:<:]]{$search['name']}[[:>:]]'");
 		})
-			->when(isset($search['phone']), function ($q) use ($search) {
-				return $q->where('phone', $search['phone']);
-			})
-			->when(isset($search['email']), function ($q2) use ($search) {
-				return $q2->where('email', $search['email']);
-			})
-			->when(isset($search['status']) && $search['status'] == 'active', function ($q3) use ($search) {
-				return $q3->where('status', 1);
-			})
-			->when(isset($search['status']) && $search['status'] == 'deactive', function ($q4) use ($search) {
-				return $q4->where('status', 0);
-			})
-			->when(isset($search['branch_type']) && $search['branch_type'] == 'head_office', function ($q5) use ($search) {
-				return $q5->where('branch_type', $search['branch_type']);
-			})
-			->when(isset($search['branch_type']) && $search['branch_type'] == 'main_branch', function ($q6) use ($search) {
-				return $q6->where('branch_type', $search['branch_type']);
-			})
-			->when(isset($search['branch_type']) && $search['branch_type'] == 'sub_branch', function ($q7) use ($search) {
-				return $q7->where('branch_type', $search['branch_type']);
-			})
-			->paginate(config('basic.paginate'));
+		->when(isset($search['phone']), function ($q) use ($search) {
+			return $q->where('phone', $search['phone']);
+		})
+		->when(isset($search['email']), function ($q2) use ($search) {
+			return $q2->where('email', $search['email']);
+		})
+		->when(isset($search['status']) && $search['status'] == 'active', function ($q3) use ($search) {
+			return $q3->where('status', 1);
+		})
+		->when(isset($search['status']) && $search['status'] == 'deactive', function ($q4) use ($search) {
+			return $q4->where('status', 0);
+		})
+
+		->when(isset($search['branch_type']) && $search['branch_type'] == 'head_office', function ($q5) use ($search) {
+			return $q5->where('branch_type', $search['branch_type']);
+		})
+		->when(isset($search['branch_type']) && $search['branch_type'] == 'main_branch', function ($q6) use ($search) {
+			return $q6->where('branch_type', $search['branch_type']);
+		})
+		->when(isset($search['branch_type']) && $search['branch_type'] == 'sub_branch', function ($q7) use ($search) {
+			return $q7->where('branch_type', $search['branch_type']);
+		})
+		->paginate(config('basic.paginate'));
 
 		return view('admin.branch.index', $data);
 	}

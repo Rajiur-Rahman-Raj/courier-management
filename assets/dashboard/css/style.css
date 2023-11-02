@@ -4364,6 +4364,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 	font-size: 14px;
 }
 
+
 .dataTables_wrapper {
 	padding: 0 !important;
 	font-size: 18px !important;
@@ -4881,7 +4882,7 @@ a:hover {
 		display: block;
 	}
 	.section-invoice .invoice-box .invoice-table .table tbody tr td {
-		display: flex;
+		/*display: flex;*/
 		align-items: center;
 		justify-content: space-between;
 		border-bottom: none !important;
@@ -5397,6 +5398,9 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 }
 .section-invoice .invoice-box .invoice-table table tr .t-price {
 	text-align: right;
+}
+.invoice-table tr:first-child td{
+	border-top: none;
 }
 .section-invoice  .invoice-btn{
 	background-color: #fffffe;

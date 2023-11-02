@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ShipmentReportExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShipmentRequest;
 use App\Models\Admin;
@@ -35,12 +36,118 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Validation\Rule;
 
 class ShipmentController extends Controller
 {
 	use Upload, Notify, OCShipmentStoreTrait, ShipmentUpdateTrait;
+
+
+	public function shipmentReport(Request $request)
+	{
+		$data['authenticateUser'] = Auth::guard('admin')->user();
+		$data['branchId'] = null;
+		if (isset($data['authenticateUser']->branch)) {
+			$data['branchId'] = $data['authenticateUser']->branch->branch_id;
+		}
+
+		$search = $request->all();
+
+		$data['branches'] = Branch::where('status', 1)->get();
+		try {
+			if (!empty($search) && (isset($search['shipment_from']) || isset($search['shipment_type']) || isset($search['shipment_status']) || $search['from_date'] || $search['to_date'])) {
+				$fromDate = Carbon::parse($request->from_date);
+				$toDate = Carbon::parse($request->to_date)->addDay();
+
+				$shipmentReports = Shipment::when(isset($search['from_date']), function ($query) use ($fromDate) {
+					return $query->whereDate('created_at', '>=', $fromDate);
+				})
+					->when(isset($search['to_date']), function ($query) use ($fromDate, $toDate) {
+						return $query->whereBetween('created_at', [$fromDate, $toDate]);
+					})
+					->when(isset($search['branch_id']) && $search['branch_id'] != 'all', function ($query) use ($search) {
+						return $query->where('sender_branch', $search['branch_id']);
+					})
+					->when(isset($search['shipment_from']) && $search['shipment_from'] == 'operator_country', function ($query) use ($search) {
+						return $query->where('shipment_identifier', 1);
+					})
+					->when(isset($search['shipment_from']) && $search['shipment_from'] == 'internationally', function ($query) use ($search) {
+						return $query->where('shipment_identifier', 2);
+					})
+					->when(isset($search['shipment_type']) && $search['shipment_type'] == 'drop_off', function ($query) use ($search) {
+						$query->where('shipment_type', 'drop_off');
+					})
+					->when(isset($search['shipment_type']) && $search['shipment_type'] == 'pickup', function ($query) use ($search) {
+						$query->where('shipment_type', 'pickup');
+					})
+					->when(isset($search['shipment_type']) && $search['shipment_type'] == 'condition', function ($query) use ($search) {
+						$query->where('shipment_type', 'condition');
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'requested', function ($query) use ($search) {
+						return $query->where('status', 0);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'in_queue', function ($query) use ($search) {
+						return $query->where('status', 1);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'dispatch', function ($query) use ($search) {
+						return $query->where('status', 2);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'received', function ($query) use ($search) {
+						return $query->where('status', 3);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'delivered', function ($query) use ($search) {
+						return $query->where('status', 4);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'return_in_queue', function ($query) use ($search) {
+						return $query->where('status', 8);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'return_dispatch', function ($query) use ($search) {
+						return $query->where('status', 9);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'return_received', function ($query) use ($search) {
+						return $query->where('status', 10);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'return_delivered', function ($query) use ($search) {
+						return $query->where('status', 11);
+					})
+					->selectRaw('COUNT(*) as total_shipments')
+					->selectRaw('COUNT(CASE WHEN shipments.shipment_identifier = 1 THEN shipments.id END) AS totalOperatorCountryShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.shipment_identifier = 2 THEN shipments.id END) AS totalInternationallyShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.shipment_type = "drop_off" THEN shipments.id END) AS totalDropOffShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.shipment_type = "pickup" THEN shipments.id END) AS totalPickupShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.shipment_type = "condition" THEN shipments.id END) AS totalConditionShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 0 THEN shipments.id END) AS totalPendingShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 1 THEN shipments.id END) AS totalInQueueShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 2 THEN shipments.id END) AS totalDispatchShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 3 THEN shipments.id END) AS totalDeliveryInQueueShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 4 THEN shipments.id END) AS totalDeliveredShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 8 THEN shipments.id END) AS totalReturnInQueueShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 9 THEN shipments.id END) AS totalReturnInDispatchShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 10 THEN shipments.id END) AS totalReturnDeliveryInQueueShipments')
+					->selectRaw('COUNT(CASE WHEN shipments.status = 11 THEN shipments.id END) AS totalReturnInDelivered')
+					->get()
+					->toArray();
+
+				$data['shipmentReportRecords'] = collect($shipmentReports)->collapse();
+
+				return view('admin.reports.shipmentReport', $data, compact('search'));
+			} else {
+				$data['shipmentReportRecords'] = null;
+				return view('admin.reports.shipmentReport', $data, compact('search'));
+			}
+		} catch (\Exception $exception) {
+			$data = ['error' => $exception->getMessage()];
+			return view('admin.reports.shipmentReport', $data);
+		}
+
+	}
+
+	public function exportShipmentReport(Request $request)
+	{
+		return Excel::download(new ShipmentReportExport($request), 'shipment_report.xlsx');
+	}
 
 	public function shipmentList(Request $request, $status = null, $type = null)
 	{
@@ -416,14 +523,15 @@ class ShipmentController extends Controller
 		return view('admin.shipments.viewShipment', $data, compact('authenticateUser'));
 	}
 
-	public function shipmentInvoice(Request $request, $id){
+	public function shipmentInvoice(Request $request, $id)
+	{
 		$data['status'] = $request->input('segment');
 		$data['shipment_type'] = $request->input('shipment_type');
 		$data['singleShipment'] = Shipment::with('shipmentAttachments', 'senderBranch.branchManager', 'receiverBranch', 'sender.profile', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea', 'assignToCollect')->findOrFail($id);
 
-		if ($data['shipment_type'] == 'operator-country'){
+		if ($data['shipment_type'] == 'operator-country') {
 			return view('admin.invoice.operatorCountry', $data);
-		}else{
+		} else {
 			return view('admin.invoice.internationally', $data);
 		}
 	}
@@ -634,11 +742,11 @@ class ShipmentController extends Controller
 				}
 			} elseif ($shipment->payment_by == 2) {
 //				if ($shipment->payment_type == 'cash' && $shipment->payment_status == 2) {
-					$shipment->status = 1;
-					$shipment->save();
-					DB::commit();
-					NotifyMailService::acceptShipmentRequestNotify($shipment);
-					return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
+				$shipment->status = 1;
+				$shipment->save();
+				DB::commit();
+				NotifyMailService::acceptShipmentRequestNotify($shipment);
+				return back()->with('success', 'Shipment request accepted successfully! This shipment is now in queue.');
 //				} else {
 //					$shipment->status = 1;
 //					$shipment->save();
@@ -1768,7 +1876,7 @@ class ShipmentController extends Controller
 				$shipment->save();
 				DB::commit();
 				return back()->with('success', 'Shipment return back successfully! Now this shipment is in return in queue.');
-			}elseif ($type == 'return_in_dispatch') {
+			} elseif ($type == 'return_in_dispatch') {
 				$shipment->status = 9;
 				$shipment->save();
 				DB::commit();

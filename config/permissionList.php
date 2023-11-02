@@ -278,6 +278,33 @@ $arr = [
 		],
 	],
 
+	'Manage_Reports' => [
+		"Shipment_Report" => [
+			'permission' => [
+				'view' => ['shipmentReport'],
+				'add' => [],
+				'edit' => [],
+				'delete' => [],
+			],
+		],
+		"Shipment_Transaction" => [
+			'permission' => [
+				'view' => ['user-list','inactive.user.list'],
+				'add' => [],
+				'edit' => ['user.edit', 'user.balance.update'],
+				'delete' => [],
+			],
+		],
+		"Payment_Transaction" => [
+			'permission' => [
+				'view' => ['user-list','inactive.user.list'],
+				'add' => [],
+				'edit' => ['user.edit', 'user.balance.update'],
+				'delete' => [],
+			],
+		],
+	],
+
 	'Transactions' => [
 		"Add_Fund_List" => [
 			'permission' => [

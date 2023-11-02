@@ -109,6 +109,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 		Route::get('get-daily-shipment-transactions-analytics', [AdminController::class, 'getDailyShipmentTransactionsAnalytics'])->name('get.daily.shipment.transactions.analytics');
 
 
+		Route::get('shipment-report', [ShipmentController::class, 'shipmentReport'])->name('shipmentReport');
+		Route::get('export-shipment-report/', [ShipmentController::class, 'exportShipmentReport'])->name('export.shipmentReport');
+
+
+
 		Route::get('branch-list', [BranchController::class, 'branchList'])->name('branchList');
 		Route::get('create-branch', [BranchController::class, 'createBranch'])->name('createBranch');
 		Route::post('branch-store', [BranchController::class, 'branchStore'])->name('branchStore');
