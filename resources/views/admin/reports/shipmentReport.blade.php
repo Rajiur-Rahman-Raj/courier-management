@@ -145,9 +145,13 @@
 																<option
 																	value="requested" {{ request()->shipment_status == 'requested' ? 'selected' : '' }}>@lang('Requested')</option>
 																<option
+																	value="canceled" {{ request()->shipment_status == 'canceled' ? 'selected' : '' }}>@lang('Canceled')</option>
+																<option
 																	value="in_queue" {{ request()->shipment_status == 'in_queue' ? 'selected' : '' }}>@lang('In Queue')</option>
 																<option
 																	value="dispatch" {{ request()->shipment_status == 'dispatch' ? 'selected' : '' }}>@lang('Dispatch')</option>
+																<option
+																	value="upcoming" {{ request()->shipment_status == 'upcoming' ? 'selected' : '' }}>@lang('Upcoming')</option>
 																<option
 																	value="received" {{ request()->shipment_status == 'received' ? 'selected' : '' }}>@lang('Received')</option>
 																<option
@@ -156,6 +160,8 @@
 																	value="return_in_queue" {{ request()->shipment_status == 'return_in_queue' ? 'selected' : '' }}>@lang('Return In Queue')</option>
 																<option
 																	value="return_dispatch" {{ request()->shipment_status == 'return_dispatch' ? 'selected' : '' }}>@lang('Return Dispatch')</option>
+																<option
+																	value="return_upcoming" {{ request()->shipment_status == 'return_upcoming' ? 'selected' : '' }}>@lang('Return Upcoming')</option>
 																<option
 																	value="return_received" {{ request()->shipment_status == 'return_received' ? 'selected' : '' }}>@lang('Return Received')</option>
 																<option
@@ -197,234 +203,175 @@
 										<div class="card-body">
 											<div class="section-invoice p-0">
 												<div class="invoice-box p-0" id="shipmentInvoice">
-													{{--													<div class="invoice-table">--}}
-													{{--														<table class="table  table-hover">--}}
-													{{--															<thead>--}}
-													{{--															<th scope="col">@lang('Parcel Name')</th>--}}
-													{{--															<th scope="col">@lang('Quantity')</th>--}}
-													{{--															<th scope="col">@lang('Parcel Type')</th>--}}
-													{{--															<th scope="col">@lang('Total Unit')</th>--}}
-													{{--															<th scope="col">@lang('Cost')</th>--}}
-													{{--															</thead>--}}
+													<div class="invoice-table">
+														<table class="table  table-hover">
+															<thead>
+															<th scope="col">@lang('SL.')</th>
+															<th scope="col">@lang('Shipment Id')</th>
+															<th scope="col">@lang('Type')</th>
+															<th scope="col">@lang('Sender')</th>
+															<th scope="col">@lang('Receiver')</th>
+															<th scope="col">@lang('From')</th>
+															<th scope="col">@lang('To')</th>
+															<th scope="col">@lang('Total Cost')</th>
+															<th scope="col">@lang('Shipment Date')</th>
+															<th scope="col">@lang('Payment Status')</th>
+															<th scope="col">@lang('Shipment Status')</th>
+															</thead>
 
-													{{--															<tbody>--}}
-
-													{{--															<tr>--}}
-													{{--																<td>aasdfsad</td>--}}
-													{{--																<td>15</td>--}}
-													{{--																<td>#KHHGKJ</td>--}}
-													{{--																<td>100--}}
-													{{--																	<span--}}
-													{{--																		class="">KG</span>--}}
-													{{--																</td>--}}
-													{{--																<td>{{ $basic->currency_symbol }}0</td>--}}
-													{{--															</tr>--}}
-													{{--															<tr>--}}
-													{{--																<td colspan="4"--}}
-													{{--																	class="t-price">@lang('Total Price')</td>--}}
-													{{--																<td data-label="Total price">{{ $basic->currency_symbol }}--}}
-													{{--																	0--}}
-													{{--																</td>--}}
-													{{--															</tr>--}}
-													{{--															</tbody>--}}
-													{{--														</table>--}}
-													{{--													</div>--}}
-
-													<div class="invoice-table mt-0">
-														<table class="table table-hover">
-															<tbody>
-															@if(isset($shipmentReportRecords) && sizeof($search) > 0)
-																@if($search['shipment_from'] == 'all')
+															@if(isset($shipmentReports) && sizeof($search) > 0)
+																<tbody>
+																@foreach($shipmentReports as $key => $shipment)
 																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Total Shipments')
+																		<td data-label="SL."> {{ ++$key }} </td>
+																		<td data-label="Shipment Id"> {{ $shipment->shipment_id }} </td>
+																		<td data-label="Shipment Type"> {{ formatedShipmentType($shipment->shipment_type) }} </td>
+																		<td data-label="Sender">
+																			@lang('Branch'): <br> @lang(optional($shipment->senderBranch)->branch_name)
+																			<br>
+																			@lang('Customer'): <br> @lang(optional($shipment->sender)->name)
 																		</td>
-																		<td class="text-right"
-																			data-label="Total Shipments">
-																			{{ $shipmentReportRecords['total_shipments'] }}
+																		<td data-label="Receiver">
+																			@lang('Branch'): <br> @lang(optional($shipment->receiverBranch)->branch_name)
+																			<br>
+																			@lang('Customer'): <br> @lang(optional($shipment->receiver)->name)
+																			<br>
+																		</td>
+																		<td data-label="From">
+																			@if($shipment->from_country_id != null)
+																				@lang('Country')
+																				: <br> @lang(optional($shipment->fromCountry)->name)
+																			@endif
+																			<br>
+																			@if($shipment->from_state_id != null)
+																				@lang('State')
+																				:  <br> @lang(optional($shipment->fromState)->name)
+																			@endif
+																			<br>
+																			@if($shipment->from_city_id != null)
+																				@lang('City')
+																				: <br> @lang(optional($shipment->fromCity)->name)
+																			@endif
+																			<br>
+																			@if($shipment->from_area_id != null)
+																				@lang('Area')
+																				: <br> @lang(optional($shipment->fromArea)->name)
+																			@endif
+																			<br>
+																		</td>
+																		<td data-label="To">
+																			@if($shipment->to_country_id != null)
+																				@lang('Country')
+																				: <br> @lang(optional($shipment->toCountry)->name)
+																			@endif
+																			<br>
+																			@if($shipment->to_state_id != null)
+																				@lang('State')
+																				: <br> @lang(optional($shipment->toState)->name)
+																			@endif
+																			<br>
+																			@if($shipment->to_city_id != null)
+																				@lang('City')
+																				: <br> @lang(optional($shipment->toCity)->name)
+																			@endif
+																			<br>
+																			@if($shipment->to_area_id != null)
+																				@lang('Area')
+																				: @lang(optional($shipment->toArea)->name)
+																			@endif
+																			<br>
+																		</td>
+																		<td data-label="Total Cost"> {{ $basic->currency_symbol }}{{ $shipment->total_pay }} </td>
+																		<td data-label="Shipment Date"> {{ customDate($shipment->shipment_date) }} </td>
+																		<td>
+																			@if($shipment->payment_status == 1)
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-success"></i>
+																						@lang('Paid')
+																					</span>
+																			@else
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-danger"></i>
+																						@lang('Unpaid')
+																					</span>
+																			@endif
+																		</td>
+																		<td data-label="Status">
+																			@if(($shipment->status == 0) || ($shipment->status == 5 && $shipment->assign_to_collect != null))
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-dark"></i>
+																						@lang('Requested')
+																					</span>
+																			@elseif($shipment->status == 6)
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-danger"></i>
+																						@lang('Canceled')
+																					</span>
+																			@elseif($shipment->status == 1)
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-info"></i>
+																						@lang('In Queue')
+																					</span>
+																			@elseif(($shipment->status == 2) && (@request()->shipment_status == 'dispatch' || @request()->shipment_status == 'all'))
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-warning"></i>
+																						@lang('Dispatch')
+																					</span>
+																			@elseif(($shipment->status == 2) && (@request()->shipment_status == 'upcoming' || @request()->shipment_status == 'all'))
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-indigo"></i>
+																						@lang('Upcoming')
+																					</span>
+																			@elseif(($shipment->status == 3) || ($shipment->status == 7 && $shipment->assign_to_delivery != null))
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-success"></i>
+																						@lang('Received')
+																					</span>
+																			@elseif($shipment->status == 4)
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-danger"></i>
+																						@lang('Delivered')
+																					</span>
+																			@elseif($shipment->status == 8)
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-info"></i>
+																						@lang('Return In Queue')
+																					</span>
+																			@elseif(($shipment->status == 9) && (@request()->shipment_status == 'return_dispatch' || @request()->shipment_status == 'all'))
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-warning"></i>
+																						@lang('Return Dispatch')
+																					</span>
+																			@elseif(($shipment->status == 9) && (@request()->shipment_status == 'return_upcoming' || @request()->shipment_status == 'all'))
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-indigo"></i>
+																						@lang('Return Upcoming')
+																					</span>
+																			@elseif(($shipment->status == 10) && (@request()->shipment_status == 'return_received' || @request()->shipment_status == 'all'))
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-success"></i>
+																						@lang('Return Received')
+																					</span>
+																			@elseif(($shipment->status == 11) && (@request()->shipment_status == 'return_delivered' || @request()->shipment_status == 'all'))
+																				<span class="badge badge-light">
+            																			<i class="fa fa-circle text-danger"></i>
+																						@lang('Return Delivered')
+																					</span>
+																			@endif
 																		</td>
 																	</tr>
-																@endif
-
-																@if($search['shipment_from'] == 'operator_country' || $search['shipment_from'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang(optional(basicControl()->operatorCountry)->name)
-																		</td>
-																		<td class="text-right"
-																			data-label="Operator Country">
-																			{{ $shipmentReportRecords['totalOperatorCountryShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_from'] == 'internationally' || $search['shipment_from'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Internationally')
-																		</td>
-																		<td class="text-right"
-																			data-label="Internationally">
-																			{{ $shipmentReportRecords['totalInternationallyShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_type'] == 'drop_off' || $search['shipment_type'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Drop Off')
-																		</td>
-																		<td class="text-right"
-																			data-label="Drop Off">
-																			{{ $shipmentReportRecords['totalDropOffShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_type'] == 'pickup' || $search['shipment_type'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Pickup')
-																		</td>
-																		<td class="text-right"
-																			data-label="Pickup">
-																			{{ $shipmentReportRecords['totalPickupShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_type'] == 'condition' || $search['shipment_type'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Condition')
-
-																		</td>
-																		<td class="text-right"
-																			data-label="Condition">
-																			{{ $shipmentReportRecords['totalConditionShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'requested' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Requested')
-																		</td>
-																		<td class="text-right"
-																			data-label="Requested">
-																			{{ $shipmentReportRecords['totalPendingShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'in_queue' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('In Queue')
-																		</td>
-																		<td class="text-right"
-																			data-label="In Queue">
-																			{{ $shipmentReportRecords['totalInQueueShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'dispatch' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Dispatch')
-																		</td>
-																		<td class="text-right"
-																			data-label="Dispatch">
-																			{{ $shipmentReportRecords['totalDispatchShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'received' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Received')
-																		</td>
-																		<td class="text-right"
-																			data-label="Received">
-																			{{ $shipmentReportRecords['totalDeliveryInQueueShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'delivered' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Delivered')
-																		</td>
-																		<td class="text-right"
-																			data-label="Delivered">
-																			{{ $shipmentReportRecords['totalDeliveredShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'return_in_queue' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Return In Queue')
-																		</td>
-																		<td class="text-right"
-																			data-label="Return In Queue">
-																			{{ $shipmentReportRecords['totalReturnInQueueShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'return_dispatch' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Return Dispatch')
-																		</td>
-																		<td class="text-right"
-																			data-label="Return Dispatch">
-																			{{ $shipmentReportRecords['totalReturnInDispatchShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'return_received' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Return Received')
-																		</td>
-																		<td class="text-right"
-																			data-label="Return Received">
-																			{{ $shipmentReportRecords['totalReturnDeliveryInQueueShipments'] }}
-																		</td>
-																	</tr>
-																@endif
-
-																@if($search['shipment_status'] == 'return_delivered' || $search['shipment_status'] == 'all')
-																	<tr>
-																		<td class="t-total"
-																			colspan="5">@lang('Return Delivered')
-																		</td>
-																		<td class="text-right"
-																			data-label="Return Delivered">
-																			{{ $shipmentReportRecords['totalReturnInDelivered'] }}
-																		</td>
-																	</tr>
-																@endif
+																@endforeach
+																</tbody>
 															@else
 																<tr>
 																	<td colspan="100%" class="text-center p-2">
 																		<img class="not-found-img"
 																			 src="{{ asset('assets/dashboard/images/empty-state.png') }}"
 																			 alt="">
-																		<p class="text-danger text-center d-block">@lang('No found data')</p>
+																		<p class="text-danger text-center d-block">@lang('No Data Found')</p>
 																	</td>
 																</tr>
 															@endif
-															</tbody>
 														</table>
 													</div>
 												</div>

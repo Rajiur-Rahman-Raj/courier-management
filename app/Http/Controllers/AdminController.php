@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UserSystemInfo;
 use App\Models\Branch;
 use App\Models\Deposit;
 use App\Models\Payout;
@@ -47,9 +48,51 @@ class AdminController extends Controller
 	}
 
 
+	public function getAdminDashboardData(){
+		$basic = config('basic');
+		$last30 = date('Y-m-d', strtotime('-30 days'));
+
+		$users = User::selectRaw('COUNT(id) AS totalUser')
+			->selectRaw('COUNT((CASE WHEN status = 1  THEN id END)) AS activeUser')
+			->selectRaw("COUNT((CASE WHEN MONTH(created_at) = MONTH(CURDATE()) THEN id END)) AS thisMonthUsers")
+			->selectRaw("COUNT((CASE WHEN MONTH(created_at) = MONTH(CURDATE()) - 1 THEN id END)) AS lastMonthUsers")
+			->selectRaw("COUNT((CASE WHEN MONTH(created_at) = MONTH(CURDATE()) - 2 THEN id END)) AS monthBeforeLastMonthUsers")
+			->selectRaw("COUNT((CASE WHEN YEAR(created_at) = YEAR(CURDATE()) THEN id END)) AS thisYearUsers")
+			->selectRaw("COUNT((CASE WHEN YEAR(created_at) = YEAR(CURDATE()) - 1 THEN id END)) AS lastYearUsers")
+			->selectRaw("COUNT((CASE WHEN created_at >= $last30 THEN id END)) AS last_30_days_join")
+			->selectRaw('SUM(balance) AS totalUserBalance')
+			->selectRaw('COUNT((CASE WHEN email_verified_at IS NOT NULL  THEN id END)) AS verifiedUser')
+			->get()->makeHidden(['mobile', 'profile'])->toArray();
+
+		$data['userRecord'] = collect($users)->collapse();
+
+		$currentMonthGrowthCalculation = $this->percentGrowthCalculation($data['userRecord']['thisMonthUsers'], $data['userRecord']['lastMonthUsers']);
+		$currentYearGrowthCalculation = $this->percentGrowthCalculation($data['userRecord']['thisYearUsers'], $data['userRecord']['lastYearUsers']);
+
+		$data['userRecord']->put('currentMonthClass', $currentMonthGrowthCalculation['class']);
+		$data['userRecord']->put('currentMonthArrowIcon', $currentMonthGrowthCalculation['arrowIcon']);
+		$data['userRecord']->put('currentMonthPercentage', $currentMonthGrowthCalculation['percentage']);
+
+		$data['userRecord']->put('currentYearClass', $currentYearGrowthCalculation['class']);
+		$data['userRecord']->put('currentYearArrowIcon', $currentYearGrowthCalculation['arrowIcon']);
+		$data['userRecord']->put('currentYearPercentage', $currentYearGrowthCalculation['percentage']);
+
+
+		$tickets = Ticket::selectRaw('COUNT((CASE WHEN status = 0  THEN id END)) AS pendingTickets')
+			->selectRaw('COUNT((CASE WHEN status = 1 THEN id END)) AS answeredTickets')
+			->selectRaw('COUNT((CASE WHEN status = 2 THEN id END)) AS repliedTickets')
+			->selectRaw('COUNT((CASE WHEN status = 2 THEN id END)) AS closedTickets')
+			->get()->toArray();
+
+		$data['ticketRecord'] = collect($tickets)->collapse();
+
+
+
+		return response()->json(['data' => $data, 'basic' => $basic]);
+	}
+
 	public function index()
 	{
-
 		$admin = Auth::guard('admin')->user();
 		$basicControl = basicControl();
 		$last30 = date('Y-m-d', strtotime('-30 days'));

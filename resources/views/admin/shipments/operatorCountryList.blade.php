@@ -106,7 +106,6 @@
 
 																	<tbody>
 																	@forelse($allShipments as $key => $shipment)
-
 																		<tr>
 																			<td data-label="SL."> {{ ++$key }} </td>
 																			<td data-label="Shipment Id"> {{ $shipment->shipment_id }} </td>
@@ -204,7 +203,8 @@
 																								   data-status="{{ $status }}"
 																								   data-route="{{route('updateShipmentStatus', ['id' => $shipment->id, 'type' => 'dispatch'])}}"
 																								   href="javascript:void(0)"
-																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i class="fas fa-sign-out-alt mr-2"></i> @lang('Dispatch')
+																								   class="dropdown-item btn-outline-primary btn-sm editShipmentStatus"><i
+																										class="fas fa-sign-out-alt mr-2"></i> @lang('Dispatch')
 																								</a>
 																							@endif
 																						@elseif($shipment->status == 2 && $status == 'upcoming')

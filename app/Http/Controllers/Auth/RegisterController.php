@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\UserSystemInfo;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\Template;
@@ -65,12 +66,11 @@ class RegisterController extends Controller
 			$ref_by = null;
 		}
 
-		$agent = new Agent();
-		$userBrowser = $agent->browser();
-		$userOs = $agent->platform();
-		$userDevice = $agent->device();
-		$viewer_ip = $_SERVER['REMOTE_ADDR'];
-		$browserInfo = json_decode(json_encode(getIpInfo($viewer_ip)), true);
+
+		$ul['ip_address'] = UserSystemInfo::get_ip();
+		$ul['browser'] = UserSystemInfo::get_browsers();
+		$ul['os'] = UserSystemInfo::get_os();
+		$ul['get_device'] = UserSystemInfo::get_device();
 
 		$user = User::create([
 			'name' => $data['name'],
@@ -81,9 +81,9 @@ class RegisterController extends Controller
 			'language_id' => Language::select('id')->where('default_status', true)->first()->name ?? null,
 			'email_verification' => (basicControl()->email_verification) ? 0 : 1,
 			'sms_verification' => (basicControl()->sms_verification) ? 0 : 1,
-			'browser_history' => $userBrowser == false ? 'Unknown' : $userBrowser,
-			'os_history' => $userOs == false ? 'Unknown' : $userOs,
-			'device_history' => $userDevice == false ? 'Unknown' : $userDevice,
+			'browser_history' => $ul['browser'],
+			'os_history' => $ul['os'],
+			'device_history' => $ul['get_device'],
 		]);
 
 		$userProfile = UserProfile::firstOrCreate(['user_id' => $user->id]);
@@ -93,6 +93,35 @@ class RegisterController extends Controller
 
 		return $user;
 	}
+
+
+
+
+//	protected function registered(Request $request, $user)
+//	{
+//		$user->last_login = Carbon::now();
+//		$user->last_seen = Carbon::now();
+//		$user->two_fa_verify = ($user->two_fa == 1) ? 0 : 1;
+//		$user->save();
+//
+//		$info = @json_decode(json_encode(getIpInfo()), true);
+//		$ul['user_id'] = $user->id;
+//
+//		$ul['longitude'] = (!empty(@$info['long'])) ? implode(',', $info['long']) : null;
+//		$ul['latitude'] = (!empty(@$info['lat'])) ? implode(',', $info['lat']) : null;
+//		$ul['country_code'] = (!empty(@$info['code'])) ? implode(',', $info['code']) : null;
+//		$ul['location'] = (!empty(@$info['city'])) ? implode(',', $info['city']) . (" - " . @implode(',', @$info['area']) . "- ") . @implode(',', $info['country']) . (" - " . @implode(',', $info['code']) . " ") : null;
+//		$ul['country'] = (!empty(@$info['country'])) ? @implode(',', @$info['country']) : null;
+//
+//		$ul['ip_address'] = UserSystemInfo::get_ip();
+//		$ul['browser'] = UserSystemInfo::get_browsers();
+//		$ul['os'] = UserSystemInfo::get_os();
+//		$ul['get_device'] = UserSystemInfo::get_device();
+//
+//		UserLogin::create($ul);
+//
+//	}
+
 
 
 	protected function registered(Request $request, $user)

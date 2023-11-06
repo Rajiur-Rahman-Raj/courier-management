@@ -1,3 +1,4 @@
+
 @if (session()->has('success'))
     <script>
         Notiflix.Notify.Success("@lang(session('success'))");
@@ -15,5 +16,6 @@
         Notiflix.Notify.Warning("@lang(session('warning'))");
     </script>
 @endif
+
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ShipmentReportCountExport;
 use App\Exports\ShipmentReportExport;
 use App\Exports\ShipmentTransactionReportExport;
 use App\Http\Controllers\Controller;
@@ -47,6 +48,94 @@ class ShipmentController extends Controller
 
 
 	public function shipmentReport(Request $request)
+	{
+		$data['authenticateUser'] = Auth::guard('admin')->user();
+		$data['branchId'] = null;
+		if (isset($data['authenticateUser']->branch)) {
+			$data['branchId'] = $data['authenticateUser']->branch->branch_id;
+		}
+		$data['branches'] = Branch::where('status', 1)->get();
+		$search = $request->all();
+		try {
+			if (!empty($search) && (isset($search['shipment_from']) || isset($search['shipment_type']) || isset($search['shipment_status']) || $search['from_date'] || $search['to_date'])) {
+				$fromDate = Carbon::parse($request->from_date);
+				$toDate = Carbon::parse($request->to_date)->addDay();
+
+				$data['shipmentReports'] = Shipment::with('senderBranch.branchManager', 'senderBranch.branchDriver.admin', 'receiverBranch.branchManager', 'receiverBranch.branchDriver.admin', 'sender', 'receiver', 'fromCountry', 'fromState', 'fromCity', 'fromArea', 'toCountry', 'toState', 'toCity', 'toArea', 'assignToCollect', 'assignToDelivery')
+					->when(isset($search['from_date']), function ($query) use ($fromDate) {
+						return $query->whereDate('created_at', '>=', $fromDate);
+					})
+					->when(isset($search['to_date']), function ($query) use ($fromDate, $toDate) {
+						return $query->whereBetween('created_at', [$fromDate, $toDate]);
+					})
+					->when(isset($search['branch_id']) && $search['branch_id'] != 'all', function ($query) use ($search) {
+						return $query->where('sender_branch', $search['branch_id']);
+					})
+					->when(isset($search['shipment_from']) && $search['shipment_from'] == 'operator_country', function ($query) use ($search) {
+						return $query->where('shipment_identifier', 1);
+					})
+					->when(isset($search['shipment_from']) && $search['shipment_from'] == 'internationally', function ($query) use ($search) {
+						return $query->where('shipment_identifier', 2);
+					})
+					->when(isset($search['shipment_type']) && $search['shipment_type'] == 'drop_off', function ($query) use ($search) {
+						$query->where('shipment_type', 'drop_off');
+					})
+					->when(isset($search['shipment_type']) && $search['shipment_type'] == 'pickup', function ($query) use ($search) {
+						$query->where('shipment_type', 'pickup');
+					})
+					->when(isset($search['shipment_type']) && $search['shipment_type'] == 'condition', function ($query) use ($search) {
+						$query->where('shipment_type', 'condition');
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'requested', function ($query) use ($search) {
+						return $query->where('status', 0);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'canceled', function ($query) use ($search) {
+						return $query->where('status', 6);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'in_queue', function ($query) use ($search) {
+						return $query->where('status', 1);
+					})
+					->when(isset($search['shipment_status']) && ($search['shipment_status'] == 'dispatch' || $search['shipment_status'] == 'upcoming'), function ($query) use ($search) {
+						return $query->where('status', 2);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'received', function ($query) use ($search) {
+						return $query->where('status', 3);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'delivered', function ($query) use ($search) {
+						return $query->where('status', 4);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'return_in_queue', function ($query) use ($search) {
+						return $query->where('status', 8);
+					})
+					->when(isset($search['shipment_status']) && ($search['shipment_status'] == 'return_dispatch' || $search['shipment_status'] == 'return_upcoming'), function ($query) use ($search) {
+						return $query->where('status', 9);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'return_received', function ($query) use ($search) {
+						return $query->where('status', 10);
+					})
+					->when(isset($search['shipment_status']) && $search['shipment_status'] == 'return_delivered', function ($query) use ($search) {
+						return $query->where('status', 11);
+					})
+					->latest()
+					->get();
+
+				return view('admin.reports.shipmentReport', $data, compact('search'));
+			} else {
+				$data['shipmentReports'] = null;
+				return view('admin.reports.shipmentReport', $data, compact('search'));
+			}
+		} catch (\Exception $exception) {
+			$data = ['error' => $exception->getMessage()];
+			return view('admin.reports.shipmentReport', $data);
+		}
+	}
+
+	public function exportShipmentReport(Request $request)
+	{
+		return Excel::download(new ShipmentReportExport($request), 'shipment_report.xlsx');
+	}
+
+	public function shipmentReportCount(Request $request)
 	{
 		$data['authenticateUser'] = Auth::guard('admin')->user();
 		$data['branchId'] = null;
@@ -131,16 +220,21 @@ class ShipmentController extends Controller
 
 				$data['shipmentReportRecords'] = collect($shipmentReports)->collapse();
 
-				return view('admin.reports.shipmentReport', $data, compact('search'));
+				return view('admin.reports.shipmentReportCount', $data, compact('search'));
 			} else {
 				$data['shipmentReportRecords'] = null;
-				return view('admin.reports.shipmentReport', $data, compact('search'));
+				return view('admin.reports.shipmentReportCount', $data, compact('search'));
 			}
 		} catch (\Exception $exception) {
 			$data = ['error' => $exception->getMessage()];
-			return view('admin.reports.shipmentReport', $data);
+			return view('admin.reports.shipmentReportCount', $data);
 		}
 
+	}
+
+	public function exportShipmentReportCount(Request $request)
+	{
+		return Excel::download(new ShipmentReportCountExport($request), 'shipment_report_count.xlsx');
 	}
 
 	public function shipmentTransactionReport(Request $request){
@@ -201,11 +295,6 @@ class ShipmentController extends Controller
 			$data = ['error' => $exception->getMessage()];
 			return view('admin.reports.shipmentTransactionReport', $data, compact('search'));
 		}
-	}
-
-	public function exportShipmentReport(Request $request)
-	{
-		return Excel::download(new ShipmentReportExport($request), 'shipment_report.xlsx');
 	}
 
 	public function exportShipmentTransactionReport(Request $request){

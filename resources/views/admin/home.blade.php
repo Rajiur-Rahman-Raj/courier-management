@@ -18,14 +18,13 @@
 				</div>
 			</div>
 
-			<!---------- User Statistics -------------->
 			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.User_Statistics.permission.view'))))
 				<div class="row mb-3">
 					<div class="col-md-12">
 						<h6 class="mb-3 text-darku">@lang('User Statistics')</h6>
 					</div>
 					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-						<div class="card card-statistic-1 shadow-sm">
+						<div class="card card-statistic-1 shadow-sm user-stat">
 							<div class="card-icon bg-primary">
 								<i class="fas fa-users"></i>
 							</div>
@@ -34,13 +33,13 @@
 									<h4>@lang('Total User')</h4>
 								</div>
 								<div class="card-body">
-									{{ $userRecord['totalUser']  }}
+									<span class="totalUser"></span>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-						<div class="card card-statistic-1 shadow-sm">
+						<div class="card card-statistic-1 shadow-sm user-stat">
 							<div class="card-icon bg-primary">
 								<i class="fas fa-user-tie"></i>
 							</div>
@@ -49,18 +48,24 @@
 									<h4>@lang('This Month Users')</h4>
 								</div>
 								<div class="card-body">
-									{{ $userRecord['thisMonthUsers'] }}
+									<span class="thisMonthUsers"></span>
 									<small
 										class="{{ $userRecord['currentMonthClass'] }} growth-calculation fw-medium float-right mt-2"><i
 											class="{{ $userRecord['currentMonthArrowIcon'] }}"></i> @if($userRecord['currentMonthArrowIcon'] != null)
 											{{ $userRecord['currentMonthClass'] == 'text-success' ? ' + ' :' - ' }}
 										@endif{{ abs($userRecord['currentMonthPercentage']) }}%</small>
+									{{--									<small--}}
+									{{--										class="growth-calculation fw-medium float-right mt-2 currentMonthClass"><i--}}
+									{{--											class="currentMonthArrowIcon"></i>--}}
+									{{--										<span class="currentMonthArrowIconNotNull"></span>--}}
+									{{--										<span class="currentMonthPercentage"></span>--}}
+									{{--									</small>--}}
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-						<div class="card card-statistic-1 shadow-sm">
+						<div class="card card-statistic-1 shadow-sm user-stat">
 							<div class="card-icon bg-primary">
 								<i class="fas fa-user-plus"></i>
 							</div>
@@ -74,7 +79,7 @@
 										@endif {{ abs($userRecord['currentYearPercentage']) }}%</small>
 								</div>
 								<div class="card-body">
-									{{ $userRecord['thisYearUsers'] }}
+									<span class="thisYearUsers"></span>
 								</div>
 							</div>
 						</div>
@@ -89,7 +94,7 @@
 									<h4>@lang('Total User Fund')</h4>
 								</div>
 								<div class="card-body">
-									{{trans($basic->currency_symbol)}}{{getAmount($userRecord['totalUserBalance'], config('basic.fraction_number'))}}
+									<span class="totalUserBalance"></span>
 								</div>
 							</div>
 						</div>
@@ -103,7 +108,7 @@
 						<h6 class="mb-3 text-darku">@lang('Branch Statistics')</h6>
 					</div>
 					<div class="col-lg-3 col-md-6 col-sm-6 col-12">
-						<div class="card card-statistic-1 shadow-sm">
+						<div class="card card-statistic-1 shadow-sm user-stat">
 							<div class="card-icon bg-primary">
 								<i class="fas fa-code-branch"></i>
 							</div>
@@ -124,7 +129,7 @@
 							</div>
 							<div class="card-wrap">
 								<div class="card-header">
-									<h4>@lang('Total Branch Manager')</h4>
+									<h4>@lang('Total Branch Managers')</h4>
 								</div>
 								<div class="card-body">
 									{{ $branchRecord['totalBranchManagers']  }}
@@ -139,7 +144,7 @@
 							</div>
 							<div class="card-wrap">
 								<div class="card-header">
-									<h4>@lang('Total Branch Driver')</h4>
+									<h4>@lang('Total Branch Drivers')</h4>
 								</div>
 								<div class="card-body">
 									{{ $branchRecord['totalBranchDrivers'] }}
@@ -154,7 +159,7 @@
 							</div>
 							<div class="card-wrap">
 								<div class="card-header">
-									<h4>@lang('Total Branch Employee')</h4>
+									<h4>@lang('Total Branch Employees')</h4>
 								</div>
 								<div class="card-body">
 									{{ $branchRecord['totalBranchEmployees'] }}
@@ -439,7 +444,7 @@
 									</div>
 								</div>
 
-								<div>
+								<div class="daily-shipments-line-chart-loader">
 									<canvas id="daily-shipments-line-chart" height="80"></canvas>
 								</div>
 							</div>
@@ -684,7 +689,7 @@
 					<div class="col-md-8">
 						<div class="card mb-4 shadow-sm">
 							<div class="card-body">
-								<h5 class="card-title">@lang('Current Year Payment Gateway Transactions')</h5>
+								<h5 class="card-title">@lang('Deposit & Withdraw Transactions')</h5>
 								<div>
 									<canvas id="line-chart-2" height="120"></canvas>
 								</div>
@@ -694,7 +699,7 @@
 					<div class="col-md-4">
 						<div class="card mb-4 shadow-sm">
 							<div class="card-body">
-								<h5 class="card-title">@lang('Gateway Used For Deposit')</h5>
+								<h5 class="card-title">@lang('Deposit Summery')</h5>
 								<div>
 									<canvas id="pie-chart-2" height="255"></canvas>
 								</div>
@@ -707,7 +712,7 @@
 			@if(adminAccessRoute(array_merge(config('permissionList.Dashboard.Browser_Statistics.permission.view'))))
 				<div class="row mb-3">
 					<div class="col-md-12">
-						<h6 class="mb-3 text-darku">@lang('Browser Statistics')</h6>
+						<h6 class="mb-3 text-darku">@lang('User Registration Statistics')</h6>
 					</div>
 					<div class="col-lg-4 mb-3 mb-lg-5">
 						<!-- Card -->
@@ -775,6 +780,7 @@
 
 				</div>
 			@endif
+			<!---------- User Statistics -------------->
 		</section>
 	</div>
 
@@ -855,10 +861,46 @@
 @endpush
 
 @section('scripts')
-	<script>
+	<script defer>
 		'use strict';
-		$(document).ready(function () {
 
+		function onDocumentLoad() {
+			getAdminDashboardData();
+		}
+
+		function getAdminDashboardData() {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+			Notiflix.Block.standard('.user-stat');
+			setTimeout(function () {
+				$.ajax({
+					url: "{{ route('getAdminDashboardData') }}",
+					method: 'GET',
+					success: function (response) {
+						Notiflix.Block.remove('.user-stat');
+						console.log(response.data);
+						let userRecord = response.data.userRecord;
+						let basic = response.basic;
+						$('.totalUser').text(userRecord.totalUser);
+						$('.thisMonthUsers').text(userRecord.thisMonthUsers);
+						$('.thisYearUsers').text(userRecord.thisYearUsers);
+						let totalUserBalance = userRecord.totalUserBalance;
+						$('.totalUserBalance').text(`${basic.currency_symbol}` + parseFloat(totalUserBalance).toFixed(2));
+					},
+					error: function (xhr, status, error) {
+						console.log(error)
+					}
+				});
+			}, 2000)
+
+		}
+
+		document.addEventListener('DOMContentLoaded', onDocumentLoad);
+
+		$(document).ready(function () {
 			// daily shipment analytics
 			$('#dailyShipments').daterangepicker({
 				startDate: moment().startOf('month'),
@@ -879,7 +921,9 @@
 				getDailyShipmentAnalytics(start.format('DD/MM/YYYY'), end.format('DD/MM/YYYY'));
 			});
 
+
 			function getDailyShipmentAnalytics(start, end) {
+				Notiflix.Block.standard('#daily-shipments-line-chart');
 				$.ajax({
 					method: "GET",
 					url: "{{ route('get.daily.shipment.analytics') }}",
@@ -889,6 +933,7 @@
 						'end': end,
 					}
 				}).done(function (response) {
+					Notiflix.Block.remove('#daily-shipments-line-chart');
 					new Chart(document.getElementById("daily-shipments-line-chart"), {
 						type: 'line',
 						data: {

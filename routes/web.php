@@ -91,7 +91,11 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], function () {
 
+	/* ===== ADMIN Dashbaord data fetch using ajax ===== */
+	Route::get('get-admin-dashboard-data', [AdminController::class, 'getAdminDashboardData'])->name('getAdminDashboardData');
+
 	/* ===== ADMIN STORAGE ===== */
+	Route::get('storage', [AdminStorageController::class, 'index'])->name('storage.index');
 	Route::get('storage', [AdminStorageController::class, 'index'])->name('storage.index');
 	Route::any('storage/edit/{id}', [AdminStorageController::class, 'edit'])->name('storage.edit');
 	Route::post('storage/set-default/{id}', [AdminStorageController::class, 'setDefault'])->name('storage.setDefault');
@@ -116,6 +120,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin', 'demo']], func
 
 		Route::get('shipment-report', [ShipmentController::class, 'shipmentReport'])->name('shipmentReport');
 		Route::get('export-shipment-report/', [ShipmentController::class, 'exportShipmentReport'])->name('export.shipmentReport');
+
+		Route::get('shipment-report-count', [ShipmentController::class, 'shipmentReportCount'])->name('shipmentReportCount');
+		Route::get('export-shipment-report-count', [ShipmentController::class, 'exportShipmentReportCount'])->name('export.shipmentReportCount');
+
 		Route::get('shipment-transaction-report', [ShipmentController::class, 'shipmentTransactionReport'])->name('shipmentTransactionReport');
 		Route::get('export-shipment-transaction-report/', [ShipmentController::class, 'exportShipmentTransactionReport'])->name('export.shipmentTransactionReport');
 

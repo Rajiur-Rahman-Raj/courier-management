@@ -11,7 +11,10 @@
 <script src="{{ asset('assets/dashboard/js/pusher.min.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/vue.min.js') }}"></script>
 <script src="{{ asset('assets/dashboard/js/axios.min.js') }}"></script>
-<script src="{{ asset('assets/dashboard/js/notiflix-aio-2.7.0.min.js') }}"></script>
+{{--<script src="{{ asset('assets/dashboard/js/notiflix-aio-2.7.0.min.js') }}"></script>--}}
+<script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.6/dist/notiflix-aio-3.2.6.min.js"></script>
+{{--<script src="https://github.com/notiflix/Notiflix/blob/main/dist/notiflix-aio-3.2.6.min.js"></script>--}}
+{{--<script  src="https://github.com/notiflix/Notiflix/blob/main/dist/notiflix-block-aio-3.2.6.min.js"></script>--}}
 
 {{--<script src="{{ asset('assets/dashboard/js/select2.min.js') }}"></script>--}}
 <script src="{{ asset('assets/dashboard/js/new_select2.full.min.js') }}"></script>
